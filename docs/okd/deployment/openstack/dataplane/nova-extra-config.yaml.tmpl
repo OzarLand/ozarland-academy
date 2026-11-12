@@ -1,0 +1,14 @@
+# Extra nova.conf snippet for nova-compute on the data plane nodes. The stock
+# "nova" data plane service picks up a ConfigMap with exactly this name.
+# Used by the lab to run instances with software emulation when the compute
+# VM has no hardware virtualization (no nested virtualization).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nova-extra-config
+  namespace: openstack
+data:
+  25-nova-extra.conf: |
+    [libvirt]
+    virt_type = ${NOVA_VIRT_TYPE}
+    cpu_mode = ${NOVA_CPU_MODE}

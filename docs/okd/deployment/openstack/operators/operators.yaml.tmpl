@@ -1,0 +1,41 @@
+# Installs the OpenStack operator through OLM (Operator Lifecycle Manager).
+#
+#   CatalogSource  where OLM finds operator bundles (an image holding a catalog)
+#   OperatorGroup  which namespaces the installed operator watches (all)
+#   Subscription   "keep this package installed from this channel"
+#
+# installPlanApproval is Manual on purpose: OLM then asks for approval before
+# installing or upgrading, which keeps upgrades a deliberate operation
+# (see docs/lifecycle/02-operator-upgrade.md).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openstack-operators
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: openstack
+  namespace: openstack-operators
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: openstack-operator-index
+  namespace: openstack-operators
+spec:
+  sourceType: grpc
+  displayName: OpenStack Operators
+  image: ${OPENSTACK_OPERATOR_INDEX}
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: openstack-operator
+  namespace: openstack-operators
+spec:
+  name: openstack-operator
+  channel: ${OPENSTACK_OPERATOR_CHANNEL}
+  source: openstack-operator-index
+  sourceNamespace: openstack-operators
+  installPlanApproval: Manual

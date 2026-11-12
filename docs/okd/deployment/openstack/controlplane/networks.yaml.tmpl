@@ -1,0 +1,105 @@
+# Network plumbing in the openstack namespace.
+#
+# NetworkAttachmentDefinition (NAD): describes an extra pod interface. A pod
+# that lists "internalapi" in its networkAttachments gets a second NIC, a
+# macvlan sub-interface of the OKD node interface connected to that network,
+# with an address from the range below. This is what puts ovsdb-server or
+# the Ansible runner pods directly on the OpenStack networks.
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: ctlplane
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "ctlplane",
+      "type": "macvlan",
+      "master": "${CTLPLANE_IFACE}",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "${CTLPLANE_CIDR}",
+        "range_start": "${CTLPLANE_POD_START}",
+        "range_end": "${CTLPLANE_POD_END}"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: internalapi
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "internalapi",
+      "type": "macvlan",
+      "master": "${INTERNALAPI_IFACE}",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "${INTERNALAPI_CIDR}",
+        "range_start": "${INTERNALAPI_POD_START}",
+        "range_end": "${INTERNALAPI_POD_END}"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: tenant
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "tenant",
+      "type": "macvlan",
+      "master": "${TENANT_IFACE}",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "${TENANT_CIDR}",
+        "range_start": "${TENANT_POD_START}",
+        "range_end": "${TENANT_POD_END}"
+      }
+    }
+---
+# NetConfig is the operator-side description of the same networks. The data
+# plane uses it for IP address management (which address each compute node
+# gets on each network) and for DNS records of the nodes.
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: netconfig
+  namespace: openstack
+spec:
+  networks:
+    - name: ctlplane
+      dnsDomain: ctlplane.${CLUSTER_DOMAIN}
+      mtu: ${CTLPLANE_MTU}
+      subnets:
+        - name: subnet1
+          cidr: ${CTLPLANE_CIDR}
+          gateway: ${CTLPLANE_GATEWAY}
+          allocationRanges:
+            - start: ${CTLPLANE_NODE_START}
+              end: ${CTLPLANE_NODE_END}
+    - name: internalapi
+      dnsDomain: internalapi.${CLUSTER_DOMAIN}
+      mtu: ${INTERNALAPI_MTU}
+      subnets:
+        - name: subnet1
+          cidr: ${INTERNALAPI_CIDR}
+          allocationRanges:
+            - start: ${INTERNALAPI_NODE_START}
+              end: ${INTERNALAPI_NODE_END}
+    - name: tenant
+      dnsDomain: tenant.${CLUSTER_DOMAIN}
+      mtu: ${TENANT_MTU}
+      subnets:
+        - name: subnet1
+          cidr: ${TENANT_CIDR}
+          allocationRanges:
+            - start: ${TENANT_NODE_START}
+              end: ${TENANT_NODE_END}

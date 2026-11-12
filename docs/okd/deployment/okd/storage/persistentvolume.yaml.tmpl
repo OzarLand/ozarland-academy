@@ -1,0 +1,31 @@
+# One statically provisioned volume backed by a directory on the OKD node.
+# Rendered once per volume by scripts/bastion/04-platform-services.sh.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-storage-${PV_INDEX}
+  labels:
+    app.kubernetes.io/part-of: okd-openstack-lab
+spec:
+  storageClassName: local-storage
+  capacity:
+    storage: ${STORAGE_PV_SIZE}
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+    - ReadOnlyMany
+  # Retain: when a claim is deleted the data stays on disk and the volume
+  # becomes "Released". Reusing it is a deliberate, manual operation
+  # (see docs/troubleshooting/storage.md).
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  local:
+    path: ${STORAGE_PV_BASE_DIR}/pv${PV_INDEX}
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - ${OKD_NODE_HOSTNAME}

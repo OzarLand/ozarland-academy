@@ -1,0 +1,16 @@
+---
+extends: default
+ignore: |
+  .work/
+rules:
+  line-length:
+    max: 160
+    level: warning
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  document-start: disable
+  truthy:
+    check-keys: false
+  indentation:
+    indent-sequences: consistent

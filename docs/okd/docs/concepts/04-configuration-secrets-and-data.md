@@ -1,0 +1,315 @@
+# Configuration, secrets and persistent data
+
+> Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
+
+Where does `keystone.conf` come from? Where are the passwords? What survives a
+pod restart? This document answers those questions for the operator model.
+
+Every command block on this page is **[READ-ONLY]**. Some print credentials:
+run them on the lab, and do not paste their output into tickets or chats.
+
+## Overview
+
+```text
+ inputs                       operators generate                 pods consume
+┌──────────────────────┐     ┌───────────────────────────┐     ┌──────────────────────┐
+│ Secret osp-secret    │────▶│ Secret <svc>-config-data  │────▶│ /etc/<svc>/<svc>.conf│
+│ (passwords)          │     │ (rendered config files)   │     │ /etc/<svc>/*.conf.d/ │
+│                      │     │                           │     │                      │
+│ OpenStackControlPlane│────▶│ Secrets cert-*  (TLS)     │────▶│ /etc/pki/tls/...     │
+│ (structure, options, │     │ Secret rabbitmq-transport-│     │                      │
+│  customServiceConfig)│     │   url-*                   │     │                      │
+│                      │     │ PVCs (database, images)   │────▶│ /var/lib/mysql, ...  │
+└──────────────────────┘     └───────────────────────────┘     └──────────────────────┘
+```
+
+There are two inputs. Everything in the middle column is generated and must
+not be edited by hand (see
+[why manual edits do not stick](03-operators-crds-and-reconciliation.md#why-manual-edits-of-managed-objects-do-not-stick)).
+
+## Passwords: the `osp-secret` Secret
+
+`osp-secret` is the equivalent of Kolla's `passwords.yml`: one Kubernetes
+Secret in the `openstack` namespace, which must exist **before** the control
+plane and is referenced by `spec.secret` of the `OpenStackControlPlane` CR.
+In the lab, `scripts/bastion/06-openstack-controlplane.sh` generates it with
+random values directly in the cluster; the passwords exist nowhere else.
+
+| Key | Used for |
+|---|---|
+| `AdminPassword` | Keystone `admin` user |
+| `DbRootPassword` | Galera root password |
+| `DatabasePassword` | Service database accounts (legacy default) |
+| `MetadataSecret` | Shared secret between Nova metadata and the OVN metadata agent |
+| `<Service>Password` | One per Keystone-registered service user: `PlacementPassword`, `GlancePassword`, `NeutronPassword`, `NovaPassword`... The lab creates one for every service the operators know, enabled or not (23 keys in total) |
+| Service-specific keys | For example `HeatAuthEncryptionKey`, `BarbicanSimpleCryptoKEK`: only needed if the service is enabled |
+
+```bash
+# Key names only (safe)
+oc get secret osp-secret -n openstack -o json | jq -r '.data | keys[]'
+
+# Which key a service expects: its passwordSelectors
+oc get keystoneapi keystone -n openstack -o jsonpath='{.spec.secret}{"  "}{.spec.passwordSelectors}{"\n"}'
+```
+
+Each service CR has a `passwordSelectors` field mapping "the password I need"
+to "a key name in the Secret" (for Keystone: `admin: AdminPassword`). If the
+key is missing, the service CR reports `InputReady` as `False` and nothing is
+deployed for that service.
+
+Changing a password in `osp-secret` after deployment is **not** a simple
+rollout. Observed on the lab with `PlacementPassword`: the operator re-renders
+the configuration and restarts the pod, but does not change the Keystone
+user's password, so Placement answers 503 while every condition is `True`.
+Rotation is a two-step change, described in
+[Passwords and secrets](../operations/07-passwords-and-secrets.md); database
+password rotation was not exercised on the lab.
+
+## Service configuration
+
+### Layer 1: generated defaults
+
+Each service operator embeds templates for its configuration files and fills
+them from the CR and from other objects: database host and credentials,
+transport URL, Keystone endpoints, memcached servers, TLS paths. The result is
+stored in a Secret named after the service, typically `<service>-config-data`.
+
+```bash
+oc get secrets -n openstack | grep config-data
+oc get secret keystone-config-data -n openstack -o json | jq -r '.data | keys[]'
+# Prints credentials:
+oc get secret keystone-config-data -n openstack -o jsonpath='{.data.keystone\.conf}' | base64 -d
+```
+
+For Keystone the Secret holds `keystone.conf`, `custom.conf`, `httpd.conf`,
+`ssl.conf`, `my.cnf`, `keystone-api-config.json` and `TemplateParameters`.
+
+### Layer 2: `customServiceConfig`
+
+`customServiceConfig` is a free-text oslo.config (INI) snippet in the CR. The
+operator writes it to a separate file in the service's `*.conf.d` directory,
+which the service loads **after** the main file, so your values win.
+
+```yaml
+spec:
+  keystone:
+    template:
+      customServiceConfig: |
+        [DEFAULT]
+        debug = true
+        [token]
+        expiration = 7200
+```
+
+```bash
+# Where it lands in the Keystone pod
+oc exec -n openstack deployment/keystone -- ls /etc/keystone/keystone.conf.d/
+oc exec -n openstack deployment/keystone -- cat /etc/keystone/keystone.conf.d/custom.conf
+```
+
+The file name differs per service: `custom.conf` for Keystone,
+`02-nova-override.conf` for Nova.
+
+This is the direct equivalent of dropping a file into
+`/etc/kolla/config/keystone/`. Points to remember:
+
+- The operator does **not** validate the content. A typo in an option name is
+  silently ignored by oslo.config; an invalid value makes the service fail.
+  On the lab a bad value put `nova-scheduler` in `CrashLoopBackOff`, while API
+  pods failed without crash-looping
+  ([runbook](../troubleshooting/pod-pending-or-crashloop.md)). The CR is
+  accepted either way.
+- Do not put secrets in `customServiceConfig`: the CR is readable by anyone who
+  can read the namespace's custom resources.
+- Services with several components expose the field at several levels. For
+  Nova, a snippet under `spec.nova.template.apiServiceTemplate` affects only
+  the API pods; under a cell's `conductorServiceTemplate`, only that conductor.
+  Use `oc explain` to find the available levels.
+- The lab manifest uses the field twice: for the Glance file store and for
+  the Neutron MTU
+  (`deployment/openstack/controlplane/openstackcontrolplane.yaml.tmpl`).
+
+### Layer 3: `defaultConfigOverwrite`
+
+`defaultConfigOverwrite` is a map of *file name → full content* used to replace
+whole non-INI files that the operator would otherwise generate, typically
+`policy.yaml` or an `api-paste.ini`.
+
+```yaml
+spec:
+  keystone:
+    template:
+      defaultConfigOverwrite:
+        policy.yaml: |
+          "identity:list_users": "role:admin or role:auditor"
+```
+
+Use it sparingly: you take ownership of the whole file, and you lose the
+operator's future changes to it.
+
+### How a change is applied
+
+Editing either field changes the rendered Secret, which changes the
+configuration hash, which rolls the pods of that service. The sequence and the
+commands to follow it are in
+[How a change propagates](03-operators-crds-and-reconciliation.md#how-a-change-propagates);
+the validated procedure is
+[Change service configuration](../operations/04-change-service-configuration.md).
+
+Always verify at three levels:
+
+```bash
+# 1. The operator accepted and processed the change
+oc get keystoneapi keystone -n openstack \
+  -o jsonpath='{range .status.conditions[*]}{.type}={.status}{"\n"}{end}'
+# 2. New pods are running (AGE is recent)
+oc get pods -n openstack -l service=keystone
+# 3. The option is present in the running container
+oc exec -n openstack deployment/keystone -- grep -r expiration /etc/keystone/keystone.conf.d/
+```
+
+### Compute nodes
+
+On data plane nodes, configuration is rendered by the same service operators
+into Secrets, then **copied onto the node by Ansible**. An extra snippet for
+`nova-compute` can be provided through the ConfigMap `nova-extra-config`,
+which the stock `nova` data plane service picks up and which lands on the node
+as `/etc/nova/nova.conf.d/25-nova-extra.conf`. The lab deployment script only
+creates it when the compute node has no hardware virtualization
+(`virt_type = qemu`); on a lab with KVM it does not exist. Unlike the control
+plane, a change there is **not** applied automatically: it needs a new
+`OpenStackDataPlaneDeployment`, and changing the ConfigMap does not even move
+the NodeSet configuration hash, so nothing signals that a run is needed. See
+[Data plane changes](../operations/08-dataplane-changes.md).
+
+## Databases and database accounts
+
+A service operator never talks to MariaDB as root itself. It creates two small
+CRs and lets `mariadb-operator` do the work:
+
+| CR | Meaning | Kolla equivalent |
+|---|---|---|
+| `MariaDBDatabase` | "Create schema `keystone` on Galera instance `openstack`" | The `mysql_db` task in the service role |
+| `MariaDBAccount` | "Create a database user with a generated password, granted on that schema" | The `mysql_user` task, with the password from `passwords.yml` |
+
+```bash
+oc get mariadbdatabase,mariadbaccount -n openstack
+oc get mariadbaccount placement -n openstack -o jsonpath='{.spec}{"\n"}'
+```
+
+The lab has seven databases (`glance`, `keystone`, `neutron`, `nova-api`,
+`nova-cell0`, `nova-cell1`, `placement`), each with an account of the same
+name. An account names a generated user (`placement_<random>`) and a Secret
+`<name>-db-secret` with a single key, `DatabasePassword`.
+
+The service CR's `databaseInstance` field (for example `openstack` or
+`openstack-cell1`) selects which Galera cluster hosts the schema. The lab has
+two: `openstack` for the API-level databases and `openstack-cell1` for the Nova
+cell database, mirroring the cells v2 layout.
+
+```bash
+# The client in the galera container already has the root credentials.
+# The same client can modify data: do not run write statements here.
+oc exec -n openstack openstack-galera-0 -c galera -- mysql -uroot -e 'SHOW DATABASES;'
+```
+
+## Message bus: `TransportURL`
+
+Similarly, a service that needs RabbitMQ creates a `TransportURL` CR.
+`infra-operator` resolves it against a `RabbitMq` instance and writes the
+complete `rabbit://user:password@host:port/vhost` URL into a Secret, which the
+service operator then injects into the `transport_url` option.
+
+```bash
+oc get transporturl -n openstack
+oc get secrets -n openstack | grep rabbitmq-transport-url
+```
+
+The lab has four (`keystone-keystone-transport`, `neutron-neutron-transport`,
+`nova-api-transport`, `nova-cell1-transport`), each with a Secret
+`rabbitmq-transport-url-<name>`.
+
+The lab has two RabbitMQ clusters, `rabbitmq` (API level) and `rabbitmq-cell1`
+(Nova cell1, also used by `nova-compute` on the compute nodes).
+
+If RabbitMQ is not ready, the `TransportURL` is not ready, and every service
+depending on it waits with an explicit condition. Dependency ordering is not
+scripted anywhere: it *emerges* from each operator waiting for its inputs.
+
+## TLS: certificates from cert-manager
+
+TLS is enabled by default for both public endpoints (`spec.tls.ingress`) and
+pod-to-pod traffic (`spec.tls.podLevel`). Certificates are not generated by a
+playbook; they are requested as objects from **cert-manager**, a separate
+operator that must be installed before the OpenStack operators.
+
+| Object (cert-manager) | Role |
+|---|---|
+| `Issuer` | A certificate authority able to sign requests. The lab has five: `selfsigned-issuer` and the root CAs `rootca-public`, `rootca-internal`, `rootca-ovn` and `rootca-libvirt` |
+| `Certificate` | A request: "a certificate for these DNS names, signed by that issuer, renewed before expiry" |
+| Secret | Where cert-manager stores the resulting key and certificate; mounted by the service pod |
+
+```bash
+oc get issuers -n openstack
+oc get certificates -n openstack             # READY column, expiry with -o wide
+oc get secrets -n openstack | grep '^cert-'
+# The CA bundle distributed to pods and to the openstackclient pod
+oc get secret combined-ca-bundle -n openstack -o json | jq -r '.data | keys[]'
+```
+
+`combined-ca-bundle` holds `tls-ca-bundle.pem` and `internal-ca-bundle.pem`.
+Renewal is handled by cert-manager; the lab has not been running long enough
+to observe one. If cert-manager is absent or an issuer is not ready, the
+control plane reports its CA condition or the service's `TLSInputReady`
+condition as `False`.
+
+## Persistent data
+
+Only a few services keep state on disk. They request it through PVCs using the
+StorageClass named in `spec.storageClass` of the control plane CR.
+
+| Service | What is stored | PVC on the lab | If the PVC is lost |
+|---|---|---|---|
+| Galera (`openstack`, `openstack-cell1`) | All OpenStack databases | `mysql-db-openstack-galera-0`, `mysql-db-openstack-cell1-galera-0` | Total loss of the cloud's state unless a backup exists |
+| RabbitMQ (`rabbitmq`, `rabbitmq-cell1`) | Queues, users, definitions | `persistence-rabbitmq-server-0`, `persistence-rabbitmq-cell1-server-0` | Recreated empty; done once on the lab for `rabbitmq-cell1`, see the [runbook](../troubleshooting/galera-and-rabbitmq.md) |
+| OVN NB and SB databases | Logical network state | `ovndbcluster-nb-etc-ovn-ovsdbserver-nb-0`, `ovndbcluster-sb-etc-ovn-ovsdbserver-sb-0` | Not tested on the lab |
+| Glance (file store) | Image data | `glance-glance-default-single-0` | Images are lost (records remain in the database) |
+
+All of these run as StatefulSets. Everything else (Keystone, Nova, Neutron
+API, Placement, Memcached) keeps nothing on disk: its pods can be deleted
+freely.
+
+```bash
+oc get pvc -n openstack
+oc get pv
+oc get storageclass
+```
+
+Practical consequences:
+
+- **The StorageClass decides where your cloud's data really is.** On the lab
+  the volumes are directories on the OKD node root volume
+  (`/var/lib/openstack-lab-pv/`): they survive pod and node restarts, but not
+  the loss of that volume.
+- A PVC stuck in `Pending` blocks the StatefulSet, hence the service CR, hence
+  the control plane. Check `oc describe pvc <name>` and its events.
+- With pre-created volumes a claim is bound to a whole PV: `storageRequest`
+  only has to fit within the PV size (`STORAGE_PV_SIZE`).
+- Deleting the `OpenStackControlPlane` CR is an uninstall: everything it owns
+  is garbage-collected. Assume data may be lost and take backups first.
+
+## What to back up
+
+| What | Why | How |
+|---|---|---|
+| The `OpenStackControlPlane` and the other CRs | They *are* the deployment | Templates in Git, plus an export of the live objects |
+| `osp-secret` | Passwords must match the databases; in the lab they exist only in the cluster | Export, stored securely outside Git |
+| Galera databases | The state of the cloud | `GaleraBackup` CR (scheduled dump to a PVC) |
+| Image data | The Glance volume | Volume-level backup |
+| Certificates and CA Secrets | So that data plane nodes keep trusting the control plane after a rebuild | Export of the Secrets, stored securely |
+
+The procedures, all executed on the lab for the backup side and none for the
+restore side, are in
+[Backup and restore](../lifecycle/05-backup-and-restore.md).
+
+Next: [Service lifecycle reference](05-service-lifecycle-reference.md).

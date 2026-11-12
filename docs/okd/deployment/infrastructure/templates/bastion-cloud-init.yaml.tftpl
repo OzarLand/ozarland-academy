@@ -1,0 +1,16 @@
+#cloud-config
+# Minimal first-boot configuration. Everything else is done by
+# scripts/bastion/01-setup-bastion.sh so that it stays visible and re-runnable.
+package_update: false
+%{ if has_access_network ~}
+runcmd:
+  # Second interface (workstation access network): never use it as the
+  # default route or for DNS. These are properties of the connection profile
+  # (NetworkManager has no configuration-file default for them), and the
+  # interface is found by its MAC address rather than by an assumed name.
+  - |
+    device="$(ip -o link | awk -v mac="${access_mac}" 'index(tolower($0), mac) {sub(":", "", $2); print $2; exit}')"
+    connection="$(nmcli -g GENERAL.CONNECTION device show "$device")"
+    nmcli connection modify "$connection" ipv4.never-default yes ipv4.ignore-auto-dns yes
+    nmcli connection up "$connection"
+%{ endif ~}

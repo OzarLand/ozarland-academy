@@ -1,0 +1,8 @@
+# Optional part of install-config.yaml, appended when HTTP_PROXY_URL is set
+# in lab.env (see "Running behind a proxy" in docs/installation/README.md).
+# The installer adds the pod, service and machine networks and the internal
+# API name to noProxy by itself; the other lab networks must be listed.
+proxy:
+  httpProxy: ${HTTP_PROXY_URL}
+  httpsProxy: ${HTTP_PROXY_URL}
+  noProxy: ${NO_PROXY_LIST}
