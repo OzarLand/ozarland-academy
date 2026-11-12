@@ -103,7 +103,8 @@ Legend:
 | Lifecycle: backups | Tested | Export of resources and Secrets, `GaleraBackup` for both database instances, etcd backup, volume snapshots of the stopped VMs |
 | Lifecycle: database restore | Tested | `GaleraRestore` executed on both database instances with before/after markers (7 s and 25 s, no failed API request), followed by the repair of Nova, Placement, Neutron/OVN and Glance leftovers; idle lab, one Galera replica |
 | Lifecycle: other restores | Documented only | Manual import of a logical dump validated on a scratch server only; etcd restore and snapshot rollback never executed |
-| Lifecycle: OKD node reboot, graceful shutdown and restart of the lab, compute node reboot | Tested | Recovery without intervention in 3 to 6 minutes, except the metadata agent limitation below. MachineConfig change and unclean stop not executed |
+| Lifecycle: OKD node reboot, graceful shutdown and restart of the lab, compute node reboot | Tested | Recovery without intervention in 3 to 6 minutes, except the OVN agents limitation below. Unclean stop not executed |
+| Lifecycle: MachineConfig change on the single node | Tested | One file added then removed on 2026-11-12: two rolls, reboot 10 to 15 seconds after the change, no drain, pool `Updated` about 7 minutes later; both OVN services of the compute node restarted by hand afterwards |
 | Lifecycle: OKD upgrade | Documented only | Read-only pre-checks run; the upgrade was deliberately not executed |
 
 ## Known limitations
@@ -131,13 +132,15 @@ Legend:
   time.
 - **One environment.** Everything was validated on a single deployment, on
   one host cloud, with KVM on the compute node and behind an HTTPS proxy.
-- **OVN metadata agent after an OKD node reboot.** After a reboot of the
-  OKD node alone, the metadata agent of the compute node was once left
-  disconnected from the OVN southbound database while still reported
-  alive; new instances then get no metadata. It did not happen after a
-  restart of the whole lab or a compute reboot. Check the agents after any
-  control plane outage; the remedy is a restart of
-  `edpm_ovn_metadata_agent`
+- **OVN agents of the compute node after an OKD node reboot.** After a
+  reboot of the OKD node alone, the metadata agent of the compute node
+  was left disconnected from the OVN southbound database three times out
+  of three, and the OVN controller two times out of three, while both
+  were still reported alive until the next change in OVN; new instances
+  then get no network or no metadata. It did not happen after a restart
+  of the whole lab or a compute reboot. Check the agents after any
+  control plane outage; the remedy is a restart of `edpm_ovn_controller`
+  and `edpm_ovn_metadata_agent`
   ([runbook](troubleshooting/node-and-okd.md)).
 - **Password rotation is a two-step change.** Changing a service password
   in `osp-secret` rolls the service with the new value, but the operator

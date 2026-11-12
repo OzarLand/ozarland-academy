@@ -1,6 +1,6 @@
 # Impact of OKD maintenance on OpenStack
 
-> Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; not executed: a MachineConfig change, an unclean stop, and a restart after a power-off long enough to need certificate approval
+> Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) and a MachineConfig change applied then removed (2026-11-12, two rolls) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; not executed: an unclean stop, and a restart after a power-off long enough to need certificate approval
 
 ## 1. Context
 
@@ -111,8 +111,8 @@ and is restarted until the database answers.
 | Galera (one replica per instance) | The operator detects that no node is running, reads the last recorded sequence number of each replica and bootstraps the cluster from the most advanced one. With a single replica this is automatic. | `oc get galera`; see [Galera and RabbitMQ](../troubleshooting/galera-and-rabbitmq.md) |
 | RabbitMQ | Restarts from its PVC; queues are re-declared by services | `oc get rabbitmq`; services reconnecting |
 | OVN NB/SB databases | Restart from their PVCs | `oc get ovndbcluster` |
-| OVN controllers on compute nodes | Lose the southbound connection during the outage and reconnect by themselves | `openstack network agent list` |
-| OVN metadata agent on compute nodes | **May stay disconnected** after an outage of the OKD node alone: seen once after a node reboot, not after a restart of the whole lab nor after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
+| OVN controllers on compute nodes | Lose the southbound connection during the outage. **Stayed disconnected** after two node reboots out of three (reconnected alone after the first one, after a restart of the whole lab and after a compute reboot). Existing flows keep working, new ports are not wired | `sudo podman exec ovn_controller ovn-appctl connection-status` on the compute node; `sudo systemctl restart edpm_ovn_controller` |
+| OVN metadata agent on compute nodes | **Stays disconnected** after an outage of the OKD node alone: seen after each of the three node reboots, not after a restart of the whole lab nor after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
 | nova-compute on compute nodes | Loses RabbitMQ, retries; reported `down` until it reconnects | `openstack compute service list` |
 | MetalLB addresses | Announced again when the speaker pod is running | Services of type `LoadBalancer` have their address |
 | Certificates | Unchanged if within validity | cert-manager pods running |
@@ -161,8 +161,24 @@ action. Instances are not restarted automatically.
 ### 5.2 MachineConfig change
 
 Applying a MachineConfig makes the Machine Config Operator reboot the node
-by itself, usually within minutes of the `oc apply`. On the lab, treat
-"apply a MachineConfig" as "reboot the control plane now".
+by itself. On the lab, treat "apply a MachineConfig" as "reboot the
+control plane now": measured on 2026-11-12, the reboot started 10 to 15
+seconds after the change, without cordon or drain (the daemon logs `Drain
+not required, skipping` on a single-node control plane). The outage is the
+one of a planned reboot (5.1): API away for about 3 min 35, Keystone
+answering again after about 5 min 10, every OpenStack pod ready after
+about 5 min 50, and the pool reported `Updated` after about 7 min 10.
+Removing the MachineConfig is a second roll of the same length and brings
+the original rendered configuration back. After each roll both OVN
+services of the compute node had to be restarted (section 4).
+
+To group several changes in one reboot, pause the pool
+(`oc patch mcp master --type merge -p '{"spec":{"paused":true}}'`), apply
+them, compare `spec.configuration.name` with `status.configuration.name`
+of the pool, then unpause. Do not leave the pool paused. The full
+mechanism, the timeline of both rolls and the commands are in the
+knowledge base:
+[OKD node maintenance](../knowledge-base/okd-node-maintenance.md).
 
 **[READ-ONLY]** Follow it:
 
@@ -269,7 +285,9 @@ the control plane is `Ready`, see
 
 ### Not tested, and limits of this validation
 
-- A MachineConfig change (5.2) was not applied.
+- The MachineConfig change of 5.2 added and removed one file. A change of
+  kernel arguments or kubelet settings, and a roll that fails half-way,
+  were not executed.
 - An unclean stop was not provoked: the behaviour of etcd, Galera and the
   node after a power cut is not validated.
 - A power-off longer than a certificate lifetime, and therefore the CSR

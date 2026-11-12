@@ -252,12 +252,112 @@ cron and rsync, period from `fernet_token_expiry`.
 - Losing this Secret means losing every issued token and every stored
   credential encrypted with the credential keys. Never delete it to
   "force a rotation".
-- The rotation was not observed during this campaign (next one due about
-  24 hours after the timestamp above); see
-  [open questions](open-questions.md).
+- The rotation itself has not been observed yet; the next entry
+  describes the watcher that was left running for it and what its log
+  will show.
+- The resource offers no field to trigger a rotation by hand: the only
+  settings are `fernetRotationDays` and `fernetMaxActiveKeys`. Editing
+  the annotation or the Secret to provoke one is not a documented
+  interface and was not tried.
 
 **See also**: [Passwords and secrets](../operations/07-passwords-and-secrets.md),
 [Backup and restore](../lifecycle/05-backup-and-restore.md)
+
+### How do I watch a Fernet rotation and check that issued tokens survive it?
+
+**Context**: you want proof that the automatic rotation happens, that
+the pod picks up the new keys without restart, and that tokens issued
+before the rotation stay valid, without ever printing a key.
+
+**How**:
+
+**[READ-ONLY]** One sample: when the Secret was last rotated, a short
+fingerprint of each key in the Secret and of each key file in the pod,
+and the pod's restart count. Six hexadecimal characters of a SHA-256
+identify a key without revealing it.
+
+```bash
+oc get secret keystone -o jsonpath='{.metadata.annotations.keystone\.openstack\.org/rotatedat} rv={.metadata.resourceVersion}{"\n"}'
+oc get secret keystone -o json | python3 -c '
+import json, sys, base64, hashlib
+d = json.load(sys.stdin)["data"]
+print(" ".join(f"{k}={hashlib.sha256(base64.b64decode(v)).hexdigest()[:6]}" for k, v in sorted(d.items())))'
+kp=$(oc get pod -l service=keystone -o name | sed -n 1p)
+oc exec $kp -c keystone-api -- sh -c 'cd /etc/keystone/fernet-keys && for f in *; do printf "%s=%s " "$f" "$(sha256sum "$f" | cut -c1-6)"; done; echo'
+oc get $kp -o jsonpath='{.metadata.name} restarts={.status.containerStatuses[0].restartCount}{"\n"}'
+```
+
+**[READ-ONLY]** Token survival: keep one token in a file readable by
+you only, and ask Keystone to validate it at each sample (`200` means
+valid). The token is a credential: mode 600, never in a log, removed at
+the end.
+
+```bash
+( umask 077; os token issue -f value -c id > .work/fernet-tok-a )
+url=$(os endpoint list --service identity --interface public -f value -c URL)
+curl -sk -o /dev/null -w '%{http_code}\n' -H "X-Auth-Token: $(cat .work/fernet-tok-a)" -H "X-Subject-Token: $(cat .work/fernet-tok-a)" "$url/v3/auth/tokens"
+rm -f .work/fernet-tok-a
+```
+
+On the lab these samples are taken every two minutes by a small script
+started with `nohup` on the bastion; it stops by itself.
+
+**Observed on the lab** (2026-11-12): **the rotation was not observed
+yet.** The Secret was last rotated on 2026-11-11 at 20:25:26 UTC, so
+with `fernetRotationDays: 1` the next one is due on 2026-11-12 at about
+20:25 UTC, after the end of the campaign that wrote this entry. State
+of the watcher when the entry was written:
+
+```text
+### 2026-11-12T19:38Z
+rotatedat 2026-11-11T20:25:26Z rv <unchanged since the start of the watch>
+FernetKeys0=<fp0> FernetKeys1=<fp1> FernetKeys2=<fp2> FernetKeys3=<fp3> FernetKeys4=<fp4>   # Secret
+0=<fp0> 1=<fp1> 2=<fp2> 3=<fp3> 4=<fp4>                                                    # files in the pod: same fingerprints
+token a: age=1839s validate=HTTP 200
+token b: age=363s validate=HTTP 200
+```
+
+The watcher log is on the bastion, in the working copy of the
+repository: `.work/fernet-watch.log` (script `.work/fernet-watch.sh`).
+It samples every 2 minutes until 20:50 UTC on 2026-11-12, then removes
+its two token files. Two node reboots happened during the watch (the
+MachineConfig rolls): the Keystone pod restarted with them, the keys
+did not change and tokens issued before the reboots stayed valid.
+
+What to read in the log after 20:25 UTC:
+
+- the sample where `rotatedat` and `rv` change: the time of the
+  rotation and its distance from the 24 hours;
+- the fingerprints before and after: with five keys, the expectation is
+  that the old staged key `0` becomes the new primary (highest index),
+  a new staged key `0` appears, and the oldest secondary disappears;
+- how many samples later the files in the pod show the same
+  fingerprints as the Secret (kubelet refresh of a mounted Secret,
+  usually within one to two minutes), with `restarts` unchanged;
+- `validate=HTTP 200` for both tokens across the rotation; a `404`
+  there would mean a token issued before the rotation was lost.
+
+**Why / how it works**: a Fernet token is encrypted with the primary
+key and can be decrypted by any key still in the repository. A rotation
+promotes the staged key to primary and keeps the previous primaries as
+secondary keys, so a token stays valid as long as the key that
+encrypted it has not been pushed out: with 5 keys and one rotation a
+day, about three days, far longer than the token lifetime. Kolla-Ansible
+equivalent: `keystone-manage fernet_rotate` from cron in the
+`keystone_fernet` container, then rsync to the other controllers.
+
+**Pitfalls**:
+
+- Do not write a watcher that prints the Secret or a token: a
+  fingerprint and an HTTP status are enough.
+- The same Secret holds the credential keys; they are not rotated by
+  this mechanism (their fingerprints are in the log to confirm it).
+- Until the log has been read, everything in the list above is an
+  expectation derived from how Keystone works, not an observation; see
+  [open questions](open-questions.md).
+
+**See also**: [Passwords and secrets](../operations/07-passwords-and-secrets.md),
+[open questions](open-questions.md)
 
 ### Who creates the catalog endpoints and what happens if one is deleted?
 

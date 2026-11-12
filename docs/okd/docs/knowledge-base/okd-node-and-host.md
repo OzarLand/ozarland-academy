@@ -208,11 +208,12 @@ the `master` and `worker` roles but belongs only to the `master` pool.
 **Why / how it works**: the machine config controller merges every
 MachineConfig of a pool into one `rendered-<pool>-<hash>`. The machine
 config daemon on the node compares it with the node's `currentConfig`;
-when they differ it cordons and drains the node, writes the files, and
-reboots. On a single node the drain cannot move anything, so the practical
-effect is: the whole platform and OpenStack control plane stop for the
-duration of a reboot (about 10 to 15 minutes until every operator
-settles, see the maintenance impact page). A `KubeletConfig` or
+when they differ it writes the files and reboots. On a multi-node
+cluster it cordons and drains first; on a single-node control plane it
+skips the drain. The practical effect is: the whole platform and
+OpenStack control plane stop for the duration of a reboot (measured:
+about 6 minutes until every OpenStack pod is ready, 7 until the pool
+reports `Updated`, see [OKD node maintenance](okd-node-maintenance.md)). A `KubeletConfig` or
 `ContainerRuntimeConfig` resource is the supported way to change kubelet
 or CRI-O settings; each generates a MachineConfig and therefore a reboot.
 Kolla-Ansible equivalent: the host part of the inventory and
@@ -222,15 +223,16 @@ the reboot is automatic.
 **Pitfalls**:
 
 - Creating or editing a MachineConfig is not a dry operation: the reboot
-  starts within a minute. To prepare several changes, pause the pool
+  starts 10 to 15 seconds later. To prepare several changes, pause the pool
   first (`oc patch mcp master --type merge -p '{"spec":{"paused":true}}'`),
   and remember a paused pool also blocks the automatic rotation of some
   node certificates.
 - `oc get mc` shows `rendered-worker-...` although there is no worker:
   it is unused.
-- Not tested on this lab on 2026-11-12: any MachineConfig change, because
-  the node had to stay up for the first-day certificate rotation. The
-  installation itself applied the `50-*` configs before the first boot.
+- This entry is the read-only study. A MachineConfig was applied and
+  removed later the same day: the mechanism, the timeline and the repair
+  needed on the compute node are in
+  [OKD node maintenance](okd-node-maintenance.md).
 
 **See also**:
 [OKD maintenance impact](../lifecycle/06-okd-maintenance-impact.md),
@@ -828,7 +830,8 @@ because there is no other node. Drain evicts every pod that is not a
 DaemonSet or static pod; on a single node the evicted pods have nowhere
 to go and stay `Pending` until the uncordon, so a drain is a full
 outage of the OpenStack control plane with no benefit. The machine
-config daemon does the same cordon before a MachineConfig reboot.
+config daemon does not even try before a MachineConfig reboot on a
+single-node control plane (`Drain not required, skipping`).
 Kolla-Ansible equivalent: none on a single controller; on several,
 `kolla-ansible stop --limit <host>`.
 
@@ -841,9 +844,12 @@ Kolla-Ansible equivalent: none on a single controller; on several,
 - While cordoned, CronJobs (Keystone Fernet rotation job, database
   backups, `collect-profiles`) create pods that queue as `Pending` and
   all start at the uncordon.
-- A drain respects PodDisruptionBudgets; with single-replica services
-  protected by a PDB the drain blocks forever. Another reason not to
-  drain here.
+- A drain respects PodDisruptionBudgets, but none protects an OpenStack
+  pod here and the four platform budgets allow one disruption: a
+  server-side dry run showed nothing would block and 198 pods would be
+  evicted (see [OKD node maintenance](okd-node-maintenance.md)).
+- While cordoned, the `master` MachineConfigPool shows `UPDATING=True`
+  and no ready machine, as if a rollout were running.
 - To stop the lab, follow the maintenance impact page; cordon and drain
   add nothing to it.
 

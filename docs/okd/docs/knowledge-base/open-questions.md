@@ -1,7 +1,7 @@
 # Open questions
 
-What the two campaigns of 2026-11-12 (OpenStack administration, then
-OKD administration) observed without being able to explain, and what
+What the campaigns of 2026-11-12 (OpenStack administration, OKD
+administration, restore and scale-out drills, node maintenance) observed without being able to explain, and what
 they could not test. Each item says what is known, so that the next
 person starts from facts.
 
@@ -66,6 +66,30 @@ person starts from facts.
   trap contains a malformed variable reference; whether this is fixed
   upstream after 18-stable was not checked.
 
+- **OVN controller and metadata agent never reconnect after a restart
+  of the OKD node.** Both log `connect: Address family not supported by
+  protocol` for `ssl:ovsdbserver-sb.openstack.svc:6642` every 8 seconds,
+  from the moment the DNS pod stops and for as long as they run, while
+  `getent hosts` on the same node resolves the name. Reproduced on two
+  reboots out of two (OVN 24.03, OVS library 3.3). Supposed cause: the
+  asynchronous resolver of the OVS library keeps a failed state; not
+  verified in the source, and not tried: an IP address instead of the
+  name in `ovn-remote`. On the first reboot of the lab only the metadata
+  agent was stuck; why the controller reconnected that time is unknown.
+- **The node shutdown takes 2 min 30 with a silent gap of 84 seconds**,
+  and the journal of the previous boot shows `kubepods-burstable.slice:
+  A process of this unit has been killed by the OOM killer` near the
+  end. Which scope holds the shutdown and why the OOM killer runs then
+  was not traced.
+- **The machine config controller waits about 2 min 30 for its leader
+  lease** after each reboot although it is the only candidate; the
+  lease is not released at shutdown. Harmless, but it delays the
+  `Updated` status of the pool by more than a minute.
+- **The kube-apiserver rolled a new static pod revision a few minutes
+  after each reboot** (`configmap/kubelet-serving-ca has changed`),
+  closing the API for some seconds. Whether this is tied to the reboot
+  or to the certificate rotation of the first day was not established.
+
 ## Defaults that deserve a decision
 
 - **No requests or limits on OpenStack pods** (all `BestEffort` except
@@ -111,8 +135,17 @@ person starts from facts.
 - **Node time follows the bastion and four public pool servers**; a
   production platform would list internal sources only.
 - **`shutdownGracePeriod` is 0** on the node: pods are not stopped in
-  order at node shutdown. The effect on Galera and RabbitMQ at a planned
-  power-off was not measured.
+  order at node shutdown. Measured on two planned reboots
+  ([entry](okd-node-maintenance.md#how-do-i-apply-a-machineconfig-on-the-single-node-and-what-happens-step-by-step)):
+  RabbitMQ is killed in the first second, the shutdown still takes
+  2 min 30 because systemd waits for container scopes, and Galera and
+  RabbitMQ recovered alone both times. Whether to set a grace period
+  (a `KubeletConfig`, one reboot) to make the stop ordered and shorter
+  is undecided.
+- **Nothing restarts the OVN agents of the compute nodes** after a
+  restart of the OKD node, and nothing alerts on it. A habit (restart
+  both services after any node restart) is documented; a systemd
+  watchdog or a health check that restarts the container is undecided.
 - **Data plane Jobs have no time-to-live** and each deployment object
   keeps its Jobs for ever; a retention habit (keep the last successful
   one per node set) is suggested, not enforced.
@@ -121,9 +154,14 @@ person starts from facts.
 
 ## Not tested
 
-- **Fernet rotation.** The mechanism is documented from the resource
-  definition; the first automatic rotation was due after the campaign and
-  was not watched.
+- **Fernet rotation.** Still not observed: it was due on 2026-11-12 at
+  about 20:25 UTC, after the end of the fourth campaign. A watcher was
+  left running on the bastion until 20:50 UTC; its log
+  (`.work/fernet-watch.log` in the working copy of the repository)
+  holds key fingerprints, pod restarts and the validation status of two
+  tokens every 2 minutes. Reading it and completing the
+  [entry](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it)
+  closes this item. The resource has no supported manual trigger.
 - **Live migration, evacuation, resize to another host**: executed on
   2026-11-12 with a temporary second node, see
   [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
@@ -155,13 +193,18 @@ person starts from facts.
   present, nothing is deployed; the memory cost on a single node is
   unknown. Which of the two should scrape the RabbitMQ and OVN exporters
   is open.
-- **MachineConfig change, node reboot, kubelet or CRI-O restart**: studied
-  read-only during the second campaign (first-day certificate rotation
-  window); the real duration of a MachineConfig roll on this node is not
-  measured.
+- **MachineConfig roll**: executed twice on 2026-11-12 (apply and
+  removal of one file), see
+  [OKD node maintenance](okd-node-maintenance.md). Not covered: a
+  change of kernel arguments or of the kubelet configuration
+  (`KubeletConfig`), a change that the node disruption policies apply
+  without reboot, a roll that fails half-way (pool `Degraded`), a
+  restart of kubelet or CRI-O alone, and an unclean stop of the node.
 - **etcd restore** and **a real node drain**: never executed (nothing
   irreversible on etcd; a drain of the only node is an outage). The
-  restore script and its single-member mode were read only
+  drain was evaluated with a server-side dry run
+  ([entry](okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist));
+  the restore script and its single-member mode were read only
   ([entry](backup-and-restore-drills.md#what-can-i-verify-about-an-etcd-restore-without-doing-it)).
 - **The whereabouts reconciler**: no CronJob or controller cleaning
   leaked addresses was found; a leak was cleaned by hand. Whether the

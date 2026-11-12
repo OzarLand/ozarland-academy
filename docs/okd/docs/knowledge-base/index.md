@@ -23,6 +23,7 @@ compute node) on 2026-11-12. What could not be tested is listed in
 | [openstack-capacity-and-observability.md](openstack-capacity-and-observability.md) | Usage per service, limits, OOM and restarts, events, metrics, logs, request tracing |
 | [okd-cluster-health-and-etcd.md](okd-cluster-health-and-etcd.md) | Version, cluster operators, static pods and revisions, etcd, API health, platform certificates |
 | [okd-node-and-host.md](okd-node-and-host.md) | Shell on the node, CoreOS, MachineConfig, kubelet, CRI-O, disk, systemd units, time, log retention, cordon and drain |
+| [okd-node-maintenance.md](okd-node-maintenance.md) | MachineConfig roll end to end with timings, paused pool and pending changes, drain dry run and PodDisruptionBudgets, tools during a partial API, OVN agents of the compute node after a node restart |
 | [okd-workloads-and-resources.md](okd-workloads-and-resources.md) | QoS classes and OOM order, requests and limits, PodDisruptionBudgets, quotas |
 | [okd-networking.md](okd-networking.md) | Cluster OVN versus OpenStack OVN, node interfaces, routes and ingress, DNS, NetworkPolicy, whereabouts, MetalLB |
 | [okd-storage.md](okd-storage.md) | Local volumes, claim binding, data location, recycling a volume, shared disk risks, image registry |
@@ -31,6 +32,7 @@ compute node) on 2026-11-12. What could not be tested is listed in
 | [okd-olm-and-operators.md](okd-olm-and-operators.md) | Catalog, Subscription, InstallPlan, CSV, operator logs and restart, `operatorOverrides`, CRDs, garbage |
 | [backup-and-restore-drills.md](backup-and-restore-drills.md) | Database restore drills on both Galera instances, repairs afterwards, manual restore, etcd restore facts |
 | [dataplane-scale-out-and-migration.md](dataplane-scale-out-and-migration.md) | Second compute node, host discovery, scheduling, live and cold migration, evacuation, gateway failover, clean removal of a node |
+| [lab-state.md](lab-state.md) | What the campaigns left on the lab (kept history, demo tenant, backups, permanent configuration), with the commands to list and remove each item |
 | [cheat-sheet.md](cheat-sheet.md) | One-liners grouped by task |
 | [open-questions.md](open-questions.md) | What is not explained or not tested yet |
 
@@ -137,6 +139,7 @@ question, followed by the same six parts:
 | [How do I override one policy rule of a service?](openstack-service-administration.md#how-do-i-override-one-policy-rule-of-a-service) | `defaultConfigOverwrite` with a `policy.yaml` key in the control plane resource. |
 | [How do I turn on debug logging for one service?](openstack-service-administration.md#how-do-i-turn-on-debug-logging-for-one-service-and-turn-it-off-again) | `customServiceConfig` with `debug = true`; the pods are rolled. |
 | [Who rotates the Keystone Fernet keys?](openstack-service-administration.md#who-rotates-the-keystone-fernet-keys) | The keystone operator, in the Secret `keystone`; no CronJob and no manual step. |
+| [How do I watch a Fernet rotation and check that issued tokens survive it?](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it) | Fingerprints of the keys in the Secret and in the pod plus a token validation every 2 minutes; rotation due after the campaign, watcher log on the bastion. |
 | [Who creates the catalog endpoints and what happens if one is deleted?](openstack-service-administration.md#who-creates-the-catalog-endpoints-and-what-happens-if-one-is-deleted) | `KeystoneEndpoint` resources; a deleted endpoint only comes back when the resource is reconciled, which you must force. |
 | [How do I inspect RabbitMQ?](openstack-service-administration.md#how-do-i-inspect-rabbitmq-users-queues-connections-alarms) | `rabbitmqctl` and `rabbitmq-diagnostics` in each of the two broker pods. |
 | [How do I look inside Galera?](openstack-service-administration.md#how-do-i-look-inside-galera-databases-sizes-connections-slow-queries) | `mysql -e` in the `galera` container of each of the two database pods. |
@@ -215,7 +218,7 @@ question, followed by the same six parts:
 | --- | --- |
 | [How do I get a shell on the node: `oc debug node` or SSH as `core`?](okd-node-and-host.md#how-do-i-get-a-shell-on-the-node-oc-debug-node-or-ssh-as-core) | `oc debug node/okd-0` needs API, scheduler and kubelet; SSH as `core` needs only sshd and is the only door when the API is down. |
 | [What is the host operating system, and why can I not install a package?](okd-node-and-host.md#what-is-the-host-operating-system-and-why-can-i-not-install-a-package) | CentOS Stream CoreOS 10, image-based: `/usr` is read-only, only `/etc` and `/var` are writable; tools come from containers. |
-| [What does a MachineConfig contain, and what would changing one do?](okd-node-and-host.md#what-does-a-machineconfig-contain-and-what-would-changing-one-do) | Files, systemd units and kernel arguments merged into `rendered-master-<hash>`; a change cordons and reboots the only node. |
+| [What does a MachineConfig contain, and what would changing one do?](okd-node-and-host.md#what-does-a-machineconfig-contain-and-what-would-changing-one-do) | Files, systemd units and kernel arguments merged into `rendered-master-<hash>`; a change reboots the only node. |
 | [How is kubelet configured, and where are its logs?](okd-node-and-host.md#how-is-kubelet-configured-and-where-are-its-logs) | A host systemd unit; effective values from `/configz` (`maxPods` 250, 1 GiB reserved); logs in the journal or `oc adm node-logs`. |
 | [How much is reserved for the system, and when would kubelet evict pods?](okd-node-and-host.md#how-much-is-reserved-for-the-system-and-when-would-kubelet-evict-pods) | 1 GiB and 500m, static; eviction under 100 MiB of memory available or 10 % of disk free (15 % for the image filesystem). |
 | [How do I inspect containers below Kubernetes with `crictl` and CRI-O?](okd-node-and-host.md#how-do-i-inspect-containers-below-kubernetes-with-crictl-and-cri-o) | `crictl` over SSH talks to the CRI-O socket and works without the API; 200 running containers, 150 images, runtime `crun`. |
@@ -223,7 +226,23 @@ question, followed by the same six parts:
 | [Which systemd units matter on the node, and how do I check them?](okd-node-and-host.md#which-systemd-units-matter-on-the-node-and-how-do-i-check-them) | NetworkManager, `ovs-configuration`, `nodeip-configuration`, `crio`, `kubelet`, plus `dnsmasq` and Open vSwitch; none failed. |
 | [Is the node clock synchronised, and to what?](okd-node-and-host.md#is-the-node-clock-synchronised-and-to-what) | Yes: chrony follows the bastion (192.168.130.5) and four public pool servers; offset in microseconds. |
 | [How long are host logs kept (journal, container logs, audit)?](okd-node-and-host.md#how-long-are-host-logs-kept-journal-container-logs-audit) | Journal about two weeks (4 GiB cap), container logs 50 MiB x 5 files, API audit about 10 hours, events 3 hours. |
-| [What do cordon, uncordon and drain mean when there is only one node?](okd-node-and-host.md#what-do-cordon-uncordon-and-drain-mean-when-there-is-only-one-node) | Cordon only keeps new pods `Pending`; a drain would evict 161 pods with nowhere to go, a full outage with no benefit. |
+| [What do cordon, uncordon and drain mean when there is only one node?](okd-node-and-host.md#what-do-cordon-uncordon-and-drain-mean-when-there-is-only-one-node) | Cordon only keeps new pods `Pending`; a drain would evict every pod with nowhere to go, a full outage with no benefit. |
+
+### OKD node maintenance
+
+| Entry | One-line answer |
+| --- | --- |
+| [How do I apply a MachineConfig on the single node, and what happens step by step?](okd-node-maintenance.md#how-do-i-apply-a-machineconfig-on-the-single-node-and-what-happens-step-by-step) | Reboot 10 to 15 s after the change, no cordon or drain; API away 3 min 35, OpenStack pods ready after 5 min 50, pool `Updated` after 7 min 10; removal is a second identical roll. |
+| [How do I prepare a MachineConfig change without rebooting yet, and see what is pending?](okd-node-maintenance.md#how-do-i-prepare-a-machineconfig-change-without-rebooting-yet-and-see-what-is-pending) | Pause the pool, apply, compare `spec.configuration.name` with `status.configuration.name` and diff the two rendered configs; unpause to roll. |
+| [What would a drain really evict here, and which PodDisruptionBudgets exist?](okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist) | Server-side dry run: 198 pods, 83 in `openstack`; four platform budgets, none blocking, none for OpenStack. |
+| [Which tools work while the API is only partly back after a reboot?](okd-node-maintenance.md#which-tools-work-while-the-api-is-only-partly-back-after-a-reboot) | SSH first, `oc adm node-logs` within 10 s of the API, `oc debug node` only about 75 s later (needs the aggregated image API). |
+| [Why are the OVN agents of the compute node dead after a reboot of the OKD node, and how do I fix them?](okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them) | Controller and metadata agent never reconnect to the southbound database (2 reboots out of 2); restart `edpm_ovn_controller` and `edpm_ovn_metadata_agent`. |
+
+### State of the lab
+
+| Entry | One-line answer |
+| --- | --- |
+| [What did the campaigns leave on the lab, and how do I list and remove each item?](lab-state.md#what-did-the-campaigns-leave-on-the-lab-and-how-do-i-list-and-remove-each-item) | Nine data plane deployments with 51 Jobs, two dumps per database instance, the `kb-demo` tenant, the `nova-extra-config` ConfigMap (now baseline); `/var` at 32 %. |
 
 ### OKD workloads and resources
 

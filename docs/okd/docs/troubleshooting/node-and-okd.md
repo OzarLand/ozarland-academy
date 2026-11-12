@@ -1,6 +1,6 @@
 # The OKD node and OpenStack
 
-> Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion and on the node, and for the planned reboot of scenario B (executed and measured); not executed: the host cloud commands, a hard stop of the VM, `cordon` and `drain`, the approval of certificate requests (none was pending), the restart of `crio` and `kubelet`, and any degraded cluster operator (none occurred)
+> Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion and on the node, and for the planned reboot of scenario B (executed and measured, and measured twice more on 2026-11-12 during MachineConfig rolls), `cordon` and a server-side dry run of `drain` (2026-11-12); not executed: the host cloud commands, a hard stop of the VM, a real `drain`, the approval of certificate requests (none was pending), the restart of `crio` and `kubelet`, and any degraded cluster operator (none occurred)
 
 In a Kolla deployment the controllers are the control plane: if a controller
 is down, its containers are down. Here the same is true one level removed.
@@ -235,8 +235,13 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
   counter increased by one (`nova-scheduler-0` by four). Galera was stopped
   cleanly and bootstrapped by itself ("Bootstrapping a new cluster", then
   "synced").
-- The `nova-compute` service and `ovn_controller` of the compute node
-  reconnect without any action on the compute node.
+- The `nova-compute` service of the compute node reconnects without any
+  action. `ovn_controller` reconnected alone on this first reboot, but
+  **not** on the two reboots of 2026-11-12: it stayed `not connected`
+  (`sudo podman exec ovn_controller ovn-appctl connection-status`), its
+  container `unhealthy`, logging `connect: Address family not supported
+  by protocol` for the southbound database every 8 seconds although the
+  name resolved again. Treat it like the metadata agent below.
 - The OVN metadata agent of the compute node did **not** reconnect. The OVN
   southbound database was unreachable for about four minutes; the agent
   logged "continuing to reconnect in the background but suppressing further
@@ -245,7 +250,8 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
   keeps showing it alive (`:-)`) until the next change in OVN (a new
   network or port), then shows `XXX`. This is why the smoke test passed
   right after the recovery and failed on "OVN agents alive" after the
-  functional test. Observed once; see the resolution below.
+  functional test. Observed on this reboot and on both reboots of
+  2026-11-12 (three out of three); see the resolution below.
 - Instances on compute nodes keep running and keep their network
   connectivity (the OVN flows are already programmed on the compute node).
   New API calls fail until the control plane is back.
@@ -263,12 +269,20 @@ What "cordon" and "drain" mean on a single node:
   (`oc get pdb -n openstack`), so nothing there blocks a drain; the four
   budgets of the cluster belong to OKD components. On a single node, drain
   is mostly a way to stop workloads cleanly before the reboot, not a way to
-  keep them available. It is not needed: the reboot below, without cordon
-  or drain, stopped Galera and RabbitMQ cleanly.
+  keep them available. It is not needed: after the reboot below, without
+  cordon or drain, Galera and RabbitMQ came back alone. A server-side dry
+  run (`oc adm drain <node> --dry-run=server --ignore-daemonsets
+  --delete-emptydir-data`, 2026-11-12) listed 198 pods to evict, 83 of
+  them in `openstack`, and no budget in the way. The Machine Config
+  Operator itself skips the drain on a single-node control plane.
+- While the node is cordoned the `master` MachineConfigPool shows
+  `UPDATING=True` and no ready machine; it is the cordon, not a rollout.
 
-What happens during the reboot: the kubelet stops containers with their
-grace period (a clean shutdown for Galera and RabbitMQ when the node is shut
-down properly), the node restarts, static pods (etcd, API server) come up,
+What happens during the reboot: the kubelet has no shutdown grace period
+on this lab and stops within a second; systemd then stops the containers
+itself over about 2 min 30 (measured on 2026-11-12: RabbitMQ is killed at
+once, several containers reach their stop timeout; Galera still restarted
+alone with `safe_to_bootstrap: 1`), the node restarts, static pods (etcd, API server) come up,
 then everything else in no particular order. OpenStack services that start
 before their database retry until it is there; the operators drive Galera's
 bootstrap ([runbook](galera-and-rabbitmq.md)).
@@ -313,11 +327,20 @@ in Neutron (the functional test does):
 oc rsh openstackclient openstack network agent list
 ```
 
-**[CHANGE]** On each compute node whose metadata agent is shown `XXX`.
-Alive again ten seconds later on the lab.
+**[READ-ONLY]** On each compute node; the agent list alone can lie until
+the next change in OVN.
 
 ```bash
-sudo systemctl restart edpm_ovn_metadata_agent
+sudo podman exec ovn_controller ovn-appctl connection-status
+```
+
+**[CHANGE]** On each compute node whose agents are shown `XXX` or whose
+controller is `not connected`. Restart both: connected in less than ten
+seconds, both agents alive within thirty seconds on the lab. Running
+instances keep their connectivity.
+
+```bash
+sudo systemctl restart edpm_ovn_controller edpm_ovn_metadata_agent
 ```
 
 If you cordoned the node beforehand, uncordon it or nothing will start:
@@ -356,7 +379,8 @@ has changed something in OVN.
   reboot is left in a transitional state.
 - Never combine a node reboot with a pending OpenStack change.
 - A `MachineConfig` change or an OKD upgrade reboots the node on its own
-  schedule. On a single node that is an unannounced OpenStack outage: check
+  schedule (10 to 15 seconds after the change, measured; see
+  [OKD node maintenance](../knowledge-base/okd-node-maintenance.md)). On a single node that is an unannounced OpenStack outage: check
   `oc get machineconfigpool` and plan it.
 - Forgetting `uncordon` is the classic cause of "everything is Pending after
   the reboot".

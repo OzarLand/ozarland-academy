@@ -107,6 +107,7 @@ oc exec nova-api-0 -c nova-api-api -- ls /etc/nova /etc/nova/nova.conf.d
 oc get oscp openstack -o jsonpath='keystone=[{.spec.keystone.template.customServiceConfig}]{"\n"}'
 oc get keystoneservice,keystoneendpoint
 oc get keystoneapi keystone -o jsonpath='rot={.spec.fernetRotationDays} max={.spec.fernetMaxActiveKeys}{"\n"}'
+oc get secret keystone -o jsonpath='{.metadata.annotations.keystone\.openstack\.org/rotatedat} rv={.metadata.resourceVersion}{"\n"}'
 r rabbitmqctl list_queues -q name messages consumers type
 r rabbitmq-diagnostics -q check_local_alarms
 g "SHOW GLOBAL STATUS WHERE Variable_name IN ('wsrep_cluster_size','wsrep_cluster_status','wsrep_ready','Threads_connected');"
@@ -261,6 +262,53 @@ node 'journalctl --list-boots --no-pager'
 oc adm cordon okd-0
 oc adm drain okd-0 --dry-run=client --ignore-daemonsets --delete-emptydir-data | awk '{print $1,$2}' | sort | uniq -c
 oc adm uncordon okd-0
+```
+
+## OKD node maintenance
+
+```bash
+oc get mcp master -o jsonpath='wanted={.spec.configuration.name}{"\n"}running={.status.configuration.name}{"\n"}paused={.spec.paused}{"\n"}'
+oc get node okd-0 -o json | jq -r '.metadata.annotations | to_entries[] | select(.key|test("machineconfiguration")) | "\(.key|split("/")[1]) = \(.value)"'
+oc -n openshift-machine-config-operator logs ds/machine-config-daemon -c machine-config-daemon --tail=30
+oc get machineconfiguration cluster -o json | jq -r '.status.nodeDisruptionPolicyStatus.clusterPolicies.files[] | "\(.path) -> \([.actions[].type]|join(","))"'
+oc get pdb -A
+oc adm drain okd-0 --dry-run=server --ignore-daemonsets --delete-emptydir-data 2>&1 | grep -c '^evicting pod'
+oc get --raw '/readyz?verbose' | grep -v '^\[+\]'
+oc adm node-logs okd-0 -u kubelet --tail=20
+node 'sudo journalctl -b -1 -u kubelet --no-pager | tail -20'
+compute 'sudo podman exec ovn_controller ovn-appctl connection-status'
+```
+
+**[CHANGE]** A MachineConfig change reboots the node 10 to 15 seconds after it is applied, unless the pool is paused. Never leave the pool paused.
+
+```bash
+oc patch mcp master --type merge -p '{"spec":{"paused":true}}'
+oc apply -f <machineconfig>.yaml
+oc patch mcp master --type merge -p '{"spec":{"paused":false}}'
+oc delete mc <name>
+```
+
+**[CHANGE]** After any restart of the OKD node, on each compute node.
+
+```bash
+compute 'sudo systemctl restart edpm_ovn_controller edpm_ovn_metadata_agent'
+```
+
+## Leftovers and cleanup
+
+```bash
+oc get openstackdataplanedeployment
+oc get jobs -o json | jq -r '.items[] | .metadata.ownerReferences[0].kind' | sort | uniq -c
+oc get pods --field-selector=status.phase=Succeeded --no-headers | wc -l
+node 'df -h /var | tail -1; sudo ls -la /home/core/assets/backup'
+os project list --domain kb-demo; os server list --all-projects
+```
+
+**[CHANGE]** Keep the newest two dumps per instance (`<pv>` is the directory of the backup volume on the node).
+
+```bash
+node 'sudo sh -c "cd /var/lib/openstack-lab-pv/<pv>/data && ls -1t openstack_backup_2*.sql.gz | tail -n +3 | xargs -r rm -v"'
+node 'sudo sh -c "cd /home/core/assets/backup && ls -1t snapshot_*.db | tail -n +3 | xargs -r rm -v"'
 ```
 
 ## OKD workloads and resources
