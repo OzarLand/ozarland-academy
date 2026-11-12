@@ -252,9 +252,8 @@ cron and rsync, period from `fernet_token_expiry`.
 - Losing this Secret means losing every issued token and every stored
   credential encrypted with the credential keys. Never delete it to
   "force a rotation".
-- The rotation itself has not been observed yet; the next entry
-  describes the watcher that was left running for it and what its log
-  will show.
+- The rotation comes with the first reconciliation after the period,
+  not exactly 24 hours after the previous one; the next entry shows one.
 - The resource offers no field to trigger a rotation by hand: the only
   settings are `fernetRotationDays` and `fernetMaxActiveKeys`. Editing
   the annotation or the Secret to provoke one is not a documented
@@ -302,40 +301,37 @@ rm -f .work/fernet-tok-a
 On the lab these samples are taken every two minutes by a small script
 started with `nohup` on the bastion; it stops by itself.
 
-**Observed on the lab** (2026-11-12): **the rotation was not observed
-yet.** The Secret was last rotated on 2026-11-11 at 20:25:26 UTC, so
-with `fernetRotationDays: 1` the next one is due on 2026-11-12 at about
-20:25 UTC, after the end of the campaign that wrote this entry. State
-of the watcher when the entry was written:
+**Observed on the lab** (2026-11-12): the Secret had last been rotated
+on 2026-11-11 at 20:25:26 UTC. With `fernetRotationDays: 1` it was not
+rotated at 20:25 the next day but at 21:01:00 UTC, 24 h 35 min after the
+previous rotation: the operator rotates during the first reconciliation
+of the `KeystoneAPI` that comes after the period, and the one that did
+it started at the same second as the hourly `keystone-cron` Job
+(minute 1 of each hour).
 
 ```text
-### 2026-11-12T19:38Z
-rotatedat 2026-11-11T20:25:26Z rv <unchanged since the start of the watch>
-FernetKeys0=<fp0> FernetKeys1=<fp1> FernetKeys2=<fp2> FernetKeys3=<fp3> FernetKeys4=<fp4>   # Secret
-0=<fp0> 1=<fp1> 2=<fp2> 3=<fp3> 4=<fp4>                                                    # files in the pod: same fingerprints
-token a: age=1839s validate=HTTP 200
-token b: age=363s validate=HTTP 200
+before  (20:48)  rotatedat 2026-11-11T20:25:26Z
+  FernetKeys0=<A> FernetKeys1=<B> FernetKeys2=<C> FernetKeys3=<D> FernetKeys4=<E>
+after   (21:02)  rotatedat 2026-11-12T21:01:00Z, new resourceVersion
+  FernetKeys0=<new> FernetKeys1=<C> FernetKeys2=<D> FernetKeys3=<E> FernetKeys4=<A>
+  CredentialKeys0, CredentialKeys1: unchanged
+files in the pod: 0=<new> 1=<C> 2=<D> 3=<E> 4=<A>, "..data" link dated 21:01:09
+keystone pod: same pod, restart count unchanged
 ```
 
-The watcher log is on the bastion, in the working copy of the
-repository: `.work/fernet-watch.log` (script `.work/fernet-watch.sh`).
-It samples every 2 minutes until 20:50 UTC on 2026-11-12, then removes
-its two token files. Two node reboots happened during the watch (the
-MachineConfig rolls): the Keystone pod restarted with them, the keys
-did not change and tokens issued before the reboots stayed valid.
-
-What to read in the log after 20:25 UTC:
-
-- the sample where `rotatedat` and `rv` change: the time of the
-  rotation and its distance from the 24 hours;
-- the fingerprints before and after: with five keys, the expectation is
-  that the old staged key `0` becomes the new primary (highest index),
-  a new staged key `0` appears, and the oldest secondary disappears;
-- how many samples later the files in the pod show the same
-  fingerprints as the Secret (kubelet refresh of a mounted Secret,
-  usually within one to two minutes), with `restarts` unchanged;
-- `validate=HTTP 200` for both tokens across the rotation; a `404`
-  there would mean a token issued before the rotation was lost.
+- The staged key `0` (`<A>`) became the primary key under the highest
+  index, a new staged key `0` was generated, the oldest secondary key
+  (`<B>`) was dropped and the others moved down by one.
+- The files mounted in the pod were replaced 9 s after the Secret, with
+  no restart of Keystone.
+- The previous primary key (`<E>`) is still present as a secondary key:
+  tokens issued before the rotation remain decryptable. The watcher
+  described above had stopped at 20:50 UTC, 11 minutes before the
+  rotation, so the `validate=HTTP 200` across the rotation was not
+  recorded: start such a watcher with a margin of more than one hour
+  after the theoretical time.
+- Two node reboots during the day restarted the Keystone pod; the keys
+  did not change and tokens issued before the reboots stayed valid.
 
 **Why / how it works**: a Fernet token is encrypted with the primary
 key and can be decrypted by any key still in the repository. A rotation
@@ -352,9 +348,8 @@ equivalent: `keystone-manage fernet_rotate` from cron in the
   fingerprint and an HTTP status are enough.
 - The same Secret holds the credential keys; they are not rotated by
   this mechanism (their fingerprints are in the log to confirm it).
-- Until the log has been read, everything in the list above is an
-  expectation derived from how Keystone works, not an observation; see
-  [open questions](open-questions.md).
+- The rotation does not happen at a fixed time of day: it waits for a
+  reconciliation after the period has elapsed, here 36 minutes late.
 
 **See also**: [Passwords and secrets](../operations/07-passwords-and-secrets.md),
 [open questions](open-questions.md)

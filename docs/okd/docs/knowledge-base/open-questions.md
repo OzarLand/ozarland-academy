@@ -154,14 +154,13 @@ person starts from facts.
 
 ## Not tested
 
-- **Fernet rotation.** Still not observed: it was due on 2026-11-12 at
-  about 20:25 UTC, after the end of the fourth campaign. A watcher was
-  left running on the bastion until 20:50 UTC; its log
-  (`.work/fernet-watch.log` in the working copy of the repository)
-  holds key fingerprints, pod restarts and the validation status of two
-  tokens every 2 minutes. Reading it and completing the
-  [entry](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it)
-  closes this item. The resource has no supported manual trigger.
+- **Token validation across a Fernet rotation.** The rotation itself
+  was observed on 2026-11-12 at 21:01 UTC (see the
+  [entry](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it)),
+  but the watcher that validated two tokens every 2 minutes had stopped
+  11 minutes earlier. The previous primary key is kept as a secondary
+  key, so tokens are expected to survive; it was not measured. The
+  resource has no supported manual trigger.
 - **Live migration, evacuation, resize to another host**: executed on
   2026-11-12 with a temporary second node, see
   [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
