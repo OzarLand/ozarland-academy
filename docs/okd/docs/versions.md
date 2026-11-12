@@ -19,7 +19,8 @@ version in `config/lab.env.example` changes.
 ### Operator catalog actually validated
 
 The tag `18-stable-latest` moves. Everything marked as tested on this page
-was run with the catalog image it pointed to on 2026-11-11:
+was run with the catalog image it pointed to on 2026-11-11, and
+`config/lab.env.example` pins that digest:
 
 ```text
 quay.io/openstack-k8s-operators/openstack-operator-index@sha256:27748ceae9dbc7368a44a6d1c531c48cdbd9d102bc594b15b0644bf32f6ef5ae
@@ -110,9 +111,12 @@ Legend:
   are only reachable inside the lab.
 - **Local storage.** Control plane data lives on the OKD node root volume;
   losing that volume loses the cloud.
-- **Moving catalog tag.** Until `OPENSTACK_OPERATOR_INDEX` is pinned to a
-  digest, two installations on different days may install different
-  operator builds. The validated digest is given above.
+- **Pinned catalog, moving package repositories.** The operator catalog is
+  pinned by digest, so the operators and the service images they deploy are
+  reproducible. The package repositories enabled on compute nodes
+  (`current-podified`, branch `antelope`) still move: packages installed on a
+  compute node depend on the day of the deployment. A pinned image is only
+  available while the registry keeps it.
 - **EOL platform stream.** OKD 4.22 receives no further builds, and no
   upgrade edge to 5.0 was offered to the installed release at validation
   time.

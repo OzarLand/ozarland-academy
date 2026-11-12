@@ -58,9 +58,9 @@ recovers by itself.
 - **One operator per service.** When Keystone misbehaves in step 5, the
   controller to read is `keystone-operator-controller-manager`.
 - **Version pinning.** `OPENSTACK_OPERATOR_INDEX` in `lab.env` selects the
-  catalog image. A moving tag (`18-stable-latest`) is convenient for a first
-  install; record the digest you actually got so the lab can be rebuilt
-  identically:
+  catalog image. The example settings pin the digest validated with this
+  lab. If you follow the moving tag (`18-stable-latest`) instead, record the
+  digest you actually got so the lab can be rebuilt identically:
 
   **[READ-ONLY]**
 

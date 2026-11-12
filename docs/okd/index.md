@@ -143,8 +143,8 @@ Validated on one deployment (KVM compute node, behind an HTTPS proxy):
   database passwords, faults that could leave the lab unrecoverable, the
   QEMU emulation path and the deployment without floating IPs.
 
-The operator catalog is referenced by a moving tag by default; the digest
-that was validated, the status of every part of the lab and the list of
+The operator catalog is pinned to the digest that was validated; that
+digest, the status of every part of the lab and the list of
 known limitations are maintained in [docs/versions.md](docs/versions.md).
 In short: single node (no high availability), no Cinder/Swift, instances
 reachable from inside the lab only.

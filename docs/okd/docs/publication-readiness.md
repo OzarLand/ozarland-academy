@@ -129,8 +129,8 @@ templates, a code of conduct, a security policy.
 - Reproducibility limits to state honestly at publication:
   - validated on a single host cloud, behind an HTTP proxy, with floating
     IPs and nested KVM;
-  - the operator catalog is referenced by a moving tag; the digest that was
-    validated is recorded in `docs/versions.md`;
+  - the operator catalog is pinned to the validated digest, but the package
+    repositories of the compute nodes follow a moving tag;
   - OKD 4.22 no longer receives builds and currently has no upgrade edge.
 
 ## Open points for the maintainers
@@ -142,8 +142,8 @@ templates, a code of conduct, a security policy.
    it later would change the commit hashes.
 2. **Working branch.** The branch used to prepare the first version still
    exists on the remote; delete it before publication.
-3. **Catalog pinning.** Decide whether `config/lab.env.example` should
-   reference the validated catalog digest instead of the moving tag.
+3. **Catalog refresh.** The example settings pin the validated catalog
+   digest; decide how often to re-validate against a newer catalog.
 4. **Community files.** Add issue/PR templates, a code of conduct and a
    security policy if outside contributions are expected.
 5. **Second environment.** A run on another host cloud (direct Internet
