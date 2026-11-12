@@ -95,13 +95,18 @@ deployment finished, not which services ran. After a partial run, the
 status no longer tells you whether the rest was applied: keep track of it
 yourself.
 
-Durations measured on the lab, one compute node:
+Durations measured on the lab:
 
 | Run | Duration |
 |-----|----------|
-| First full deployment | 21 min |
+| First full deployment, one node | 21 min |
 | Full deployment on the already deployed node | 13 min 43 s |
-| `servicesOverride: [nova]` | 2 min 20 s to 2 min 30 s |
+| Full deployment adding a second node to the first | 21 min 4 s |
+| Full deployment on the remaining node after a node was removed | 13 min 5 s |
+| `servicesOverride: [nova]`, one or two nodes | 2 min 20 s to 2 min 30 s |
+
+Adding and removing a node, and what the operator does in each case, are
+in [Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
 
 ## 5. Resolution
 
@@ -126,9 +131,10 @@ data:
 YAML
 ```
 
-On a lab with KVM this ConfigMap does not exist before you create it. On a
-lab running QEMU emulation it already exists and holds the `[libvirt]`
-settings: keep them and add your section, do not replace them.
+The lab script already creates this ConfigMap with a `[libvirt]` section
+(hypervisor type and live migration address): the example above replaces
+it. On a real change, edit it (`oc edit configmap nova-extra-config`),
+keep that section and add yours.
 
 The hashes do not move and the NodeSet stays `True`: see above.
 
@@ -192,8 +198,9 @@ oc get openstackdataplanenodeset openstack-edpm
 Then start the deployment with `oc apply`, as in the other examples of this
 page, and **not** with the script. The script applies the NodeSet rendered
 from the repository template first, which takes your patch back before the
-run starts. It also removes `nova-extra-config` on a lab with KVM. Whatever
-is not in the template or in `lab.env` does not survive the script.
+run starts. It also writes `nova-extra-config` again from its template.
+Whatever is not in the templates or in `lab.env` does not survive the
+script.
 
 Check the name passed to the script: with the name of an existing
 deployment it only waits for that deployment and runs nothing.

@@ -31,17 +31,24 @@ apply a change, or to retry after a failure, create a **new** deployment
 1. Checks SSH access to the nodes with the data plane key.
 2. Creates three Secrets: the Ansible SSH key, a key pair for nova live
    migration and the libvirt password.
-3. Chooses the hypervisor type. With `COMPUTE_VIRT_TYPE=auto` it checks the
-   node CPU flags; without hardware virtualization it creates the
-   `nova-extra-config` ConfigMap that sets `virt_type = qemu`. With KVM the
-   ConfigMap is not needed and the script removes it if it exists.
+3. Chooses the hypervisor type and writes the `nova-extra-config`
+   ConfigMap. With `COMPUTE_VIRT_TYPE=auto` it checks the CPU flags of the
+   first node: `virt_type = qemu` without hardware virtualization, `kvm`
+   (the default) with it. The same ConfigMap sets
+   `live_migration_inbound_addr`, needed for live migration between two
+   nodes.
 4. Applies the custom `repo-setup` service and the NodeSet
    (`deployment/openstack/dataplane/`).
 5. Creates the deployment and waits. One pod per service runs in sequence.
 6. Runs nova cell discovery so the new hypervisors are mapped to cell1.
+   Nothing else does it for a node added later.
 
 The first deployment took 21 minutes on the lab; the longest services were
 `bootstrap`, `download-cache` and `libvirt` (three to five minutes each).
+Adding a second node later (`compute_count = 2`, then the script with a
+new deployment name) took the same 21 minutes and did not disturb the
+instances of the first node: see
+[Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
 Running the script again with the same deployment name only waits for that
 deployment and changes nothing on the nodes.
 

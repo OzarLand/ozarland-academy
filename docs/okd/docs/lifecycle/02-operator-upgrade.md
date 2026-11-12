@@ -93,6 +93,11 @@ alpha     Manual     openstack-operator.v0.8.0   openstack-operator.v0.8.0   AtL
   happens until the catalog pod is restarted with a newer image: a running
   pod never re-pulls its tag by itself (unless the CatalogSource defines
   `spec.updateStrategy.registryPoll`, which the lab does not).
+  A reboot of the node is such a restart: the pod's pull policy is
+  `Always` with a tag, so the catalog can change without anyone touching
+  OLM. Moving a running lab from the tag to the digest it already runs is
+  described in the
+  [knowledge base](../knowledge-base/okd-olm-and-operators.md#is-the-catalog-pinned-to-a-digest-and-how-do-i-move-a-running-lab-from-a-tag-to-a-digest).
 - If the catalog is pinned by digest, nothing ever changes until you edit
   the digest.
 

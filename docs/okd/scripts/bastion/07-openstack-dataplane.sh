@@ -95,17 +95,14 @@ configure_hypervisor() {
     info "Compute nodes expose $([[ ${virt_type} == kvm ]] && echo 'hardware virtualization: using KVM' || echo 'no hardware virtualization: using QEMU emulation')"
   fi
   case "${virt_type}" in
-    kvm)
-      # Operator defaults (kvm, host-model). Remove a previous override.
-      oc -n "${ns}" delete configmap nova-extra-config --ignore-not-found
-      ;;
-    qemu)
-      export NOVA_VIRT_TYPE=qemu NOVA_CPU_MODE=none
-      render_template "${manifests}/nova-extra-config.yaml.tmpl" "${rendered}/nova-extra-config.yaml"
-      oc apply -f "${rendered}/nova-extra-config.yaml"
-      ;;
+    # kvm and host-model are the operator defaults, written explicitly because
+    # the same snippet also carries the live migration address.
+    kvm) export NOVA_VIRT_TYPE=kvm NOVA_CPU_MODE=host-model ;;
+    qemu) export NOVA_VIRT_TYPE=qemu NOVA_CPU_MODE=none ;;
     *) die "COMPUTE_VIRT_TYPE must be kvm, qemu or auto (got '${virt_type}')" ;;
   esac
+  render_template "${manifests}/nova-extra-config.yaml.tmpl" "${rendered}/nova-extra-config.yaml"
+  oc apply -f "${rendered}/nova-extra-config.yaml"
 }
 
 # Build the "nodes" section of the NodeSet from the Terraform facts.

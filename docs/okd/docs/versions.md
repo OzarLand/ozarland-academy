@@ -90,6 +90,10 @@ Legend:
 | OpenStack operators installation through OLM on OKD 4.22 | Tested | `openstack-operator.v0.8.0` installs and all service operators run on Kubernetes 1.35 |
 | OpenStack control plane | Tested | About 10 minutes until all pods run; node memory about 60 % of 32 GiB |
 | OpenStack data plane on a pre-provisioned VM of a tenant cloud | Tested | One compute node with KVM, behind an HTTPS proxy; about 21 minutes. QEMU emulation path not executed |
+| Second compute node: scale-out and clean scale-in | Tested | 2026-11-12, temporary. Added to the existing NodeSet with a new deployment (21 minutes, no effect on running instances), removed again (services, agents, NodeSet, Terraform). The validated baseline remains one compute node |
+| Scheduling on two nodes, aggregates and zones, cold migration, resize to another node, evacuation | Tested | 2026-11-12, small CirrOS instances with a 1 GB local disk |
+| Live migration without shared storage (block migration over TLS) | Tested | 2026-11-12. Failed with the configuration as first deployed; works since `live_migration_inbound_addr` is set by the lab template (1.5 to 2.7 s without answer). Not tested under memory pressure |
+| OVN gateway failover | Tested, does not fail over | With two chassis the survivor does not take over the router gateway; floating IPs are distributed and keep working. Three chassis not tested |
 | Smoke and functional tests | Tested | `tests/smoke-test.sh --functional` boots an instance |
 | Operations guide scenarios | Partially tested | Every page was run against the lab on 2026-11-11; each page carries its own status line. Not executed: rotation of the database passwords |
 | Troubleshooting runbooks | Partially tested | Read-only commands and the safe reproductions were run on 2026-11-11; each page states in its status line what was not provoked (faults that would risk an unrecoverable lab, host cloud faults, QEMU emulation) |
@@ -97,7 +101,8 @@ Legend:
 | Lifecycle: operator upgrade through OLM | Partially tested | Inspection and catalog refresh run; the catalog offered no newer bundle, so no InstallPlan was approved. On `18-stable` the bundle name does not change between builds, see the page |
 | Lifecycle: failed upgrade, rollback limits | Partially tested | Read-only commands, webhook refusals, healthy-update signatures. No failure provoked, no downgrade |
 | Lifecycle: backups | Tested | Export of resources and Secrets, `GaleraBackup` for both database instances, etcd backup, volume snapshots of the stopped VMs |
-| Lifecycle: restores | Documented only | `GaleraRestore` accepted by a server-side dry run only; etcd restore and snapshot rollback never executed |
+| Lifecycle: database restore | Tested | `GaleraRestore` executed on both database instances with before/after markers (7 s and 25 s, no failed API request), followed by the repair of Nova, Placement, Neutron/OVN and Glance leftovers; idle lab, one Galera replica |
+| Lifecycle: other restores | Documented only | Manual import of a logical dump validated on a scratch server only; etcd restore and snapshot rollback never executed |
 | Lifecycle: OKD node reboot, graceful shutdown and restart of the lab, compute node reboot | Tested | Recovery without intervention in 3 to 6 minutes, except the metadata agent limitation below. MachineConfig change and unclean stop not executed |
 | Lifecycle: OKD upgrade | Documented only | Read-only pre-checks run; the upgrade was deliberately not executed |
 
@@ -107,6 +112,10 @@ Legend:
   outage of the OpenStack control plane.
 - **No persistent block or object storage service.** Cinder and Swift are
   disabled; instances use ephemeral disks on the compute node.
+- **No automatic gateway failover with two compute nodes.** If the node
+  that hosts the router gateway is lost, instances without floating IP
+  lose their outbound path until the node is back or the gateway is moved
+  by hand. Instances with a floating IP are not affected.
 - **No public connectivity for instances.** Floating IPs of the lab cloud
   are only reachable inside the lab.
 - **Local storage.** Control plane data lives on the OKD node root volume;
@@ -147,5 +156,7 @@ Legend:
   a volume snapshot taken, during the first 24 hours and started after
   that delay comes back with expired node certificates
   ([maintenance impact](lifecycle/06-okd-maintenance-impact.md)).
-- **No restore has ever been executed**, and the OKD upgrade has not been
-  attempted.
+- **The database restore was exercised on an idle lab only** (both
+  instances, one Galera replica); the etcd restore and the volume
+  snapshot rollback have never been executed, and the OKD upgrade has not
+  been attempted.

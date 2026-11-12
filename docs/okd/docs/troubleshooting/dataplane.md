@@ -11,6 +11,12 @@ Names used below: NodeSet `openstack-edpm`, node `edpm-compute-0` at
 192.168.122.100, Ansible user `cloud-admin`, key `.work/dataplane-ssh-key`
 on the bastion.
 
+Problems that only exist with two compute nodes (a node that is `up` but
+not mapped to the cell, a live migration that fails with "address
+resolution failed", a router gateway that is not taken over) were
+provoked on 2026-11-12 and are described in
+[Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
+
 ## Scenario A: a data plane deployment failed
 
 ### 1. Initial symptoms
@@ -471,10 +477,9 @@ oc rsh openstackclient openstack hypervisor list -c "Hypervisor Hostname" -c "Hy
   virtualization. `virt_type` must be `qemu`.
 - A positive count and `/dev/kvm` present: nested virtualization is
   available and the default (`kvm`) works. This is the case of the lab node
-  (count `8`). The configuration then contains no `virt_type` line at all,
-  only `cpu_mode=host-model` in `/etc/nova/nova.conf.d/01-nova.conf`, and
-  the ConfigMap `nova-extra-config` does not exist ("NotFound" is the
-  normal answer).
+  (count `8`). The ConfigMap `nova-extra-config` then holds
+  `virt_type = kvm` and `cpu_mode = host-model`, which are also the
+  defaults of the operator.
 - The hypervisor type column shows `QEMU` in both cases: it names the
   libvirt driver, not the acceleration. To know what an instance really
   uses, look at its domain on the node:
@@ -518,8 +523,8 @@ tests/smoke-test.sh
 ```
 
 Expected with emulation: a `virt_type = qemu` line in
-`/etc/nova/nova.conf.d/25-nova-extra.conf`. With KVM the `grep` prints
-nothing.
+`/etc/nova/nova.conf.d/25-nova-extra.conf`. With KVM the same file says
+`virt_type = kvm`.
 
 **[CHANGE]** Boots and deletes a test instance.
 

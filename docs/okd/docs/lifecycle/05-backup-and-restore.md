@@ -1,6 +1,6 @@
 # Backup and restore
 
-> Status: partially validated on the lab — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); no restore was executed: `GaleraRestore` was only checked with a server-side dry run and by reading its script, and the etcd restore and the volume snapshot rollback were deliberately not run on the only lab
+> Status: validated on the lab except the etcd restore — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), and the `GaleraRestore` of 5.5 was executed the same day on both database instances with markers proving the result; the manual import of a logical dump was validated on a scratch server only, and the etcd restore and the volume snapshot rollback were deliberately not run on the only lab
 
 ## 1. Context
 
@@ -152,11 +152,12 @@ oc -n openstack wait job/manual-backup-openstack --for=condition=complete --time
 For the second instance the CronJob is `backup-openstack-cell1`. Each job
 took 15 seconds on the lab.
 
-Each run writes two files under `data/` on the backup PVC, named after the
-**database service**, for example
+Each run writes two files under `data/` on the backup PVC, for example
 `openstack_backup_2026-11-12_00-25-07.sql.gz` (all databases except `mysql`;
 240 kB on a nearly empty lab) and
 `openstack_backup-grants_2026-11-12_00-25-07.sql.gz` (user grants). The
+prefix `openstack_backup` is fixed: **both instances produce files with the
+same names**, each on its own PVC, so never mix their copies. The
 dump is not taken from the live server directly: the job receives a full
 state transfer from the Galera node into `transfer/` on the same PVC
 (about 200 MB per instance on the lab, kept and overwritten at each run),
@@ -276,17 +277,78 @@ oc -n openstack delete galerarestore/openstack-restore
 ```
 
 `backupSource` is the name of the `GaleraBackup` resource and the only
-field of the spec. **This block was not executed on the lab.** The API
-accepts the resource (`oc apply --dry-run=server`), and the script was
-read: it asks for confirmation unless `--yes` is given, removes the
-database Service endpoint so that no client reaches Galera, pipes each
-file into the server, then puts the endpoint back. `--content data` or
-`--content grants` restores only one of the two files. If several backups
-are on the PVC, pass only the pair you want. A file that fails to load is
-reported as `FAILED` and the script continues: read its whole output.
+field of the spec. The resource only starts a pod that mounts the backup
+volume; the restore is the script, which loads **only the files given as
+arguments**. It asks for confirmation unless `--yes` is given, removes the
+database Service endpoint, pipes each file into the server, then puts the
+endpoint back. `--content data` or `--content grants` restores only one of
+the two files. If several backups are on the PVC, pass only the pair you
+want.
+
+Executed on the lab on 2026-11-12, first on `openstack-cell1`
+(`backupSource: openstack-cell1`), then on `openstack`:
+
+| Instance | Tables | Duration of the script | Failed API requests during the restore |
+| --- | --- | --- | --- |
+| `openstack-cell1` | 110 | 7 s | 0 |
+| `openstack` | 407 | 25 s | 0 |
+
+What the drills showed
+([details and repairs](../knowledge-base/backup-and-restore-drills.md)):
+
+- The data file recreates each table (`DROP TABLE IF EXISTS`, `CREATE
+  TABLE`, rows); it never drops a database. Objects created after the
+  backup disappear, objects deleted after it come back.
+- Nothing is stopped. Removing the endpoint blocks new connections only:
+  the services keep their open connections and keep working during the
+  restore. On a cloud with activity, scale the API services down first.
+- No service needed a restart afterwards and the control plane stayed
+  `Ready`.
+- A file that fails to load is reported as `FAILED`, the script continues
+  and **exits with 0**: read its whole output.
+- The grants file sets every database account back to its password at
+  backup time. After a password rotation, restore with `--content data`.
+
+After the restore, repair what the databases no longer describe:
+
+**[READ-ONLY]** then **[DESTRUCTIVE]** (the second command deletes from OVN
+whatever the restored Neutron database does not know)
+
+```bash
+oc -n openstack exec nova-cell0-conductor-0 -- nova-manage placement audit --verbose
+np="$(oc -n openstack get pod -l service=neutron -o name | head -1)"
+oc -n openstack exec "${np}" -c neutron-api -- neutron-ovn-db-sync-util \
+  --config-file /etc/neutron/neutron.conf --config-dir /etc/neutron/neutron.conf.d \
+  --ovn-neutron_sync_mode log
+oc -n openstack exec "${np}" -c neutron-api -- neutron-ovn-db-sync-util \
+  --config-file /etc/neutron/neutron.conf --config-dir /etc/neutron/neutron.conf.d \
+  --ovn-neutron_sync_mode repair
+```
+
+- Cell restore: instances created after the backup still run on the
+  compute node but are unknown to Nova (remove the domain, the instance
+  directory, the Placement allocation with `placement audit --delete`,
+  the port); instances deleted after the backup come back as `ACTIVE`
+  with nothing behind them (delete them again).
+- Main restore: instances created after the backup are still listed but
+  cannot be shown or deleted until their row in
+  `nova_api.instance_mappings` is put back; networks and ports differ
+  between Neutron and OVN until the sync tool runs in `repair` mode;
+  image files uploaded after the backup stay in the Glance store without
+  a record.
+
+**Fallback without the operator**: a `mysqldump --all-databases` taken as
+in the [drills](../knowledge-base/backup-and-restore-drills.md) can be
+loaded with `mysql` in the Galera pod after removing the Service endpoint
+by hand. The import was validated on a scratch server only (1.5 s for the
+main instance); it also replaces the accounts and the root password with
+those of the dump.
 
 etcd restore on a single-node cluster is a disaster-recovery procedure of
-OKD itself and is not documented here; on the lab, prefer volume snapshots.
+OKD itself. The node carries `cluster-restore.sh` (with a single-member
+mode, `ETCD_ETCDCTL_RESTORE`); it was read, not run, because a failed
+restore of the only member means reinstalling the lab. On the lab, prefer
+volume snapshots.
 
 ## 6. Verification
 
@@ -308,16 +370,22 @@ oc -n openstack rsh openstackclient openstack token issue
 oc -n openstack rsh openstackclient openstack server list --all-projects
 ```
 
-Then `tests/smoke-test.sh`. A backup that has never been restored is an
-assumption: do one restore on the lab before trusting the procedure.
+Then the audit and the sync tool of 5.5 until both are silent, and
+`tests/smoke-test.sh --functional` (0 failed after each of the two drills
+once the repairs were done). A backup that has never been restored is an
+assumption: this one has been restored once, on an idle lab.
 
 ## 7. Risks and precautions
 
-- `GaleraRestore` overwrites live data and interrupts every API while it
-  runs.
+- `GaleraRestore` overwrites live data table by table while the services
+  stay connected. No API request failed on the idle lab; under load,
+  writes can land in the middle of the restore.
 - Restoring a database dump older than the current state desynchronises
-  Nova/Neutron records from what really runs on compute nodes (instances
-  created since the dump become unknown to the API).
+  Nova, Placement, Neutron, OVN and the Glance store from each other and
+  from what really runs on compute nodes (5.5). Restoring one instance and
+  not the other adds a disagreement between the cell and the API
+  databases.
+- The restore script exits with 0 even when a file failed to load.
 - The exported Secrets file is the most sensitive artefact of the lab.
 - Each `GaleraBackup` consumes one of the static volumes (two of the five
   free ones on the lab, leaving three); with `Retain`, deleting the PVC
@@ -334,10 +402,16 @@ assumption: do one restore on the lab before trusting the procedure.
 
 ### Not tested, and limits of this document
 
-- **No restore has been executed.** `GaleraRestore`, the restore order of
-  5.5, an etcd restore and a rollback to the volume snapshots remain
-  assumptions on this lab; the last two would have put the only validated
-  environment at risk.
+- `GaleraRestore` was executed on both instances, on an idle lab with a
+  single Galera replica and a few test resources: behaviour under load,
+  with three replicas, or with a dump of realistic size is not known.
+- The restore order of 5.5 (steps 1 to 6 and 8), an etcd restore and a
+  rollback to the volume snapshots remain assumptions on this lab; the
+  last two would have put the only validated environment at risk.
+- The manual import of a `mysqldump --all-databases` file was only run on
+  a scratch server, not on a live instance.
+- A restore after a database password rotation, and a restore after the
+  Neutron pod was replaced, were not exercised.
 - The scheduled run of the backup CronJobs was not waited for; the jobs
   were started by hand.
 - The interaction between restored Secrets and operator-generated Secrets
