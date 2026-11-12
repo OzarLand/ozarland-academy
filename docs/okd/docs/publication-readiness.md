@@ -15,7 +15,7 @@ maintainers to decide. Nothing in it changes the repository visibility.
 | Scripts and configuration | Lint-clean; executed end to end on one environment |
 | Documentation consistency | Links valid; every scenario page carries a validation status |
 | License and third-party content | Apache-2.0; derived files attributed |
-| Git history | Conventional commits, single project identity |
+| Git history | Two commits on `main`, Conventional Commits style |
 | Contribution guidelines | Present |
 | Examples generic and reproducible | Yes, with the limits listed below |
 
@@ -109,9 +109,8 @@ and the three jobs pass.
 
 - Conventional Commits style, no reference to tooling used to
   produce them.
-- Authors: one project identity for all work commits, plus the initial
-  commit created through the GitHub interface under a personal `noreply`
-  address.
+- `main` holds the initial commit and one squashed commit for the first
+  version, both under a personal `noreply` address.
 - No large file, no generated artefact, no file later removed for
   confidentiality reasons.
 
@@ -136,13 +135,13 @@ templates, a code of conduct, a security policy.
 
 ## Open points for the maintainers
 
-1. **Merge path.** The work is proposed as one pull request against `main`.
-   Merge it with a squash so that the working branch name does not enter
-   the history.
-2. **Commit identity.** Work commits use
-   `OzarLand <ozarland@users.noreply.github.com>`. Confirm this is the
-   identity wanted in public history; rewriting it later would change every
-   commit hash.
+1. **Commit identity.** The first version was merged into `main` as a single
+   squashed commit, attributed by the hosting platform to the account that
+   opened the pull request (a personal `noreply` address), like the initial
+   commit. Confirm this is the identity wanted in public history; rewriting
+   it later would change the commit hashes.
+2. **Working branch.** The branch used to prepare the first version still
+   exists on the remote; delete it before publication.
 3. **Catalog pinning.** Decide whether `config/lab.env.example` should
    reference the validated catalog digest instead of the moving tag.
 4. **Community files.** Add issue/PR templates, a code of conduct and a

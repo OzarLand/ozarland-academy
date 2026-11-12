@@ -69,12 +69,13 @@ create_storage() {
   local index
   info "Creating ${STORAGE_PV_COUNT} local persistent volumes of ${STORAGE_PV_SIZE}"
   # container_file_t is the SELinux type pods are allowed to write to.
-  # Only new directories are prepared: on a re-run, the data that services
-  # already wrote keeps its owner, mode and label.
+  # Only new or still empty directories are prepared: on a re-run, the data
+  # that services already wrote keeps its owner, mode and label, while a
+  # directory left half-prepared by an interrupted run is repaired.
   on_node "set -e
     for i in \$(seq 1 ${STORAGE_PV_COUNT}); do
       dir=${STORAGE_PV_BASE_DIR}/pv\$(printf '%02d' \$i)
-      [ -d \$dir ] && continue
+      [ -d \$dir ] && [ -n \"\$(ls -A \$dir)\" ] && continue
       mkdir -p \$dir
       chmod 0777 \$dir
       chcon -t container_file_t \$dir

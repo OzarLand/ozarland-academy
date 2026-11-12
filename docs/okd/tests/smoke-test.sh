@@ -74,8 +74,11 @@ check "Operators: ClusterServiceVersion Succeeded" csv_succeeded
 check "Operators: OpenStack initialization resource Ready" condition_true openstack-operators openstack openstack Ready
 
 # --- Control plane -----------------------------------------------------------
+# Pods of the data plane Ansible jobs are excluded: a failed run from an
+# earlier deployment stays visible on purpose and says nothing about the
+# health of the services.
 pods_healthy() {
-  oc -n "${ns}" get pods -o json | jq -e '.items | all(
+  oc -n "${ns}" get pods -l 'app!=openstackansibleee' -o json | jq -e '.items | all(
     .status.phase == "Succeeded" or
     (.status.phase == "Running" and all(.status.containerStatuses[]; .ready)))'
 }
