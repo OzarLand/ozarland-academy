@@ -8,6 +8,17 @@ output, and Kubernetes keeps that stream per container. There is one more
 log to know about that has no Kolla equivalent: the **operator** log, which
 tells you why a service was (or was not) deployed or reconfigured.
 
+## In short
+
+- Control plane services log to the container output: read them with
+  `oc logs`. There are no log files to look for.
+- Many pods have two containers; if one is quiet, look at the other.
+- "Why is my option not applied" is answered by the **operator** log, in
+  the `openstack-operators` namespace, not by the service log.
+- Logs die with the pod: save them before a restart. Jobs that succeeded
+  are deleted with their log.
+- Compute node logs are on the node itself, in the journal.
+
 ## 1. Initial symptoms
 
 - An API returns 500 or a timeout and you need the traceback.
@@ -82,11 +93,14 @@ oc -n openstack-operators logs deployment/openstack-operator-controller-manager 
 
 Operator Deployment names follow `<service>-operator-controller-manager`
 (`keystone`, `nova`, `neutron`, `glance`, `ovn`, `mariadb`, `infra`, ...);
-the first command lists them all. Placement is handled by the nova operator
-(there is no placement operator Deployment), RabbitMQ, memcached and dnsmasq
-by the infra operator, Galera by the mariadb operator. The data plane
-controllers (NodeSet, deployment) run inside
-`openstack-operator-controller-manager`.
+the first command lists them all. The cases where the name is not obvious:
+
+| What | Operator to read |
+|------|------------------|
+| Placement | nova operator (there is no placement operator Deployment) |
+| RabbitMQ, memcached, dnsmasq | infra operator |
+| Galera | mariadb operator |
+| Data plane (NodeSet, deployment) | `openstack-operator-controller-manager` |
 
 An operator pod can also be selected by label:
 
@@ -257,3 +271,7 @@ oc get pod <pod> -o jsonpath='{.status.startTime}{"\n"}'
   never attach it to a public issue unreviewed.
 - Debug logging is verbose and logs request details; enable it for a
   limited time.
+
+---
+
+**Previous:** [Inspect service status](01-inspect-service-status.md) · **Up:** [Operations guide](README.md) · **Next:** [Restart a service](03-restart-a-service.md)

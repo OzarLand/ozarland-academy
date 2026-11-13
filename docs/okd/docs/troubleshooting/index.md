@@ -14,10 +14,70 @@ fault on purpose.
 Commands run on the bastion, in the `openstack` namespace unless a
 namespace is given (`oc project openstack`).
 
+## Start here
+
+- **You have a symptom**: look it up in
+  [symptom to runbook](#symptom-to-runbook).
+- **You do not know where the fault is**: run the
+  [triage](#triage-which-layer-is-broken) below, bottom-up, and stop at
+  the first layer that is not healthy. The decision tree shows which
+  runbook each failed check leads to.
+- **Before any fix**: read
+  [before you change anything](#before-you-change-anything).
+- **You want to understand normal behaviour first**: the
+  [operations knowledge base](../knowledge-base/README.md) records what a
+  healthy lab answers, task by task.
+
+## Runbooks
+
+| Runbook | Scenarios | Use it when |
+|---------|-----------|-------------|
+| [Node and OKD](node-and-okd.md) | A node `NotReady`, B planned node reboot, C degraded cluster operator | `oc` does not answer, the node is not `Ready`, or you plan a reboot |
+| [Resource exhaustion](resource-exhaustion.md) | one | Pods are `Evicted` or `OOMKilled`, or `Pending` for lack of memory |
+| [Storage](storage.md) | A claim `Pending`, B volume `Released`, C node disk full | A stateful pod has no volume, or the disk fills |
+| [Network](network.md) | A LoadBalancer without address, B pod stuck in `ContainerCreating`, C compute node cannot reach the control plane, D MTU | A MetalLB address, a network attachment or a path between nodes fails |
+| [DNS and routing](dns-and-routing.md) | A lab DNS down, B Route does not answer, C names fail in pods, D compute nodes cannot resolve | A name does not resolve or a public URL does not answer |
+| [Pod Pending or CrashLoopBackOff](pod-pending-or-crashloop.md) | A `Pending`, B `CrashLoopBackOff`, C `ImagePullBackOff` | One pod does not start |
+| [Reconciliation not progressing](reconciliation-not-progressing.md) | one | The control plane or a service resource stays `False` |
+| [Manual changes reverted](manual-changes-reverted.md) | one | An edit disappeared or a deleted object came back |
+| [Galera and RabbitMQ](galera-and-rabbitmq.md) | A Galera not ready, B RabbitMQ not ready | APIs return 500 or hang, a database or broker pod is `0/1` |
+| [Data plane](dataplane.md) | A deployment failed, B SSH or key problem, C `nova-compute` down, D no nested virtualization | An Ansible run failed or the compute node misbehaves |
+
+Suggested reading order:
+
+- **30 minutes**: this page, then
+  [Reconciliation not progressing](reconciliation-not-progressing.md) and
+  [Manual changes reverted](manual-changes-reverted.md). These two
+  explain how operators behave, which every other runbook relies on.
+- **Half a day**: the runbooks bottom-up, in the order of the triage
+  (node, resources, storage, network, DNS, pods, reconciliation,
+  databases and message bus, data plane), replaying the "Reproduce it in
+  the lab" sections where they exist (Galera, lab DNS, `nova-compute`,
+  crash loop, reconciliation, manual changes).
+
 ## Triage: which layer is broken?
 
 A fault in a lower layer shows up as symptoms in every layer above it, so
 always check bottom-up. Stop at the first layer that is not healthy.
+
+Where to look first, following the numbered checks of the command block
+below:
+
+```mermaid
+flowchart TD
+    Q0{"0. oc whoami and<br/>oc get nodes answer?"} -- no --> R0["DNS and routing (A),<br/>then Node and OKD (A)"]
+    Q0 -- yes --> Q1{"1. Node Ready, cluster<br/>operators healthy,<br/>no memory or disk pressure?"}
+    Q1 -- no --> R1["Node and OKD,<br/>Resource exhaustion"]
+    Q1 -- yes --> Q2{"2. Volumes, cert-manager<br/>and MetalLB healthy?"}
+    Q2 -- no --> R2["Storage, Network (A)"]
+    Q2 -- yes --> Q3{"3. Operator CSV Succeeded,<br/>operator pods Running?"}
+    Q3 -- no --> R3["Reconciliation not<br/>progressing (5c)"]
+    Q3 -- yes --> Q4{"4. Control plane True,<br/>every pod Running<br/>or Completed?"}
+    Q4 -- no --> R4["By pod status: Pod Pending or<br/>CrashLoopBackOff, Galera and RabbitMQ.<br/>By condition: Reconciliation<br/>not progressing"]
+    Q4 -- yes --> Q5{"5. NodeSet True,<br/>nova-compute up,<br/>OVN agents alive?"}
+    Q5 -- no --> R5["Data plane,<br/>Network (C)"]
+    Q5 -- yes --> R6["Symptom table below,<br/>Manual changes reverted"]
+```
 
 **[READ-ONLY]**
 
@@ -58,8 +118,10 @@ What a healthy lab answers:
 - `oc whoami` prints `system:admin` (the bastion uses the installer
   kubeconfig); the node is `Ready`.
 - The cluster operator filter prints only its header line.
-- Twelve PersistentVolumes, seven of them `Bound`; three cert-manager pods;
-  one MetalLB `controller` and one `speaker` pod.
+- Twelve PersistentVolumes, seven of them `Bound` (nine once the two
+  backup claims of the backup guide exist, see
+  [OKD storage](../knowledge-base/okd-storage.md)); three cert-manager
+  pods; one MetalLB `controller` and one `speaker` pod.
 - One ClusterServiceVersion, `openstack-operator`, in phase `Succeeded`. The
   operator pod filter shows the header and one `Completed` pod with a long
   generated name: it is the Job that unpacked the operator bundle at
@@ -93,6 +155,9 @@ What a healthy lab answers:
 | Galera or RabbitMQ pod `0/1`, APIs return 500 or time out | Database, message bus | [Galera and RabbitMQ](galera-and-rabbitmq.md) |
 | Data plane deployment failed, `nova-compute` down, instances fail to boot | Data plane | [Data plane](dataplane.md) |
 | Everything broke after a node reboot | Node, then Galera | [Node and OKD](node-and-okd.md), [Galera and RabbitMQ](galera-and-rabbitmq.md) |
+| New instances get no network or no metadata after a restart of the OKD node | OVN agents of the compute node | [Node and OKD](node-and-okd.md), scenario B |
+| A compute node is `up` but gets no instance, live migration fails, a router gateway is not taken over | Several compute nodes | [Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md) |
+| A restore left instances, ports or images inconsistent | Databases versus OVN, Placement and Glance | [Backup and restore drills](../knowledge-base/backup-and-restore-drills.md) |
 
 ## Before you change anything
 

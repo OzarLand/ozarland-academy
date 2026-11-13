@@ -7,6 +7,19 @@ not read it directly: each operator copies the keys it needs into the
 configuration it renders. This document shows where credentials live and
 what was observed when changing one.
 
+## In short
+
+- `osp-secret` is the `passwords.yml` of the lab. It is generated in the
+  cluster and exists nowhere else.
+- For daily work use `oc rsh openstackclient`: no password to copy.
+- Rotating a service password is two changes that must carry the same
+  value: the Keystone user and the Secret. The operator does only the
+  second half.
+- After a password change every condition can say `True` while the API
+  answers 503: verify by calling the API.
+- Database passwords and `AdminPassword` were not rotated on this lab.
+- Fernet keys are rotated by the keystone operator, without action.
+
 ## 1. Initial symptoms
 
 - You need the admin password to log in to Horizon or to build a `clouds.yaml`
@@ -89,7 +102,7 @@ oc get keystoneapi keystone -o jsonpath='{.spec.secret}{"  "}{.spec.passwordSele
 
 ## 4. Root cause
 
-Three families of credentials, with three owners:
+Four families of credentials, each with its own owner:
 
 | Credential | Declared in | Consumed through |
 |------------|-------------|------------------|
@@ -102,6 +115,17 @@ Because rendered configuration contains passwords, generated configuration
 is stored in Secrets, not ConfigMaps. The hash mechanism of
 [04](04-change-service-configuration.md) covers them: when an input Secret
 changes, the operator re-renders and rolls the pods.
+
+Keystone Fernet and credential keys are a separate case. They live in the
+Secret `keystone`, which the keystone operator owns, and the operator
+rotates the Fernet keys itself (`fernetRotationDays`); there is no cron
+container as with Kolla-Ansible. A rotation was observed on the lab on
+2026-11-12: the key files in the pod were replaced without a restart of
+Keystone. Token validation across that rotation was not recorded. See the
+knowledge base:
+[who rotates the Fernet keys](../knowledge-base/openstack-service-administration.md#who-rotates-the-keystone-fernet-keys)
+and
+[watching a rotation](../knowledge-base/openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it).
 
 ## 5. Resolution
 
@@ -122,15 +146,11 @@ the password.
 Rotating a Keystone service user password was executed on the lab with
 Placement. What happens on this version:
 
-- Changing `PlacementPassword` in `osp-secret` changes an operator input:
-  the Placement configuration is re-rendered and its Deployment rolls
-  (about 25 seconds). The control plane returns to `True`.
-- The operator does **not** change the password of the `placement` user in
-  Keystone. The new pod therefore starts with a password Keystone rejects:
-  every Placement API request answers HTTP 503 while every condition says
-  `True`. Nothing in `oc get openstackcontrolplane` reveals the problem.
-- Setting the Keystone user password to the value now in the Secret repairs
-  the service at once, without a restart.
+| Step | What happens |
+|------|--------------|
+| `PlacementPassword` changes in `osp-secret` | An operator input changed: the Placement configuration is re-rendered and its Deployment rolls (about 25 seconds). The control plane returns to `True`. |
+| The new pod starts | The operator does **not** change the password of the `placement` user in Keystone. The pod starts with a password Keystone rejects: every Placement API request answers HTTP 503 while every condition says `True`. Nothing in `oc get openstackcontrolplane` reveals the problem. |
+| The Keystone user password is set to the value now in the Secret | The service is repaired at once, without a restart. |
 
 A rotation is therefore two changes that must carry the same value. Do them
 in this order so that the outage is limited to the rollout:
@@ -206,3 +226,7 @@ service whose password you changed.
 - Compute nodes receive credentials through Ansible. A change that affects
   `nova-compute` or the OVN agents needs a new data plane deployment
   ([08](08-dataplane-changes.md)).
+
+---
+
+**Previous:** [Scale a service](06-scale-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Data plane changes](08-dataplane-changes.md)

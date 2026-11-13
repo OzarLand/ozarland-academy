@@ -2,6 +2,20 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command, the unclean stop and the clean restart of Galera, the restart of RabbitMQ and the reset of a RabbitMQ volume (executed on `rabbitmq-cell1`); the stuck-recovery and damaged-data cases of both tables were not provoked, because they would risk an unrecoverable lab
 
+## In short
+
+- Galera recovers by itself after an unclean stop: the mariadb operator
+  picks the replica to bootstrap. The first action is to wait two
+  minutes and watch (17 to 20 s on the lab).
+- Recovery needs every Galera pod running and the mariadb operator
+  running. If one is missing, restore that, not the database.
+- Never delete the Galera claim, edit `grastate.dat` or force-delete the
+  pod. The claim is the database.
+- RabbitMQ holds nothing OpenStack cannot recreate: resetting its volume
+  is a valid last resort. It is never one for Galera.
+- A message naming Nova or a database may hide a RabbitMQ outage: check
+  `oc get rabbitmq` and the pods first.
+
 The database and the message bus are the two services where the Kolla
 experience transfers most directly (`mariadb_recovery`, a RabbitMQ that will
 not rejoin) and where the operator model changes the procedure most: the
@@ -11,6 +25,27 @@ let it work and to recognise when it cannot.
 The lab runs two Galera servers (`openstack` for the API databases,
 `openstack-cell1` for the Nova cell) and two RabbitMQ servers (`rabbitmq`,
 `rabbitmq-cell1`), each with one replica and one PersistentVolume.
+
+Recovery decisions for both services, as detailed in the two scenarios:
+
+```mermaid
+flowchart TD
+    subgraph GAL["Galera pod 0/1 after an unclean stop"]
+        G1{"Wait two minutes:<br/>does the pod become 1/1?"} -- yes --> G2["Verify wsrep status.<br/>Services reconnect by themselves"]
+        G1 -- no --> G3{"Preconditions met?<br/>Claim bound, room on the node,<br/>mariadb operator running"}
+        G3 -- no --> G4["Restore the precondition,<br/>then wait again"]
+        G3 -- "yes, pod in a restart loop" --> G5["Delete the pod once"]
+        G3 -- "yes, data directory damaged" --> G6["Restore from backup or rebuild.<br/>Never delete the claim"]
+    end
+    subgraph RAB["RabbitMQ pod 0/1, or operations hang"]
+        R1{"Disk or memory alarm?"} -- yes --> R2["Free the resource.<br/>RabbitMQ unblocks by itself"]
+        R1 -- no --> R3{"On-disk state intact?"}
+        R3 -- yes --> R4["Delete the pod once<br/>(about one minute)"]
+        R3 -- "no: Mnesia or boot errors" --> R5["Last resort: delete the claim,<br/>then the pod. State is recreated"]
+        R4 --> R6["Restart the services<br/>that do not recover"]
+        R5 --> R6
+    end
+```
 
 ## Scenario A: Galera pod not ready after an unclean stop
 

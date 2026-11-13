@@ -1,5 +1,21 @@
 # Data plane scale-out, migration and scale-in
 
+## In short
+
+- A second compute node was added, used and removed on 2026-11-12; three
+  nodes were tried the next day. The lab is back to one node.
+- Adding a node takes as long as a first deployment (21 minutes), does
+  not disturb running instances, and must end with `discover_hosts`.
+- Live migration without shared storage needs
+  `live_migration_inbound_addr = $host` (now in the lab template). The
+  instance is silent for 1.5 to 2.7 s; cold migration and resize cost
+  about 25 s and a reboot; `evacuate` loses the local disk.
+- Floating IPs are distributed and survive the loss of the gateway
+  node. The router address does not: two chassis never fail over, three
+  do in about 3 s, and the returning node takes the gateway back.
+- Removing a node goes in this order: OpenStack records, NodeSet,
+  infrastructure. The operator only frees addresses and DNS records.
+
 A second compute node was added to the lab on 2026-11-12, used for
 scheduling, migration, evacuation and gateway tests, then removed again.
 Everything below was executed; the lab is back to its documented baseline
@@ -25,6 +41,25 @@ sb() { oc exec ovsdbserver-sb-0 -c ovsdbserver-sb -- ovn-sbctl --no-leader-only 
 `os` is the admin client of the control plane, and it is scoped to the
 admin project: it does not find an instance of another project by name.
 Use the instance ID (`id=$($o server show kb-vm1 -f value -c id)`).
+
+The two procedures at a glance, with the durations measured on the lab:
+
+```mermaid
+flowchart TD
+    subgraph OUT["Scale-out"]
+        A1["Workstation: compute_count + 1,<br/>terraform apply (1 min 7 s), sync"] --> A2["Bastion: 07-openstack-dataplane.sh<br/>with a new deployment name"]
+        A2 --> A3["Operator: IPSet and DNS records<br/>of the node (seconds)"]
+        A3 --> A4["Deployment: every service on<br/>every node (21 min)"]
+        A4 --> A5["Script: discover_hosts<br/>maps the node to the cell"]
+    end
+    subgraph IN["Scale-in"]
+        B1["Disable nova-compute,<br/>live-migrate the instances away"] --> B2["Stop the services on the node,<br/>delete agents and compute service"]
+        B2 --> B3["Remove the node from the NodeSet:<br/>operator frees addresses and DNS"]
+        B3 --> B4["Workstation: compute_count - 1,<br/>terraform apply, sync"]
+        B4 --> B5["New deployment on the<br/>remaining nodes (13 min)"]
+        B5 --> B6["Delete the leftover Certificate<br/>objects and Secrets by hand"]
+    end
+```
 
 ## Entries
 

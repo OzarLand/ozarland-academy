@@ -1,30 +1,82 @@
 # Installation guide
 
-The installation is a sequence of seven steps. Each step has its own page
-explaining what is deployed, why, how to verify it and what to look at when
-it fails. Commands are run either on the **workstation** (has cloud
-credentials) or on the **bastion** (has cluster access); every page says
-which.
+**Start here** to build the lab from nothing. The installation is a
+sequence of seven steps, from the virtual infrastructure to a test instance
+booted on the new cloud. Follow the pages in order, one at a time: each
+page explains what is deployed, why, how to verify it and what to look at
+when it fails. If you have been through them once, the
+[quick reference](#quick-reference) is enough.
 
-| Step | Page | Where | Duration (measured on the lab) |
-|---|---|---|---|
-| 1 | [Infrastructure](01-infrastructure.md) | workstation | 5 min (the `apply` itself: about 1 min) |
-| 2 | [OKD cluster](02-okd.md) | bastion, workstation | 55 min (bastion 1 min, ISO 3 min, installation 46 min) |
-| 3 | [Platform services](03-platform-services.md) | bastion | 2 min |
-| 4 | [OpenStack operators](04-openstack-operators.md) | bastion | 3 min |
-| 5 | [OpenStack control plane](05-openstack-control-plane.md) | bastion | 10–15 min |
-| 6 | [OpenStack data plane](06-openstack-data-plane.md) | bastion | 21 min |
-| 7 | [Verification](07-verification.md) | bastion | 2 min |
+## In short
+
+- Seven numbered pages, run in order; each ends with a verification.
+- Commands run either on the **workstation** (has cloud credentials) or on
+  the **bastion** (has cluster access). Every page says which.
+- Everything that ends up in the cluster is a readable manifest under
+  `deployment/`; the scripts only fill in values, apply and wait.
+- Re-running a script after a failure is the normal way to continue.
+  Steps 1 and 2 need more care than steps 3 to 6 (see
+  [Pages](#pages)).
+- Count two hours for a first run, reading included.
+
+## Before you start
+
+| Prerequisite | Where |
+|---|---|
+| You know what the lab is made of: VMs, networks, software layers | [../architecture.md](../architecture.md) |
+| The host cloud project has the quota, flavors, images and network features | [../prerequisites.md](../prerequisites.md) |
+| The workstation has Terraform, the OpenStack client and an SSH key | [../prerequisites.md](../prerequisites.md#workstation) |
+| The lab VMs reach the Internet only through an HTTP proxy | [Running behind a proxy](#running-behind-a-proxy), before the first bastion step |
+
+## Pages
+
+| Step | Page | What you get | Script | Where | Duration (measured on the lab) |
+|---|---|---|---|---|---|
+| 1 | [Infrastructure](01-infrastructure.md) | Networks, router, bastion, compute VM, ports of the OKD node | `terraform`, `sync-to-bastion.sh` | workstation | 5 min (the `apply` itself: about 1 min) |
+| 2 | [OKD cluster](02-okd.md) | A single-node OKD cluster | `01-setup-bastion.sh`, `02-create-agent-iso.sh`, `boot-okd-node.sh`, `03-wait-for-okd.sh` | bastion, workstation | 55 min (bastion 1 min, ISO 3 min, installation 46 min) |
+| 3 | [Platform services](03-platform-services.md) | Storage, cert-manager, MetalLB | `04-platform-services.sh` | bastion | 2 min |
+| 4 | [OpenStack operators](04-openstack-operators.md) | The controllers that will run OpenStack | `05-openstack-operators.sh` | bastion | 3 min |
+| 5 | [OpenStack control plane](05-openstack-control-plane.md) | The OpenStack services, as pods | `06-openstack-controlplane.sh` | bastion | 10–15 min |
+| 6 | [OpenStack data plane](06-openstack-data-plane.md) | nova-compute and OVN on the compute VM | `07-openstack-dataplane.sh` | bastion | 21 min |
+| 7 | [Verification](07-verification.md) | A smoke test and a booted test instance | `tests/smoke-test.sh` | bastion | 2 min |
+
+The numbers of the bastion scripts are not the page numbers: the OKD page
+uses the first three scripts, so script `04` belongs to step 3.
 
 These figures come from one installation, behind a proxy, on fast volumes.
-Count two hours for a first run, reading included. Running steps 3 to
-6 again once they have finished takes a few seconds and changes nothing.
-Steps 1 and 2 are different: the bastion setup restarts its DNS service,
-and the ISO step refuses to overwrite an existing installation unless
-`--force` is given.
 
-Read [../architecture.md](../architecture.md) and check
-[../prerequisites.md](../prerequisites.md) first.
+Running steps 3 to 6 again once they have finished takes a few seconds and
+changes nothing. Steps 1 and 2 are different: the bastion setup restarts
+its DNS service, and the ISO step refuses to overwrite an existing
+installation unless `--force` is given.
+
+## Who runs what, where
+
+The sequence below shows the whole deployment: which machine starts each
+script and which machine it acts on.
+
+```mermaid
+sequenceDiagram
+    participant W as Workstation
+    participant C as Host cloud
+    participant B as Bastion
+    participant O as OKD node
+    participant N as Compute node
+    W->>C: terraform apply (networks, bastion, compute VM, OKD node ports)
+    W->>B: sync-to-bastion.sh (repository and infrastructure facts)
+    W->>B: 01-setup-bastion.sh (client tools, DNS)
+    W->>B: 02-create-agent-iso.sh (installer ISO)
+    B-->>W: boot-okd-node.sh fetches the ISO
+    W->>C: boot-okd-node.sh (uploads the ISO, creates the OKD node)
+    C->>O: the node boots the ISO and installs itself
+    B->>O: 03-wait-for-okd.sh (waits, installs the kubeconfig)
+    B->>O: 04-platform-services.sh (storage, cert-manager, MetalLB)
+    B->>O: 05-openstack-operators.sh (OLM, service operators)
+    B->>O: 06-openstack-controlplane.sh (OpenStack services as pods)
+    B->>O: 07-openstack-dataplane.sh (NodeSet and deployment)
+    O->>N: Ansible jobs over SSH (OVN, libvirt, nova-compute)
+    B->>O: tests/smoke-test.sh --functional
+```
 
 ## Quick reference
 
@@ -93,21 +145,17 @@ HTTP_PROXY_URL=http://proxy.example.com:3128
 
 What this changes:
 
-- the bastion downloads its packages, the OKD client tools and the release
-  manifests of the platform services through the proxy, and no longer
-  requires external names to resolve through its DNS;
-- the OKD cluster is installed with a cluster-wide proxy (`proxy:` block of
-  `install-config.yaml`), so the node pulls its images through it. The lab
-  networks and the cluster names bypass the proxy; add your own exceptions
-  with `NO_PROXY_EXTRA`;
-- the data plane Ansible runs receive the proxy settings
-  (`edpm_playbook_environment` in the NodeSet), so the compute nodes install
-  packages and pull images through it;
-- the functional test downloads its CirrOS image through it.
+| Where | Effect |
+|---|---|
+| Bastion | Downloads its packages, the OKD client tools and the release manifests of the platform services through the proxy, and no longer requires external names to resolve through its DNS |
+| OKD cluster | Installed with a cluster-wide proxy (`proxy:` block of `install-config.yaml`), so the node pulls its images through it. The lab networks and the cluster names bypass the proxy; add your own exceptions with `NO_PROXY_EXTRA` |
+| Compute nodes | The data plane Ansible runs receive the proxy settings (`edpm_playbook_environment` in the NodeSet), so the nodes install packages and pull images through it |
+| Functional test | Downloads its CirrOS image through it |
 
 The proxy must accept HTTPS (`CONNECT`) requests from every lab VM address
 it sees. Plain HTTP is not required: the lab's `repo-setup` service writes
 the package repositories of the compute nodes with `https://` addresses.
+
 Related optional settings, all neutral by default:
 
 | Setting | Where | Purpose |
@@ -126,3 +174,7 @@ Related optional settings, all neutral by default:
 terraform -chdir=deployment/infrastructure destroy
 openstack image list --private -f value -c ID -c Name | grep agent-iso   # then delete these images
 ```
+
+---
+
+**Next:** [Step 1 — Infrastructure](01-infrastructure.md)

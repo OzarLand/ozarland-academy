@@ -2,6 +2,20 @@
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
 
+## In short
+
+- Only the `OpenStackControlPlane` (and the other top resources) is
+  yours. Everything with an `ownerReferences` entry is rebuilt from
+  above.
+- An edit of a managed field is reverted within a second; an edit of a
+  field the operator does not set survives as invisible drift.
+- Changes made inside OpenStack (an endpoint URL) are not noticed until
+  the owning resource is reconciled again.
+- Deleted pods, Deployments and generated Secrets come back. A deleted
+  claim does not come back with its data.
+- To stop an operator in an emergency, use `operatorOverrides`; scaling
+  its Deployment by hand is itself reverted.
+
 Sooner or later an operator from the Kolla world edits a Deployment or a
 ConfigMap directly, as one would hot-fix a file under `/etc/kolla/`. The
 edit vanishes, or seems to stick and disappears days later. This runbook
@@ -67,8 +81,10 @@ oc get deployment keystone -o jsonpath='{.spec.replicas}{"\n"}'
 Each operator rebuilds the objects it owns from the resource above them, on
 every reconciliation. A reconciliation runs when the owner changes, when the
 owned object changes (operators watch what they create), when a dependency
-changes, when the operator restarts, and periodically. What happens to your
-manual change depends on the kind of object:
+changes, and when the operator restarts. No periodic pass was seen on the
+lab: over 11 hours, idle operators logged nothing (see
+[when operators reconcile](../knowledge-base/okd-olm-and-operators.md#how-do-i-read-an-operators-logs-and-when-do-operators-actually-reconcile)).
+What happens to your manual change depends on the kind of object:
 
 | You change... | What happens |
 |---------------|--------------|

@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,
 > OpenStack 2023.1 Antelope, one KVM compute node) on 2026-11-12
 
+## In short
+
+- The admin client is the `openstackclient` pod (`oc exec`); nothing is
+  written on the bastion.
+- From outside the cluster use the public Routes on 443 with the
+  exported CA (`rootca-public`, key `ca.crt`); the internal endpoints
+  only work from pods.
+- Domains, projects, users, quotas, flavors and images are plain
+  OpenStack objects: no custom resource describes them, and the database
+  backup is their only copy.
+- `reader` and `member` are enforced strictly (secure RBAC is on).
+- Glance stores images as files on a local volume of the node, whose
+  10Gi size is not enforced.
+
 Day-1 tenant work on an operator-managed cloud: where the admin client
 lives, how to reach the API as a normal user, and what to create for a new
 team. Commands run on the bastion in the `openstack` namespace
@@ -138,8 +152,9 @@ curl: (60) SSL certificate problem: unable to get local issuer certificate
 ```
 
 Four CA issuers exist (`rootca-public`, `rootca-internal`, `rootca-libvirt`
-and `rootca-ovn`) next to the `selfsigned-issuer` that signed them. The public root is valid ten years; the certificate on a
-Route is valid five years and names only the Route host. The Secret
+and `rootca-ovn`) next to the `selfsigned-issuer` that signed them. The
+public root is valid ten years; the certificate on a Route is valid five
+years and names only the Route host. The Secret
 `combined-ca-bundle` (system CAs plus the four lab roots, 122 certificates)
 is what every service pod and the client pod mount.
 

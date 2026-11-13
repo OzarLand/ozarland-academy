@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- Storage is twelve static 10Gi local volumes, directories of the node
+  under `/var/lib/openstack-lab-pv`. No provisioner: when they are used
+  up, claims stay `Pending`.
+- The 10Gi is a label, not a limit. All OpenStack data is 1.2 GiB, on
+  the same 150 GiB disk as etcd, images and logs.
+- Deleting a claim never deletes data (`Retain`): the volume becomes
+  `Released` and must be erased and detached by hand before reuse.
+- A recreated claim takes a new, empty volume. For Galera that means
+  empty databases: look at `oc get pv` before and after.
+- There is no internal image registry: every image comes from external
+  registries through the proxy.
+
 The lab has no storage system: the persistent data of the OpenStack
 control plane (Galera, RabbitMQ, OVN databases, Glance images) lives in
 plain directories of the node's single disk, published to Kubernetes as
@@ -302,14 +316,15 @@ kubelet: evict pods under 10 % free (nodefs) or 15 % (imagefs); image garbage co
 etcd WAL fsync p99 8 ms now, 25 ms worst in 6 h; backend commit p99 13 ms
 ```
 
-**Why / how it works**: a CoreOS host has a single data partition; `/var/lib/etcd`, `/var/lib/containers`, `/var/lib/kubelet`,
-`/var/log` and the lab's volume directories are folders of it. Two
-distinct risks follow.
+**Why / how it works**: a CoreOS host has a single data partition;
+`/var/lib/etcd`, `/var/lib/containers`, `/var/lib/kubelet`, `/var/log`
+and the lab's volume directories are folders of it. Two distinct risks
+follow.
 
 - **Space**: whoever fills the disk fills it for everybody. At 85 % the
   kubelet deletes unused images; between 15 and 10 % free it sets
-  `DiskPressure` and evicts pods (the OpenStack pods first, as BestEffort); at 100 %
-  etcd cannot write and the API stops. The platform alerts
+  `DiskPressure` and evicts pods (the OpenStack pods first, as
+  BestEffort); at 100 % etcd cannot write and the API stops. The platform alerts
   (`NodeFilesystemSpaceFillingUp`) fire under 15 % free **and** a
   predicted exhaustion.
 - **Latency**: etcd needs each write flushed to disk within

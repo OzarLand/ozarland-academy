@@ -2,6 +2,17 @@
 
 **Where:** bastion, with one command on the workstation.
 
+## In short
+
+- One VM becomes a complete OKD cluster: control plane and only worker.
+- The bastion builds a self-contained installer ISO; the workstation
+  uploads it and creates the node; the node installs itself.
+- The ISO embeds certificates valid for 24 hours: boot the node right
+  after building it.
+- DNS on the bastion is a hard dependency, during and after installation.
+- Measured on the lab: "Install complete" 46 minutes after the creation of
+  the node.
+
 ## What we deploy
 
 A single-node OKD cluster: one VM that is at the same time the Kubernetes
@@ -37,8 +48,8 @@ We use the **agent-based installer** with `platform: none`:
   disk, reboots and assembles the cluster. No external bootstrap machine or
   load balancer is involved.
 - `platform: none` tells OKD not to integrate with the host cloud at all.
-  The cluster does not know it runs on OpenStack, which keeps the lab
-  independent of the provider — and avoids confusing the host cloud with the
+  The cluster does not know it runs on OpenStack. This keeps the lab
+  independent of the provider, and avoids confusing the host cloud with the
   cloud we are about to build.
 
 The VM is created with two disks in a specific boot order: the empty root
@@ -108,10 +119,10 @@ never used again.
   cluster resources (MachineConfig). SSH access (`ssh core@<node>` from the
   bastion) exists for emergencies; day-to-day host access goes through
   `oc debug node/<name>`.
-- **Cluster operators.** OKD itself is run by operators. `oc get
-  clusteroperators` is the OKD equivalent of what `oc get
-  openstackcontrolplane` will be for OpenStack: one line per component with
-  Available / Progressing / Degraded.
+- **Cluster operators.** OKD itself is run by operators.
+  `oc get clusteroperators` is the OKD equivalent of what
+  `oc get openstackcontrolplane` will be for OpenStack: one line per
+  component with Available / Progressing / Degraded.
 
 ## Verify
 
@@ -168,3 +179,7 @@ terraform -chdir=deployment/infrastructure apply     # removes the OKD node, kee
 ```
 
 Then repeat this page from step 2 with `02-create-agent-iso.sh --force`.
+
+---
+
+**Previous:** [Step 1 — Infrastructure](01-infrastructure.md) · **Next:** [Step 3 — Platform services](03-platform-services.md)

@@ -1,6 +1,35 @@
 # Lifecycle management
 
-> Status: partially validated on the lab — the pages of this directory were run against the lab on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); each page states in its status line what was not executed (an operator upgrade through OLM, restores, provoked failures, the OKD upgrade)
+> Status: partially validated on the lab — the pages of this directory were run against the lab on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); each page states in its status line what was not executed (an operator upgrade through OLM, a rollback to volume snapshots, provoked failures, the OKD upgrade). The database restores (2026-11-12) and one etcd restore (2026-11-13) were executed: see [05](05-backup-and-restore.md)
+
+**Start here** before changing a version, taking a backup or rebooting the
+OKD node. Read this page first: it explains the four version axes that the
+other pages rely on. Then read [05](05-backup-and-restore.md) before any
+change of version, and the page of the axis you want to move.
+
+## In short
+
+- There are four independent version axes: OKD, the OpenStack operators,
+  the OpenStack service images, and the compute node packages.
+- Upgrading the operators does not upgrade OpenStack: it only makes a
+  newer set of images *available*. You apply it with `targetVersion`.
+- The data plane never updates by itself: you create a deployment.
+- No axis has a supported downgrade. Prepare the way back (backups,
+  volume snapshots) before the change.
+- On the single-node lab, any reboot of the OKD node is a full outage of
+  the OpenStack APIs; instances keep running.
+- Change one axis at a time and wait for `Ready` in between.
+
+## Prerequisites
+
+| Prerequisite | Where |
+|---|---|
+| The lab is deployed and `tests/smoke-test.sh` passes | [Installation, step 7](../installation/07-verification.md) |
+| You can read conditions and follow a rollout | [Operations 01](../operations/01-inspect-service-status.md), [04](../operations/04-change-service-configuration.md) |
+| You know how a data plane deployment is created | [Operations 08](../operations/08-dataplane-changes.md) |
+| The safe change checklist is at hand | [Operations 09](../operations/09-safe-change-checklist.md) |
+
+## Why four axes
 
 With Kolla-Ansible, "the version of the platform" is essentially one thing:
 the `openstack_release` and image tags in `globals.yml`, applied by one
@@ -34,12 +63,19 @@ Key consequences:
 
 ## How the axes depend on each other
 
-```text
-OKD / Kubernetes version
-   └── must be supported by ──> operator bundle (CSV minKubeVersion, API usage)
-          └── publishes ──> availableVersion (a set of service image references)
-                 └── targetVersion applies it to ──> control plane pods
-                        └── then, by explicit deployments ──> data plane containers and packages
+Each axis constrains the one below it; read the arrows as "comes before".
+
+```mermaid
+flowchart TD
+    A["OKD / Kubernetes version"]
+    B["Operator bundle<br/>(CSV minKubeVersion, API usage)"]
+    C["availableVersion<br/>(a set of service image references)"]
+    D["Control plane pods"]
+    E["Data plane containers and packages"]
+    A -- "must be supported by" --> B
+    B -- "publishes" --> C
+    C -- "targetVersion applies it to" --> D
+    D -- "then, by explicit deployments" --> E
 ```
 
 Ordering rules that follow from this:
@@ -60,7 +96,7 @@ Ordering rules that follow from this:
 
 | Kolla-Ansible | Operator-managed lab | Notes |
 |---|---|---|
-| Edit `globals.yml` / config overrides, `kolla-ansible reconfigure` | Edit the `OpenStackControlPlane` CR; reconciliation applies it | No command to run; see [operations](../operations/) |
+| Edit `globals.yml` / config overrides, `kolla-ansible reconfigure` | Edit the `OpenStackControlPlane` CR; reconciliation applies it | No command to run; see [operations](../operations/README.md) |
 | Bump `openstack_release`, `kolla-ansible pull` + `upgrade` | Operator upgrade (new images become *available*), then `targetVersion` (images are *applied*) | Two separate decisions |
 | `kolla-ansible upgrade --limit compute01` | `OpenStackDataPlaneDeployment` with `servicesOverride` and optionally `ansibleLimit` | Each run is a new resource |
 | Upgrade the deployment tool itself (`pip install kolla-ansible==...`) | Operator upgrade through OLM | The "tool" runs permanently inside the cluster |
@@ -69,28 +105,37 @@ Ordering rules that follow from this:
 | `mariabackup` via `kolla-ansible mariadb_backup` | `GaleraBackup` / `GaleraRestore` resources | [05](05-backup-and-restore.md) |
 | Roll back by redeploying the previous tag | No supported downgrade on any axis | [04](04-rollback-limitations.md) |
 
-## Documents
+## Pages
 
-| Document | Phase | Topic | Lab validation |
+| Page | Phase | Topic | Lab validation |
 |---|---|---|---|
-| [01-openstack-version-and-minor-update.md](01-openstack-version-and-minor-update.md) | 3 | The `OpenStackVersion` resource and the staged service update | Validated, with a simulated newer version |
-| [02-operator-upgrade.md](02-operator-upgrade.md) | 3 | Upgrading the operators through OLM | Partial: no newer bundle was offered |
-| [03-failed-upgrade.md](03-failed-upgrade.md) | 3 | Investigating an update that stalls | Partial: no failure provoked |
-| [04-rollback-limitations.md](04-rollback-limitations.md) | 3 | What can and cannot be undone | Partial: no restore, no real downgrade |
-| [05-backup-and-restore.md](05-backup-and-restore.md) | 3 | State inventory, backups, restore order | Partial: all backups taken, no restore |
-| [06-okd-maintenance-impact.md](06-okd-maintenance-impact.md) | 3 | What OKD operations do to OpenStack | Partial: reboot, shutdown and restart done; no MachineConfig change |
-| [07-okd-upgrade.md](07-okd-upgrade.md) | 4 | Upgrading OKD itself | Partial: read-only checks only, upgrade not executed |
+| [01 — OpenStackVersion and minor update](01-openstack-version-and-minor-update.md) | 3 | The `OpenStackVersion` resource and the staged service update | Validated, with a simulated newer version |
+| [02 — Operator upgrade](02-operator-upgrade.md) | 3 | Upgrading the operators through OLM | Partial: no newer bundle was offered |
+| [03 — Failed upgrade](03-failed-upgrade.md) | 3 | Investigating an update that stalls | Partial: no failure provoked |
+| [04 — Rollback limitations](04-rollback-limitations.md) | 3 | What can and cannot be undone | Partial: no rollback to volume snapshots, no real downgrade |
+| [05 — Backup and restore](05-backup-and-restore.md) | 3 | State inventory, backups, restore order | Validated: all backups taken, `GaleraRestore` on both instances, etcd restore once; no rollback to volume snapshots |
+| [06 — OKD maintenance impact](06-okd-maintenance-impact.md) | 3 | What OKD operations do to OpenStack | Partial: reboot, shutdown and restart, MachineConfig change done; no unclean stop |
+| [07 — OKD upgrade](07-okd-upgrade.md) | 4 | Upgrading OKD itself | Partial: read-only checks only, upgrade not executed |
 
-Values measured on the lab (one OKD node, one compute node):
+The restores and the maintenance operations are recorded step by step in
+the knowledge base:
+[backup and restore drills](../knowledge-base/backup-and-restore-drills.md)
+and [OKD node maintenance](../knowledge-base/okd-node-maintenance.md).
 
-| Operation | Duration | Effect seen from outside |
-|---|---|---|
-| Override of one image (Keystone) | about 1 min | Service resource not `Ready` meanwhile; rolling replacement |
-| Staged minor update, both planes | about 10 min | Every service restarted once; compute packages updated |
-| Database backup job (`GaleraBackup`) | 15 s per instance | None |
-| etcd backup | a few seconds | None |
-| Planned reboot of the OKD node | about 6 min | All OpenStack APIs down |
-| Graceful shutdown, volume snapshots, restart | about 10 min | All OpenStack APIs down |
+How long each operation takes, as measured on the lab (one OKD node, one
+compute node):
+
+| Operation | Page | Duration | Effect seen from outside |
+|---|---|---|---|
+| Override of one image (Keystone) | 01 | about 1 min | Service resource not `Ready` meanwhile; rolling replacement |
+| Staged minor update, both planes | 01 | about 10 min | Every service restarted once; compute packages updated |
+| Database backup job (`GaleraBackup`) | 05 | 15 s per instance | None |
+| etcd backup | 05 | a few seconds | None |
+| Database restore (`GaleraRestore` script) | 05 | 7 s (cell), 25 s (main) | No failed API request on the idle lab |
+| etcd restore | 05 | etcd unavailable 9 min, then 5 min more | Keystone and a running instance not interrupted |
+| Planned reboot of the OKD node | 06 | about 6 min | All OpenStack APIs down |
+| MachineConfig change (one roll) | 06 | about 7 min until the pool is `Updated` | All OpenStack APIs down |
+| Graceful shutdown, volume snapshots, restart | 05, 06 | about 10 min | All OpenStack APIs down |
 
 ## Conventions
 
@@ -110,3 +155,7 @@ oc project openstack
 
 Every document ends with what was not tested. A procedure that was not
 executed is described from upstream source and documentation and says so.
+
+---
+
+**Previous:** [Operating OpenStack on OKD (Day 2)](../operations/README.md) · **Next:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md)

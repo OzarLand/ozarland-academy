@@ -3,38 +3,107 @@
 Short, tested answers to the questions an OpenStack administrator asks on
 a cloud managed by operators on OKD, and about OKD itself. The rest of
 the documentation explains how the lab is built and how the operators
-work; this directory records **how each day-to-day task is done here**, with the output that
-was really observed, for people who know OpenStack from a Kolla-Ansible
-deployment.
+work; this directory records **how each day-to-day task is done here**,
+with the output that was really observed, for people who know OpenStack
+from a Kolla-Ansible deployment.
 
 Every command was run on the lab (single-node OKD 4.22,
 openstack-k8s-operators 18-stable, OpenStack 2023.1 Antelope, one KVM
-compute node) on 2026-11-12. What could not be tested is listed in
-[open questions](open-questions.md), not guessed.
+compute node) on 2026-11-12; the gateway test with three compute nodes
+and the etcd restore were run on 2026-11-13. What could not be tested is
+listed in [open questions](open-questions.md), not guessed.
 
-## Files
+## Start here
 
-| File | Content |
+- **You have a task**: find it in [find by task](#find-by-task), or in
+  the [index](#index) of all 149 entries with their one-line answers.
+- **You only need the command**: open the [cheat sheet](cheat-sheet.md).
+- **Something is broken**: go to the
+  [troubleshooting runbooks](../troubleshooting/README.md); this
+  knowledge base explains normal operation, the runbooks start from a
+  symptom.
+- **You are new to the lab**: follow the
+  [suggested reading order](#suggested-reading-order).
+
+Every page longer than a screen starts with an "In short" block: read it
+first, it says what the page covers and what is worth remembering.
+
+## Pages
+
+| Page | Entries | Content |
+| --- | --- | --- |
+| [openstack-identity-and-tenants.md](openstack-identity-and-tenants.md) | 8 | Admin client, endpoints, CA, project and user setup, quotas, flavors, images |
+| [openstack-networking-ovn.md](openstack-networking-ovn.md) | 10 | Provider and project networks, floating IPs, OVN databases, tracing, gateway, metadata |
+| [openstack-compute.md](openstack-compute.md) | 13 | Instance lifecycle, compute node layout, Placement, allocation ratios, maintenance |
+| [openstack-service-administration.md](openstack-service-administration.md) | 13 | Configuration and policy overrides, Fernet keys, catalog, RabbitMQ, Galera, memcached |
+| [openstack-capacity-and-observability.md](openstack-capacity-and-observability.md) | 9 | Usage per service, limits, OOM and restarts, events, metrics, logs, request tracing |
+| [okd-cluster-health-and-etcd.md](okd-cluster-health-and-etcd.md) | 11 | Version, cluster operators, static pods and revisions, etcd, API health, platform certificates |
+| [okd-node-and-host.md](okd-node-and-host.md) | 11 | Shell on the node, CoreOS, MachineConfig, kubelet, CRI-O, disk, systemd units, time, log retention, cordon and drain |
+| [okd-node-maintenance.md](okd-node-maintenance.md) | 5 | MachineConfig roll with timings, paused pool, drain dry run, tools during a partial API, OVN agents after a node restart |
+| [okd-workloads-and-resources.md](okd-workloads-and-resources.md) | 6 | QoS classes and OOM order, requests and limits, PodDisruptionBudgets, quotas |
+| [okd-networking.md](okd-networking.md) | 10 | Cluster OVN versus OpenStack OVN, node interfaces, routes and ingress, DNS, NetworkPolicy, whereabouts, MetalLB |
+| [okd-storage.md](okd-storage.md) | 5 | Local volumes, claim binding, data location, recycling a volume, shared disk risks, image registry |
+| [okd-access-and-security.md](okd-access-and-security.md) | 8 | Credentials, named users, read-only access, operator permissions, security contexts, audit log |
+| [okd-monitoring-and-alerting.md](okd-monitoring-and-alerting.md) | 7 | Platform Prometheus and Alertmanager, queries, firing alerts, silences, events, console access |
+| [okd-olm-and-operators.md](okd-olm-and-operators.md) | 7 | Catalog, Subscription, InstallPlan, CSV, operator logs and restart, `operatorOverrides`, CRDs, garbage |
+| [backup-and-restore-drills.md](backup-and-restore-drills.md) | 12 | Database restore drills on both Galera instances, repairs afterwards, manual restore, etcd restore |
+| [dataplane-scale-out-and-migration.md](dataplane-scale-out-and-migration.md) | 13 | Second compute node, host discovery, scheduling, live and cold migration, evacuation, gateway failover, clean removal of a node |
+| [lab-state.md](lab-state.md) | 1 | What the campaigns left on the lab, with the commands to list and remove each item |
+| [cheat-sheet.md](cheat-sheet.md) | - | One-liners grouped by task |
+| [open-questions.md](open-questions.md) | - | What is not explained, not decided or not tested yet, and what has been settled since |
+
+## Find by task
+
+| I want to... | Go to |
 | --- | --- |
-| [openstack-identity-and-tenants.md](openstack-identity-and-tenants.md) | Admin client, endpoints, CA, project and user setup, quotas, flavors, images |
-| [openstack-networking-ovn.md](openstack-networking-ovn.md) | Provider and project networks, floating IPs, OVN databases, tracing, gateway, metadata |
-| [openstack-compute.md](openstack-compute.md) | Instance lifecycle, compute node layout, Placement, allocation ratios, maintenance |
-| [openstack-service-administration.md](openstack-service-administration.md) | Configuration and policy overrides, Fernet keys, catalog, RabbitMQ, Galera, memcached |
-| [openstack-capacity-and-observability.md](openstack-capacity-and-observability.md) | Usage per service, limits, OOM and restarts, events, metrics, logs, request tracing |
-| [okd-cluster-health-and-etcd.md](okd-cluster-health-and-etcd.md) | Version, cluster operators, static pods and revisions, etcd, API health, platform certificates |
-| [okd-node-and-host.md](okd-node-and-host.md) | Shell on the node, CoreOS, MachineConfig, kubelet, CRI-O, disk, systemd units, time, log retention, cordon and drain |
-| [okd-node-maintenance.md](okd-node-maintenance.md) | MachineConfig roll end to end with timings, paused pool and pending changes, drain dry run and PodDisruptionBudgets, tools during a partial API, OVN agents of the compute node after a node restart |
-| [okd-workloads-and-resources.md](okd-workloads-and-resources.md) | QoS classes and OOM order, requests and limits, PodDisruptionBudgets, quotas |
-| [okd-networking.md](okd-networking.md) | Cluster OVN versus OpenStack OVN, node interfaces, routes and ingress, DNS, NetworkPolicy, whereabouts, MetalLB |
-| [okd-storage.md](okd-storage.md) | Local volumes, claim binding, data location, recycling a volume, shared disk risks, image registry |
-| [okd-access-and-security.md](okd-access-and-security.md) | Credentials, named users, read-only access, operator permissions, security contexts, audit log |
-| [okd-monitoring-and-alerting.md](okd-monitoring-and-alerting.md) | Platform Prometheus and Alertmanager, queries, firing alerts, silences, events, console access |
-| [okd-olm-and-operators.md](okd-olm-and-operators.md) | Catalog, Subscription, InstallPlan, CSV, operator logs and restart, `operatorOverrides`, CRDs, garbage |
-| [backup-and-restore-drills.md](backup-and-restore-drills.md) | Database restore drills on both Galera instances, repairs afterwards, manual restore, etcd restore |
-| [dataplane-scale-out-and-migration.md](dataplane-scale-out-and-migration.md) | Second compute node, host discovery, scheduling, live and cold migration, evacuation, gateway failover, clean removal of a node |
-| [lab-state.md](lab-state.md) | What the campaigns left on the lab (kept history, demo tenant, backups, permanent configuration), with the commands to list and remove each item |
-| [cheat-sheet.md](cheat-sheet.md) | One-liners grouped by task |
-| [open-questions.md](open-questions.md) | What is not explained or not tested yet |
+| Give a new team a project, users, quotas and a working CLI | [Identity and tenants](openstack-identity-and-tenants.md) |
+| Find out why an instance has no network, or test a security group | [Connectivity from inside an instance](openstack-networking-ovn.md#how-do-i-check-connectivity-mtu-dns-and-metadata-from-inside-an-instance), [ovn-trace](openstack-networking-ovn.md#how-do-i-trace-a-packet-through-ovn-without-sending-it) |
+| Understand why a boot was refused | [Quota or scheduler refusal](openstack-compute.md#what-does-a-user-see-when-a-quota-or-the-scheduler-refuses-a-boot), [following a request in the logs](openstack-capacity-and-observability.md#where-are-the-logs-and-how-do-i-follow-one-request-across-services) |
+| Change an option or a policy of a control plane service | [Service administration](openstack-service-administration.md) |
+| Change an option of `nova-compute` on the node | [Allocation ratio entry](openstack-compute.md#how-do-i-change-an-allocation-ratio-or-any-nova-compute-option-the-supported-way) |
+| Add or remove a compute node, migrate or evacuate instances | [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md) |
+| Take a safety net before a risky change | [What do I put aside](backup-and-restore-drills.md#what-do-i-put-aside-before-touching-the-databases) |
+| Restore a database, or etcd | [Backup and restore drills](backup-and-restore-drills.md) |
+| Change the host configuration or reboot the OKD node | [OKD node maintenance](okd-node-maintenance.md) |
+| Check that the cluster under OpenStack is healthy | [Cluster health and etcd](okd-cluster-health-and-etcd.md) |
+| Know what uses memory and what dies first | [Workloads and resources](okd-workloads-and-resources.md), [usage per service](openstack-capacity-and-observability.md#how-much-cpu-and-memory-does-each-openstack-service-use-right-now) |
+| Find where the disk space goes, or reuse a `Released` volume | [Disk usage](okd-node-and-host.md#where-does-the-disk-space-go-on-the-node), [recycling a volume](okd-storage.md#what-happens-to-the-data-when-a-claim-is-deleted-and-how-do-i-reuse-the-volume) |
+| Follow a request from a client to an API pod | [Request path](okd-networking.md#how-does-a-request-reach-an-openstack-api-end-to-end) |
+| Give a colleague access, or find who changed something | [Access and security](okd-access-and-security.md) |
+| Query metrics, read or silence alerts | [Monitoring and alerting](okd-monitoring-and-alerting.md) |
+| Read the logs of an operator, restart it or switch it off | [OLM and the OpenStack operators](okd-olm-and-operators.md) |
+| Know what is baseline and what is residue on the lab | [State of the lab](lab-state.md) |
+
+## Suggested reading order
+
+**30 minutes** (orientation):
+
+1. [Conventions](#conventions) below: labels, helpers, address plan.
+2. The "In short" block of each page of the [table above](#pages), in
+   the order of the table.
+3. [State of the lab](lab-state.md): what exists on the lab today.
+4. [Open questions](open-questions.md): what is not known.
+
+**Half a day** (in this order, with a terminal on the bastion):
+
+1. The OpenStack side, as a tenant then as an administrator:
+   [identity](openstack-identity-and-tenants.md),
+   [networking with OVN](openstack-networking-ovn.md),
+   [compute](openstack-compute.md),
+   [service administration](openstack-service-administration.md),
+   [capacity and observability](openstack-capacity-and-observability.md).
+2. The platform under it:
+   [cluster health and etcd](okd-cluster-health-and-etcd.md),
+   [node and host](okd-node-and-host.md),
+   [networking](okd-networking.md), [storage](okd-storage.md),
+   [workloads and resources](okd-workloads-and-resources.md).
+3. The drills, which change the lab and are best read before being
+   replayed: [node maintenance](okd-node-maintenance.md),
+   [backup and restore](backup-and-restore-drills.md),
+   [scale-out and migration](dataplane-scale-out-and-migration.md).
+4. As needed: [access and security](okd-access-and-security.md),
+   [monitoring](okd-monitoring-and-alerting.md),
+   [OLM and operators](okd-olm-and-operators.md).
 
 ## Structure of an entry
 
@@ -85,6 +154,8 @@ question, followed by the same six parts:
 
 ## Index
 
+All entries, page by page, with the answer in one line.
+
 ### Identity and tenants
 
 | Entry | One-line answer |
@@ -109,7 +180,7 @@ question, followed by the same six parts:
 | [What do the OVN databases show for a project network?](openstack-networking-ovn.md#what-do-the-ovn-northbound-and-southbound-databases-show-for-a-project-network) | Switches, routers, NAT, DHCP options and port groups named after Neutron IDs. |
 | [How do I trace a packet through OVN without sending it?](openstack-networking-ovn.md#how-do-i-trace-a-packet-through-ovn-without-sending-it) | `ovn-trace` in the southbound pod with port, MAC and IP of the flow. |
 | [How do I check whether a security group lets a new connection in?](openstack-networking-ovn.md#how-do-i-check-whether-a-security-group-lets-a-new-connection-in) | `ovn-trace --ct new`: `output` means allowed, no output means dropped by `neutron_pg_drop`. |
-| [Which chassis is the gateway and how is it scheduled?](openstack-networking-ovn.md#which-chassis-is-the-gateway-and-how-is-it-scheduled) | The compute node, through `edpm_enable_chassis_gw`; one chassis means no failover. |
+| [Which chassis is the gateway and how is it scheduled?](openstack-networking-ovn.md#which-chassis-is-the-gateway-and-how-is-it-scheduled) | The compute node, through `edpm_enable_chassis_gw`; one chassis means no failover (failover with two and three chassis is in the scale-out page). |
 | [What does the compute node look like from the Open vSwitch side?](openstack-networking-ovn.md#what-does-the-compute-node-look-like-from-the-open-vswitch-side) | Open vSwitch on the host, `ovn_controller` in a container, `br-int` patched to `br-ex`. |
 | [How does the metadata service reach an instance?](openstack-networking-ovn.md#how-does-the-metadata-service-reach-an-instance) | An `ovnmeta-` namespace with haproxy per network, then the `nova-metadata` pod. |
 
@@ -139,7 +210,7 @@ question, followed by the same six parts:
 | [How do I override one policy rule of a service?](openstack-service-administration.md#how-do-i-override-one-policy-rule-of-a-service) | `defaultConfigOverwrite` with a `policy.yaml` key in the control plane resource. |
 | [How do I turn on debug logging for one service?](openstack-service-administration.md#how-do-i-turn-on-debug-logging-for-one-service-and-turn-it-off-again) | `customServiceConfig` with `debug = true`; the pods are rolled. |
 | [Who rotates the Keystone Fernet keys?](openstack-service-administration.md#who-rotates-the-keystone-fernet-keys) | The keystone operator, in the Secret `keystone`; no CronJob and no manual step. |
-| [How do I watch a Fernet rotation and check that issued tokens survive it?](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it) | Fingerprints of the keys in the Secret and in the pod plus a token validation every 2 minutes; rotation due after the campaign, watcher log on the bastion. |
+| [How do I watch a Fernet rotation and check that issued tokens survive it?](openstack-service-administration.md#how-do-i-watch-a-fernet-rotation-and-check-that-issued-tokens-survive-it) | Fingerprints of the keys in the Secret and in the pod plus a token validation every 2 minutes; rotation observed 24 h 35 min after the previous one, without a pod restart. |
 | [Who creates the catalog endpoints and what happens if one is deleted?](openstack-service-administration.md#who-creates-the-catalog-endpoints-and-what-happens-if-one-is-deleted) | `KeystoneEndpoint` resources; a deleted endpoint only comes back when the resource is reconciled, which you must force. |
 | [How do I inspect RabbitMQ?](openstack-service-administration.md#how-do-i-inspect-rabbitmq-users-queues-connections-alarms) | `rabbitmqctl` and `rabbitmq-diagnostics` in each of the two broker pods. |
 | [How do I look inside Galera?](openstack-service-administration.md#how-do-i-look-inside-galera-databases-sizes-connections-slow-queries) | `mysql -e` in the `galera` container of each of the two database pods. |
@@ -151,7 +222,7 @@ question, followed by the same six parts:
 
 ### Backup and restore drills
 
-| Question | Short answer |
+| Entry | One-line answer |
 | --- | --- |
 | [What do I put aside before touching the databases?](backup-and-restore-drills.md#what-do-i-put-aside-before-touching-the-databases) | One extra `GaleraBackup` run, a `mysqldump --all-databases` of each instance, the resource and Secret export, an etcd snapshot: under a minute. |
 | [What does GaleraRestore really do?](backup-and-restore-drills.md#what-does-galerarestore-really-do) | It starts a pod with the backup volume; the script you run there reloads the chosen dump table by table, with the services still connected. |
@@ -240,12 +311,6 @@ question, followed by the same six parts:
 | [Which tools work while the API is only partly back after a reboot?](okd-node-maintenance.md#which-tools-work-while-the-api-is-only-partly-back-after-a-reboot) | SSH first, `oc adm node-logs` within 10 s of the API, `oc debug node` only about 75 s later (needs the aggregated image API). |
 | [Why are the OVN agents of the compute node dead after a reboot of the OKD node, and how do I fix them?](okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them) | Controller and metadata agent never reconnect to the southbound database (2 reboots out of 2); restart `edpm_ovn_controller` and `edpm_ovn_metadata_agent`. |
 
-### State of the lab
-
-| Entry | One-line answer |
-| --- | --- |
-| [What did the campaigns leave on the lab, and how do I list and remove each item?](lab-state.md#what-did-the-campaigns-leave-on-the-lab-and-how-do-i-list-and-remove-each-item) | Nine data plane deployments with 51 Jobs, two dumps per database instance, the `kb-demo` tenant, the `nova-extra-config` ConfigMap (now baseline); `/var` at 32 %. |
-
 ### OKD workloads and resources
 
 | Entry | One-line answer |
@@ -318,3 +383,9 @@ question, followed by the same six parts:
 | [How do I switch off or resize individual operators (`operatorOverrides`)?](okd-olm-and-operators.md#how-do-i-switch-off-or-resize-individual-operators-operatoroverrides) | `spec.operatorOverrides` of the `OpenStack` resource (name, replicas, resources); a direct edit of the Deployment is reverted. |
 | [Which resource types do the operators own, and which exist on this lab?](okd-olm-and-operators.md#which-resource-types-do-the-operators-own-and-which-exist-on-this-lab) | 104 CRDs in 31 API groups, 36 kinds with objects; the CSV owns only `OpenStack`, the initialisation operator creates the other 103. |
 | [What garbage accumulates (old ReplicaSets, Jobs, completed pods), and what may I clean?](okd-olm-and-operators.md#what-garbage-accumulates-old-replicasets-jobs-completed-pods-and-what-may-i-clean) | 51 empty ReplicaSets in the cluster, 33 Completed pods in `openstack`; only old data plane deployments and manual Jobs are yours to delete. |
+
+### State of the lab
+
+| Entry | One-line answer |
+| --- | --- |
+| [What did the campaigns leave on the lab, and how do I list and remove each item?](lab-state.md#what-did-the-campaigns-leave-on-the-lab-and-how-do-i-list-and-remove-each-item) | Nine data plane deployments with 51 Jobs on 2026-11-12 (eleven deployments after the drills of 2026-11-13), two dumps per database instance, the `kb-demo` tenant, the `nova-extra-config` ConfigMap (now baseline); `/var` at 32 %. |

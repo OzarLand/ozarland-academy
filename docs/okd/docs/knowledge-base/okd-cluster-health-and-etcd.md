@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- `oc get clusterversion` and `oc get co` are the health dashboard: 34
+  operators, all `True False False`. etcd, the API server, the
+  scheduler, network, DNS and ingress are the ones OpenStack depends on.
+- The control plane is four static pods started by the kubelet; when the
+  API is down, look at them with `crictl` on the node.
+- etcd has one member, no automatic backup and no defragmentation.
+  Take snapshots by hand with `cluster-backup.sh` and copy them off the
+  node.
+- Platform certificates rotate by themselves while the cluster runs.
+  The first-day rotation restarts the API server four times; a cluster
+  powered off across an expiry needs manual CSR approval.
+
 OpenStack runs on top of this cluster: when the Kubernetes API, etcd or a
 platform operator is unhealthy, every OpenStack operator is blind and
 every pod restart is at risk. This file records how the cluster itself is
@@ -103,7 +117,7 @@ Operators the OpenStack control plane depends on directly:
 | --- | --- | --- |
 | `etcd` | Runs and guards the etcd static pod | API read-only or down; nothing reconciles |
 | `kube-apiserver` | Kubernetes API static pod and its certificates | `oc` and every operator stop working; running pods keep serving |
-| `kube-controller-manager` | Deployments, StatefulSets, Jobs, certificate signing | No pod is recreated, no Job starts (Fernet cron, database purge) |
+| `kube-controller-manager` | Deployments, StatefulSets, Jobs, certificate signing | No pod is recreated, no Job starts (Keystone trust flush, database purge, backups) |
 | `kube-scheduler` | Places pods on the node | New pods stay `Pending` |
 | `network` | OVN-Kubernetes, Multus, whereabouts | No new pod sandbox, no secondary interface (internalapi, tenant) |
 | `dns` | CoreDNS and the node resolver | Services stop resolving `*.svc` names: API calls between services fail |
@@ -466,7 +480,9 @@ for the platform state.
 - The snapshot directory is on the same disk as etcd. Copy it off the
   node.
 
-**See also**: [Backup and restore](../lifecycle/05-backup-and-restore.md),
+**See also**: [the etcd restore executed on 2026-11-13](backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens)
+(what `cluster-restore.sh` really does on this single member),
+[Backup and restore](../lifecycle/05-backup-and-restore.md),
 [Rollback limitations](../lifecycle/04-rollback-limitations.md)
 
 ### Where are the logs of the API server, controller manager and scheduler, and what is normal in them?
@@ -647,9 +663,8 @@ of the installation were already garbage-collected.
 **Why / how it works**: the platform is its own certificate authority.
 Operators store each certificate in a Secret annotated with
 `auth.openshift.io/certificate-not-before` and `-not-after` and
-regenerate it before expiry; the
-kubelet asks for a new certificate through a
-`CertificateSigningRequest`. The first signers are deliberately valid
+regenerate it before expiry; the kubelet asks for a new certificate
+through a `CertificateSigningRequest`. The first signers are deliberately valid
 for 24 hours only, so every cluster goes through one rotation during
 its first day. Everything is automatic **while the cluster runs**.
 OpenStack service certificates are a separate world managed by
@@ -721,9 +736,9 @@ kube-apiserver revision is a restart of the only API server: `oc`
 answered "connection refused" for about a minute at 13:42 and briefly
 at 18:01 (the two other revisions were not watched from a terminal).
 The resize and migrations between compute nodes running at 18:01 were
-not affected, and the functional smoke test passed at 18:34. Besides this rotation, the node asked for
-24-hour client certificates for Multus and OVN-Kubernetes during the
-afternoon; these come back every day.
+not affected, and the functional smoke test passed at 18:34. Besides
+this rotation, the node asked for 24-hour client certificates for Multus
+and OVN-Kubernetes during the afternoon; these come back every day.
 
 **Why / how it works**: the kube-controller-manager operator renews a
 signer at 80 % of its life; the new signer goes into the trust bundles
@@ -738,8 +753,8 @@ equivalent: none; certificates there do not rotate by themselves.
 
 - Four kube-apiserver restarts, each an API interruption of up to a
   minute, between the 18th and the 23rd hour after installation: do not
-  run an installation step, an update or
-  a long `oc wait` across them without a retry.
+  run an installation step, an update or a long `oc wait` across them
+  without a retry.
 - A cluster powered off during that window misses the rotation and comes
   back with expired kubelet certificates (see the previous entry).
 - A snapshot taken before the 23rd hour holds certificates that are only

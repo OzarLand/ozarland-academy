@@ -3,6 +3,21 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- OLM installs one small operator (CSV `openstack-operator.v0.8.0`,
+  approval `Manual`); that operator creates the 104 CRDs and the 21
+  service operator Deployments.
+- The catalog is pinned by digest, so a rebuild installs the same
+  version.
+- Operators reconcile only when a watched object changes. An idle
+  operator logs nothing; a restart is one full pass (34 s of lease wait
+  first).
+- Change or switch off an operator through `operatorOverrides` of the
+  `OpenStack` resource; a direct edit of its Deployment is reverted.
+- Completed pods and Jobs are history. Only old data plane deployments
+  and manual Jobs are yours to delete.
+
 The OpenStack operators are installed and kept in place by the Operator
 Lifecycle Manager (OLM) of OKD. This file records the chain of objects
 from the catalog image to the running operator pods, how to pin the
@@ -511,8 +526,9 @@ equivalent: none of this is kept; bootstrap containers are removed and
 the Ansible output is on the deployment host's terminal.
 
 **[CHANGE]** — what is safe to clean, when the list bothers you (not
-run on the lab: these objects are the trace of earlier exercises and
-cost nothing).
+run for this entry: these objects are the trace of earlier exercises and
+cost nothing). A later campaign did remove the manual Jobs; the current
+inventory of deployments and Jobs is in [State of the lab](lab-state.md).
 
 ```bash
 # old data plane runs: delete the deployment object, its jobs and pods follow

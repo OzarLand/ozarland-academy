@@ -1,21 +1,23 @@
 # Open questions
 
+## In short
+
+- Four lists: what was seen and not explained, defaults that deserve a
+  decision, what was not tested, and what has been settled since (kept
+  here for the pointer to the evidence and for what remains open).
+- Each item says what is known, so that the next person starts from
+  facts.
+- Settled by a drill since the first campaigns: host discovery, live
+  migration between nodes, gateway failover with three chassis,
+  database restore, MachineConfig roll, etcd restore.
+
 What the campaigns of 2026-11-12 (OpenStack administration, OKD
-administration, restore and scale-out drills, node maintenance) observed without being able to explain, and what
-they could not test. Each item says what is known, so that the next
-person starts from facts.
+administration, restore and scale-out drills, node maintenance) and the
+drills of 2026-11-13 (three compute nodes, etcd restore) observed without
+being able to explain, and what they could not test.
 
 ## Observed but not explained
 
-- **Catalog endpoint repair delay — mostly settled.** A deleted Keystone
-  endpoint was not recreated until the `KeystoneEndpoint` resource was
-  touched. The second campaign read the operator logs over 11 hours:
-  operators reconcile on events only, four of them logged nothing at all
-  after their start, and the hourly `KeystoneAPI` reconcile is triggered
-  by the `keystone-cron` Job, not by a timer (see
-  [when operators reconcile](okd-olm-and-operators.md#how-do-i-read-an-operators-logs-and-when-do-operators-actually-reconcile)).
-  A restart of the operator is a full pass. What remains open: whether a
-  resynchronisation longer than 11 hours exists.
 - **Stale hash in the NodeSet status.** After the ConfigMap
   `nova-extra-config` was deleted and a new deployment had run,
   `.status.configMapHashes` of the NodeSet still listed it. Whether
@@ -24,26 +26,12 @@ person starts from facts.
   `barbican_notifications.info` hold messages that nothing reads (270
   ready messages in the morning, 282 at 12:44 UTC, 141 in each queue:
   about two messages per hour on an idle lab). What emits them at that
-  rate and the right fix (disable notifications in Keystone, or deploy a consumer)
-  are open.
+  rate and the right fix (disable notifications in Keystone, or deploy a
+  consumer) are open.
 - **Queues left by replaced pods.** Each replaced Neutron pod leaves
   three empty quorum queues named after the old pod, with no expiry and
   no policy. The supported way to remove them (or to make Neutron use
   stable queue names) is not known.
-- **Host discovery: settled.** The operator did not run discovery after
-  a deployment that added a node; the mapping comes from the
-  `discover_hosts` call at the end of the lab script. See
-  [who maps a new compute node](dataplane-scale-out-and-migration.md#who-maps-a-new-compute-node-to-the-cell).
-  What remains open: which change of the NodeSet or of Nova makes the
-  operator create its own discovery Job again.
-- **Hypervisor hostname versus service host: settled.** The difference
-  breaks live migration without shared storage, because the disk copy
-  targets the node's own host name; fixed with
-  `live_migration_inbound_addr`. See
-  [why live migration failed](dataplane-scale-out-and-migration.md#why-does-live-migration-fail-with-address-resolution-failed).
-  What remains open: deploying nodes whose operating-system host name is
-  already the control-plane FQDN, which would remove the difference, was
-  not tried.
 - **Router address black-holed after a planned gateway move.** With the
   chassis address mapping the data plane deployment sets on every node
   (`ovn-chassis-mac-mappings`), the new gateway node announces the
@@ -77,7 +65,6 @@ person starts from facts.
 - **`restore_galera` exits with 0 after a failed file**, and its cleanup
   trap contains a malformed variable reference; whether this is fixed
   upstream after 18-stable was not checked.
-
 - **OVN controller and metadata agent never reconnect after a restart
   of the OKD node.** Both log `connect: Address family not supported by
   protocol` for `ssl:ovsdbserver-sb.openstack.svc:6642` every 8 seconds,
@@ -173,33 +160,12 @@ person starts from facts.
   11 minutes earlier. The previous primary key is kept as a secondary
   key, so tokens are expected to survive; it was not measured. The
   resource has no supported manual trigger.
-- **Live migration, evacuation, resize to another host**: executed on
-  2026-11-12 with a temporary second node, see
-  [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
-  Not covered: live migration under memory pressure (auto-converge,
-  post-copy), instances with several disks or a config drive, a node
-  lost without a clean shutdown, a larger disk than 1 GB.
 - **`soft-anti-affinity` server groups** and **unshelve when the node is
   full**: mentioned in the entries, not provoked.
 - **Volumes**: no Cinder on the lab; boot from volume, attach and volume
   snapshots are not covered.
-- **Gateway failover**: settled on 2026-11-13. With two chassis the
-  survivor does not take over; with three the next priority took over
-  in 3.3 s and the returning node preempted (15.8 s). Done with the
-  chassis address mapping removed; the failover with the mapping in
-  place was not measured. Not tested: a node lost without a clean
-  power-off of its virtual machine, several routers, traffic of a real
-  workload.
 - **Outbound Internet access from instances**: not available on the lab;
   SNAT was verified up to the control-plane gateway only.
-- **Database restore under real conditions**: the restore was executed
-  on both instances
-  ([drills](backup-and-restore-drills.md)), but on an idle lab with one
-  Galera replica. Not known: the effect of API writes arriving during the
-  restore (the services stay connected), the behaviour with three
-  replicas, a restore after a database password rotation (the grants
-  file brings old passwords back), and whether new ports become ACTIVE
-  after a restore that follows a replacement of the Neutron pod.
 - **Manual restore from a `mysqldump --all-databases` file**: imported
   on a scratch server only, never into a live instance.
 - **Purge or deletion of RabbitMQ queues**: not executed.
@@ -207,24 +173,9 @@ person starts from facts.
   present, nothing is deployed; the memory cost on a single node is
   unknown. Which of the two should scrape the RabbitMQ and OVN exporters
   is open.
-- **MachineConfig roll**: executed twice on 2026-11-12 (apply and
-  removal of one file), see
-  [OKD node maintenance](okd-node-maintenance.md). Not covered: a
-  change of kernel arguments or of the kubelet configuration
-  (`KubeletConfig`), a change that the node disruption policies apply
-  without reboot, a roll that fails half-way (pool `Degraded`), a
-  restart of kubelet or CRI-O alone, and an unclean stop of the node.
 - **A real node drain**: never executed (a drain of the only node is an
   outage); evaluated with a server-side dry run
   ([entry](okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist)).
-- **etcd restore**: executed once on a snapshot one minute old
-  ([entry](backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens)).
-  Open: why kubelet needs five minutes to take the restore pod after the
-  script ends (repeated timeouts deleting the mirror pod), whether the
-  etcd operator would have replaced the restore pod by itself with more
-  patience (it was given six minutes after etcd served again), the `ETCD_ETCDCTL_RESTORE` mode,
-  and a restore across real changes (old snapshot, rotated
-  certificates or passwords, added node).
 - **The whereabouts reconciler**: no CronJob or controller cleaning
   leaked addresses was found; a leak was cleaned by hand. Whether the
   node-level reconciler ever runs here was not observed.
@@ -239,8 +190,75 @@ person starts from facts.
 - **Setting quotas of block storage, load balancers or DNS**: services
   not deployed.
 
+## Settled, with what remains open
+
+These items were open after the first campaigns and have an answer now.
+Each one points to the entry that holds the evidence and says what is
+still unknown.
+
+- **Catalog endpoint repair delay — mostly settled.** A deleted Keystone
+  endpoint was not recreated until the `KeystoneEndpoint` resource was
+  touched. The second campaign read the operator logs over 11 hours:
+  operators reconcile on events only, four of them logged nothing at all
+  after their start, and the hourly `KeystoneAPI` reconcile is triggered
+  by the `keystone-cron` Job, not by a timer (see
+  [when operators reconcile](okd-olm-and-operators.md#how-do-i-read-an-operators-logs-and-when-do-operators-actually-reconcile)).
+  A restart of the operator is a full pass. What remains open: whether a
+  resynchronisation longer than 11 hours exists.
+- **Host discovery: settled.** The operator did not run discovery after
+  a deployment that added a node; the mapping comes from the
+  `discover_hosts` call at the end of the lab script. See
+  [who maps a new compute node](dataplane-scale-out-and-migration.md#who-maps-a-new-compute-node-to-the-cell).
+  What remains open: which change of the NodeSet or of Nova makes the
+  operator create its own discovery Job again.
+- **Hypervisor hostname versus service host: settled.** The difference
+  breaks live migration without shared storage, because the disk copy
+  targets the node's own host name; fixed with
+  `live_migration_inbound_addr`. See
+  [why live migration failed](dataplane-scale-out-and-migration.md#why-does-live-migration-fail-with-address-resolution-failed).
+  What remains open: deploying nodes whose operating-system host name is
+  already the control-plane FQDN, which would remove the difference, was
+  not tried.
+- **Live migration, evacuation, resize to another host**: executed on
+  2026-11-12 with a temporary second node, see
+  [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
+  Not covered: live migration under memory pressure (auto-converge,
+  post-copy), instances with several disks or a config drive, a node
+  lost without a clean shutdown, a larger disk than 1 GB.
+- **Gateway failover**: settled on 2026-11-13. With two chassis the
+  survivor does not take over; with three the next priority took over
+  in 3.3 s and the returning node preempted (15.8 s). Done with the
+  chassis address mapping removed; the failover with the mapping in
+  place was not measured. Not tested: a node lost without a clean
+  power-off of its virtual machine, several routers, traffic of a real
+  workload.
+- **Database restore under real conditions**: the restore was executed
+  on both instances
+  ([drills](backup-and-restore-drills.md)), but on an idle lab with one
+  Galera replica. Not known: the effect of API writes arriving during the
+  restore (the services stay connected), the behaviour with three
+  replicas, a restore after a database password rotation (the grants
+  file brings old passwords back), and whether new ports become ACTIVE
+  after a restore that follows a replacement of the Neutron pod.
+- **MachineConfig roll**: executed twice on 2026-11-12 (apply and
+  removal of one file), see
+  [OKD node maintenance](okd-node-maintenance.md). Not covered: a
+  change of kernel arguments or of the kubelet configuration
+  (`KubeletConfig`), a change that the node disruption policies apply
+  without reboot, a roll that fails half-way (pool `Degraded`), a
+  restart of kubelet or CRI-O alone, and an unclean stop of the node.
+- **etcd restore**: executed once on a snapshot one minute old
+  ([entry](backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens)).
+  Open: why kubelet needs five minutes to take the restore pod after the
+  script ends (repeated timeouts deleting the mirror pod), whether the
+  etcd operator would have replaced the restore pod by itself with more
+  patience (it was given six minutes after etcd served again), the
+  `ETCD_ETCDCTL_RESTORE` mode, and a restore across real changes (old
+  snapshot, rotated certificates or passwords, added node).
+
 ## How to close a question
 
 Run the experiment on the lab, add or correct the entry in the topic
 file with the observed output and its date, then remove the item here in
-the same commit.
+the same commit. If part of the question stays open, move the item to
+the "settled" list with a link to the entry and the remaining unknowns.

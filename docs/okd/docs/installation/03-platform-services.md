@@ -2,6 +2,15 @@
 
 **Where:** bastion. **Command:** `scripts/bastion/04-platform-services.sh`
 
+## In short
+
+- One script adds what the OpenStack operators expect and a fresh OKD
+  cluster lacks: IP forwarding, local storage, cert-manager and MetalLB.
+- It also installs one CRD (`FRRConfiguration`) that the OpenStack infra
+  operator needs in order to start, although the lab does not use BGP.
+- Done when 12 PersistentVolumes are `Available` and the cert-manager and
+  MetalLB pods are `Running`.
+
 ## What we deploy
 
 Four things the OpenStack operators expect from the platform and that a
@@ -101,3 +110,7 @@ oc get crd frrconfigurations.frrk8s.metallb.io
 | MetalLB pods not created | `oc -n metallb-system get events --sort-by=.lastTimestamp` — an SCC denial names the missing permission |
 | Address pools rejected | The MetalLB webhook is not ready yet (the script retries for 3 minutes); `oc -n metallb-system logs deploy/controller` |
 | Cluster operators `Progressing` after the network patch | Expected for a few minutes: OVN-Kubernetes restarts its node components |
+
+---
+
+**Previous:** [Step 2 — OKD cluster](02-okd.md) · **Next:** [Step 4 — OpenStack operators](04-openstack-operators.md)

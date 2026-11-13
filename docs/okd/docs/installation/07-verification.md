@@ -22,9 +22,10 @@ check:
 | Data plane | NodeSet Ready; nova-compute up; OVN agents alive |
 
 On the lab it prints 15 `PASS` lines and one `SKIP` (the functional test)
-in about ten seconds. The exit code is the number of failed checks. The order of the checks is
-also the order in which to investigate a broken lab: a failure in a lower
-layer usually explains the ones above it.
+in about ten seconds. The exit code is the number of failed checks.
+
+The order of the checks is also the order in which to investigate a broken
+lab: a failure in a lower layer usually explains the ones above it.
 
 ## Functional test
 
@@ -64,3 +65,7 @@ and are reachable from the bastion and from the lab networks only.
 3. [../troubleshooting/](../troubleshooting/README.md) — runbooks, several
    with a "reproduce it in the lab" section.
 4. [../lifecycle/](../lifecycle/README.md) — updates, upgrades, backup.
+
+---
+
+**Previous:** [Step 6 — OpenStack data plane](06-openstack-data-plane.md) · **Up:** [Installation guide](README.md) · **Next:** [Operating OpenStack on OKD (Day 2)](../operations/README.md)

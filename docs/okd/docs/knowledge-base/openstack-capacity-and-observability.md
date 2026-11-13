@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,
 > OpenStack 2023.1 Antelope, one KVM compute node) on 2026-11-12
 
+## In short
+
+- No telemetry operator: use `oc adm top`, the platform Prometheus
+  (container metrics of every pod, 15 days), events (about three hours)
+  and container logs.
+- The whole `openstack` namespace uses under 4 Gi; the OpenStack pods
+  have no requests or limits except RabbitMQ, so they are `BestEffort`.
+- To follow a request, grep its request ID in each service; a failed
+  scheduling ends in the cell0 conductor.
+- Know the usual noise before counting errors: Keystone
+  `ServiceNotFound` tracebacks and AMQP reconnections of idle API
+  workers.
+- On the compute node, memory is the limit (ratio 1.0, 512 MB reserved).
+
 The lab does not deploy the telemetry operator. Everything below uses
 what is already there: the Kubernetes metrics API, the platform
 Prometheus of OKD, events and container logs. Commands run on the
@@ -264,7 +278,9 @@ at once.
 - The session of the lab kubeconfig is certificate-based:
   `oc whoami -t` gives no token, so the usual `curl` against the
   `thanos-querier` Route with a bearer token does not work. The `oc exec`
-  form above needs no token.
+  form above needs no token. The Route does work with a short-lived
+  ServiceAccount token from `oc create token`: see
+  [querying Prometheus from the command line](okd-monitoring-and-alerting.md#how-do-i-query-prometheus-from-the-command-line).
 - `kubelet_volume_stats_used_bytes` reported the same 45 GB for every
   volume: with local volumes on one filesystem the figure is the usage of
   the **whole disk**, not of the claim. The requested size of a claim is

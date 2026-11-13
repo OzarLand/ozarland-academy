@@ -2,9 +2,18 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
-One card per service of the lab: which operator manages it, through which
-custom resources (CRs), what Kubernetes workload it becomes, what it stores,
-and what is particular about its lifecycle.
+## In short
+
+- A reference page, not a page to read in one go: one card per service of
+  the lab, with its operator, its custom resources (CRs), its Kubernetes
+  workload, its storage and what is particular about its lifecycle.
+- All services follow the same pattern: inspect the CR and its conditions,
+  configure through the `OpenStackControlPlane` CR, restart by deleting the
+  pod.
+- Every service runs with 1 replica: every restart is a short outage of that
+  service.
+- Galera, RabbitMQ, the OVN databases and Glance hold persistent data; the
+  [quick reference](#quick-reference) at the end summarises all services.
 
 ## How to read the cards
 
@@ -24,11 +33,13 @@ Shared facts:
 
 - **Restart means deleting the pod, not `oc rollout restart`.** The pod
   template belongs to the operator, which removes the restart annotation
-  within a second: on a Deployment nothing restarts at all, on a StatefulSet
-  the pod restarts once. `oc scale` is reverted the same way.
+  within a second; `oc scale` is reverted the same way. The observed effects
+  are listed in
+  [Why manual edits of managed objects do not stick](03-operators-crds-and-reconciliation.md#why-manual-edits-of-managed-objects-do-not-stick).
 - Every service runs with 1 replica, so **every restart is a short outage of
-  that service** (20 to 60 seconds on the lab, mostly the readiness probe).
-  Running instances and their networking are not affected by API restarts.
+  that service** (20 to 60 seconds on the lab, mostly the readiness probe,
+  the check a pod must pass before it receives traffic). Running instances
+  and their networking are not affected by API restarts.
 - Pod logs: `oc logs -n openstack <pod> [-c <container>]`. Operator logs:
   `oc logs -n openstack-operators deployment/<operator>-operator-controller-manager`.
 - Database schema migrations (`db-sync`) run as Jobs, created by the operator
@@ -134,7 +145,9 @@ rest to the bastion. See
   `oc logs -n openstack deployment/keystone`.
 - **Catalog.** Endpoints are declared by `KeystoneEndpoint` CRs. The operator
   does not watch the Keystone database: an endpoint changed with
-  `openstack endpoint set` stays wrong until the next reconcile of that CR.
+  `openstack endpoint set` stays wrong until the next reconcile of that CR
+  (see
+  [Kubernetes resource versus OpenStack resource](03-operators-crds-and-reconciliation.md#kubernetes-resource-versus-openstack-resource)).
 - **Service passwords** are not pushed to Keystone when `osp-secret` changes;
   see [Passwords and secrets](../operations/07-passwords-and-secrets.md).
 - **Restart.** Delete the pod (ready again after about 35 seconds on the lab).
@@ -285,4 +298,6 @@ It is the replacement for sourcing `admin-openrc.sh` on a controller.
 | Neutron | `neutronapi` | Deployment | No |
 | Nova | `nova`, `novaapi`, `novascheduler`, `novaconductor`, `novacell`, `novametadata`, `novanovncproxy` | StatefulSet | No |
 
-Next: [Control plane and data plane](06-control-plane-and-data-plane.md).
+---
+
+**Previous:** [Configuration, secrets and data](04-configuration-secrets-and-data.md) · **Next:** [Control plane and data plane](06-control-plane-and-data-plane.md)

@@ -1,5 +1,20 @@
 # Backup and restore drills
 
+## In short
+
+- Real restores, with markers that prove the result: both Galera
+  instances on 2026-11-12, etcd on the single node on 2026-11-13.
+- A database restore is quick (7 s for the cell, 25 s for the main
+  instance) and no API request failed, but the cloud is inconsistent
+  afterwards: instances, Placement allocations, Neutron and OVN, and
+  Glance files have to be repaired by hand.
+- `restore_galera` loads only the files you name, leaves the services
+  connected, and exits with 0 even when a file is reported `FAILED`.
+- The etcd restore script ends after 40 s, but etcd was unavailable
+  twice (about 9 and 5 minutes). OpenStack kept answering the whole time.
+- Each backup covers one layer only. Restore etcd and the databases from
+  the same moment, or they disagree.
+
 Database restores executed for real on the lab on 2026-11-12, on both
 Galera instances, with markers created before and after each backup so
 that the result can be proven. The procedure itself is in
@@ -17,6 +32,26 @@ nb() { oc exec ovsdbserver-nb-0 -c ovsdbserver-nb -- ovn-nbctl --no-leader-only 
 
 `sql openstack "..."` queries the main instance, `sql openstack-cell1
 "..."` the cell instance.
+
+What each backup holds, and what its restore brings back:
+
+```mermaid
+flowchart LR
+    S1["etcd snapshot<br/>(cluster-backup.sh)"] --> R1["Kubernetes objects:<br/>custom resources, Secrets,<br/>claim-to-volume records"]
+    S2["GaleraBackup dump<br/>(data file + grants file,<br/>one pair per instance)"] --> R2["SQL tables of that instance<br/>and the account passwords<br/>of backup time"]
+    S3["mysqldump --all-databases<br/>(manual fallback)"] --> R3["Same tables, plus the<br/>mysql schema (root and<br/>every account)"]
+    S4["Export of resources<br/>and Secrets on the bastion"] --> R4["Input to rebuild<br/>the control plane"]
+    N["No restore moves these back:<br/>OVN databases, Glance image files,<br/>instance disks, RabbitMQ"]
+    R2 -. "repair afterwards" .-> N
+    R3 -. "repair afterwards" .-> N
+```
+
+| Restore | Entry | Brings back | Does not touch |
+| --- | --- | --- | --- |
+| Cell instance (`openstack-cell1`) | [cell restore](#how-do-i-restore-the-cell-database-and-what-is-the-result) | `nova_cell1`: instances, migrations, compute nodes, services | The API database, Placement, Neutron, the compute node |
+| Main instance (`openstack`) | [main restore](#how-do-i-restore-the-main-database-instance-and-what-is-the-result) | Keystone, Glance, Neutron, `nova_api`, `nova_cell0`, Placement | OVN databases, image files, the compute node, RabbitMQ |
+| Plain `mysqldump` | [manual restore](#how-do-i-restore-by-hand-from-a-plain-mysqldump) | Every schema, `mysql` included (scratch server only) | Same as the operator's restore |
+| etcd | [etcd restore](#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens) | Every Kubernetes object, as of the snapshot | Data in the volumes (Galera, OVN, Glance), running pods of OpenStack |
 
 ## Entries
 

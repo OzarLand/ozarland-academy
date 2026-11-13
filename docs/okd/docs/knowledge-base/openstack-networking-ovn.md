@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,
 > OpenStack 2023.1 Antelope, OVN 24.03, one KVM compute node) on 2026-11-12
 
+## In short
+
+- Neutron uses ML2/OVN: routers, NAT, DHCP and security groups are rows
+  in the OVN databases, not namespaces or agents. The only namespace
+  left is `ovnmeta-` for metadata.
+- The OVN tools run in the `ovsdbserver-nb-0` and `ovsdbserver-sb-0`
+  pods, always with `-c`; `ovn-trace --ct new` is the way to test a
+  security group.
+- The provider network is flat on `datacentre` (`br-ex`), MTU 1442;
+  project networks are Geneve with MTU 1384.
+- Floating IPs are translated on the node of the instance. Only source
+  NAT and the router address depend on the gateway chassis, and one
+  chassis means no failover.
+
 Neutron uses the ML2/OVN driver. The OVN databases and `ovn-northd` are
 pods; `ovn-controller`, the metadata agent and Open vSwitch run on the
 compute node. Commands run on the bastion in the `openstack` namespace
@@ -14,6 +28,23 @@ os() { oc exec openstackclient -c openstackclient -- openstack "$@"; }
 export OS_CLIENT_CONFIG_FILE=~/kb-demo/clouds.yaml OS_CLOUD=kb-demo
 o=~/kb-demo/venv/bin/openstack
 compute() { ssh -i ~/okd-openstack-lab/.work/dataplane-ssh-key cloud-admin@192.168.122.100 "$@"; }
+```
+
+Path of a packet from an instance to the outside, with and without a
+floating IP (on the lab the only compute node is also the gateway
+chassis):
+
+```mermaid
+flowchart LR
+    VM["Instance 10.20.0.54<br/>tap port on br-int"] --> LS["Logical switch<br/>kb-demo-net (Geneve, MTU 1384)"]
+    LS --> LR["Logical router<br/>kb-demo-router"]
+    LR -- "floating IP: dnat_and_snat<br/>on the node of the instance" --> PATCH["Patch port<br/>br-int to br-ex"]
+    LR -- "no floating IP: snat<br/>to the router address" --> GW["Gateway chassis<br/>(cr-lrp port)"]
+    GW --> PATCH
+    PATCH --> BREX["br-ex and the first<br/>interface of the node"]
+    BREX --> PROV["Provider network datacentre<br/>192.168.122.0/24 (flat, MTU 1442)"]
+    PROV --> RTR["Lab router<br/>192.168.130.1"]
+    RTR --> OUT["Bastion and<br/>other clients"]
 ```
 
 ## Entries
@@ -530,7 +561,9 @@ floating IPs).
 - Changing the variable needs a new data plane deployment that runs the
   `ovn` service; editing Open vSwitch by hand is reverted at the next run.
 
-**See also**: [Data plane changes](../operations/08-dataplane-changes.md),
+**See also**: [failover measured with two and three chassis](dataplane-scale-out-and-migration.md#what-happens-to-routers-and-floating-ips-when-the-node-hosting-the-gateway-goes-down)
+(two chassis did not fail over, three did),
+[Data plane changes](../operations/08-dataplane-changes.md),
 [Data plane troubleshooting](../troubleshooting/dataplane.md),
 [Control plane and data plane](../concepts/06-control-plane-and-data-plane.md)
 

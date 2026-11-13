@@ -29,31 +29,31 @@ machines that are themselves hosted by an OpenStack cloud.
 
 ## Overview
 
-```text
-                       host cloud external network
-                                   |
-                             +-----------+
-                             |  router   |
-                             +-----------+
-                               |       |
-        machine network        |       |        ctlplane network
-        192.168.130.0/24       |       |        192.168.122.0/24
-   ------+-------------+-------+       +--------+--------------+------
-         |             |                        |              |
-   +-----------+ +-----------------------------------+ +----------------+
-   |  bastion  | |            OKD node               | | compute node   |
-   |           | |  (single-node cluster)            | | (CentOS Stream)|
-   | DNS       | |                                   | |                |
-   | oc client | |  OKD platform                     | | nova-compute   |
-   | jump host | |  OpenStack operators              | | libvirt / QEMU |
-   +-----------+ |  OpenStack control plane (pods)   | | ovn-controller |
-                 +-----------------------------------+ +----------------+
-                        |              |                  |          |
-   ---------------------+--------------|------------------+----------|---
-        internalapi network 172.17.0.0/24                            |
-   ------------------------------------+-----------------------------+---
-        tenant network 172.19.0.0/24
+```mermaid
+flowchart TB
+    ext(["host cloud external network"]) --- router["router"]
+    router --- machine
+    router --- ctlplane
+    machine["machine network<br/>192.168.130.0/24"]
+    ctlplane["ctlplane network<br/>192.168.122.0/24"]
+    internalapi["internalapi network<br/>172.17.0.0/24, not routed"]
+    tenant["tenant network<br/>172.19.0.0/24, not routed"]
+    bastion["bastion<br/>DNS, oc client, jump host"]
+    okd["OKD node (single-node cluster)<br/>OKD platform<br/>OpenStack operators<br/>OpenStack control plane (pods)"]
+    compute["compute node (CentOS Stream 9)<br/>nova-compute, libvirt / QEMU<br/>ovn-controller"]
+    machine --- bastion
+    machine --- okd
+    ctlplane --- okd
+    ctlplane --- compute
+    internalapi --- okd
+    internalapi --- compute
+    tenant --- okd
+    tenant --- compute
 ```
+
+The OKD node has one interface on each of the four networks; the compute
+node has one on each of the three OpenStack networks; the bastion sits
+on the machine network only.
 
 Three virtual machines:
 
@@ -158,6 +158,26 @@ connect OpenStack pods to the networks above:
   `LoadBalancer` Service. MetalLB assigns it an address from the `.80`–`.90`
   range and the node answers ARP for it. This is the role keepalived virtual
   IPs play in a Kolla-Ansible deployment.
+
+The two paths side by side, for a compute node talking to the control
+plane:
+
+```mermaid
+flowchart LR
+    compute["compute node<br/>172.17.0.100"]
+    subgraph okd["OKD node"]
+        nic["NIC on internalapi<br/>172.17.0.10"]
+        metallb["MetalLB address<br/>172.17.0.80 to .90"]
+        svc["LoadBalancer Service"]
+        podA["pod on the pod network<br/>(RabbitMQ, internal API endpoints)"]
+        macvlan["macvlan interface<br/>172.17.0.30 to .70"]
+        podB["pod with a second interface<br/>(OVN databases, Neutron API)"]
+    end
+    compute -- "stable service address" --> nic
+    nic --> metallb --> svc --> podA
+    compute -- "direct pod address" --> nic
+    nic --> macvlan --> podB
+```
 
 Both mechanisms make the OKD node use MAC or IP addresses the host cloud did
 not assign to it. The host cloud's anti-spoofing (Neutron *port security*)

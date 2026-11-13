@@ -2,9 +2,35 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
-This document introduces the standard Kubernetes resource types you will meet
-in the `openstack` namespace. Each one is shown on a real OpenStack service.
+## In short
+
+- This page introduces the standard Kubernetes object types you will meet in
+  the `openstack` namespace, each shown on a real OpenStack service.
+- Every object has a `spec` (desired state, written by you or an operator)
+  and a `status` (observed state, written by a controller).
+- A pod is disposable: it is replaced, never repaired. A Deployment
+  (stateless services) or a StatefulSet (stable name and volume) recreates it.
+- A Service gives pods a stable address, as HAProxy does in Kolla; a Route
+  publishes it outside the cluster over HTTPS.
+- Configuration and passwords live in Secrets, data on volumes claimed
+  through PVCs.
+- `ownerReferences` tell you who created an object: change the top of the
+  chain, not the children.
+
 Every command block on this page is **[READ-ONLY]**.
+
+| Object | Kolla-Ansible analogy | Section |
+|---|---|---|
+| Namespace | An OpenStack project | [Namespace](#namespace) |
+| Pod | One container, or an API container with its log sidecar | [Pod](#pod) |
+| Deployment | A stateless service container, kept running in N copies | [Deployment](#deployment) |
+| StatefulSet | A container that keeps its name and its data volume, such as MariaDB | [StatefulSet](#statefulset) |
+| DaemonSet | An agent container deployed on every host of a group | [DaemonSet](#daemonset) |
+| Job | A one-shot Ansible task hidden inside `deploy` or `upgrade` | [Job](#job) |
+| Service | HAProxy for internal endpoints | [Service](#service) |
+| Route | HAProxy for the public endpoints | [Route](#route) |
+| ConfigMap, Secret | `passwords.yml`, rendered files under `/etc/kolla/<service>/` | [ConfigMap and Secret](#configmap-and-secret) |
+| PVC, PV, StorageClass | A Cinder volume request, volume and volume type | [PersistentVolumeClaim, PersistentVolume, StorageClass](#persistentvolumeclaim-persistentvolume-storageclass) |
 
 ## The shape of every Kubernetes object
 
@@ -58,8 +84,8 @@ oc logs <pod> -c <container> --previous  # logs of the previous, crashed instanc
 
 Key facts for an OpenStack operator:
 
-- A pod is **disposable**. It is never repaired, only replaced. Its name and IP
-  change on replacement unless a StatefulSet manages it.
+- A pod is **disposable**. It is never repaired, only replaced. Its IP changes
+  on replacement, and so does its name unless a StatefulSet manages it.
 - You almost never create a pod yourself. A higher-level object (Deployment,
   StatefulSet, DaemonSet, Job) creates pods from a template.
 - Pods may have **init containers** that run to completion before the main
@@ -149,11 +175,16 @@ oc logs job/bootstrap-edpm-deployment-openstack-edpm | tail
 
 In Kolla these steps are Ansible tasks hidden inside `deploy` or `upgrade`.
 Here they are objects with their own logs, which makes a failed database
-migration easy to locate. On the lab the db-sync and bootstrap Jobs are
-deleted once they have succeeded: at rest `oc get jobs` lists only the hourly
-`keystone-cron-<n>` Job and the data plane Jobs, named
-`<service>-<deployment>-<nodeset>`. A db-sync Job that fails stays, with its
-logs.
+migration easy to locate.
+
+On the lab the db-sync and bootstrap Jobs are deleted once they have
+succeeded. At rest `oc get jobs` lists only:
+
+- the hourly `keystone-cron-<n>` Job, created by the CronJob `keystone-cron`
+  (a CronJob creates a Job on a schedule, like a cron entry);
+- the data plane Jobs, named `<service>-<deployment>-<nodeset>`.
+
+A db-sync Job that fails stays, with its logs.
 
 ## Service
 
@@ -184,15 +215,20 @@ Service types you will see:
 | `ClusterIP` | Inside the cluster only | Public API Services (behind a Route), Galera, Memcached |
 | `LoadBalancer` | Also outside the cluster, on an address assigned by MetalLB | What compute nodes must reach: the internal API endpoints, RabbitMQ and DNS |
 
-On the lab the six internal API Services (`keystone-internal`,
-`glance-default-internal`, `neutron-internal`, `nova-internal`,
-`nova-metadata-internal`, `placement-internal`) share one MetalLB address,
-172.17.0.80, and differ by port, like an internal VIP. `rabbitmq` and
-`rabbitmq-cell1` have their own (172.17.0.85 and .86) and `dnsmasq-dns` is on
-the ctlplane network (192.168.122.80). The OVN southbound database is not a
-LoadBalancer Service: compute nodes reach its pod directly on its internalapi
-network attachment. A LoadBalancer Service also keeps a cluster IP, which is
-what pods use.
+MetalLB is the component that assigns and announces these external addresses.
+On the lab:
+
+| MetalLB address | LoadBalancer Services |
+|---|---|
+| 172.17.0.80 (internalapi) | The six internal API Services, which differ by port, like an internal VIP: `keystone-internal`, `glance-default-internal`, `neutron-internal`, `nova-internal`, `nova-metadata-internal`, `placement-internal` |
+| 172.17.0.85 and 172.17.0.86 (internalapi) | `rabbitmq` and `rabbitmq-cell1` |
+| 192.168.122.80 (ctlplane) | `dnsmasq-dns` |
+
+A LoadBalancer Service also keeps a cluster IP, which is what pods use. The
+OVN southbound database is not a LoadBalancer Service: compute nodes reach
+its pod directly on its internalapi network attachment. Both mechanisms are
+explained in
+[Control plane and data plane](06-control-plane-and-data-plane.md#networks).
 
 A Service with no endpoint address has no *ready* pod matching the selector:
 no backend, like an HAProxy backend with all servers down.
@@ -315,9 +351,10 @@ responsible, is in
 
 ## Events
 
-Events are short-lived records of what controllers and the node agent did or
-failed to do (scheduling, image pulls, volume mounts, probe failures). They are
-often the fastest explanation of a pod that does not start.
+Events are short-lived records of what controllers and the node agent (the
+kubelet) did or failed to do: scheduling, image pulls, volume mounts, probe
+failures. They are often the fastest explanation of a pod that does not
+start.
 
 ```bash
 oc get events --sort-by=.lastTimestamp | tail -20
@@ -325,6 +362,23 @@ oc describe pod <pod> | sed -n '/^Events:/,$p'
 ```
 
 ## Summary: one service, all the blocks
+
+How the objects of one service relate, with Keystone as the example (the
+custom resource and the operator are the subject of the next document):
+
+```mermaid
+flowchart TD
+    cr["KeystoneAPI/keystone<br/>(custom resource)"] -->|"its operator creates"| secret["Secret<br/>keystone-config-data"]
+    cr -->|"its operator creates"| deploy["Deployment<br/>keystone"]
+    deploy -->|"creates"| rs["ReplicaSet<br/>(one per template revision)"]
+    rs -->|"creates"| pod["Pod keystone-(hash)<br/>container keystone-api"]
+    secret -->|"mounted as files"| pod
+    svcint["Service keystone-internal<br/>(LoadBalancer, MetalLB address)"] -->|"label selector"| pod
+    svcpub["Service keystone-public<br/>(ClusterIP)"] -->|"label selector"| pod
+    route["Route keystone-public<br/>(public HTTPS hostname)"] --> svcpub
+    compute(["compute nodes"]) --> svcint
+    users(["API clients outside the cluster"]) --> route
+```
 
 Keystone in the lab is the sum of:
 
@@ -339,4 +393,6 @@ Keystone in the lab is the sum of:
 | Service | `keystone-internal` (MetalLB), `keystone-public` (ClusterIP) | Stable addresses for the pods |
 | Route | `keystone-public` | Public HTTPS entry point |
 
-Next: [Operators, CRDs and reconciliation](03-operators-crds-and-reconciliation.md).
+---
+
+**Previous:** [From Kolla-Ansible to operators](01-from-kolla-to-operators.md) · **Next:** [Operators, CRDs and reconciliation](03-operators-crds-and-reconciliation.md)

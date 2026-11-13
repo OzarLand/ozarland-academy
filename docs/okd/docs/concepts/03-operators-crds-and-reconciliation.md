@@ -2,6 +2,22 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
+## In short
+
+- A CRD adds a new object type to the Kubernetes API (`KeystoneAPI`, `Galera`,
+  `OpenStackControlPlane`...). A custom resource (CR) is one object of such a
+  type.
+- An operator is a program running in a pod. It watches CRs and, in a loop
+  that never stops, makes the cluster match their `spec`: this is
+  *reconciliation*. It reports what it sees in the CR `status` conditions.
+- Operators are layered: you edit one object, `OpenStackControlPlane`, and
+  the change goes down to service CRs, then to Deployments and StatefulSets,
+  then to pods.
+- **Write at the top, read everywhere.** A manual edit of anything below the
+  top is treated as drift and reverted.
+- A configuration change always restarts the pods of the affected service,
+  and only those.
+
 The [previous document](02-kubernetes-building-blocks.md) covered the standard
 Kubernetes objects. None of them knows what Keystone is. This document explains
 the layer that does: operators and their custom resources.
@@ -53,6 +69,19 @@ An operator is an ordinary program, running in a pod, that contains one or more
    and creates, updates or deletes Kubernetes objects to close the gap.
 4. **Writes** what it observed into the CR `status`, mainly as *conditions*.
 
+The loop, for any operator:
+
+```mermaid
+flowchart LR
+    event(["a watched object changed,<br/>or the resync timer fired"]) --> read["read the CR spec<br/>(desired state)"]
+    read --> compare{"does what exists<br/>match the spec?"}
+    compare -- no --> act["create, update or delete<br/>Kubernetes objects"]
+    act --> status["write conditions<br/>into the CR status"]
+    compare -- yes --> status
+    status --> wait(["wait for the next event"])
+    wait --> event
+```
+
 It encodes what a human operator, or a Kolla-Ansible role, would do, but as a
 loop instead of a one-shot run. For `KeystoneAPI`, one pass of the
 `keystone-operator` reconcile function is roughly:
@@ -70,6 +99,7 @@ all of the above True?                           -> condition Ready
 
 Each step that cannot complete sets its condition to `False` with a message,
 and the function returns; it will run again when something it watches changes.
+
 The set of conditions differs per service; read them from the CR rather than
 from memory. The full list seen on the lab is in
 [Inspect service status](../operations/01-inspect-service-status.md).
@@ -103,17 +133,23 @@ oc get openstackcontrolplane -n openstack -o json \
 Reading method: start at the top-level CR, find the first condition that is not
 `True`, go to the CR it names, repeat. Only then read pod logs.
 
-The `OpenStackControlPlane` CR has one condition per enabled service
-(`OpenStackControlPlaneKeystoneAPIReady`, `OpenStackControlPlaneMariaDBReady`,
-`OpenStackControlPlaneRabbitMQReady`, `OpenStackControlPlaneNovaReady`...) and,
-for services with a Route, an `OpenStackControlPlaneExpose<Service>Ready`
-condition. A disabled service has no condition at all. Besides `True` and
-`False`, a condition can be `Unknown`: the operator has not reached that step
-yet, so look at an earlier one.
+What you find on the `OpenStackControlPlane` CR:
+
+- One condition per enabled service: `OpenStackControlPlaneKeystoneAPIReady`,
+  `OpenStackControlPlaneMariaDBReady`, `OpenStackControlPlaneRabbitMQReady`,
+  `OpenStackControlPlaneNovaReady`...
+- For services with a Route, an `OpenStackControlPlaneExpose<Service>Ready`
+  condition.
+- No condition at all for a disabled service.
+
+Besides `True` and `False`, a condition can be `Unknown`: the operator has not
+reached that step yet, so look at an earlier one.
 
 ## The operator hierarchy in this lab
 
-Operators are layered. From the outside in:
+Operators are layered. From the outside in (OLM, the OKD component that
+installs the operators, is described in
+[OKD in brief](07-okd-in-brief.md#operator-lifecycle-manager)):
 
 ```text
 Operator Lifecycle Manager (OLM, part of OKD)
@@ -170,6 +206,28 @@ spec:
 '
 ```
 
+The same change as a sequence, from your `oc patch` to the new pod:
+
+```mermaid
+sequenceDiagram
+    actor you as You
+    participant api as Kubernetes API
+    participant oso as openstack-operator
+    participant novaop as nova-operator
+    participant sts as StatefulSet controller
+    you->>api: oc patch OpenStackControlPlane
+    api->>api: validate (schema, webhook) and store
+    api-->>oso: change event
+    oso->>api: update the Nova CR spec
+    api-->>novaop: change event
+    novaop->>api: re-render Secret nova-api-config-data
+    novaop->>api: new CONFIG_HASH in the pod template
+    api-->>sts: template changed
+    sts->>api: replace pod nova-api-0
+    novaop->>api: conditions back to True
+    you->>api: oc get openstackcontrolplane (Ready)
+```
+
 What happens next, and how to observe each step:
 
 | Step | Actor | Observe with |
@@ -181,13 +239,17 @@ What happens next, and how to observe each step:
 | 5. The pod template changed, so the StatefulSet replaces its pods | StatefulSet controller | `oc get pods -n openstack -l service=nova-api -w` |
 | 6. New pods become ready; conditions return to `True` | nova-operator | `oc get openstackcontrolplane -n openstack` |
 
+In step 1, the *admission webhook* is a check that the operator registers
+with the API server, so that an invalid object is refused before it is stored.
+
 Step 4 is the key mechanism. A pod does not notice that a mounted Secret
 changed in a way that restarts the service. The operators therefore inject a
 hash of the inputs into the pod template (`CONFIG_HASH` environment variable):
 when the configuration changes, the hash changes, the template changes, and
-Kubernetes performs a rolling replacement. **A configuration change is
-therefore always a pod restart of the affected service**, and only of that
-service.
+Kubernetes performs a rolling replacement.
+
+**A configuration change is therefore always a pod restart of the affected
+service**, and only of that service.
 
 Verification from inside the new pod (for Nova the snippet is mounted as
 `/etc/nova/nova.conf.d/02-nova-override.conf`):
@@ -218,12 +280,16 @@ of an object it owns as drift:
 | `oc delete pvc mysql-db-openstack-galera-0` | **Data loss for the cloud.** A new claim is not given the old data |
 
 Most reverts are immediate because operators watch the objects they own. Two
-cases are worse than an immediate revert. A field the operator does not set
-(an annotation on the Deployment itself) survives as invisible drift. And a
-change the operator cannot see is only corrected at some later reconcile, for
-example when the operator pod restarts. Manual edits are therefore not only
-ineffective but dangerous: they create a state that nobody declared and that
-disappears at an unpredictable moment. The experiments are in
+cases are worse than an immediate revert:
+
+- A field the operator does not set (an annotation on the Deployment itself)
+  survives as invisible drift.
+- A change the operator cannot see is only corrected at some later reconcile,
+  for example when the operator pod restarts.
+
+Manual edits are therefore not only ineffective but dangerous: they create a
+state that nobody declared and that disappears at an unpredictable moment. The
+experiments are in
 [Manual changes reverted](../troubleshooting/manual-changes-reverted.md).
 
 There is no general "pause reconciliation" switch. Scaling an operator
@@ -297,7 +363,7 @@ confuse them:
 | | Kubernetes resource | OpenStack resource |
 |---|---|---|
 | Examples | Pod, Secret, `KeystoneAPI`, `Galera` | Server, network, image, project, user |
-| Stored in | etcd, on the OKD control plane | MariaDB (Galera), running *as a workload* on OKD |
+| Stored in | etcd (the database of the Kubernetes API), on the OKD control plane | MariaDB (Galera), running *as a workload* on OKD |
 | API | Kubernetes API (`oc`) | Keystone, Nova, Neutron... APIs (`openstack`) |
 | Describes | How the cloud *software* is deployed | What the cloud *users* have created |
 | Managed by | Operators | OpenStack services |
@@ -321,12 +387,18 @@ oc rsh -n openstack openstackclient openstack service list
 ```
 
 This is how each service operator registers its service in the catalog without
-any `openstack endpoint create` in a playbook. The bridge is one-way: the
-operator does not watch the Keystone database. On the lab an endpoint URL
-changed with `openstack endpoint set` stayed wrong for minutes and was only
-put back when the operator reconciled the `KeystoneEndpoint` again. The same
-one-way logic applies to passwords: changing a service password in
-`osp-secret` re-renders the configuration but does not change the Keystone
-user ([Passwords and secrets](../operations/07-passwords-and-secrets.md)).
+any `openstack endpoint create` in a playbook.
 
-Next: [Configuration, secrets and data](04-configuration-secrets-and-data.md).
+The bridge is one-way: the operator does not watch the Keystone database. Two
+consequences:
+
+- On the lab an endpoint URL changed with `openstack endpoint set` stayed
+  wrong for minutes and was only put back when the operator reconciled the
+  `KeystoneEndpoint` again.
+- Changing a service password in `osp-secret` re-renders the configuration
+  but does not change the Keystone user
+  ([Passwords and secrets](../operations/07-passwords-and-secrets.md)).
+
+---
+
+**Previous:** [Kubernetes building blocks](02-kubernetes-building-blocks.md) · **Next:** [Configuration, secrets and data](04-configuration-secrets-and-data.md)

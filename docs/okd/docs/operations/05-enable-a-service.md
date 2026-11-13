@@ -8,6 +8,17 @@ except that there is nothing to run: flipping `enabled` makes the operator
 build the whole service. Horizon is the example because it is stateless and
 harmless to remove again.
 
+## In short
+
+- Setting `enabled: true` in the control plane resource makes the operator
+  build the whole service: no command to run.
+- Horizon was `True` about 50 seconds after the patch on the lab, and uses
+  about 400 MiB.
+- Side effect seen on the lab: the Glance pod is rolled once, when Horizon
+  is enabled and when it is disabled.
+- Disabling removes the service objects but leaves two TLS Secrets behind.
+- Disabling a service that has a database was not executed on this lab.
+
 ## 1. Initial symptoms
 
 - You want the dashboard, or want to see what an operator creates for a
@@ -147,3 +158,7 @@ Secrets described above; delete them by hand if you want a clean namespace.
   them without a backend gives a control plane that never returns to `True`.
 - Keep the template in the repository in step with what you enable, or the
   next run of the deployment script will disable it again.
+
+---
+
+**Previous:** [Change service configuration](04-change-service-configuration.md) · **Up:** [Operations guide](README.md) · **Next:** [Scale a service](06-scale-a-service.md)

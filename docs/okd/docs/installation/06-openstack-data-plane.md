@@ -4,6 +4,16 @@
 
 Skip this step for a control-plane-only lab (`compute_count = 0`).
 
+## In short
+
+- Compute nodes are not Kubernetes nodes: the operator configures them
+  with Ansible over SSH, and the services run there as podman containers.
+- Three resources: services (the plays), a NodeSet (inventory and
+  variables) and a deployment (one run).
+- A deployment is immutable. To apply a change or retry, run the script
+  again with a **new** deployment name.
+- The first deployment took 21 minutes on the lab.
+
 ## What we deploy
 
 On each compute VM: OVN controller, the OVN metadata agent, libvirt and
@@ -45,10 +55,13 @@ apply a change, or to retry after a failure, create a **new** deployment
 
 The first deployment took 21 minutes on the lab; the longest services were
 `bootstrap`, `download-cache` and `libvirt` (three to five minutes each).
+
 Adding a second node later (`compute_count = 2`, then the script with a
 new deployment name) took the same 21 minutes and did not disturb the
-instances of the first node: see
+instances of the first node. Going to three nodes and back to one was also
+done on the lab. Both are recorded in
 [Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
+
 Running the script again with the same deployment name only waits for that
 deployment and changes nothing on the nodes.
 
@@ -116,3 +129,7 @@ run the script again with a new deployment name:
 ```bash
 scripts/bastion/07-openstack-dataplane.sh edpm-deployment-2
 ```
+
+---
+
+**Previous:** [Step 5 — OpenStack control plane](05-openstack-control-plane.md) · **Next:** [Step 7 — Verification](07-verification.md)

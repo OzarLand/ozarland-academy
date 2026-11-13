@@ -2,6 +2,18 @@
 
 **Where:** workstation.
 
+## In short
+
+- Terraform creates the networks, the router, the bastion and the compute
+  VM, plus the network ports of the future OKD node. The OKD node itself
+  comes in step 2.
+- Two files hold your choices: `lab.env` (lab settings) and
+  `terraform.tfvars` (your host cloud).
+- `sync-to-bastion.sh` copies the repository to the bastion. Run it again
+  after every change made on the workstation.
+- Done when the bastion answers over SSH and `.work/infra.env` lists four
+  MAC addresses for the OKD node.
+
 ## What we deploy
 
 The virtual infrastructure described in
@@ -12,11 +24,11 @@ installer image exists.
 
 ## Why Terraform
 
-The infrastructure is a set of interdependent objects with fixed addresses
-(the OKD node's MAC addresses, for example, are needed before the node
-exists, to prepare its network configuration). A declarative tool handles
-that naturally, and `terraform destroy` removes everything it created and
-nothing else.
+The infrastructure is a set of interdependent objects with fixed
+addresses. The MAC addresses of the OKD node, for example, are needed
+before the node exists, to prepare its network configuration. A declarative
+tool handles that naturally, and `terraform destroy` removes everything it
+created and nothing else.
 
 ## Procedure
 
@@ -121,3 +133,7 @@ Expected: the bastion answers, has an address on the machine network, and
 | No floating IP available | Set `bastion_floating_ip = false` and `bastion_access_network` if the workstation shares a network with the lab project |
 | SSH to the bastion times out | `admin_cidrs` does not include your source address as seen by the cloud; check with `openstack security group rule list <prefix>-machine` |
 | SSH works but `sync-to-bastion.sh` cannot log in | `BASTION_USER` in `lab.env` does not match the image's default user |
+
+---
+
+**Previous:** [Installation guide](README.md) · **Next:** [Step 2 — OKD cluster](02-okd.md)

@@ -2,6 +2,20 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) except the `nodeSelector` removal (the lab declares none), enabling `telemetry` and the image override (not executed: the pull errors were reproduced with throwaway pods instead)
 
+## In short
+
+- `Pending`: nothing has started, there is no log. The answer is in the
+  events of the pod.
+- `CrashLoopBackOff`: read `oc logs --previous` before deleting the pod.
+  After a `customServiceConfig` change the cause is usually a value of
+  the wrong type; revert it at the source.
+- API services behind Apache do not crash: the pod stays `Running` and
+  never becomes ready, with a misleading log.
+- `ImagePullBackOff`: the event shows the registry's answer. Deleting
+  the pod does not help.
+- The operator is not in error in any of these cases: it waits for the
+  pod, for ever.
+
 A pod status is the Kubernetes view of a container, where a Kolla operator
 would look at `docker ps`. Three statuses cover most failures. They mean
 very different things:

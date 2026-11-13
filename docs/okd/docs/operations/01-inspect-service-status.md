@@ -8,6 +8,17 @@ is one more layer above the containers: each operator publishes what it
 thinks of its service as **conditions** on a custom resource. Reading
 conditions first saves most of the digging.
 
+## In short
+
+- Health is read top-down through five levels: control plane resource,
+  service resources, workloads, pods, then the OpenStack APIs.
+- Stop at the first level that is not healthy and open the matching
+  runbook.
+- Healthy is one line: `openstack   True   Setup complete`.
+- Conditions cover the control plane only. They do not prove that the
+  compute nodes work or that an API answers: always finish with level 5.
+- Everything on this page is read-only.
+
 ## 1. Initial symptoms
 
 - You start a shift, or have just applied a change, and want to know whether
@@ -18,6 +29,19 @@ conditions first saves most of the digging.
 
 Go top-down through five levels. Stop at the first level that is not healthy
 and switch to the matching [runbook](../troubleshooting/README.md).
+
+The order of the investigation; each level explains the one above it.
+
+```mermaid
+flowchart TD
+    L1["Level 1: OpenStackControlPlane openstack<br/>(one condition per service)"]
+    L2["Level 2: service resources<br/>(KeystoneAPI, Nova, Galera, ...)"]
+    L3["Level 3: workloads<br/>(Deployments, StatefulSets, Jobs)"]
+    L4["Level 4: pods and events"]
+    L5["Level 5: OpenStack APIs<br/>(endpoints, compute services, agents)"]
+    DP["Data plane<br/>(NodeSet and deployments)"]
+    L1 --> L2 --> L3 --> L4 --> L5 --> DP
+```
 
 ### Level 1: the control plane resource
 
@@ -116,18 +140,17 @@ tests/smoke-test.sh
   openstack   True     Setup complete
   ```
 
-  Every condition is `True`. The lab shows 24 of them: `Ready`, then, all
-  prefixed with `OpenStackControlPlane`: `RabbitMQReady`, `MariaDBReady`,
-  `MemcachedReady`, `KeystoneAPIReady`, `PlacementAPIReady`, `GlanceReady`,
-  `OVNReady`, `NeutronReady`, `NovaReady`, `InfrastructureReady`,
-  `DNSReadyCondition`, `CAReadyCondition`, `ClientReady`,
-  `BackupConfigReady`, `InstanceHaCMReadyCondition`,
-  `InstanceHaTLSReadyCondition`, `TestCMReadyCondition`,
-  `OpenStackVersionInitializationReadyCondition`, and one
-  `Expose<Service>Ready` per service with a Route (`ExposeKeystoneAPIReady`,
-  `ExposePlacementAPIReady`, `ExposeGlanceReady`, `ExposeNeutronReady`,
-  `ExposeNovaReady`). Disabled services (Horizon, Cinder, Swift, ...) have
-  **no** condition at all: absence is normal.
+  Every condition is `True`. The lab shows 24 of them: `Ready`, then 23
+  conditions all prefixed with `OpenStackControlPlane`:
+
+  | Group | Conditions (after the prefix) |
+  |-------|-------------------------------|
+  | Services | `RabbitMQReady`, `MariaDBReady`, `MemcachedReady`, `KeystoneAPIReady`, `PlacementAPIReady`, `GlanceReady`, `OVNReady`, `NeutronReady`, `NovaReady` |
+  | Platform plumbing | `InfrastructureReady`, `DNSReadyCondition`, `CAReadyCondition`, `ClientReady`, `BackupConfigReady`, `InstanceHaCMReadyCondition`, `InstanceHaTLSReadyCondition`, `TestCMReadyCondition`, `OpenStackVersionInitializationReadyCondition` |
+  | One per service with a Route | `ExposeKeystoneAPIReady`, `ExposePlacementAPIReady`, `ExposeGlanceReady`, `ExposeNeutronReady`, `ExposeNovaReady` |
+
+  Disabled services (Horizon, Cinder, Swift, ...) have **no** condition at
+  all: absence is normal.
 - Level 2: every resource shows `STATUS` `True` and `MESSAGE` `Setup
   complete`. Two kinds print only an `AGE` column (`nova` and `novacell`):
   read their conditions with the `jsonpath` command instead. `KeystoneAPI`
@@ -160,18 +183,20 @@ tests/smoke-test.sh
   `placement-...`, `nova-api-0`, `nova-metadata-0`) and the OVN pods are
   `2/2`; the others are `1/1`. The field-selector command prints `No
   resources found`. Restart counts are `0` and stable between two looks.
-- Level 5: ten endpoints, an `internal` and a `public` one for each of
-  identity, placement, image, network and compute. Internal URLs have the
-  form `https://<service>-internal.openstack.svc:<port>`, public ones
-  `https://<service>-public-openstack.apps.<cluster domain>`. Two
-  `nova-conductor` (hosts `nova-cell0-conductor-0` and
-  `nova-cell1-conductor-0`) and one `nova-scheduler` are `up`; with a data
-  plane, one `nova-compute` on host `edpm-compute-0.ctlplane.<cluster
-  domain>` is `up`, and the agents `OVN Controller Gateway agent` and `OVN
-  Metadata agent` are alive on the same host. The hypervisor list shows one
-  hypervisor of type `QEMU` with host IP 192.168.122.100; its hostname is
-  the name the virtual machine reported at registration, which is not
-  necessarily `edpm-compute-0`.
+- Level 5:
+  - Ten endpoints, an `internal` and a `public` one for each of identity,
+    placement, image, network and compute. Internal URLs have the form
+    `https://<service>-internal.openstack.svc:<port>`, public ones
+    `https://<service>-public-openstack.apps.<cluster domain>`.
+  - Two `nova-conductor` (hosts `nova-cell0-conductor-0` and
+    `nova-cell1-conductor-0`) and one `nova-scheduler` are `up`.
+  - With a data plane, one `nova-compute` on host
+    `edpm-compute-0.ctlplane.<cluster domain>` is `up`, and the agents
+    `OVN Controller Gateway agent` and `OVN Metadata agent` are alive on
+    the same host.
+  - The hypervisor list shows one hypervisor of type `QEMU` with host IP
+    192.168.122.100. Its hostname is the name the virtual machine reported
+    at registration, which is not necessarily `edpm-compute-0`.
 - Data plane: the NodeSet is `True` with message `NodeSet Ready`; the
   deployment `edpm-deployment` is `True` with message `Setup complete`.
 - The smoke test ends with `0 check(s) failed` (15 `PASS`, 1 `SKIP` for the
@@ -189,7 +214,8 @@ The `OpenStackControlPlane` conditions are a mirror: `...KeystoneAPIReady`
 copies the `Ready` condition of `KeystoneAPI/keystone`. That is why you
 always go one level down to get the actual reason.
 
-Three states exist, not two:
+A condition has three possible `status` values, not two; `False` splits
+again by `reason`:
 
 | `status` | `reason` | Meaning |
 |----------|----------|---------|
@@ -236,3 +262,7 @@ oc get openstackcontrolplane openstack
   "what was asked is done", not "the API answers".
 - `oc rsh openstackclient` runs as OpenStack admin. Read-only commands are
   safe; anything else changes the cloud.
+
+---
+
+**Up:** [Operations guide](README.md) · **Next:** [Logs](02-logs.md)

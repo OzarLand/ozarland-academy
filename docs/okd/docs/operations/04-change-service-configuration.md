@@ -8,6 +8,19 @@ run `kolla-ansible reconfigure`. Here the override lives in the
 "reconfigure" command: saving the resource **is** the trigger. The example
 enables debug logging in Keystone.
 
+## In short
+
+- Put the option in `customServiceConfig` of the service, in the
+  `OpenStackControlPlane` resource. Saving the resource is the trigger.
+- The operator re-renders the configuration, its hash changes, and the
+  pods roll by themselves: about 35 seconds for Keystone on the lab.
+- The content is not validated. A wrong section is silently ignored; an
+  unparsable value keeps the new pod from starting.
+- `--type=merge` replaces the whole `customServiceConfig` string: include
+  what is already there (Glance, Neutron).
+- Put lasting changes in the repository template too, or the next run of
+  the deployment script removes them.
+
 ## 1. Initial symptoms
 
 - You need to set or change an option in a service configuration file.
@@ -67,6 +80,22 @@ Note the pod name and the `CONFIG_HASH` value: both must change.
   inputs.
 
 ## 4. Root cause
+
+From your edit to the restarted pod; nothing below the first box is
+started by hand.
+
+```mermaid
+flowchart TD
+    A["You: oc patch OpenStackControlPlane openstack<br/>(spec.keystone.template.customServiceConfig)"]
+    B["openstack operator copies the Keystone section<br/>into KeystoneAPI keystone"]
+    C["keystone operator re-renders<br/>the Secret keystone-config-data"]
+    D["New hash of the inputs,<br/>written as CONFIG_HASH in the pod template"]
+    E["Deployment rolls: a new pod starts,<br/>the old one is removed once the new one is ready"]
+    F["KeystoneAPI and the control plane<br/>report True again"]
+    G["Nothing restarts"]
+    A --> B --> C --> D --> E --> F
+    C -- "rendered configuration identical" --> G
+```
 
 The mechanism, step by step:
 
@@ -202,3 +231,7 @@ oc get openstackcontrolplane openstack
   because the difference is obvious.
 - Changes for `nova-compute` on compute nodes do not go through this path:
   see [data plane changes](08-dataplane-changes.md).
+
+---
+
+**Previous:** [Restart a service](03-restart-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Enable a service](05-enable-a-service.md)

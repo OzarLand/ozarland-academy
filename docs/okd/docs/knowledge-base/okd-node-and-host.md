@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- Two doors to the node: `oc debug node/okd-0` needs the API, SSH as
+  `core` needs only sshd. Keep the SSH path tested.
+- The host is an image-based system (CentOS Stream CoreOS): no package
+  installation, every durable change is a MachineConfig and a reboot.
+- One 150 GiB partition holds images, logs, etcd and every OpenStack
+  volume; 1 GiB of memory is reserved for host services that use
+  about 3.9 GiB.
+- Evidence is short-lived: events 3 hours, API audit log about 10
+  hours, container logs gone with the pod, journal about two weeks.
+- Cordon only blocks new pods; a drain of the single node is an outage
+  with no benefit.
+
 The whole control plane, every OpenStack pod and every volume live on one
 virtual machine, `okd-0`. This file records how that machine is entered,
 what its operating system is, how kubelet and CRI-O are inspected, where
@@ -213,9 +227,10 @@ cluster it cordons and drains first; on a single-node control plane it
 skips the drain. The practical effect is: the whole platform and
 OpenStack control plane stop for the duration of a reboot (measured:
 about 6 minutes until every OpenStack pod is ready, 7 until the pool
-reports `Updated`, see [OKD node maintenance](okd-node-maintenance.md)). A `KubeletConfig` or
-`ContainerRuntimeConfig` resource is the supported way to change kubelet
-or CRI-O settings; each generates a MachineConfig and therefore a reboot.
+reports `Updated`, see [OKD node maintenance](okd-node-maintenance.md)).
+A `KubeletConfig` or `ContainerRuntimeConfig` resource is the supported
+way to change kubelet or CRI-O settings; each generates a MachineConfig
+and therefore a reboot.
 Kolla-Ansible equivalent: the host part of the inventory and
 `kolla-ansible bootstrap-servers`, except that here drift is detected and
 the reboot is automatic.
@@ -841,9 +856,11 @@ Kolla-Ansible equivalent: none on a single controller; on several,
   recreation, then things stay `Pending` with `node(s) were
   unschedulable`. After an interrupted maintenance or a failed
   MachineConfig rollout, check `oc get node` for `SchedulingDisabled`.
-- While cordoned, CronJobs (Keystone Fernet rotation job, database
-  backups, `collect-profiles`) create pods that queue as `Pending` and
-  all start at the uncordon.
+- While cordoned, CronJobs (the hourly `keystone-cron` trust flush,
+  database backups, `collect-profiles`) create pods that queue as
+  `Pending` and all start at the uncordon. Fernet keys are not rotated
+  by a CronJob here (see
+  [who rotates the Fernet keys](openstack-service-administration.md#who-rotates-the-keystone-fernet-keys)).
 - A drain respects PodDisruptionBudgets, but none protects an OpenStack
   pod here and the four platform budgets allow one disruption: a
   server-side dry run showed nothing would block and 198 pods would be

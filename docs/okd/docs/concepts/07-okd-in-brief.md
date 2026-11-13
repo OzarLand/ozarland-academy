@@ -2,6 +2,19 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
+## In short
+
+- OKD is Kubernetes with integrated additions: an immutable node OS, cluster
+  operators, the Operator Lifecycle Manager (OLM), Routes, and the `oc` CLI.
+- Check the cluster before OpenStack: `oc get nodes` and
+  `oc get clusteroperators` take ten seconds.
+- Nodes are appliances: you do not edit files on them, and a node
+  configuration change reboots the node.
+- The lab is a single-node cluster: a node reboot is a full outage of the
+  OpenStack control plane, while instances on the compute node keep running.
+- OLM installs and upgrades the OpenStack operators; the lab requires a
+  manual approval for each operator upgrade.
+
 This document contains the minimum you need to know about OKD in order to
 operate OpenStack on it (phases 1 to 3 of the learning roadmap). It is
 intentionally short. Cluster networking, storage, scheduling, monitoring and
@@ -68,9 +81,9 @@ oc get pods -A | grep -Ev 'Running|Completed'   # anything unhealthy, cluster-wi
 **Cluster operators** are to OKD what the service operators are to OpenStack:
 one per platform function (`kube-apiserver`, `etcd`, `network`, `ingress`,
 `dns`, `machine-config`, `storage`...; 34 on the lab), each reporting
-conditions. A degraded
-`ingress` operator explains unreachable public OpenStack endpoints; a degraded
-`network` or `dns` operator explains almost anything.
+conditions. A degraded `ingress` operator explains unreachable public
+OpenStack endpoints; a degraded `network` or `dns` operator explains almost
+anything.
 
 ```bash
 oc describe clusteroperator ingress
@@ -146,14 +159,30 @@ oc get catalogsource -A
 oc get subscription,installplan,csv -n openstack-operators
 ```
 
+The chain for the OpenStack operators, from the catalog to the operator pods
+(the objects observed on the lab are listed in
+[OLM and operators](../knowledge-base/okd-olm-and-operators.md)):
+
+```mermaid
+flowchart TD
+    cat["CatalogSource<br/>(index of available operator versions)"] --> sub["Subscription<br/>(operator, channel, approval mode)"]
+    sub -->|"OLM resolves it into"| ip["InstallPlan<br/>(waits for approval when Manual)"]
+    ip -->|"once approved, creates"| csv["ClusterServiceVersion<br/>(one installed operator version)"]
+    csv -->|"carries"| init["Deployment<br/>openstack-operator-controller-init"]
+    init -->|"reads"| oscr["OpenStack CR<br/>(namespace openstack-operators)"]
+    init -->|"creates"| ops["Deployments of openstack-operator<br/>and of the service operators"]
+```
+
 The lab sets `installPlanApproval: Manual` on the OpenStack operator's
 Subscription, so that an operator upgrade happens only when you approve the
 InstallPlan. The deployment script approves the first one only.
 
 Remember the two-step model: approving an InstallPlan upgrades the
 **operators**; the OpenStack **service** images change only when you set
-`targetVersion` on the `OpenStackVersion` CR. What the lab observed (no newer
-bundle was offered, so no real operator upgrade took place) is in
+`targetVersion` on the `OpenStackVersion` CR.
+
+What the lab observed (no newer bundle was offered, so no real operator
+upgrade took place) is in
 [Operator upgrade](../lifecycle/02-operator-upgrade.md) and
 [Minor update](../lifecycle/01-openstack-version-and-minor-update.md).
 
@@ -172,8 +201,9 @@ usable:
 In the lab the three names are served by dnsmasq on the bastion and are only
 resolvable from the lab networks. If that DNS stops, `oc` and the public
 endpoints fail while everything is healthy inside the cluster
-([DNS and routing](../troubleshooting/dns-and-routing.md)). Inside the
-cluster, services talk to each other through Service names
+([DNS and routing](../troubleshooting/dns-and-routing.md)).
+
+Inside the cluster, services talk to each other through Service names
 (`<svc>.<namespace>.svc`), served by the cluster's own DNS.
 
 ## Security Context Constraints
@@ -258,4 +288,6 @@ data: review before sharing. See [Logs](../operations/02-logs.md).
 | Monitoring | The built-in Prometheus stack, alerts, `oc adm top`, events |
 | Lifecycle | `oc adm upgrade`, cluster operator upgrade order, MachineConfig rollouts, etcd backup and restore, certificate rotation; start with [OKD upgrade](../lifecycle/07-okd-upgrade.md) |
 
-Back to the [index](README.md).
+---
+
+**Previous:** [Control plane and data plane](06-control-plane-and-data-plane.md) · **Up:** [Concepts index](README.md) · **Next:** [Operations guide](../operations/README.md)

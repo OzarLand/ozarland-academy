@@ -4,6 +4,19 @@
 > 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12, after the fourth
 > campaign; `tests/smoke-test.sh --functional` reported 0 failed
 
+## In short
+
+- The campaigns reverted their changes but left some objects on purpose:
+  data plane deployments kept as history, two database dumps per
+  instance, the `kb-demo` tenant, and backups on the bastion.
+- Permanent and now part of the baseline: the ConfigMap
+  `nova-extra-config` and the catalog image pinned by digest.
+- The inventory below is from 2026-11-12 (9 deployments). The drills of
+  2026-11-13 added two deployments (11 in total), one backup directory
+  on the bastion and a third etcd revision, and nothing else.
+- Nothing is close to a limit (`/var` at 32 %); the removal commands are
+  there for the habit.
+
 The four campaigns of 2026-11-12 changed the lab and reverted their
 changes, but some objects were kept on purpose (history, replay of the
 entries) and some are permanent. This file lists every one of them with

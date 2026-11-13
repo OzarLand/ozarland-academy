@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command and the dnsmasq stop/start reproduction; `scripts/bastion/01-setup-bastion.sh` was not re-run, and the failure patterns of scenarios B, C and D other than a stopped lab DNS were not provoked
 
+## In short
+
+- Three DNS services exist: the lab DNS on the bastion, the cluster DNS
+  for pods, and the data plane DNS for compute nodes. Find which one the
+  failing client uses before anything else.
+- The lab DNS on the bastion is a single point of failure: without it
+  `oc` fails with "connection refused", which looks like an API fault.
+- A Route that answers 503 has no ready pod behind it: it is a pod
+  fault, not a network fault.
+- On a compute node use `getent hosts`; a Service name that resolves
+  while an external name does not puts the fault behind the data plane
+  DNS.
+
 Three different DNS services exist in the lab. Mixing them up is the usual
 source of confusion.
 
@@ -14,6 +27,19 @@ source of confusion.
 Public OpenStack endpoints are Routes: names under `*.apps.<cluster domain>`
 that all resolve to the OKD node, where the ingress router picks the backend
 from the host name.
+
+Who asks whom; a break anywhere on a path gives the same symptom at its
+start:
+
+```mermaid
+flowchart LR
+    POD["Pods"] --> CORE["Cluster DNS (CoreDNS)<br/>answers Service names"]
+    CORE -- "everything else, through<br/>the resolver of the node" --> LAB["Lab DNS (dnsmasq on the bastion)<br/>192.168.130.5<br/>answers api, api-int, *.apps"]
+    CN["Compute nodes"] --> DP["Data plane DNS (dnsmasq-dns pod)<br/>192.168.122.80<br/>answers compute node and<br/>control plane endpoint names"]
+    DP -- "everything else" --> LAB
+    BN["Bastion (oc)<br/>and the OKD node"] --> LAB
+    LAB -- "everything else" --> UP["Upstream resolvers"]
+```
 
 ## Scenario A: the lab DNS is down or wrong
 

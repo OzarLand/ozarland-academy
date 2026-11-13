@@ -2,6 +2,21 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion, the OKD node and the compute node, the MetalLB allocation failures (reproduced with throwaway Services) and the missing NAD; not executed: the host cloud checks and `terraform` commands of scenario C (outside the lab perimeter of this validation), a real port-security or interface-rename fault, whereabouts exhaustion, and any MTU change
 
+## In short
+
+- Four networks, split the same way: `.10` the OKD node, `.30` to `.70`
+  pod interfaces, `.80` to `.90` MetalLB addresses, `.100` and above
+  compute nodes.
+- MetalLB addresses and macvlan pods only work because port security is
+  disabled on the three OpenStack networks. If it is enabled, every
+  scenario of this page appears at once.
+- Never test a MetalLB address with `ping`: test a TCP port from the
+  compute node and read the neighbour entry.
+- A NetworkAttachmentDefinition is read only when a pod is created: a
+  missing one stays hidden until the next restart.
+- MTU faults look like hangs on large transfers; probe with
+  `ping -M do`.
+
 Four networks matter to OpenStack in the lab. Knowing which one a flow uses
 is half of the diagnosis.
 
@@ -224,10 +239,12 @@ oc delete pod <pod>
 ```
 
 Exhausted or leaked addresses: list the allocations (command above) and
-compare with the pods that exist. Cleaning leaked whereabouts allocations
-by hand was not executed on this lab; the least risky way is to delete the
+compare with the pods that exist. The least risky way is to delete the
 pods of the affected network one at a time so that allocations are released
-properly.
+properly. Cleaning a leaked allocation by hand was not executed during the
+validation of this page; it was done on 2026-11-12 on a simulated leak,
+with a JSON patch that tests the offset first: see
+[how do I clean a leaked address](../knowledge-base/okd-networking.md#which-pod-holds-which-address-on-the-openstack-networks-and-how-do-i-clean-a-leaked-one).
 
 ### 6. Verification
 

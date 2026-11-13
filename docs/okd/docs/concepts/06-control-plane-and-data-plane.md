@@ -2,8 +2,21 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
-The platform has two halves that are managed in two different ways. Knowing
-which half a component belongs to tells you which tools apply to it.
+## In short
+
+- The platform has two halves. The **control plane** (APIs, databases,
+  message bus) runs as pods on OKD and is reconciled continuously. The
+  **data plane** (compute nodes) stays ordinary Linux hosts outside the
+  cluster, configured by Ansible over SSH.
+- The data plane is close to Kolla: a NodeSet is an inventory group with its
+  variables, a Deployment is one `kolla-ansible deploy` run. Nothing happens
+  on a node until you create a Deployment.
+- Configuration drift on a compute node is not corrected until the next
+  deployment.
+- Compute nodes cannot reach pod IPs. Secondary pod interfaces (NADs) and
+  MetalLB virtual IPs on the OpenStack networks bridge the gap.
+
+Knowing which half a component belongs to tells you which tools apply to it.
 
 Every command block on this page is **[READ-ONLY]**.
 
@@ -30,7 +43,7 @@ Every command block on this page is **[READ-ONLY]**.
 | Runs on | OKD nodes, as pods | External hosts (compute nodes), outside the cluster |
 | Declared by | `OpenStackControlPlane` | `OpenStackDataPlaneNodeSet` |
 | Applied by | Service operators, **continuously** | Ansible Jobs, **only when you create** an `OpenStackDataPlaneDeployment` |
-| Process manager | Kubernetes (kubelet) | systemd + podman |
+| Process manager | Kubernetes (the kubelet, its agent on each node) | systemd + podman |
 | Logs | `oc logs` | `journalctl` / `podman logs` on the node |
 | Restart a service | `oc delete pod` (the workload recreates it) | `systemctl restart edpm_<service>` on the node |
 | Self-healing | Yes (reconciliation) | Process restarts by systemd only; configuration drift is **not** corrected until the next deployment |
@@ -109,10 +122,20 @@ spec:
     - openstack-edpm
 ```
 
-Useful optional fields: `servicesOverride` (run only these services, like
-`--tags`) and `ansibleLimit` (restrict to some nodes, like `--limit`). On the
-lab the first full run took about 21 minutes, a later full run about 14, and
-a run limited to `nova` about two and a half.
+Useful optional fields:
+
+| Field | Effect | Kolla analogy |
+|---|---|---|
+| `servicesOverride` | Run only these services | `--tags` |
+| `ansibleLimit` | Restrict the run to some nodes | `--limit` |
+
+Durations observed on the lab:
+
+| Run | Duration |
+|---|---|
+| First full run | About 21 minutes |
+| A later full run | About 14 minutes |
+| A run limited to `nova` | About two and a half minutes |
 
 ### What a run looks like
 
@@ -127,11 +150,38 @@ oc get pods -n openstack -l app=openstackansibleee
 oc logs -n openstack job/nova-edpm-deployment-openstack-edpm | tail -20   # the familiar Ansible output
 ```
 
-A failed task fails the Job; Kubernetes retries it up to its backoff limit and
-the Deployment's conditions report the failure. After fixing the cause, create
-a new Deployment, optionally limited with `servicesOverride`. Searching the
-log for `fatal:` gives false positives on ignored errors: read the
-`PLAY RECAP`. See the [data plane runbook](../troubleshooting/dataplane.md).
+The whole chain, from the declaration to the node:
+
+```mermaid
+sequenceDiagram
+    actor you as You
+    participant api as Kubernetes API
+    participant oso as openstack-operator
+    participant job as Job pod (ansible-runner)
+    participant node as compute node
+    you->>api: edit the NodeSet (declares, changes nothing on the node)
+    you->>api: create an OpenStackDataPlaneDeployment
+    api-->>oso: new deployment
+    loop for each service of the NodeSet, in order
+        oso->>api: create a Job with inventory and SSH key
+        api->>job: start the pod
+        job->>node: run the playbook over SSH
+        node-->>job: PLAY RECAP
+        job-->>oso: Job complete or failed
+    end
+    oso->>api: deployment and NodeSet conditions Ready
+```
+
+When a task fails:
+
+- The Job fails; Kubernetes retries it up to its backoff limit and the
+  Deployment's conditions report the failure.
+- After fixing the cause, create a new Deployment, optionally limited with
+  `servicesOverride`.
+- Searching the log for `fatal:` gives false positives on ignored errors:
+  read the `PLAY RECAP`.
+
+See the [data plane runbook](../troubleshooting/dataplane.md).
 
 ### Detecting undeployed changes
 
@@ -163,9 +213,11 @@ Different values mean "declared but not yet deployed", and the NodeSet is
 configuration directory by the `nova` data plane service.
 
 The lab runs its compute node as a virtual machine. Whether hardware
-virtualisation is exposed to that VM decides the libvirt virtualisation type.
-With it (the validated lab), nova keeps its default, KVM, and the ConfigMap
-does not exist. Without it, the deployment script creates:
+virtualisation is exposed to that VM decides the libvirt virtualisation type:
+
+- With it (the validated lab), nova keeps its default, KVM, and the ConfigMap
+  does not exist.
+- Without it, the deployment script creates:
 
 ```yaml
 apiVersion: v1
@@ -245,10 +297,12 @@ oc get pod <pod> -n openstack \
 ```
 
 A service is attached through the `networkAttachments` list in its section of
-the control plane CR, for example `[internalapi]`. On the lab, Neutron and the two OVN
-databases are attached to `internalapi`, and the Ansible runner pods to
-`ctlplane`. Deleting a NAD does nothing to running pods; the next pod that
-starts fails, and the service CR reports `NetworkAttachmentsReady` as `False`
+the control plane CR, for example `[internalapi]`. On the lab, Neutron and the
+two OVN databases are attached to `internalapi`, and the Ansible runner pods
+to `ctlplane`.
+
+Deleting a NAD does nothing to running pods; the next pod that starts fails,
+and the service CR reports `NetworkAttachmentsReady` as `False`
 ([runbook](../troubleshooting/reconciliation-not-progressing.md)).
 
 For a Kolla operator: a NAD plays the role of `api_interface`,
@@ -269,16 +323,20 @@ oc get svc -n openstack | grep LoadBalancer        # EXTERNAL-IP is the VIP
 
 | Address | Services |
 |---|---|
-| 172.17.0.80 (internalapi) | The six internal API endpoints, sharing the address on different ports |
+| 172.17.0.80 (internalapi) | The six internal API endpoints, sharing the address on different ports (their names are in [Kubernetes building blocks](02-kubernetes-building-blocks.md#service)) |
 | 172.17.0.85, 172.17.0.86 (internalapi) | `rabbitmq`, `rabbitmq-cell1` |
 | 192.168.122.80 (ctlplane) | `dnsmasq-dns` |
 
 The shared address is the functional equivalent of the keepalived internal
-VIP in Kolla. The OVN southbound database has no MetalLB address: compute
-nodes resolve `ovsdbserver-sb.openstack.svc` through `dnsmasq-dns` to the
-internalapi address of the database pod. A Service whose `EXTERNAL-IP` stays
-`<pending>` has not obtained an address; the causes and the real event texts
-are in the [network runbook](../troubleshooting/network.md).
+VIP in Kolla.
+
+The OVN southbound database has no MetalLB address: compute nodes resolve
+`ovsdbserver-sb.openstack.svc` through `dnsmasq-dns` to the internalapi
+address of the database pod.
+
+A Service whose `EXTERNAL-IP` stays `<pending>` has not obtained an address;
+the causes and the real event texts are in the
+[network runbook](../troubleshooting/network.md).
 
 ### Routes: public HTTP endpoints
 
@@ -335,4 +393,6 @@ oc rsh -n openstack openstackclient openstack hypervisor list
 oc rsh -n openstack openstackclient openstack network agent list
 ```
 
-Next: [OKD in brief](07-okd-in-brief.md).
+---
+
+**Previous:** [Service lifecycle reference](05-service-lifecycle-reference.md) · **Next:** [OKD in brief](07-okd-in-brief.md)

@@ -11,6 +11,42 @@ when, what remains to be verified, and a draft text. The decision to
 send, and the sending, belong to the person whose name will be on the
 contribution.
 
+## Start here
+
+Reading this folder takes about an hour:
+
+1. This page: the status board and the suggested first three (5 min).
+2. [methodology.md](methodology.md), sections 1, 2 and 6: the method and
+   how trust is built (15 min). Sections 3 to 5 are reference material,
+   to read when a topic targets that project.
+3. The first topic of the board, in full (10 min). Every topic has the
+   same ten sections, so the others read fast: start with "Summary",
+   "Evidence from the lab" and its "Not verified" list.
+4. [topics/rejected.md](topics/rejected.md): what was looked at and
+   dropped, and why (5 min).
+
+To work on a topic: close its "Not verified" items on the lab, re-read
+the upstream state on the day, fill the
+[checklist](templates/pr-checklist.md), send, and write the
+[journal](log.md) entry.
+
+```mermaid
+stateDiagram-v2
+    [*] --> candidate: written from lab evidence
+    candidate --> validating: lab runs to close "Not verified"
+    validating --> candidate: evidence complete
+    candidate --> reported: issue or question sent
+    reported --> in_review: patch sent
+    candidate --> in_review: small fix sent directly
+    in_review --> merged
+    in_review --> refused
+    candidate --> abandoned: fixed upstream or not a bug
+    reported --> abandoned
+    merged --> [*]
+    refused --> [*]
+    abandoned --> [*]
+```
+
 ## Organisation
 
 | Path | Content |

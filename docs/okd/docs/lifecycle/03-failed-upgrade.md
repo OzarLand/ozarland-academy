@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — every read-only command was run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), at rest and during a staged minor update, and the webhook refusals were checked with `--dry-run=server`; no update was deliberately broken, so the failure rows of section 3 and the resolutions of section 5 were not exercised
 
+## In short
+
+- There is no global "upgrade failed" flag. Find the first link of the
+  chain that is not `Ready`, then debug it as outside an upgrade.
+- Work top-down: which axis is moving, which stage, which service, which
+  pod or job.
+- The only "stall" seen on the lab is not a failure: the update waits for
+  your data plane deployment at stages 2 and 8.
+- Fix the cause; reconciliation resumes by itself. Do not set
+  `targetVersion` back, edit workloads by hand or delete PVCs to unblock.
+- The failure cases of this page come from the operator source: none was
+  provoked on the lab.
+
 ## 1. Initial symptoms
 
 One of:
@@ -177,7 +190,7 @@ oc -n openstack patch openstackversion openstack --type=json \
 
 **[CHANGE]** Pod stuck on an old failure after the cause is fixed — delete
 it; its controller recreates it (see
-[restarting a service](../operations/) for what this
+[restarting a service](../operations/03-restart-a-service.md) for what this
 means for each workload type):
 
 ```bash
@@ -271,3 +284,7 @@ Both should print nothing.
 - Confirmed on the lab: the Ansible pod label `app=openstackansibleee`, the
   condition names, reasons and messages of a healthy update, the webhook
   message, and the must-gather image on OKD.
+
+---
+
+**Previous:** [Upgrading the OpenStack operators](02-operator-upgrade.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Rollback: what can and cannot be undone](04-rollback-limitations.md)

@@ -240,6 +240,15 @@ repositories OKD is built from.
 
 A ladder, each step small enough to succeed:
 
+```mermaid
+flowchart LR
+    s1["1. Precise user<br/>documentation fix<br/>(topics 07, 08)"] --> s2["2. Report with evidence<br/>issue or backport request<br/>(topics 04, 01)"]
+    s2 --> s3["3. Fix what you reported<br/>small, with a test<br/>(topics 01, 02, 10)"]
+    s3 --> s4["4. Review and test<br/>others' changes"]
+    s4 --> s5["5. Harder subject,<br/>agreed with a maintainer<br/>(topics 03, 05)"]
+    s5 --> s6["6. Stay"]
+```
+
 1. **Be a precise user.** One documentation fix that is obviously right
    and tested (topics 07, 08). The goal is a first merged change and a
    first exchange with an approver.

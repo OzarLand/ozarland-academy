@@ -2,27 +2,55 @@
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
 
-This guide covers the daily work of an OpenStack operator once the lab is
-deployed: looking at health, reading logs, restarting, reconfiguring, enabling
-and scaling services. It assumes you know OpenStack well and Kubernetes little.
-If a term is unfamiliar, the [concepts guide](../concepts/README.md) explains it.
+**Start here** once the lab is deployed and the smoke test passes. This
+guide covers the daily work of an OpenStack operator: looking at health,
+reading logs, restarting, reconfiguring, enabling and scaling services. It
+assumes you know OpenStack well and Kubernetes little.
+
+Read pages 1 and 2 first: they are read-only and every other page relies on
+them. The other pages can be read in any order; page 9 is the checklist to
+keep open during any change.
 
 When something is broken rather than merely to be changed, go to the
 [troubleshooting runbooks](../troubleshooting/README.md).
 
-## Reading order
+## In short
 
-| # | Document | You learn to |
-|---|----------|--------------|
-| 1 | [Inspect service status](01-inspect-service-status.md) | Walk the health chain from the control plane resource down to the API |
-| 2 | [Logs](02-logs.md) | Find the right log for a service, an operator, a job, a compute node |
-| 3 | [Restart a service](03-restart-a-service.md) | Restart safely, and know what a restart does not fix |
-| 4 | [Change service configuration](04-change-service-configuration.md) | Edit `customServiceConfig` and follow the rollout |
-| 5 | [Enable a service](05-enable-a-service.md) | Turn Horizon on and off |
-| 6 | [Scale a service](06-scale-a-service.md) | Change replica counts, and when not to |
-| 7 | [Passwords and secrets](07-passwords-and-secrets.md) | Read credentials, understand what rotation implies |
-| 8 | [Data plane changes](08-dataplane-changes.md) | Re-run Ansible on compute nodes after a change |
-| 9 | [Safe change checklist](09-safe-change-checklist.md) | Apply any change with a way back |
+- Change the `OpenStackControlPlane` resource, nothing below it
+  ([the one rule](#the-one-rule)).
+- There is no "reconfigure" command: saving the resource is the trigger,
+  and the result arrives seconds to minutes later, in conditions.
+- The control plane reconciles continuously. Compute nodes change only
+  when you create a data plane deployment.
+- A `True` control plane means "what was asked is done", not "the API
+  answers": finish every change with a call to the API.
+- Every command block is labelled **[READ-ONLY]**, **[CHANGE]** or
+  **[DESTRUCTIVE]** ([conventions](#conventions)).
+
+## Prerequisites
+
+| Prerequisite | Where |
+|---|---|
+| The lab is deployed and `tests/smoke-test.sh` passes | [Installation, step 7](../installation/07-verification.md) |
+| A shell on the bastion, in the repository directory, with `oc project openstack` done | [Conventions](#conventions) |
+| The vocabulary: operator, custom resource, condition, reconciliation | [Concepts guide](../concepts/README.md) |
+
+## Pages
+
+The last column is the duration of the example change of the page, as
+measured on the lab; the pages give the details.
+
+| # | Page | You learn to | Measured on the lab |
+|---|------|--------------|---------------------|
+| 1 | [Inspect service status](01-inspect-service-status.md) | Walk the health chain from the control plane resource down to the API | Read-only |
+| 2 | [Logs](02-logs.md) | Find the right log for a service, an operator, a job, a compute node | Read-only; a must-gather collection takes about 2 min 30 s |
+| 3 | [Restart a service](03-restart-a-service.md) | Restart safely, and know what a restart does not fix | 20 to 60 s per pod |
+| 4 | [Change service configuration](04-change-service-configuration.md) | Edit `customServiceConfig` and follow the rollout | About 35 s (Keystone) |
+| 5 | [Enable a service](05-enable-a-service.md) | Turn Horizon on and off | About 50 s to enable, 30 s to disable |
+| 6 | [Scale a service](06-scale-a-service.md) | Change replica counts, and when not to | About 30 s up, 3 s down |
+| 7 | [Passwords and secrets](07-passwords-and-secrets.md) | Read credentials, understand what rotation implies | About 25 s of rollout (Placement) |
+| 8 | [Data plane changes](08-dataplane-changes.md) | Re-run Ansible on compute nodes after a change | 2 min 30 s (`nova` only) to about 14 min (full run on a deployed node) |
+| 9 | [Safe change checklist](09-safe-change-checklist.md) | Apply any change with a way back | Read-only checks before and after |
 
 ## Conventions
 
@@ -47,7 +75,8 @@ Every scenario uses the same seven sections: initial symptoms, read-only
 investigation, expected observations, root cause, resolution, verification,
 risks and precautions. In the operations guide the "symptom" is usually a
 need ("I want debug logs"), and the "root cause" section explains the
-mechanism that makes the procedure work.
+mechanism that makes the procedure work. Each page starts with an "In
+short" block: read it first, and again before applying the procedure.
 
 ## The one rule
 
@@ -156,3 +185,7 @@ oc get pods -l service=keystone
 oc get pods -l app.kubernetes.io/name=rabbitmq
 oc get pods -l app=galera
 ```
+
+---
+
+**Previous:** [Installation guide](../installation/README.md) · **Next:** [Inspect service status](01-inspect-service-status.md) · **See also:** [Lifecycle management](../lifecycle/README.md)

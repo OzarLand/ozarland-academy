@@ -4,6 +4,13 @@ What you need before starting, and how to check each item. Everything here
 can be verified in a few minutes with a throw-away instance; doing so avoids
 discovering a blocker halfway through the installation.
 
+| What to check | Section |
+|---|---|
+| Quota, flavors, images, network features and outbound access of the project | [Host cloud project](#host-cloud-project) |
+| Nested virtualization, CPU level and disk latency, on a test instance | [Checks on a test instance](#checks-on-a-test-instance) |
+| Tools and credentials on your machine | [Workstation](#workstation) |
+| What you are expected to know | [Knowledge](#knowledge) |
+
 ## Host cloud project
 
 The lab runs in one project (tenant) of an existing OpenStack cloud. A
@@ -71,17 +78,22 @@ If the first command is refused by policy, read the fallback discussion in
 
 ### Outbound access
 
-Lab VMs download from `quay.io`, `github.com` and
-`raw.githubusercontent.com`, `mirror.openshift.com`-style content hosts used
-by the OKD installer, `cloud.centos.org` / `mirror.stream.centos.org`,
-`trunk.rdoproject.org`, and `download.cirros-cloud.net` (test image of the
-functional smoke test). A cloud that filters
-outbound traffic needs these destinations allowed; a disconnected
-installation is out of scope.
+Lab VMs download from:
+
+- `quay.io`;
+- `github.com` and `raw.githubusercontent.com`;
+- `mirror.openshift.com`-style content hosts used by the OKD installer;
+- `cloud.centos.org` / `mirror.stream.centos.org`;
+- `trunk.rdoproject.org`;
+- `download.cirros-cloud.net` (test image of the functional smoke test).
+
+A cloud that filters outbound traffic needs these destinations allowed; a
+disconnected installation is out of scope.
 
 Access through an HTTP proxy is supported as long as the proxy accepts HTTPS
 (`CONNECT`) requests from the lab VMs: see
 [Running behind a proxy](installation/README.md#running-behind-a-proxy).
+
 The lab also needs an NTP server; when none is reachable, the bastion can
 serve its own clock (`BASTION_NTP_SERVER` in `lab.env`).
 
@@ -128,9 +140,13 @@ fio --rw=write --ioengine=sync --fdatasync=1 --directory=/var/tmp \
     --size=22m --bs=2300 --name=etcd-check
 ```
 
-In the output, look at `fsync/fdatasync/sync_file_range` → `99.00th`. Below
-10 ms is good. Between 10 and 20 ms the cluster installs but may show
-occasional etcd warnings. Above that, choose a faster volume type or flavor.
+In the output, look at `fsync/fdatasync/sync_file_range` → `99.00th`:
+
+| 99th percentile | Meaning |
+|---|---|
+| Below 10 ms | Good |
+| Between 10 and 20 ms | The cluster installs but may show occasional etcd warnings |
+| Above 20 ms | Choose a faster volume type or flavor |
 
 ## Workstation
 

@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for the investigation, the missing NetworkAttachmentDefinition (5b) and the operator restart (5d); the missing `osp-secret` key (5a) was not executed (a wrong value desynchronises a service from Keystone), and of the condition table only the `NetworkAttachmentsReady` and `DeploymentReady` rows were observed
 
+## In short
+
+- Nothing stops and nothing prints: the operator writes where it is
+  blocked into the conditions of the resource.
+- Read in this order: control plane conditions, then the service
+  resource (and its children), then `observedGeneration`, then the
+  operator log, then the inputs.
+- The first condition that is not `True` names the blocked step; fix the
+  earliest one, the others follow.
+- Creating the missing input restarts the attempt by itself. Restarting
+  the operator pod is the last step, and harmless for the service.
+- Never delete a service resource to force a retry.
+
 You declared a state and the platform does not reach it: the control plane
 or a service resource stays `False`. With Kolla-Ansible a failed deploy
 stops with an Ansible error on your terminal. Here nothing stops and nothing

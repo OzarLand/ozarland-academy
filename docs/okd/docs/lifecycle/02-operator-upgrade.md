@@ -2,6 +2,21 @@
 
 > Status: partially validated on the lab — read-only commands and the catalog refresh were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); the catalog offered no newer bundle, so no InstallPlan could be approved and the replacement of the operators by OLM (section 5, steps 2 to 4) was not executed
 
+## In short
+
+- The operators are upgraded by OLM, as one bundle: catalog, Subscription,
+  InstallPlan, ClusterServiceVersion.
+- Approval is manual on the lab: a newer bundle in the catalog changes
+  nothing until you approve its InstallPlan.
+- An operator upgrade does not change the service images. It only
+  publishes a newer `availableVersion`; but new controllers can still roll
+  services.
+- Choosing the catalog image (digest) is choosing the version. There is no
+  downgrade.
+- Not observed on the lab: an InstallPlan to approve. The catalog offered
+  no newer bundle, and on 18-stable a rebuilt catalog may never show up as
+  an OLM upgrade (section 3).
+
 ## 1. Context
 
 You want newer operators: bug fixes in the controllers, new fields in the
@@ -211,17 +226,21 @@ status line).
 
 What was observed is the second half, when the content of the installed
 CSV changes (done by hand for the exercise of
-[01](01-openstack-version-and-minor-update.md), section 5.2): the CSV went
-`Installing` then `Succeeded` in about 20 seconds,
-`openstack-operator-controller-init` was replaced, then
-`openstack-operator-controller-manager` and **all** service operator
-Deployments were deleted and recreated — the controller manager is briefly
-`NotFound`. About 95 seconds after the change every operator pod was
-running again and `availableVersion` showed the new value. The `OpenStack`
-resource has three conditions to follow: `Ready`,
+[01](01-openstack-version-and-minor-update.md), section 5.2):
+
+- the CSV went `Installing` then `Succeeded` in about 20 seconds;
+- `openstack-operator-controller-init` was replaced, then
+  `openstack-operator-controller-manager` and **all** service operator
+  Deployments were deleted and recreated — the controller manager is
+  briefly `NotFound`;
+- about 95 seconds after the change every operator pod was running again
+  and `availableVersion` showed the new value;
+- no OpenStack service pod was restarted and the control plane stayed
+  `Ready`.
+
+The `OpenStack` resource has three conditions to follow: `Ready`,
 `OpenStackOperatorDeploymentsReadyCondition` and
-`OpenStackOperatorReadyCondition`. No OpenStack service pod was restarted
-and the control plane stayed `Ready`.
+`OpenStackOperatorReadyCondition`.
 
 ## 6. Verification
 
@@ -269,3 +288,7 @@ shows which service pods were restarted by the new controllers. Then run
 - The catalog pod label (`olm.catalogSource=openstack-operator-index`) and
   the state string `AtLatestKnown` are confirmed; `UpgradePending` was not
   seen.
+
+---
+
+**Previous:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md)

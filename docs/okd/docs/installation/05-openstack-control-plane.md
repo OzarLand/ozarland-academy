@@ -2,6 +2,17 @@
 
 **Where:** bastion. **Command:** `scripts/bastion/06-openstack-controlplane.sh`
 
+## In short
+
+- One resource, `OpenStackControlPlane`, describes the whole control
+  plane. Nearly every Day-2 operation is an edit of this resource.
+- No order is scripted: each operator waits for what it depends on and
+  reports the wait in the conditions of its resource.
+- Passwords are generated into the Secret `osp-secret` and exist nowhere
+  else.
+- Done when the control plane shows `True`, "Setup complete". On the lab
+  all pods were running ten minutes after the `oc apply`.
+
 ## What we deploy
 
 The OpenStack control plane services, as pods in the `openstack` namespace:
@@ -114,3 +125,7 @@ the service that is not ready. Then:
 | A Service of type LoadBalancer with `<pending>` address | MetalLB pools: [../troubleshooting/network.md](../troubleshooting/network.md) |
 | `CrashLoopBackOff` | `oc -n openstack logs <pod> --previous`; [../troubleshooting/pod-pending-or-crashloop.md](../troubleshooting/pod-pending-or-crashloop.md) |
 | A condition stays False with no failing pod | [../troubleshooting/reconciliation-not-progressing.md](../troubleshooting/reconciliation-not-progressing.md) |
+
+---
+
+**Previous:** [Step 4 — OpenStack operators](04-openstack-operators.md) · **Next:** [Step 6 — OpenStack data plane](06-openstack-data-plane.md)

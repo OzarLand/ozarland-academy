@@ -3,6 +3,22 @@
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,
 > OpenStack 2023.1 Antelope, one KVM compute node) on 2026-11-12
 
+## In short
+
+- Configuration is never edited in a pod: change `customServiceConfig`,
+  `defaultConfigOverwrite` or `resources` in the `OpenStackControlPlane`
+  and the operator rolls the pods (20 to 35 s per service on the lab).
+- The operators react to changes of Kubernetes objects only. Drift made
+  inside OpenStack (a deleted catalog endpoint) stays until the owning
+  resource is touched.
+- Fernet keys are rotated by the keystone operator in the Secret
+  `keystone`, without a pod restart; a rotation was observed on
+  2026-11-12.
+- RabbitMQ, Galera and memcached are inspected with their usual tools
+  through `oc exec`; the database client needs no password option.
+- Known noise: "AMQP server is unreachable" from idle API workers, and
+  notification queues that only grow.
+
 Every control-plane service is described by the `OpenStackControlPlane`
 resource `openstack` (short name `oscp`) in the namespace `openstack`.
 You change the resource; the operators render configuration into Secrets

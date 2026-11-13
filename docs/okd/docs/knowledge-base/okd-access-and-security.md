@@ -3,6 +3,22 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- The bastion works as `system:admin` with a 10-year client certificate
+  that cannot be revoked and carries no personal identity. Keep it as
+  break-glass access and give named accounts instead.
+- Named users: an htpasswd identity provider plus role bindings. To
+  remove one, delete bindings first, then tokens, then User and
+  Identity.
+- A read-only user sees health, pods, logs and events, but no Secret and
+  no shell. Two surprises: Route TLS private keys are readable, and the
+  OpenStack custom resources are not until a ClusterRole is added.
+- The operators hold cluster-wide rights on Secrets; the service pods
+  hold almost none.
+- The audit log says when and from where, keeps about 10 hours, and
+  records no request body.
+
 Who can do what on the cluster that carries the OpenStack control plane:
 the credentials the bastion uses, how to give a colleague a named
 account (administrator or read-only), what a read-only account really

@@ -89,9 +89,11 @@ and the three jobs pass.
   restores, upgrades without an available target).
 - `docs/versions.md` is the single source for versions, validation status
   and known limitations, and matches the README.
-- Not executed anywhere, and documented as such: restore from any backup,
-  an operator upgrade through OLM, the OKD upgrade, the QEMU emulation
-  path, the layout without floating IPs, a second compute node.
+- Not executed anywhere, and documented as such: a volume-snapshot
+  rollback, an operator upgrade through OLM, the OKD upgrade, the QEMU
+  emulation path, the layout without floating IPs. The restores of the
+  databases and of etcd, and the additional compute nodes, were exercised
+  after the first review; `docs/versions.md` holds the current status.
 
 ## 6. License and third-party content
 

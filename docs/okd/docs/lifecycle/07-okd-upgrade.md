@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — only the read-only parts were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable): current state, channel, offered updates, health gates and API deprecation queries. The upgrade itself was deliberately not executed and remains an exercise; no upgrade edge was offered to the lab at that date
 
+## In short
+
+- An OKD release is one payload: Kubernetes, the cluster operators and the
+  node OS. Upgrading it restarts OpenStack but does not upgrade it.
+- On the single-node lab an OKD upgrade includes at least one full control
+  plane outage, and there is no downgrade: take volume snapshots first.
+- Observed on the lab: with the settings left by the 4.22 installer,
+  `oc adm upgrade` answers "No updates available".
+- Read upstream, **not tested on the lab**: a newer OKD update service may
+  offer updates from this version (note in section 3).
+- The upgrade itself was not executed. The OpenStack operators are not
+  validated on the next Kubernetes version.
+
 This is Phase 4 material: it concerns the platform under OpenStack. Read
 [06-okd-maintenance-impact.md](06-okd-maintenance-impact.md) first — on the
 single-node lab an OKD upgrade includes at least one full control plane
@@ -103,6 +116,30 @@ oc -n openstack get openstackversion openstack \
   `4.22.0-okd-scos.10`**: `status.availableUpdates` is `null` and there is
   no conditional update either. Whether a `stable-scos-5` channel exists was
   not tested (it would be a change).
+
+  > **Note of 2026-11-13: upstream reading, not tested on the lab.**
+  >
+  > - *Observed on the lab, unchanged:* with the update source and the
+  >   channel shown above, the cluster is offered no update.
+  > - *Read upstream, not on the cluster:*
+  >   [contribution topic 11](../../contributions/topics/11-okd-update-service-docs.md)
+  >   records that OKD has had its own update service since September 2026
+  >   (`updates.okd.io`, channels `stable-5.0` and `candidate-5.0`), and
+  >   that a cluster installed with 4.22 keeps the previous settings: the
+  >   release controller as update source and the channel `stable-scos-4`.
+  >   The update graphs, read directly on 2026-11-13 from a workstation,
+  >   offered updates from `4.22.0-okd-scos.10` on two of them:
+  >   `5.0.0-okd-scos.2` to `.6` plus one conditional update on
+  >   `updates.okd.io` with `stable-5.0`, and `5.0.0-okd-scos.0` to `.6` on
+  >   the release controller with `stable-scos-5`.
+  > - *Not tested:* the lab cluster was not pointed at the new service and
+  >   its channel was not changed. What `oc adm upgrade` would show
+  >   afterwards is deduced from the graphs, not observed, and no update to
+  >   5.0 was run.
+  >
+  > The statements of this page about "no edge" therefore describe what the
+  > lab was offered with its default settings. They do not establish that
+  > no upgrade path exists.
 - History: a single entry, `4.22.0-okd-scos.10  Completed`.
 - `ClusterVersion` conditions on the lab: `RetrievedUpdates=True`,
   `ReleaseAccepted=True`, `Available=True`, `Failing=False`,
@@ -179,7 +216,9 @@ oc adm upgrade --to=<version>
 the supported graph: they bypass the edge and signature checks. With no
 edge offered, as on the lab at validation time, `--to-image` is the only
 way to start the exercise: that is precisely the unsupported case, to be
-attempted only with volume snapshots at hand.
+attempted only with volume snapshots at hand. A change of update source and
+channel may offer an edge instead; it was read upstream and not tested (see
+the note in section 3).
 
 **[READ-ONLY]** Follow (the API will be unreachable at times; just retry):
 
@@ -262,3 +301,11 @@ it survived a node reboot and a full restart of the lab.
   whether) an edge from `4.22.0-okd-scos.10` is published, the total
   duration, and above all the behaviour of the OpenStack operators,
   cert-manager and MetalLB on the next Kubernetes version.
+- Pointing the cluster at the newer OKD update service, and what
+  `oc adm upgrade` then offers, was not tested. The upstream reading is in
+  [contribution topic 11](../../contributions/topics/11-okd-update-service-docs.md)
+  and summarised in the note of section 3.
+
+---
+
+**Previous:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md) · **Up:** [Lifecycle management](README.md)

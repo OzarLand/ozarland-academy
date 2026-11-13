@@ -14,13 +14,17 @@ like, and where to look when something is stuck.
 
 > **Project status: validated end to end on one environment.** In November
 > 2026 the lab was deployed from this repository on one host cloud, from
-> the Terraform apply to an instance booted on the compute node, and the
-> operations, troubleshooting and lifecycle guides were run against it.
-> Not everything could be exercised: no restore from backup, no operator
-> upgrade through OLM (no newer bundle was offered), no OKD upgrade, no
-> deliberately provoked destructive fault. Every guide page carries a
-> status line, and [docs/versions.md](docs/versions.md) states precisely
-> what has been tested and what has not.
+> the Terraform apply to an instance booted on the compute node. The
+> operations, troubleshooting and lifecycle guides were then run against
+> it, including database and etcd restores and a temporary scale-out to
+> three compute nodes. Not exercised: an operator upgrade through OLM (no
+> newer bundle was offered), the OKD upgrade, the emulation path. Every
+> page carries a status line, and [docs/versions.md](docs/versions.md)
+> states precisely what has been tested and what has not.
+
+**New here?** Start with the [reading guide](docs/README.md): it gives a
+map of the documentation and three reading paths (one hour, one day, one
+week).
 
 ## What you get
 
@@ -40,20 +44,21 @@ like, and where to look when something is stuck.
 
 ## Architecture at a glance
 
-```text
-        workstation ── ssh ──> bastion (DNS, oc client)
-                                  │
-            ┌─────────────────────┴───────────────────────┐
-            │ OKD node (single-node cluster, 16 vCPU/32 GB)│
-            │   OKD platform · cert-manager · MetalLB      │
-            │   OpenStack operators                        │
-            │   OpenStack control plane (pods)             │
-            └───────┬──────────────┬──────────────┬────────┘
-                ctlplane      internalapi       tenant        (one network each)
-            ┌───────┴──────────────┴──────────────┴────────┐
-            │ compute node (CentOS Stream 9, 8 vCPU/16 GB) │
-            │   nova-compute · libvirt · ovn-controller    │
-            └──────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    ws["workstation<br/>Terraform, cloud credentials"] -- ssh --> bastion["bastion<br/>DNS, oc client, jump host"]
+    bastion -- "oc / ssh" --> okd
+    subgraph okd["OKD node: single-node cluster, 16 vCPU / 32 GB"]
+        direction TB
+        ops["OpenStack operators"] -- reconcile --> cp["OpenStack control plane (pods)<br/>Keystone, Glance, Placement, Neutron/OVN, Nova<br/>Galera, RabbitMQ, Memcached"]
+        plat["OKD platform, cert-manager, MetalLB"]
+    end
+    subgraph compute["compute node: CentOS Stream 9, 8 vCPU / 16 GB"]
+        dp["nova-compute, libvirt, ovn-controller"]
+    end
+    ops -- "Ansible jobs over SSH (ctlplane)" --> dp
+    dp -- "RabbitMQ, OVN southbound DB (internalapi)" --> cp
+    dp -. "Geneve tunnels (tenant)" .- cp
 ```
 
 Details, sizing rationale and the constraints of running a cloud inside a
@@ -99,6 +104,7 @@ check when it fails — in the [installation guide](docs/installation/README.md)
 
 | Section | Content |
 |---|---|
+| [Reading guide](docs/README.md) | Map of the documentation, reading paths, where to find what |
 | [Architecture](docs/architecture.md) | Design, sizing, networks, nested-cloud constraints, alternatives |
 | [Prerequisites](docs/prerequisites.md) | Quota, features and pre-flight checks |
 | [Versions and status](docs/versions.md) | Selected versions, compatibility reasoning, what is tested, limitations |
@@ -139,11 +145,13 @@ Validated on one deployment (KVM compute node, behind an HTTPS proxy):
   functional tests; the day-2 operations that do not risk the lab (see the
   status line of each page); a staged minor update of the control
   plane and the data plane (with a simulated newer version); all backup
-  procedures; node reboot and full shutdown/restart of the lab.
-- **Not executed:** restores (database, etcd, volume snapshots), an
-  operator upgrade through OLM, the OKD upgrade to 5.0, rotation of the
-  database passwords, faults that could leave the lab unrecoverable, the
-  QEMU emulation path and the deployment without floating IPs.
+  procedures; a database restore and an etcd restore; node reboot and
+  full shutdown/restart of the lab; scale-out to two and three compute
+  nodes and back, with migration and gateway failover.
+- **Not executed:** a volume-snapshot rollback, an operator upgrade
+  through OLM, the OKD upgrade to 5.0, rotation of the database
+  passwords, faults that could leave the lab unrecoverable, the QEMU
+  emulation path and the deployment without floating IPs.
 
 The operator catalog is pinned to the digest that was validated; that
 digest, the status of every part of the lab and the list of

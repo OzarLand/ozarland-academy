@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — every read-only command was run on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) and the figures below were measured; memory pressure, evictions and OOM kills were not provoked, because exhausting the only node risks etcd and the databases
 
+## In short
+
+- Three mechanisms with three symptoms: `Pending` with
+  `Insufficient memory` (scheduler, counts requests), `OOMKilled`
+  (container over its own limit), `Evicted` (kubelet, node under
+  pressure).
+- Only RabbitMQ has requests and limits. The other OpenStack pods are
+  not counted by the scheduler and are not capped: the node fills up for
+  real.
+- The largest consumers are OKD components, not OpenStack.
+- Fix by reducing demand, largest and least critical first, then check
+  Galera and RabbitMQ after any eviction or OOM episode.
+
 The lab runs OKD and the whole OpenStack control plane on one 32 GB node.
 That is enough, without much margin. On a Kolla controller, running out of
 memory shows as the kernel OOM killer picking a process. Kubernetes adds two

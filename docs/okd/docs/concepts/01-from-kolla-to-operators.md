@@ -2,9 +2,21 @@
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
-You already know what an OpenStack control plane is made of. What changes in
-this lab is **who assembles it and who keeps it running**. This document maps
-what you do today with Kolla-Ansible onto the operator model.
+## In short
+
+- OpenStack itself does not change: same services, same options, same APIs.
+  What changes is **who assembles the platform and who keeps it running**.
+- With Kolla-Ansible you run a tool from a deployment host. Here you
+  **declare** the platform as objects in the Kubernetes API, and programs
+  called operators make reality match them, all the time.
+- The `OpenStackControlPlane` custom resource replaces `globals.yml`: the
+  durable way to change anything is to edit that object.
+- A manual fix on an object managed by an operator does not last.
+- Compute nodes are the exception: they are still configured by Ansible over
+  SSH, on demand.
+
+You already know what an OpenStack control plane is made of. This document
+maps what you do today with Kolla-Ansible onto the operator model.
 
 ## The one-paragraph summary
 
@@ -21,6 +33,14 @@ deployment host and no "run": saving the object *is* the deployment, and the
 correction loop never stops.
 
 ## Translation table
+
+The right-hand column uses Kubernetes object types (Pod, Deployment,
+StatefulSet, Secret, Service, Route, Job). Each one is explained, with its
+Kolla equivalent, in
+[Kubernetes building blocks](02-kubernetes-building-blocks.md). A *custom
+resource* (CR) is an object of a type that an operator adds to the Kubernetes
+API; see
+[Operators, CRDs and reconciliation](03-operators-crds-and-reconciliation.md).
 
 | Kolla-Ansible | Operator model in this lab | Notes |
 |---|---|---|
@@ -99,10 +119,12 @@ The complete, validated procedure (including how to revert) is
 
 If you delete a Keystone pod, a new one is created at once and is ready after
 about half a minute. If you edit the generated configuration Secret or the
-Keystone `Deployment` by hand, the operator puts it back within a second. This is the biggest behavioural difference with Kolla:
+Keystone `Deployment` by hand, the operator puts it back within a second.
+
+This is the biggest behavioural difference with Kolla:
 **manual fixes on managed objects do not last**. The durable fix is always a
 change to the CR. The mechanics are explained in
-[Operators, CRDs and reconciliation](03-operators-crds-and-reconciliation.md).
+[Why manual edits of managed objects do not stick](03-operators-crds-and-reconciliation.md#why-manual-edits-of-managed-objects-do-not-stick).
 
 ### Health is read from status conditions
 
@@ -129,28 +151,37 @@ There are now two inventories of the same service, and you will use both:
 | Is the process running, on which node, how many restarts? | Kubernetes | `oc get pods -n openstack -l service=nova-api -o wide` |
 | Is the service registered and reporting in OpenStack? | OpenStack | `openstack compute service list` |
 
-A pod can be `Running` while the OpenStack service is `down` (for example,
-RabbitMQ unreachable), and conditions can all be `True` while an API answers
-503 (seen on the lab after a password change, see
-[Passwords and secrets](../operations/07-passwords-and-secrets.md)). Check
-Kubernetes first, then OpenStack.
+The two views can disagree:
+
+- A pod can be `Running` while the OpenStack service is `down` (for example,
+  RabbitMQ unreachable).
+- Conditions can all be `True` while an API answers 503 (seen on the lab
+  after a password change, see
+  [Passwords and secrets](../operations/07-passwords-and-secrets.md)).
+
+Check Kubernetes first, then OpenStack.
 
 ### Hosts matter less for the control plane, and as much as before for compute
 
 Control plane pods are placed by the Kubernetes scheduler. On the single-node
-lab they all land on the same node, but nothing in the CR says so. Compute
-nodes are different: they are outside the cluster, they are listed explicitly
-in an `OpenStackDataPlaneNodeSet`, and they are configured by Ansible playbooks
-(the `edpm-ansible` collection) launched as Kubernetes Jobs. That half of the
-platform will feel familiar. See
+lab they all land on the same node, but nothing in the CR says so.
+
+Compute nodes are different: they are outside the cluster, they are listed
+explicitly in an `OpenStackDataPlaneNodeSet`, and they are configured by
+Ansible playbooks (the `edpm-ansible` collection) launched as Kubernetes Jobs
+(pods that run once, to completion). That half of the platform will feel
+familiar. See
 [Control plane and data plane](06-control-plane-and-data-plane.md).
 
 ### Upgrades are split in two
 
 Kolla ties tool version and OpenStack release together. Here:
 
-1. Upgrading the **operators** (through the Operator Lifecycle Manager) changes
-   the controllers and makes new service images *available*.
+1. Upgrading the **operators** changes the controllers and makes new service
+   images *available*. It goes through the Operator Lifecycle Manager (OLM),
+   the OKD component that installs operators from a catalog, much like a
+   package manager; see
+   [OKD in brief](07-okd-in-brief.md#operator-lifecycle-manager).
 2. Updating the **services** happens only when you set
    `spec.targetVersion` on the `OpenStackVersion` CR.
 
@@ -181,4 +212,6 @@ oc rsh -n openstack openstackclient openstack endpoint list
 oc rsh -n openstack openstackclient openstack compute service list
 ```
 
-Next: [Kubernetes building blocks](02-kubernetes-building-blocks.md).
+---
+
+**Previous:** [Concepts index](README.md) · **Next:** [Kubernetes building blocks](02-kubernetes-building-blocks.md)

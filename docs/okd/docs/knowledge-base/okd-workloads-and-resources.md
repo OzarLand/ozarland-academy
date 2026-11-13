@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- If the node runs out of memory, the OpenStack pods die first: 18 of
+  20 have no request (`BestEffort`, `oom_score_adj` 1000), Galera
+  included.
+- Three numbers describe memory: 72 % requested (what the scheduler
+  counts), 62 % used, 11.6 GiB available. `Pending` with
+  `Insufficient memory` is a request problem, not a usage problem.
+- Requests and limits are set through `resources` in the
+  `OpenStackControlPlane`; the pod rolls and the value applies to every
+  container of the pod.
+- No PodDisruptionBudget, ResourceQuota or LimitRange exists in
+  `openstack`. Do not add a LimitRange there.
+
 One node carries the platform, the operators and the OpenStack control
 plane. This file records how Kubernetes accounts for CPU and memory on
 that node, which pods would be sacrificed first if memory ran out, and

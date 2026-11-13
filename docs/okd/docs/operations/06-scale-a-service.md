@@ -8,6 +8,16 @@ brings no resilience (all replicas die with the node), but it is the cheapest
 way to see how Services spread traffic and how rolling updates stop being
 outages.
 
+## In short
+
+- The number of API pods is the `replicas` field of the service in the
+  control plane resource. Scaling the Deployment directly is reverted.
+- Nothing else has to be reconfigured: the Service adds the new pod as an
+  endpoint once it is ready.
+- With two Keystone replicas, 12 token requests out of 12 succeeded on the
+  lab while one pod was replaced.
+- Leave Galera, RabbitMQ and the OVN databases at 1 on the lab.
+
 ## 1. Initial symptoms
 
 - You want an API to stay available while its pods are being replaced.
@@ -114,3 +124,7 @@ two pods was deleted and replaced.
   to keep, unless that is the exercise and you accept a rebuild.
 - Replica counts set by hand are lost when the deployment script re-applies
   the template; put lasting values in the template.
+
+---
+
+**Previous:** [Enable a service](05-enable-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Passwords and secrets](07-passwords-and-secrets.md)

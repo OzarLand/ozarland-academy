@@ -2,6 +2,18 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for scenarios A and B (Pending claim reproduced with a throwaway claim; a `Released` volume produced, recovered and recycled for real); scenario C was validated read-only: the disk was not filled, and `crictl rmi --prune`, the image deletion and the clean-up of failed pods were not executed
 
+## In short
+
+- Twelve static local volumes, no provisioner: a claim binds one whole
+  volume or stays `Pending`.
+- Deleting a claim keeps the data: the volume becomes `Released` and
+  must be recovered or recycled by hand. A recreated claim takes another,
+  empty volume.
+- Never delete a `Bound` claim to fix a `Pending` one, and never clear a
+  `claimRef` without wiping when the volume goes to another service.
+- The 10Gi capacity is not enforced: any service can fill the node disk,
+  which etcd shares. Keep at least 20 % free.
+
 The lab uses the simplest possible storage: a fixed number of directories on
 the OKD node, each published as a PersistentVolume (PV) of class
 `local-storage`. There is no provisioner: when the volumes are used up, no
@@ -18,6 +30,20 @@ Where things are:
 
 Consumers in the lab: two Galera servers, two RabbitMQ servers, two OVN
 databases and Glance: seven volumes out of the twelve created by default.
+The two backup claims of the backup guide take two more: on 2026-11-12 the
+lab had nine volumes `Bound` and three `Available` (see
+[OKD storage](../knowledge-base/okd-storage.md)).
+
+Life of a volume, and the two ways out of `Released` (scenario B):
+
+```mermaid
+flowchart LR
+    AV["Available"] -- "claim binds when<br/>its first pod starts" --> BO["Bound"]
+    BO -- "claim deleted:<br/>data kept (Retain)" --> RE["Released"]
+    RE -- "recycle: wipe the directory,<br/>remove claimRef" --> AV
+    RE -- "recover: remove uid and<br/>resourceVersion of claimRef" --> RV["Available, data kept,<br/>reserved for a claim<br/>of the same name"]
+    RV -- "claim of that name" --> BO
+```
 
 ## Scenario A: PVC Pending, no volume available
 

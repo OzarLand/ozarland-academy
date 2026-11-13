@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — read-only commands, the reversal of an image override and a return to a previous `targetVersion` between two image sets with identical software were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); no snapshot restore, rebuild or real downgrade was executed, and the other rows of section 4 are not exercised
 
+## In short
+
+- Declarative configuration is reversible: apply the previous content of
+  the resource. State and versions are not.
+- No downgrade is supported for the OpenStack services, the operators or
+  OKD.
+- Recovery is prepared **before** the change: keep the previous resource,
+  take the backups of [05](05-backup-and-restore.md).
+- On the lab, the only real "undo" of a version change is a set of volume
+  snapshots of the VMs taken while the cluster is shut down. Taking them
+  was validated; restoring them was not.
+- Rebuilding at pinned versions is a legitimate rollback for a lab.
+
 ## 1. Context
 
 With Kolla-Ansible a common reflex after a bad upgrade is "redeploy the
@@ -41,6 +54,11 @@ what is installed. The digest is on the catalog pod:
 oc -n openstack-operators get pods -l olm.catalogSource=openstack-operator-index \
   -o jsonpath='{.items[0].status.containerStatuses[0].imageID}{"\n"}'
 ```
+
+Since 2026-11-12 the running lab is pinned: its CatalogSource was moved
+from the tag to the digest it was already running, so the catalog command
+prints a digest there
+([knowledge base](../knowledge-base/okd-olm-and-operators.md#is-the-catalog-pinned-to-a-digest-and-how-do-i-move-a-running-lab-from-a-tag-to-a-digest)).
 
 `containerImageVersionDefaults` lists every version the operator
 installation has known, including versions no longer deployed. The control
@@ -82,7 +100,10 @@ the change.
 
 2. **Version changes (any axis)** — take the backups described in
    [05-backup-and-restore.md](05-backup-and-restore.md): exported resources
-   and secrets, a database backup, an etcd backup.
+   and secrets, a database backup, an etcd backup. A database restore and
+   an etcd restore were executed on the lab from such backups; what each
+   one brings back, and what it leaves inconsistent, is in section 5.5 of
+   that page.
 
 3. **The lab-grade rollback: volume snapshots of the lab VMs.** The lab runs
    on virtual machines whose disks are volumes of the host cloud. A
@@ -146,4 +167,9 @@ recreated.
   control plane resource and a real service downgrade are derived from
   upstream source and documentation, not exercised.
 - Configuration reversal and the effect of disabling a service are covered
-  by the [operations](../operations/) pages, with their own status lines.
+  by the [operations](../operations/README.md) pages, with their own status
+  lines.
+
+---
+
+**Previous:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Backup and restore](05-backup-and-restore.md)

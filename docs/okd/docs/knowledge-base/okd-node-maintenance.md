@@ -5,6 +5,21 @@
 > MachineConfig was applied and removed (two full rolls, two reboots).
 > Not executed: a real drain, an unclean stop of the node
 
+## In short
+
+- Any MachineConfig change reboots the only node 10 to 15 s after it is
+  applied, without cordon or drain. Pause the pool to prepare and review
+  a change first.
+- One roll: API away about 3 min 35, every OpenStack pod ready after
+  5 min 50, pool `Updated` after 7 min 10. Galera and RabbitMQ came back
+  alone both times.
+- A drain of the single node would evict 198 pods with nowhere to go and
+  nothing would block it: do not drain.
+- After the reboot, SSH works first, then `oc adm node-logs`, and
+  `oc debug node` only about 75 s after the API.
+- After any restart of the OKD node, restart `edpm_ovn_controller` and
+  `edpm_ovn_metadata_agent` on every compute node.
+
 This file records what a planned change of the host configuration does
 to a cluster that has one node: how the change is prepared, what the
 machine config daemon really does, how long the API and OpenStack are
@@ -123,6 +138,28 @@ Timeline in seconds after T0. Roll 1 adds the file, roll 2 removes it.
 | Every pod of the `openstack` namespace ready | +349 | +349 |
 | Node annotation `state=Done`, `currentConfig` updated | +421 | +420 |
 | Pool `Updated=True` | +428 | +426 |
+
+The same roll as a picture (seconds after T0, roll 1):
+
+```mermaid
+sequenceDiagram
+    participant B as Bastion
+    participant N as OKD node
+    participant A as Kubernetes API
+    participant O as OpenStack pods
+    participant C as Compute node
+    Note over N: T0 daemon logs initiating reboot
+    N->>A: +2 s readyz answers 500, +19 s port closed
+    Note over N,O: Shutdown phase until +153 s, RabbitMQ killed in the first second
+    Note over C: Instances keep running, OVN agents lose the southbound database
+    N-->>B: +186 s ping answers again, SSH works
+    A-->>B: +216 s API answers, statuses stale for about 15 s
+    Note over N: +235 s NotReady, +246 s Ready
+    O-->>B: +309 s Keystone answers 200, +349 s every pod ready
+    C->>O: nova-compute reconnects to RabbitMQ alone
+    Note over C: OVN controller and metadata agent stay disconnected until restarted
+    Note over N: +428 s pool Updated
+```
 
 After roll 2 the pool was back on the same `rendered-master-<old>` name
 as before roll 1, the file was gone from the node, no cluster operator

@@ -2,6 +2,21 @@
 
 > Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) and a MachineConfig change applied then removed (2026-11-12, two rolls) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; not executed: an unclean stop, and a restart after a power-off long enough to need certificate approval
 
+## In short
+
+- The lab has one OKD node: a reboot, a MachineConfig change or an OKD
+  upgrade is a full outage of the Kubernetes API and of every OpenStack
+  API.
+- Instances on the compute node keep running, with their network.
+- Everything comes back by itself, as the same pods restarted: about 6
+  minutes for a planned reboot on the lab.
+- One thing does not always come back: the OVN agents of the compute node
+  can stay disconnected. Check them after every restart of the OKD node
+  and restart them if needed.
+- Always shut down cleanly, from inside the node. Leave a new cluster
+  running for a day before a long power-off (certificate window, section
+  7).
+
 ## 1. Context
 
 In a Kolla-Ansible deployment, rebooting a controller is an OpenStack
@@ -25,6 +40,28 @@ What keeps running during the outage: instances on the compute node, their
 tenant networking and existing flows (OVN programmes the data path locally
 on the compute node). What does not: every OpenStack API, DHCP/metadata for
 new requests, any change to networks or instances.
+
+What an OKD maintenance operation does to OpenStack on the single-node lab,
+from the trigger to the check that is left to you.
+
+```mermaid
+flowchart TD
+    T1["MachineConfig change"]
+    T2["OKD upgrade"]
+    T3["Manual reboot or shutdown"]
+    R["The single OKD node reboots"]
+    D1["Down: Kubernetes API, operators,<br/>every OpenStack control plane pod and API"]
+    D2["Keeps running: instances on the compute node,<br/>tenant networking, existing flows"]
+    U1["Node back: kubelet restarts the same pods,<br/>operators reconcile"]
+    U2["Control plane Ready again, without intervention"]
+    C["To check on the compute node: OVN controller and<br/>OVN metadata agent can stay disconnected"]
+    T1 --> R
+    T2 --> R
+    T3 --> R
+    R --> D1
+    R --> D2
+    D1 --> U1 --> U2 --> C
+```
 
 ## 2. Read-only investigation
 
@@ -139,7 +176,10 @@ oc debug "node/${node}" -- chroot /host systemctl reboot
 
 Draining the node first (`oc adm drain`) is the normal practice on a
 multi-node cluster. On a single node there is nowhere to move pods to, so a
-drain only evicts them slightly earlier than the reboot would.
+drain only evicts them slightly earlier than the reboot would. A real drain
+was never executed on the lab; what it would evict was evaluated with a
+server-side dry run
+([knowledge base](../knowledge-base/okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist)).
 
 ### 5.1b Compute node reboot
 
@@ -164,13 +204,22 @@ Applying a MachineConfig makes the Machine Config Operator reboot the node
 by itself. On the lab, treat "apply a MachineConfig" as "reboot the
 control plane now": measured on 2026-11-12, the reboot started 10 to 15
 seconds after the change, without cordon or drain (the daemon logs `Drain
-not required, skipping` on a single-node control plane). The outage is the
-one of a planned reboot (5.1): API away for about 3 min 35, Keystone
-answering again after about 5 min 10, every OpenStack pod ready after
-about 5 min 50, and the pool reported `Updated` after about 7 min 10.
+not required, skipping` on a single-node control plane).
+
+The outage is the one of a planned reboot (5.1):
+
+| Measure | Value |
+|---|---|
+| API away | for about 3 min 35 |
+| Keystone answering again | after about 5 min 10 |
+| Every OpenStack pod ready | after about 5 min 50 |
+| Pool reported `Updated` | after about 7 min 10 |
+
 Removing the MachineConfig is a second roll of the same length and brings
 the original rendered configuration back. After each roll both OVN
-services of the compute node had to be restarted (section 4).
+services of the compute node had to be restarted (section 4;
+[diagnosis and fix](../knowledge-base/okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them)
+in the knowledge base).
 
 To group several changes in one reboot, pause the pool
 (`oc patch mcp master --type merge -p '{"spec":{"paused":true}}'`), apply
@@ -295,3 +344,7 @@ the control plane is `Ready`, see
   hours was not waited for.
 - Shelving the VMs was not tried.
 - Galera bootstrapped by itself after both clean stops.
+
+---
+
+**Previous:** [Backup and restore](05-backup-and-restore.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Upgrading OKD](07-okd-upgrade.md)

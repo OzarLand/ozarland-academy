@@ -2,6 +2,22 @@
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-12, with a simulated newer version: the update mechanics ran for real, but no newer OpenStack code was available to install
 
+## In short
+
+- Service images are not set in the control plane resource but in
+  `OpenStackVersion`. You normally edit one field: `spec.targetVersion`.
+- A minor update runs in eight stages. The operator does six of them; it
+  waits for **you** at stage 2 (OVN on the compute nodes) and stage 8 (the
+  rest of the compute nodes).
+- On the lab: about 10 minutes from the patch to `deployedVersion`, every
+  service restarted once.
+- The `update` service also runs a full `dnf update` of the compute node,
+  kernel included, and does not reboot it.
+- One image can be overridden alone (`customContainerImages`): about one
+  minute for Keystone.
+- Setting `targetVersion` back is accepted by the API; it is not a
+  downgrade procedure.
+
 ## 1. Context
 
 You want to change the container images the OpenStack services run: either
@@ -24,6 +40,23 @@ plane (`openstack` in the lab).
 | `status.containerImageVersionDefaults` | The default image set of every version this operator installation has known, keyed by version. Old keys are kept. |
 | `status.trackedCustomImages` | The overrides that were in force for each version, keyed by version. |
 | `status.conditions` | `Ready` and `Initialized` at rest; during an update, one condition per stage (below). |
+
+The stages of a minor update, in order, and who acts at each one.
+
+```mermaid
+flowchart TD
+    S["You: set spec.targetVersion"]
+    P1["Stage 1: MinorUpdateOVNControlplane<br/>(operator; nothing to do on the lab)"]
+    P2["Stage 2: MinorUpdateOVNDataplane<br/>(you: deployment with servicesOverride ovn)"]
+    P3["Stage 3: MinorUpdateRabbitMQ (operator)"]
+    P4["Stage 4: MinorUpdateMariaDB (operator)"]
+    P5["Stage 5: MinorUpdateMemcached (operator)"]
+    P6["Stage 6: MinorUpdateKeystone (operator)"]
+    P7["Stage 7: MinorUpdateControlplane<br/>(operator: all remaining services)"]
+    P8["Stage 8: MinorUpdateDataplane<br/>(you: deployment with servicesOverride update)"]
+    E["deployedVersion moves to the target,<br/>every MinorUpdate condition is removed"]
+    S --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> E
+```
 
 Update stages, in the order the operator runs them, each reported as a
 condition on `OpenStackVersion`:
@@ -243,12 +276,18 @@ What the `update` service does on a compute node, as observed:
   `servicesOverride`.
 
 Timings measured on the lab (one compute node, images already reachable):
-OVN data plane job 1 min 30 s; control plane stages about 2 min 30 s after
-it; `update` job 4 min 45 s; about 10 minutes from the patch to
-`deployedVersion`. The public Keystone endpoint answered every probe sent
-at 5-second intervals during the whole update; RabbitMQ and Galera
-restarts were short enough not to be seen from there, which does not mean
-that no API call can fail.
+
+| Part | Duration |
+|---|---|
+| OVN data plane job | 1 min 30 s |
+| Control plane stages, after it | about 2 min 30 s |
+| `update` job | 4 min 45 s |
+| From the patch to `deployedVersion` | about 10 minutes |
+
+The public Keystone endpoint answered every probe sent at 5-second
+intervals during the whole update. RabbitMQ and Galera restarts were short
+enough not to be seen from there, which does not mean that no API call can
+fail.
 
 ### 5.2 Practising in the lab
 
@@ -295,13 +334,16 @@ To undo it, patch the saved `spec` back
 (`oc create --dry-run=client -o json -f csv-before.yaml | jq '{spec: .spec}' > spec.json`,
 then `oc -n openstack-operators patch csv openstack-operator.v0.8.0 --type=merge --patch-file spec.json`;
 a plain `oc apply` of the saved file is refused because of its
-`resourceVersion`). The operators are recreated once more and
-`availableVersion` returns to the original value, while target and deployed
-stay on the simulated version: `MinorUpdateAvailable` is `True` again, this
-time pointing *backwards*. On the lab the original version was then set as
-target and the same sequence (new deployment names) brought everything back
-to the digest-pinned images in about 7 minutes. This worked only because
-both image sets carry the same software versions; it is not a downgrade
+`resourceVersion`).
+
+The operators are recreated once more and `availableVersion` returns to the
+original value, while target and deployed stay on the simulated version:
+`MinorUpdateAvailable` is `True` again, this time pointing *backwards*.
+
+On the lab the original version was then set as target, and the same
+sequence (new deployment names) brought everything back to the
+digest-pinned images in about 7 minutes. This worked only because both
+image sets carry the same software versions; it is not a downgrade
 procedure ([04](04-rollback-limitations.md)).
 
 ### 5.3 Hotfix: override one image
@@ -396,3 +438,7 @@ is `Ready`.
   brings new OpenStack code and real schema migrations was not available.
 - The behaviour with no NodeSet deployed, and a failure in the middle of a
   stage, were not exercised.
+
+---
+
+**Up:** [Lifecycle management](README.md) · **Next:** [Upgrading the OpenStack operators](02-operator-upgrade.md)

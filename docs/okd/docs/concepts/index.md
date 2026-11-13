@@ -9,6 +9,11 @@ OpenStack with Kolla-Ansible and is discovering Kubernetes and OKD.
 Every Kubernetes concept is introduced through an OpenStack example that you
 can look at in the lab, together with the `oc` command that shows it.
 
+The one idea to take away: you no longer run a deployment tool. You declare
+the platform in one object, `OpenStackControlPlane`, and programs called
+operators keep the running services identical to it. **Write at the top,
+read everywhere.**
+
 ## Lab baseline assumed by this guide
 
 | Item | Value |
@@ -20,16 +25,18 @@ can look at in the lab, together with the `oc` command that shows it.
 | Namespace of the operators | `openstack-operators` |
 | Namespace of the OpenStack services | `openstack` |
 
-The control plane resource is named `openstack`, the data plane NodeSet
-`openstack-edpm`. The lab uses network isolation with one interface per
-network (machine, ctlplane, internalapi, tenant) and deploys a minimal set of
-services: Galera, RabbitMQ, Memcached, DNS, Keystone, Placement, Glance,
-Neutron with OVN, and Nova. Horizon, Cinder, Swift and the others are disabled
-by default (see [architecture](../architecture.md#software-layers)).
-
-`oc` runs on the bastion. Object names shown in examples are the ones observed
-on the deployed lab; the pages of the [operations guide](../operations/README.md)
-are the validated reference when a detail matters.
+- The control plane resource is named `openstack`, the data plane NodeSet
+  `openstack-edpm`.
+- The lab uses network isolation with one interface per network (machine,
+  ctlplane, internalapi, tenant).
+- It deploys a minimal set of services: Galera, RabbitMQ, Memcached, DNS,
+  Keystone, Placement, Glance, Neutron with OVN, and Nova. Horizon, Cinder,
+  Swift and the others are disabled by default (see
+  [architecture](../architecture.md#software-layers)).
+- `oc` runs on the bastion.
+- Object names shown in examples are the ones observed on the deployed lab;
+  the pages of the [operations guide](../operations/README.md) are the
+  validated reference when a detail matters.
 
 ## Reading order
 
@@ -46,6 +53,9 @@ are the validated reference when a detail matters.
 Documents 1 to 3 are enough to start the operational scenarios. Documents 4 to
 6 are references you will return to. Document 7 is deliberately short: deeper
 OKD administration is Phase 4 of the learning roadmap.
+
+Each page opens with an "In short" block (what it explains and the ideas to
+keep) and ends with links to the previous and next pages.
 
 ## Conventions
 

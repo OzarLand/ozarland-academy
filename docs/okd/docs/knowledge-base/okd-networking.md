@@ -3,6 +3,22 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- Two OVN deployments exist and never talk to each other: the cluster
+  OVN inside the `ovnkube-node` pod, and the OpenStack OVN in the
+  `ovsdbserver-*` pods with its data plane on the compute node.
+- Each OpenStack network is split by convention: `.10` the node,
+  `.30` to `.70` pod interfaces (whereabouts), `.80` to `.90` MetalLB
+  virtual IPs, `.100` and above the compute nodes.
+- Pods without a secondary interface reach the OpenStack networks
+  through the host routing table, masqueraded to the node's `.10`
+  address (`routingViaHost: true` is required).
+- Public APIs come in through the HAProxy router (`reencrypt` Routes);
+  the compute node uses the MetalLB address 172.17.0.80. Test a virtual
+  IP from the compute node, never with `ping`.
+- The `openstack` namespace has no NetworkPolicy.
+
 Four network mechanisms are stacked on the OKD node: the cluster network
 (OVN-Kubernetes), the ingress router, the secondary networks given to
 some OpenStack pods (Multus, macvlan, whereabouts) and the virtual IPs
@@ -397,13 +413,15 @@ pod -> internal Service: 200 172.30.149.5:5000
 compute -> internal VIP: 200
 ```
 
-The two paths:
+The three ways in, one public and two internal:
 
-```text
-public:   client -> DNS (*.apps -> 192.168.130.10) -> haproxy on the node :443
-          -> [TLS ends, new TLS] -> pod 10.128.0.250:5000
-internal: pod -> CoreDNS (keystone-internal.openstack.svc -> ClusterIP) -> OVN load balancer -> pod :5000
-          compute node -> 172.17.0.80 (ARP answered by the node, ens5) -> OVN load balancer -> pod :5000
+```mermaid
+flowchart LR
+    CL["Client outside<br/>the cluster"] -- "DNS: *.apps resolves<br/>to 192.168.130.10" --> HA["HAProxy router<br/>on the node, port 443"]
+    HA -- "TLS ends,<br/>new TLS to the pod IP" --> POD["Keystone pod<br/>10.128.0.250:5000"]
+    P["Pod in the cluster"] -- "CoreDNS: keystone-internal<br/>resolves to the ClusterIP" --> LB["Cluster OVN<br/>load balancer"]
+    CN["Compute node"] -- "172.17.0.80, ARP answered<br/>by the node on ens5 (MetalLB)" --> LB
+    LB --> POD
 ```
 
 **Why / how it works**: every OpenStack API has two Services selecting

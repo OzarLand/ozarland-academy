@@ -1,8 +1,38 @@
 # Cheat sheet
 
 One-liners taken from the entries of this knowledge base, all run on the
-lab on 2026-11-12. Read-only unless marked **[CHANGE]**. Run on the
-bastion after `oc project openstack`.
+lab on 2026-11-12. Every block carries its label: **[READ-ONLY]**,
+**[CHANGE]** or **[DESTRUCTIVE]**. Run on the bastion after
+`oc project openstack`.
+
+## In short
+
+- One section per knowledge base file; the entry
+  behind each line explains the output and the pitfalls.
+- Define the helpers of the two "helpers" sections first: most lines
+  use `os`, `$o`, `compute`, `node`, `nb`, `sb` or `q`.
+- Placeholders in angle brackets (`<instance-id>`, `<pv>`) must be
+  replaced before running a line.
+
+| Section | Details in |
+| --- | --- |
+| [Identity and tenants](#identity-and-tenants) | [openstack-identity-and-tenants.md](openstack-identity-and-tenants.md) |
+| [Networking](#networking) | [openstack-networking-ovn.md](openstack-networking-ovn.md) |
+| [Compute](#compute) | [openstack-compute.md](openstack-compute.md) |
+| [Service administration](#service-administration) | [openstack-service-administration.md](openstack-service-administration.md) |
+| [Several compute nodes](#several-compute-nodes) | [dataplane-scale-out-and-migration.md](dataplane-scale-out-and-migration.md) |
+| [Backup and restore](#backup-and-restore) | [backup-and-restore-drills.md](backup-and-restore-drills.md) |
+| [Capacity and observability](#capacity-and-observability) | [openstack-capacity-and-observability.md](openstack-capacity-and-observability.md) |
+| [OKD cluster health and etcd](#okd-cluster-health-and-etcd) | [okd-cluster-health-and-etcd.md](okd-cluster-health-and-etcd.md) |
+| [OKD node and host](#okd-node-and-host) | [okd-node-and-host.md](okd-node-and-host.md) |
+| [OKD node maintenance](#okd-node-maintenance) | [okd-node-maintenance.md](okd-node-maintenance.md) |
+| [Leftovers and cleanup](#leftovers-and-cleanup) | [lab-state.md](lab-state.md) |
+| [OKD workloads and resources](#okd-workloads-and-resources) | [okd-workloads-and-resources.md](okd-workloads-and-resources.md) |
+| [OKD networking](#okd-networking) | [okd-networking.md](okd-networking.md) |
+| [OKD storage](#okd-storage) | [okd-storage.md](okd-storage.md) |
+| [OKD access and security](#okd-access-and-security) | [okd-access-and-security.md](okd-access-and-security.md) |
+| [OKD monitoring and alerting](#okd-monitoring-and-alerting) | [okd-monitoring-and-alerting.md](okd-monitoring-and-alerting.md) |
+| [OLM and the OpenStack operators](#olm-and-the-openstack-operators) | [okd-olm-and-operators.md](okd-olm-and-operators.md) |
 
 ## Helpers
 
@@ -18,6 +48,8 @@ nm() { oc exec nova-cell0-conductor-0 -c nova-cell0-conductor-conductor -- "$@" 
 ```
 
 ## Identity and tenants
+
+**[READ-ONLY]**
 
 ```bash
 os token issue -f value -c expires
@@ -39,6 +71,8 @@ oc exec -i openstackclient -c openstackclient -- openstack image create kb-cirro
 ```
 
 ## Networking
+
+**[READ-ONLY]**
 
 ```bash
 os network agent list
@@ -66,6 +100,8 @@ $o floating ip create kb-public -f value -c floating_ip_address
 ```
 
 ## Compute
+
+**[READ-ONLY]**
 
 ```bash
 $o server event list kb-vm1
@@ -99,6 +135,8 @@ os resource provider inventory set $rp --amend --resource VCPU:allocation_ratio=
 ```
 
 ## Service administration
+
+**[READ-ONLY]**
 
 ```bash
 oc get pods -o custom-columns=POD:.metadata.name,SERVICE:.metadata.labels.service,CONTAINERS:.spec.containers[*].name
@@ -197,6 +235,8 @@ oc exec $(oc get pod -l service=neutron -o name | head -1) -c neutron-api -- neu
 
 ## Capacity and observability
 
+**[READ-ONLY]**
+
 ```bash
 oc adm top node
 oc adm top pods -n openstack --sort-by=memory
@@ -226,6 +266,8 @@ V=.work/idp/viewer.kubeconfig
 
 ## OKD cluster health and etcd
 
+**[READ-ONLY]**
+
 ```bash
 oc get clusterversion
 oc adm upgrade
@@ -242,6 +284,8 @@ oc get csr
 ```
 
 ## OKD node and host
+
+**[READ-ONLY]**
 
 ```bash
 oc debug node/okd-0 -q -- chroot /host sh -c 'id; hostname; cat /proc/1/comm'
@@ -267,6 +311,8 @@ oc adm uncordon okd-0
 ```
 
 ## OKD node maintenance
+
+**[READ-ONLY]**
 
 ```bash
 oc get mcp master -o jsonpath='wanted={.spec.configuration.name}{"\n"}running={.status.configuration.name}{"\n"}paused={.spec.paused}{"\n"}'
@@ -298,6 +344,8 @@ compute 'sudo systemctl restart edpm_ovn_controller edpm_ovn_metadata_agent'
 
 ## Leftovers and cleanup
 
+**[READ-ONLY]**
+
 ```bash
 oc get openstackdataplanedeployment
 oc get jobs -o json | jq -r '.items[] | .metadata.ownerReferences[0].kind' | sort | uniq -c
@@ -314,6 +362,8 @@ node 'sudo sh -c "cd /home/core/assets/backup && ls -1t snapshot_*.db | tail -n 
 ```
 
 ## OKD workloads and resources
+
+**[READ-ONLY]**
 
 ```bash
 oc get pods -n openstack -o custom-columns='POD:.metadata.name,QOS:.status.qosClass,PRIO:.spec.priority,REQ:.spec.containers[*].resources.requests'
@@ -339,6 +389,8 @@ oc patch oscp openstack -n openstack --type=json -p '[{"op":"remove","path":"/sp
 ```
 
 ## OKD networking
+
+**[READ-ONLY]**
 
 ```bash
 oc get network.config cluster -o jsonpath='{.spec.networkType} pods={.spec.clusterNetwork} services={.spec.serviceNetwork} mtu={.status.clusterNetworkMTU}{"\n"}'
@@ -366,6 +418,8 @@ oc delete overlappingrangeipreservations.whereabouts.cni.cncf.io -n openshift-mu
 
 ## OKD storage
 
+**[READ-ONLY]**
+
 ```bash
 oc get sc -o custom-columns='NAME:.metadata.name,PROV:.provisioner,BIND:.volumeBindingMode,RECLAIM:.reclaimPolicy'
 oc get pv -o custom-columns='NAME:.metadata.name,CAP:.spec.capacity.storage,RECLAIM:.spec.persistentVolumeReclaimPolicy,STATUS:.status.phase,CLAIM:.spec.claimRef.name,PATH:.spec.local.path'
@@ -390,6 +444,8 @@ oc get pv $PV
 ```
 
 ## OKD access and security
+
+**[READ-ONLY]**
 
 ```bash
 oc whoami; oc whoami --show-server; oc config get-contexts
@@ -418,6 +474,8 @@ oc delete secret -n openshift-config local-htpasswd
 
 ## OKD monitoring and alerting
 
+**[READ-ONLY]**
+
 ```bash
 oc get co monitoring
 oc adm top pods -n openshift-monitoring --no-headers | sort -k3 -n -r
@@ -442,6 +500,8 @@ am silence add namespace=openstack --duration=1h --author="$USER" --comment="con
 ```
 
 ## OLM and the OpenStack operators
+
+**[READ-ONLY]**
 
 ```bash
 oc get catalogsource -A -o custom-columns='NS:.metadata.namespace,NAME:.metadata.name,IMAGE:.spec.image,POLL:.spec.updateStrategy.registryPoll.interval,STATE:.status.connectionState.lastObservedState'

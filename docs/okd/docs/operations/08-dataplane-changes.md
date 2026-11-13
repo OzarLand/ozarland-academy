@@ -8,6 +8,22 @@ nodes are changed only when an Ansible run is started, exactly like
 `OpenStackDataPlaneDeployment` resource, and each new run is a **new**
 resource.
 
+## In short
+
+- Nothing changes on a compute node until you create a new
+  `OpenStackDataPlaneDeployment`. Each run is a new resource with a new
+  name.
+- An edited NodeSet shows `False` until a deployment finishes. A changed
+  ConfigMap (`nova-extra-config`) shows nothing at all: you have to know
+  that a run is needed.
+- Use `servicesOverride` to run the smallest set of services: about two
+  and a half minutes for `nova` alone, against about 14 minutes for a full
+  run.
+- The lab script re-applies the repository templates first: start a run
+  with `oc apply` when the change is only a test patch.
+- `True` after a partial run does not prove that every service was
+  applied.
+
 ## 1. Initial symptoms
 
 - You changed something that concerns compute nodes (a `nova-compute`
@@ -67,6 +83,24 @@ restart agents and interrupt workloads. The operators therefore never start
 one on their own. They prepare everything (inventory, variables, secrets,
 certificates) and wait for you to create a deployment.
 
+What happens between a change and the compute node; the two entry points
+differ only in what the NodeSet status shows.
+
+```mermaid
+flowchart TD
+    A1["You edit the NodeSet"]
+    A2["You change a ConfigMap a service consumes<br/>(nova-extra-config)"]
+    B["NodeSet False: configHash differs<br/>from deployedConfigHash"]
+    C["You create a new OpenStackDataPlaneDeployment<br/>(optional: servicesOverride, ansibleLimit)"]
+    D["Operator creates one Job per service, in order"]
+    E["Each Job starts an Ansible runner pod"]
+    F["Compute node, over SSH on the ctlplane network:<br/>configuration written, containers restarted"]
+    G["Deployment True, hashes equal, NodeSet True"]
+    A1 --> B --> C
+    A2 -- "no hash change, no status change" --> C
+    C --> D --> E --> F --> G
+```
+
 Anatomy of a run:
 
 - `OpenStackDataPlaneNodeSet`: inventory and variables.
@@ -102,11 +136,16 @@ Durations measured on the lab:
 | First full deployment, one node | 21 min |
 | Full deployment on the already deployed node | 13 min 43 s |
 | Full deployment adding a second node to the first | 21 min 4 s |
+| Full deployment adding two nodes at once (three nodes) | 27 min 30 s |
 | Full deployment on the remaining node after a node was removed | 13 min 5 s |
+| Full deployment on the remaining node after two nodes were removed | 14 min 26 s |
 | `servicesOverride: [nova]`, one or two nodes | 2 min 20 s to 2 min 30 s |
 
-Adding and removing a node, and what the operator does in each case, are
-in [Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
+Adding and removing nodes were executed on the lab: one to two nodes and
+back on 2026-11-12, then up to three nodes and back to one on 2026-11-13.
+The procedure, what the operator does in each case, and the live migration
+between nodes are in
+[Data plane scale-out, migration and scale-in](../knowledge-base/dataplane-scale-out-and-migration.md).
 
 ## 5. Resolution
 
@@ -273,3 +312,7 @@ alphabetical order, so a name starting with `25-` overrides them.
   Ansible run. Fix the cause and create another deployment; see
   [data plane troubleshooting](../troubleshooting/dataplane.md).
 - Never edit configuration on the node by hand: the next run overwrites it.
+
+---
+
+**Previous:** [Passwords and secrets](07-passwords-and-secrets.md) · **Up:** [Operations guide](README.md) · **Next:** [Safe change checklist](09-safe-change-checklist.md)

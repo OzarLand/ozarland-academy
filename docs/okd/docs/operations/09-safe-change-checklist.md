@@ -7,6 +7,17 @@ value is rolled out as diligently as a right one. This checklist is the
 discipline to keep around every change to the control plane resource, the
 NodeSet, or anything in the `openstack` namespace.
 
+## In short
+
+- Before: the platform is healthy, the starting point is saved, and the
+  change was previewed with `--dry-run=server`.
+- During: one change at a time, on the highest-level resource, watched in
+  a second terminal, with a stop condition decided in advance.
+- After: the control plane is `True`, only the expected pods were
+  replaced, and the smoke test passes.
+- Rolling back is applying the previous declaration. It does not undo
+  schema migrations, written data, or what was applied on compute nodes.
+
 ## 1. Initial symptoms
 
 You are about to apply a change, or you applied one and are not sure the
@@ -184,9 +195,15 @@ last.
   rule: no change without a reason, never two at once, and never while
   another change is still rolling.
 - Do not combine an OpenStack change with OKD maintenance (node reboot,
-  cluster upgrade). See [node and OKD](../troubleshooting/node-and-okd.md).
+  cluster upgrade). See [node and OKD](../troubleshooting/node-and-okd.md)
+  and
+  [impact of OKD maintenance on OpenStack](../lifecycle/06-okd-maintenance-impact.md).
 - Stop and investigate rather than stacking a second change on a failing
   first one. Use
   [reconciliation not progressing](../troubleshooting/reconciliation-not-progressing.md).
 - If in doubt on a lab: take notes, then try. If in doubt in production:
   do not.
+
+---
+
+**Previous:** [Data plane changes](08-dataplane-changes.md) · **Up:** [Operations guide](README.md) · **Next:** [Lifecycle management](../lifecycle/README.md)

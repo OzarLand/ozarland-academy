@@ -7,6 +7,18 @@ equivalent here is to **delete the pod**: the Deployment or StatefulSet that
 owns it immediately starts a replacement with the same configuration. You
 never "start" or "stop" a pod; you let the controller recreate it.
 
+## In short
+
+- To restart a service, delete its pod: `oc delete pod -l service=<name>`.
+- Do not use `oc rollout restart` or `oc scale`: the operator owns the
+  workload and the result depends on its kind.
+- With one replica, every restart is a short outage of that service: 20 to
+  60 seconds on the lab.
+- RabbitMQ and Galera: only with a reason, one pod at a time, never with
+  `--force`.
+- A restart does not apply configuration and destroys the logs of the pod:
+  save them first.
+
 ## 1. Initial symptoms
 
 - A service misbehaves (hung worker, stale connection to the database or
@@ -66,11 +78,14 @@ What actually happens on a restart:
   because it lives in the volume, not in the pod.
 - **`oc rollout restart`**: adds a timestamp annotation to the pod template.
   The template is owned by an operator, which removes the annotation within
-  a second. Observed on the lab: on a Deployment (Keystone) the new
-  ReplicaSet is created and scaled back to zero before its pod is ready, so
-  the running pod is **not** restarted at all; on a StatefulSet
-  (`nova-scheduler`) the pod is restarted once. Do not use it: the result
-  depends on the workload kind. Delete the pod instead.
+  a second. Observed on the lab:
+  - on a Deployment (Keystone) the new ReplicaSet is created and scaled
+    back to zero before its pod is ready, so the running pod is **not**
+    restarted at all;
+  - on a StatefulSet (`nova-scheduler`) the pod is restarted once.
+
+  Do not use it: the result depends on the workload kind. Delete the pod
+  instead.
 - **Scaling to 0 and back**: the operator owns `replicas`; a manual
   `oc scale` on the Deployment is reverted in under a second. To stop a
   service on purpose, set `replicas: 0` in the `OpenStackControlPlane`.
@@ -178,3 +193,7 @@ oc rsh openstackclient openstack compute service list
   for running services; it pauses reconciliation for about 15 seconds, and
   the operator then reconciles everything it owns once, which removes any
   manual drift it finds.
+
+---
+
+**Previous:** [Logs](02-logs.md) · **Up:** [Operations guide](README.md) · **Next:** [Change service configuration](04-change-service-configuration.md)

@@ -3,6 +3,20 @@
 > Status: every command was run on the lab (single-node OKD 4.22,
 > operators 18-stable, OpenStack 2023.1 Antelope) on 2026-11-12
 
+## In short
+
+- The platform monitoring stack runs on defaults: 11 pods, 3.2 GiB of
+  memory, 15 days of history in an `emptyDir` that is lost if the
+  Prometheus pod is deleted.
+- Query it from the bastion with a short-lived token
+  (`oc create token prometheus-k8s`) on the `thanos-querier` route.
+- Six alerts fire on the healthy lab; only `HighOverallControlPlaneMemory`
+  is a real signal. No receiver is configured: nobody is told.
+- Nothing knows OpenStack: only container metrics of its pods are
+  collected. The RabbitMQ and OVN exporters answer but nobody scrapes
+  them.
+- Events last three hours: capture them right after an incident.
+
 OKD ships a complete monitoring stack (Prometheus, Alertmanager, node
 and Kubernetes exporters) that watches the platform from the first
 minute. This file records what runs, what it costs, how to query it

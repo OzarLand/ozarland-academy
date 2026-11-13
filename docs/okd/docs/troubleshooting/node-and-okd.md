@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion and on the node, and for the planned reboot of scenario B (executed and measured, and measured twice more on 2026-11-12 during MachineConfig rolls), `cordon` and a server-side dry run of `drain` (2026-11-12); not executed: the host cloud commands, a hard stop of the VM, a real `drain`, the approval of certificate requests (none was pending), the restart of `crio` and `kubelet`, and any degraded cluster operator (none occurred)
 
+## In short
+
+- Everything OpenStack runs on one OKD node: recover in a fixed order
+  (VM, kubelet, etcd and API server, cluster operators, then OpenStack)
+  and do not touch OpenStack pods while the platform is still settling.
+- A planned reboot is a full control plane outage of about six minutes.
+  Instances keep running. Cordon and drain add nothing on a single node.
+- For about twenty seconds after the API returns, statuses are stale:
+  wait for the node to pass `NotReady` then `Ready`.
+- After any restart of the OKD node, check the OVN agents on each
+  compute node and restart `edpm_ovn_controller` and
+  `edpm_ovn_metadata_agent` if they are not connected.
+
 In a Kolla deployment the controllers are the control plane: if a controller
 is down, its containers are down. Here the same is true one level removed.
 OpenStack services are pods; pods live on the OKD node; the node is a
@@ -231,6 +244,9 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
 
 - No cluster operator was reported degraded at any time during the
   recovery, and no certificate request had to be approved.
+- The two reboots of 2026-11-12 gave the same timeline; it is drawn as a
+  sequence diagram in
+  [OKD node maintenance](../knowledge-base/okd-node-maintenance.md#how-do-i-apply-a-machineconfig-on-the-single-node-and-what-happens-step-by-step).
 - The pods are not replaced: the same pods come back with their restart
   counter increased by one (`nova-scheduler-0` by four). Galera was stopped
   cleanly and bootstrapped by itself ("Bootstrapping a new cluster", then

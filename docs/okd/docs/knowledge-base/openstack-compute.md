@@ -3,10 +3,28 @@
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,
 > OpenStack 2023.1 Antelope, one KVM compute node) on 2026-11-12
 
+## In short
+
+- Nova control services are pods; `nova_compute` is a podman container
+  under the unit `edpm_nova_compute`, and libvirt runs on the host.
+- The service host (control-plane FQDN) and the hypervisor hostname
+  differ on the lab: use the service host in `compute service` and
+  `aggregate` commands.
+- Compute options go through the ConfigMap `nova-extra-config` and a
+  deployment limited to `nova`, never through files on the node.
+- A refused boot is either HTTP 403 at once (quota) or `ERROR` with
+  `No valid host` (the scheduler log names the filter).
+- This page was written with one compute node. Migration between nodes,
+  evacuation and resize to another host were done later with a second
+  node: see
+  [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
+
 The Nova control services are pods; `nova_compute` is a podman container
 on the compute node and libvirt runs on that host as systemd services.
-With one compute node, live migration and evacuation cannot be exercised
-(see [open questions](open-questions.md)). `os`, `$o` and `compute` are
+With one compute node, live migration and evacuation cannot be exercised;
+they were exercised with a temporary second node, see
+[Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
+`os`, `$o` and `compute` are
 the helpers defined in [networking with OVN](openstack-networking-ovn.md):
 admin client, member client, SSH to the compute node.
 
@@ -225,7 +243,9 @@ reconfigure.
 - A flavor with a smaller disk is refused.
 - On a multi-node cloud, resize to another host needs the migration SSH
   key (`nova-migration-ssh-key`) deployed by the `nova` data plane
-  service. This path could not be tested with one node.
+  service. This path could not be tested with one node; it was done
+  later with a second node (31 s to `VERIFY_RESIZE`), see
+  [how long an instance is unreachable](dataplane-scale-out-and-migration.md#how-long-is-an-instance-unreachable-when-it-changes-node).
 
 **See also**: [Data plane changes](../operations/08-dataplane-changes.md),
 [Change service configuration](../operations/04-change-service-configuration.md)
@@ -342,10 +362,13 @@ exits with code 1.
 **Why / how it works**: the cell0 conductor pod has the API database and
 cell0 credentials mounted, so `nova-manage` works there without options.
 Cell1 has its own Galera and RabbitMQ instances. The compute node was
-already mapped to cell1 without any manual step (the nova operator runs
-the discovery itself: the status of the `NovaCell` resource records a
-`nova-compute-discovery` hash), and database purge is done by
-the two CronJobs.
+already mapped to cell1 without any manual step. The status of the
+`NovaCell` resource records a `nova-compute-discovery` hash, but the
+scale-out drill showed that the operator does not run discovery after
+each deployment: the mapping comes from the `discover_hosts` call at the
+end of the lab script (see
+[who maps a new compute node](dataplane-scale-out-and-migration.md#who-maps-a-new-compute-node-to-the-cell)).
+Database purge is done by the two CronJobs.
 Kolla-Ansible equivalent: `docker exec nova_api nova-manage ...` and
 `kolla-ansible ... nova-cell` plays.
 
@@ -816,7 +839,8 @@ to migration. Kolla-Ansible equivalent: identical.
   `server migration list`.
 - Failed records stay in the list; they are history, not pending work.
 - Real live migration, evacuation and the migration SSH key could not be
-  tested here (see [open questions](open-questions.md)).
+  tested with one node. They were tested with a temporary second node:
+  see [Data plane scale-out, migration and scale-in](dataplane-scale-out-and-migration.md).
 
 **See also**: [Data plane changes](../operations/08-dataplane-changes.md),
 [Data plane troubleshooting](../troubleshooting/dataplane.md)

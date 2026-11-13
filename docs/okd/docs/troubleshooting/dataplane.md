@@ -2,6 +2,19 @@
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for scenario A (two provoked failures, partial runs, a full second run), the read-only parts of scenario B and scenario C (service stopped and started); a key mismatch (scenario B) was not provoked and the emulation path of scenario D was not executed, because the lab compute node has KVM
 
+## In short
+
+- A data plane deployment is one Ansible run, recorded once: when it
+  fails, fix the cause and create a new deployment under a new name.
+- Read the `PLAY RECAP` and the summary line of the failed Job, not the
+  first `fatal:` line.
+- `True` on the NodeSet means "a deployment finished since the last
+  change", not "every service was applied".
+- `nova-compute` down is invisible to Kubernetes: only the OpenStack API
+  and the smoke test show it.
+- Problems that need two compute nodes are in the knowledge base (link
+  below).
+
 The data plane is where the lab feels most like Kolla-Ansible: an Ansible run
 over SSH configures a host, and services run as containers under systemd.
 The differences are that the run is started by creating a resource, executes
@@ -396,6 +409,11 @@ sudo systemctl restart edpm_ovn_metadata_agent
 ```
 
 The agent was reported alive ten seconds later.
+
+On the two reboots of 2026-11-12 the OVN controller was stuck as well.
+Check it with `sudo podman exec ovn_controller ovn-appctl
+connection-status` and restart both units if it is `not connected`: see
+[why the OVN agents are dead after a reboot](../knowledge-base/okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them).
 
 ### 6. Verification
 

@@ -2,6 +2,22 @@
 
 > Status: validated on the lab — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), and the `GaleraRestore` of 5.5 was executed the same day on both database instances with markers proving the result; the manual import of a logical dump was validated on a scratch server only; the etcd restore was executed once on 2026-11-13, on a snapshot one minute old; the volume snapshot rollback was deliberately not run on the only lab
 
+## In short
+
+- State lives in several places: database volumes, Secrets generated in
+  the cluster, custom resources, etcd, and the compute node disk. No single
+  backup covers them all, except volume snapshots of the stopped VMs.
+- Four backups to take: export of resources and Secrets (5.1),
+  `GaleraBackup` (5.2), etcd backup (5.3), volume snapshots (5.4).
+- On the lab every volume and etcd share one disk: copy backups off the
+  node.
+- `osp-secret` exists nowhere else. On a rebuild, restore the Secrets
+  **before** the control plane resource.
+- A database restore puts tables back, not consistency: Nova, Placement,
+  Neutron, OVN and Glance must be repaired afterwards (5.5).
+- Executed on the lab: every backup, `GaleraRestore` on both instances, one
+  etcd restore. Not executed: a rollback to the volume snapshots.
+
 ## 1. Context
 
 A Kolla-Ansible backup is usually "`mariadb_backup` plus `/etc/kolla` plus
@@ -27,6 +43,33 @@ On the lab every PV is a directory under `/var/lib/openstack-lab-pv` on the
 single OKD node: **all persistent state and etcd share one disk**. Any
 backup that stays in the cluster does not protect against losing that
 volume.
+
+Which backup covers which state; the table above has the details, and
+section 4 says what each backup does not cover.
+
+```mermaid
+flowchart LR
+    DB["Galera databases<br/>(two PVCs)"]
+    OG["OVN databases, Glance images<br/>(PVCs)"]
+    SEC["Secrets: osp-secret, CAs, SSH keys"]
+    CR["Custom resources<br/>(desired state)"]
+    ETCD["etcd<br/>(every Kubernetes object)"]
+    VM["Instance disks<br/>(compute node disk)"]
+    GB["GaleraBackup<br/>(SQL dumps on another PVC)"]
+    EXP["Export of resources and Secrets<br/>(files on the bastion)"]
+    GIT["Git templates and lab.env"]
+    EB["etcd backup<br/>(snapshot file on the node)"]
+    SNAP["Volume snapshots of the stopped VMs<br/>(cover everything on the left)"]
+    DB --> GB
+    SEC --> EXP
+    CR --> EXP
+    CR --> GIT
+    SEC --> ETCD
+    CR --> ETCD
+    ETCD --> EB
+    OG --> SNAP
+    VM --> SNAP
+```
 
 ## 2. Read-only investigation
 
@@ -157,9 +200,10 @@ Each run writes two files under `data/` on the backup PVC, for example
 240 kB on a nearly empty lab) and
 `openstack_backup-grants_2026-11-12_00-25-07.sql.gz` (user grants). The
 prefix `openstack_backup` is fixed: **both instances produce files with the
-same names**, each on its own PVC, so never mix their copies. The
-dump is not taken from the live server directly: the job receives a full
-state transfer from the Galera node into `transfer/` on the same PVC
+same names**, each on its own PVC, so never mix their copies.
+
+The dump is not taken from the live server directly. The job receives a
+full state transfer from the Galera node into `transfer/` on the same PVC
 (about 200 MB per instance on the lab, kept and overwritten at each run),
 starts a temporary local server on it and dumps from there. Size the backup
 volume for a full copy of the database plus the dumps.
@@ -197,6 +241,9 @@ It takes a few seconds and produces `snapshot_<timestamp>.db` (the etcd
 snapshot, about 90 MB on the lab) and
 `static_kuberesources_<timestamp>.tar.gz` under `/home/core/assets/backup`
 on the node. `oc debug` prints a PodSecurity warning that can be ignored.
+
+Nothing schedules this backup: the lab has no automatic etcd backup
+([knowledge base](../knowledge-base/okd-cluster-health-and-etcd.md#are-there-automatic-etcd-backups-and-where-is-the-backup-script)).
 
 Copy them off the node — a backup on the disk it protects is not a backup.
 The files belong to root with mode `0600`, so a plain `scp core@<node>:...`
@@ -359,13 +406,18 @@ oc patch etcd cluster --type=merge -p "{\"spec\":{\"forceRedeploymentReason\":\"
 oc adm wait-for-stable-cluster --minimum-stable-period=2m
 ```
 
-Executed once on the lab, on a snapshot one minute old: the script
-returned in 40 s, etcd was unavailable for 9 minutes, then for 5 more
-minutes during the forced revision; objects created after the snapshot
-disappeared and deleted ones came back; Keystone and a running instance
-were never interrupted and no OpenStack pod restarted. The previous data
-directory stays in `/var/lib/etcd-backup` until removed by hand. Details
-and timeline in the
+Executed once on the lab, on 2026-11-13, on a snapshot one minute old:
+
+- the script returned in 40 s, etcd was unavailable for 9 minutes, then
+  for 5 more minutes during the forced revision;
+- objects created after the snapshot disappeared and deleted ones came
+  back;
+- Keystone and a running instance were never interrupted and no OpenStack
+  pod restarted;
+- the previous data directory stays in `/var/lib/etcd-backup` until
+  removed by hand.
+
+Details and timeline are in the
 [drill](../knowledge-base/backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens).
 A restore from an older snapshot leaves the custom resources and the
 databases out of step and remains untested: on the lab, prefer volume
@@ -445,3 +497,7 @@ assumption: this one has been restored once, on an idle lab.
   and defines a restore order. Pairing it with a backup tool is not covered
   by upstream documentation in the 18-stable branch and is not used here.
 - No backup of the OVN databases other than volume snapshots is described.
+
+---
+
+**Previous:** [Rollback: what can and cannot be undone](04-rollback-limitations.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md)
