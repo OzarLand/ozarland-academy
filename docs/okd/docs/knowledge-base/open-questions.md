@@ -214,12 +214,17 @@ person starts from facts.
   (`KubeletConfig`), a change that the node disruption policies apply
   without reboot, a roll that fails half-way (pool `Degraded`), a
   restart of kubelet or CRI-O alone, and an unclean stop of the node.
-- **etcd restore** and **a real node drain**: never executed (nothing
-  irreversible on etcd; a drain of the only node is an outage). The
-  drain was evaluated with a server-side dry run
-  ([entry](okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist));
-  the restore script and its single-member mode were read only
-  ([entry](backup-and-restore-drills.md#what-can-i-verify-about-an-etcd-restore-without-doing-it)).
+- **A real node drain**: never executed (a drain of the only node is an
+  outage); evaluated with a server-side dry run
+  ([entry](okd-node-maintenance.md#what-would-a-drain-really-evict-here-and-which-poddisruptionbudgets-exist)).
+- **etcd restore**: executed once on a snapshot one minute old
+  ([entry](backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens)).
+  Open: why kubelet needs five minutes to take the restore pod after the
+  script ends (repeated timeouts deleting the mirror pod), whether the
+  etcd operator would have replaced the restore pod by itself with more
+  patience (it was given six minutes after etcd served again), the `ETCD_ETCDCTL_RESTORE` mode,
+  and a restore across real changes (old snapshot, rotated
+  certificates or passwords, added node).
 - **The whereabouts reconciler**: no CronJob or controller cleaning
   leaked addresses was found; a leak was cleaned by hand. Whether the
   node-level reconciler ever runs here was not observed.

@@ -82,6 +82,13 @@ recent one that ran every service: keep it), which makes 11 deployments,
 and nothing else: its instances, floating IP and node records were
 removed, and the functional smoke test reported 0 failed afterwards.
 
+The etcd restore of the same day left one more backup directory on the
+bastion (dumps, exports and the restored snapshot, 127 MB) and a third
+etcd revision on the node; its namespace, instance, network, Jobs, the
+restore source and `/var/lib/etcd-backup` (560 MB together) were
+removed, the dumps pruned to two per instance, and the functional smoke
+test reported 0 failed.
+
 **Observed on the lab** (2026-11-12, after the cleanup of the fourth
 campaign):
 

@@ -104,7 +104,8 @@ Legend:
 | Lifecycle: failed upgrade, rollback limits | Partially tested | Read-only commands, webhook refusals, healthy-update signatures. No failure provoked, no downgrade |
 | Lifecycle: backups | Tested | Export of resources and Secrets, `GaleraBackup` for both database instances, etcd backup, volume snapshots of the stopped VMs |
 | Lifecycle: database restore | Tested | `GaleraRestore` executed on both database instances with before/after markers (7 s and 25 s, no failed API request), followed by the repair of Nova, Placement, Neutron/OVN and Glance leftovers; idle lab, one Galera replica |
-| Lifecycle: other restores | Documented only | Manual import of a logical dump validated on a scratch server only; etcd restore and snapshot rollback never executed |
+| Lifecycle: etcd restore | Tested | `cluster-restore.sh` executed once on the single member with before/after markers, snapshot one minute old: etcd unavailable 9 minutes, then 5 minutes for the forced revision that replaces the restore pod; OpenStack APIs and a running instance not interrupted |
+| Lifecycle: other restores | Documented only | Manual import of a logical dump validated on a scratch server only; snapshot rollback never executed |
 | Lifecycle: OKD node reboot, graceful shutdown and restart of the lab, compute node reboot | Tested | Recovery without intervention in 3 to 6 minutes, except the OVN agents limitation below. Unclean stop not executed |
 | Lifecycle: MachineConfig change on the single node | Tested | One file added then removed on 2026-11-12: two rolls, reboot 10 to 15 seconds after the change, no drain, pool `Updated` about 7 minutes later; both OVN services of the compute node restarted by hand afterwards |
 | Lifecycle: OKD upgrade | Documented only | Read-only pre-checks run; the upgrade was deliberately not executed |
@@ -167,6 +168,6 @@ Legend:
   that delay comes back with expired node certificates
   ([maintenance impact](lifecycle/06-okd-maintenance-impact.md)).
 - **The database restore was exercised on an idle lab only** (both
-  instances, one Galera replica); the etcd restore and the volume
-  snapshot rollback have never been executed, and the OKD upgrade has not
-  been attempted.
+  instances, one Galera replica) and the etcd restore on a snapshot one
+  minute old; the volume snapshot rollback has never been executed, and
+  the OKD upgrade has not been attempted.

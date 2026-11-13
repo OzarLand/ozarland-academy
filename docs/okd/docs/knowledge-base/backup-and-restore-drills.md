@@ -5,7 +5,7 @@ Galera instances, with markers created before and after each backup so
 that the result can be proven. The procedure itself is in
 [Backup and restore](../lifecycle/05-backup-and-restore.md); this file
 records what happened, how long it took and what had to be repaired
-afterwards.
+afterwards. The last entry is the etcd restore executed on 2026-11-13.
 
 Conventions and helpers are those of the [README](README.md). Two more
 helpers are used here:
@@ -754,8 +754,9 @@ container.
 ### What can I verify about an etcd restore without doing it?
 
 **Context**: the cluster has one etcd member. A restore replaces the
-whole Kubernetes state and restarts the control plane; it was not run on
-the lab.
+whole Kubernetes state. These are the facts gathered on 2026-11-12,
+before the restore was run for real the next day
+([next entry](#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens)).
 
 **How**:
 
@@ -787,7 +788,7 @@ snapshot db and kube resources are successfully saved to /home/core/assets/backu
 ```
 
 `cluster-restore.sh <backup-directory>` exists on the node (143 lines,
-written by the etcd operator). Read, not run: it must be started as root
+written by the etcd operator). It must be started as root
 on a node with a working etcd static pod definition; it moves the etcd
 static pod manifest away, waits for the containers to stop, moves the
 current data directory to a backup directory, then either restores the
@@ -804,13 +805,15 @@ volume belongs to which claim. Data in the volumes (Galera, OVN, Glance)
 is not in etcd and stays as it is. Kolla-Ansible equivalent: none; the
 closest is restoring `/etc/kolla` and the inventory.
 
-**Why the drill was not run**: with one member there is no second
-control plane node to fall back on; a failed restore means reinstalling
-the cluster and the whole lab. The first-day certificate rotation was
-also due the same evening, and a snapshot taken before it would bring
-back certificates about to expire. On this lab the tested way back is
-the volume snapshot of the stopped virtual machines
-([lifecycle 5.4](../lifecycle/05-backup-and-restore.md)).
+**Why the drill was first postponed**: with one member there is no
+second control plane node to fall back on; a failed restore means
+reinstalling the cluster and the whole lab. The first-day certificate
+rotation was also due the same evening, and a snapshot taken before it
+would bring back certificates about to expire. The restore was run the
+day after, once the rotation was over, with the volume snapshots of the
+stopped virtual machines
+([lifecycle 5.4](../lifecycle/05-backup-and-restore.md)) as the last
+way back.
 
 **Pitfalls**:
 
@@ -824,3 +827,146 @@ the volume snapshot of the stopped virtual machines
 
 **See also**: [etcd backups](okd-cluster-health-and-etcd.md#are-there-automatic-etcd-backups-and-where-is-the-backup-script),
 [OKD maintenance impact](../lifecycle/06-okd-maintenance-impact.md)
+
+### How do I restore etcd on the single node, and what really happens?
+
+**Context**: the last resort when Kubernetes objects were destroyed or
+corrupted (a deleted namespace, a broken custom resource definition) and
+a snapshot from before the damage exists. Run once on the lab, on a
+healthy and idle cluster, with markers proving the result.
+
+**How**:
+
+**[CHANGE]** Safety net first (database dumps and exports as in the
+[safety net entry](#what-do-i-put-aside-before-touching-the-databases)),
+then a fresh snapshot in its own directory: the restore script wants
+exactly one snapshot and one resources archive in the directory it is
+given.
+
+```bash
+oc get nodes; oc get clusteroperators          # gate: everything settled
+node 'sudo mkdir -p /home/core/assets/restore-src && sudo /usr/local/bin/cluster-backup.sh /home/core/assets/restore-src'
+ssh core@192.168.130.10 "sudo tar -C /home/core/assets -cf - restore-src" > $bd/etcd-restore-src.tar
+```
+
+**[DESTRUCTIVE]** The restore, as root on the node. Every Kubernetes
+object goes back to the snapshot; the API cannot write for several
+minutes.
+
+```bash
+node 'sudo -E /usr/local/bin/cluster-restore.sh /home/core/assets/restore-src'
+oc adm wait-for-stable-cluster --minimum-stable-period=3m
+```
+
+**[CHANGE]** The script leaves a restore pod in place of the regular
+etcd pod. When the etcd operator does not replace it by itself, force a
+new revision (second outage of etcd, about five minutes), then check.
+
+```bash
+oc -n openshift-etcd get pod etcd-okd-0 -o jsonpath='{.spec.containers[*].name}{"\n"}'
+oc patch etcd cluster --type=merge -p "{\"spec\":{\"forceRedeploymentReason\":\"restore-$(date +%s)\"}}"
+oc adm wait-for-stable-cluster --minimum-stable-period=2m
+oc get etcd cluster -o jsonpath='{.status.latestAvailableRevision} {.status.nodeStatuses[0].currentRevision}{"\n"}'
+node 'sudo ls -l /var/lib/etcd'
+```
+
+**[DESTRUCTIVE]** Once the cluster is stable on the new revision, remove
+the previous data directory kept by the script, and the restore source.
+
+```bash
+node 'sudo rm -rf /var/lib/etcd-backup /home/core/assets/restore-src'
+```
+
+**Observed on the lab** (2026-11-13, times in UTC; OKD 4.22.0-okd-scos.10,
+etcd 3.6, one member):
+
+```text
+05:46:11  gate: node Ready, 0 unsettled operators, control plane and node set True, etcd revision 2
+05:46:35  snapshot: {"revision":974678,"totalKey":5872,"totalSize":130523136,"version":"3.6.0"}   (3 s)
+05:46:50  after the snapshot: ConfigMap kb6-after created, kb6-before deleted, kb6-edit v=1 -> v=2,
+          deployment kb6-web scaled 1 -> 3, OpenStack network created, instance booted with a floating IP
+05:47:55  cluster-restore.sh started
+          stopping etcd-pod.yaml / Waiting for container etcd to stop ... complete
+          Moving etcd data-dir /var/lib/etcd/member to /var/lib/etcd-backup
+          starting restore-etcd static pod
+05:48:35  SNAPSHOT RESTORE COMPLETED, rc=0             (the script, 40 s)
+05:48:31  etcd container stopped                       (container runtime log)
+05:53:07  kubelet takes the restore pod from the manifest file
+05:57:25  restore pod containers started: etcd, etcd-readyz
+05:57:39  snapshot restored, "bumping revisions by 1223995", etcd serving again
+06:01:45  wait-for-stable-cluster: All clusteroperators are stable
+06:03:42  still the restore pod (2 containers), operator: latest revision 2, nothing in progress -> patch
+06:05:06  etcd container stopped (installer of revision 3)
+06:10:15  regular etcd pod started: etcdctl etcd etcd-metrics etcd-readyz etcd-rev
+06:18:28  All clusteroperators are stable; etcd revision 3; /var/lib/etcd/revision.json is back
+```
+
+What came back and what did not:
+
+```text
+ConfigMap kb6-before      present again           (deleted after the snapshot)
+ConfigMap kb6-edit        v=1                     (edit undone)
+ConfigMap kb6-after       gone                    (created after the snapshot)
+Deployment kb6-web        1/1, the original pod   (the 2 extra pods were removed by the controller)
+OpenStack network         still there, ACTIVE     (lives in the database, not in etcd)
+Instance                  ACTIVE, marker file intact, uptime continuous, 1880 ping answers without a gap
+Keystone public endpoint  HTTP 200 every 3 s during both etcd outages
+openstack namespace       same pods, restart total unchanged (61 before, 61 after)
+kube-apiserver            container never restarted; at least 40 platform operator containers restarted once
+```
+
+etcd was unavailable twice: 9 min 8 s after the restore script
+(05:48:31 to 05:57:39) and 5 min 9 s during the forced revision
+(06:05:06 to 06:10:15). The functional smoke test reported 0 failed at
+06:21.
+
+**Why / how it works**: the script does not restore anything itself in
+its default mode. It stops the etcd static pod by moving its manifest
+away, moves the data directory aside, unpacks the static pod resources
+of the snapshot and installs a *restore pod* as the etcd manifest. That
+pod runs `etcdutl snapshot restore` into an empty data directory, with
+a large revision bump and the old revisions marked compacted so that
+every client cache is invalidated and reloads, then starts etcd on the
+result. Most of the first outage is not the restore (14 s for 130 MB):
+kubelet first tries to delete the mirror pod of the stopped etcd through
+an API that has no etcd behind it, and repeats 34-second timeouts for
+about five minutes before it takes the new manifest. The restore pod is
+not a regular revision: the operator has to roll a new one to bring back
+the five usual containers and the revision file, and on this single
+member it did not start that by itself. OpenStack keeps answering
+because its pods do not need the Kubernetes API to serve requests; only
+operators and anything that creates, schedules or updates objects stop.
+Kolla-Ansible equivalent: none (no cluster state store); the closest is
+putting `/etc/kolla` and the inventory back from a backup.
+
+**Pitfalls**:
+
+- `oc adm wait-for-stable-cluster` returning "stable" is not the end:
+  check the container names of `etcd-okd-0`. Two containers mean the
+  restore pod is still there.
+- Budget two interruptions of the Kubernetes API (about nine and five
+  minutes here), not the 40 seconds of the script.
+- A probe on `/readyz` every 3 seconds never reported a failure while
+  `oc get clusteroperators` timed out and kubelet logged
+  `Timeout: request did not complete`. Read the timeline in the kubelet
+  and container runtime journals, not in such a probe.
+- Everything created in Kubernetes after the snapshot disappears,
+  including Secrets and certificates issued since then, and deleted
+  objects come back. OpenStack data does not move: after a restore
+  across a real change (a new node, a rotated password), the custom
+  resources and the databases disagree. The drill avoided this by
+  taking the snapshot one minute before.
+- Pods started after the snapshot keep running on the node until the
+  controllers reconcile; here the two extra replicas were removed
+  within the stabilisation time.
+- The way back if the restore pod never serves is the data directory
+  kept in `/var/lib/etcd-backup/member`; it was not needed and not
+  tested. Do not delete it before the new revision is in place.
+- The restore source and the kept directory hold every Secret in clear
+  and about 560 MB on the disk that etcd uses.
+- Not covered: a restore after losing the node disk, a snapshot hours or
+  days old, the `ETCD_ETCDCTL_RESTORE` mode, a cluster under load.
+
+**See also**: [facts gathered before the drill](#what-can-i-verify-about-an-etcd-restore-without-doing-it),
+[static pods and revisions](okd-cluster-health-and-etcd.md#where-does-the-control-plane-itself-run-and-what-are-revisions),
+[Backup and restore](../lifecycle/05-backup-and-restore.md)

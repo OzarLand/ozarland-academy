@@ -1,6 +1,6 @@
 # Backup and restore
 
-> Status: validated on the lab except the etcd restore — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), and the `GaleraRestore` of 5.5 was executed the same day on both database instances with markers proving the result; the manual import of a logical dump was validated on a scratch server only, and the etcd restore and the volume snapshot rollback were deliberately not run on the only lab
+> Status: validated on the lab — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), and the `GaleraRestore` of 5.5 was executed the same day on both database instances with markers proving the result; the manual import of a logical dump was validated on a scratch server only; the etcd restore was executed once on 2026-11-13, on a snapshot one minute old; the volume snapshot rollback was deliberately not run on the only lab
 
 ## 1. Context
 
@@ -345,10 +345,31 @@ main instance); it also replaces the accounts and the root password with
 those of the dump.
 
 etcd restore on a single-node cluster is a disaster-recovery procedure of
-OKD itself. The node carries `cluster-restore.sh` (with a single-member
-mode, `ETCD_ETCDCTL_RESTORE`); it was read, not run, because a failed
-restore of the only member means reinstalling the lab. On the lab, prefer
-volume snapshots.
+OKD itself: it puts every Kubernetes object back to the snapshot and
+leaves the databases and the instances alone.
+
+**[DESTRUCTIVE]**
+
+```bash
+ssh core@192.168.130.10 'sudo -E /usr/local/bin/cluster-restore.sh /home/core/assets/<directory-with-one-snapshot>'
+oc adm wait-for-stable-cluster --minimum-stable-period=3m
+oc -n openshift-etcd get pod etcd-okd-0 -o jsonpath='{.spec.containers[*].name}{"\n"}'
+# two containers only: the restore pod is still in place, force a regular revision
+oc patch etcd cluster --type=merge -p "{\"spec\":{\"forceRedeploymentReason\":\"restore-$(date +%s)\"}}"
+oc adm wait-for-stable-cluster --minimum-stable-period=2m
+```
+
+Executed once on the lab, on a snapshot one minute old: the script
+returned in 40 s, etcd was unavailable for 9 minutes, then for 5 more
+minutes during the forced revision; objects created after the snapshot
+disappeared and deleted ones came back; Keystone and a running instance
+were never interrupted and no OpenStack pod restarted. The previous data
+directory stays in `/var/lib/etcd-backup` until removed by hand. Details
+and timeline in the
+[drill](../knowledge-base/backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens).
+A restore from an older snapshot leaves the custom resources and the
+databases out of step and remains untested: on the lab, prefer volume
+snapshots for that case.
 
 ## 6. Verification
 
@@ -405,9 +426,11 @@ assumption: this one has been restored once, on an idle lab.
 - `GaleraRestore` was executed on both instances, on an idle lab with a
   single Galera replica and a few test resources: behaviour under load,
   with three replicas, or with a dump of realistic size is not known.
-- The restore order of 5.5 (steps 1 to 6 and 8), an etcd restore and a
-  rollback to the volume snapshots remain assumptions on this lab; the
-  last two would have put the only validated environment at risk.
+- The restore order of 5.5 (steps 1 to 6 and 8) and a rollback to the
+  volume snapshots remain assumptions on this lab. The etcd restore was
+  executed once, on an idle cluster and a snapshot one minute old: a
+  restore across real changes, or after losing the node disk, is not
+  known.
 - The manual import of a `mysqldump --all-databases` file was only run on
   a scratch server, not on a live instance.
 - A restore after a database password rotation, and a restore after the

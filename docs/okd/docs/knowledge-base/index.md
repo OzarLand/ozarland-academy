@@ -30,7 +30,7 @@ compute node) on 2026-11-12. What could not be tested is listed in
 | [okd-access-and-security.md](okd-access-and-security.md) | Credentials, named users, read-only access, operator permissions, security contexts, audit log |
 | [okd-monitoring-and-alerting.md](okd-monitoring-and-alerting.md) | Platform Prometheus and Alertmanager, queries, firing alerts, silences, events, console access |
 | [okd-olm-and-operators.md](okd-olm-and-operators.md) | Catalog, Subscription, InstallPlan, CSV, operator logs and restart, `operatorOverrides`, CRDs, garbage |
-| [backup-and-restore-drills.md](backup-and-restore-drills.md) | Database restore drills on both Galera instances, repairs afterwards, manual restore, etcd restore facts |
+| [backup-and-restore-drills.md](backup-and-restore-drills.md) | Database restore drills on both Galera instances, repairs afterwards, manual restore, etcd restore |
 | [dataplane-scale-out-and-migration.md](dataplane-scale-out-and-migration.md) | Second compute node, host discovery, scheduling, live and cold migration, evacuation, gateway failover, clean removal of a node |
 | [lab-state.md](lab-state.md) | What the campaigns left on the lab (kept history, demo tenant, backups, permanent configuration), with the commands to list and remove each item |
 | [cheat-sheet.md](cheat-sheet.md) | One-liners grouped by task |
@@ -163,7 +163,8 @@ question, followed by the same six parts:
 | [Which image files are left in the Glance store after a restore?](backup-and-restore-drills.md#which-image-files-are-left-in-the-glance-store-after-a-restore) | Files of images uploaded after the backup; compare the store with `glance.images`. |
 | [What happens when a restore file fails to load?](backup-and-restore-drills.md#what-happens-when-a-restore-file-fails-to-load) | `FAILED` in the output, the script continues and exits with 0; the Service endpoint is put back. |
 | [How do I restore by hand from a plain mysqldump?](backup-and-restore-drills.md#how-do-i-restore-by-hand-from-a-plain-mysqldump) | `mysql < dump` in the Galera pod with the endpoint removed; validated on a scratch server only. |
-| [What can I verify about an etcd restore without doing it?](backup-and-restore-drills.md#what-can-i-verify-about-an-etcd-restore-without-doing-it) | Snapshot content and `cluster-restore.sh` on the node; not run on a single member. |
+| [What can I verify about an etcd restore without doing it?](backup-and-restore-drills.md#what-can-i-verify-about-an-etcd-restore-without-doing-it) | Snapshot content and what `cluster-restore.sh` does, read on the node before the drill. |
+| [How do I restore etcd on the single node, and what really happens?](backup-and-restore-drills.md#how-do-i-restore-etcd-on-the-single-node-and-what-really-happens) | Script 40 s, etcd down 9 minutes, restore pod left in place, forced revision (5 more minutes); OpenStack not interrupted. |
 
 ### Data plane scale-out, migration and scale-in
 
