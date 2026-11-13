@@ -108,6 +108,7 @@ check when it fails — in the [installation guide](docs/installation/README.md)
 | [Troubleshooting](docs/troubleshooting/README.md) | Runbooks by symptom, with fault reproduction |
 | [Lifecycle](docs/lifecycle/README.md) | Updates, operator upgrades, backup and restore, OKD maintenance |
 | [Knowledge base](docs/knowledge-base/README.md) | Tested answers to day-to-day OpenStack and OKD administration questions, cheat sheet, open questions |
+| [Upstream contributions](contributions/README.md) | Method, candidate subjects with evidence and journal for contributing back to the operators and OKD |
 | [Publication readiness](docs/publication-readiness.md) | Review of secrets, history, licensing and open points before a public release |
 
 ## Learning roadmap
