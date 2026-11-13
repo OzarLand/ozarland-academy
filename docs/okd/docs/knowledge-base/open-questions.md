@@ -121,6 +121,9 @@ being able to explain, and what they could not test.
 - **No PodDisruptionBudget, ResourceQuota, LimitRange or NetworkPolicy**
   in the `openstack` namespace. Harmless with one node and one tenant of
   the cluster; to be decided before a multi-node or shared cluster.
+  Whether the operators create budgets by themselves for Galera and
+  RabbitMQ with several replicas could not be checked on this
+  single-replica lab.
 - **Monitoring is not durable and nobody is told**: Prometheus keeps 15
   days in an `emptyDir` (lost with the pod), Alertmanager has no
   receiver, and no OpenStack target is scraped.

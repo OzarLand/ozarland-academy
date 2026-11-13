@@ -281,7 +281,8 @@ keystone`.
   (`spec.galera.templates.<name>.resources`,
   `spec.rabbitmq.templates.<name>.resources`); changing them restarts
   the database or the message bus — plan it as a maintenance. Not done
-  on the lab; listed in the open questions with a proposed sizing.
+  on the lab; which requests to give them is listed in the
+  [open questions](open-questions.md).
 
 **See also**:
 [How do I give a service CPU and memory requests and limits](openstack-service-administration.md#how-do-i-give-a-service-cpu-and-memory-requests-and-limits),
@@ -426,8 +427,8 @@ autoscaler). It does nothing against `oc delete pod`, a rolling update,
 a crash or a node failure. With one replica a budget requiring one
 available pod would block every drain; nothing in this single-replica
 topology has one. Whether the operators create budgets for
-multi-replica Galera and RabbitMQ could not be checked here (open
-question).
+multi-replica Galera and RabbitMQ could not be checked here
+([open question](open-questions.md)).
 Kolla-Ansible equivalent: none; the operator's discipline ("one
 controller at a time") plays this role.
 

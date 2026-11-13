@@ -156,8 +156,9 @@ Operator Lifecycle Manager (OLM, part of OKD)
 └─ installs, from a catalog, the openstack-operator bundle
    └─ openstack-operator  (namespace openstack-operators)
       │
-      ├─ reads the "OpenStack" CR  (operator.openstack.org, name: openstack)
-      │  └─ deploys the service operators as Deployments:
+      ├─ its "controller-init" Deployment reads the "OpenStack" CR
+      │  (operator.openstack.org, name: openstack)
+      │  └─ deploys the controller-manager and the service operators:
       │     keystone-operator, mariadb-operator, infra-operator, nova-operator,
       │     neutron-operator, ovn-operator, glance-operator, ... (also those of
       │     services the lab does not enable)

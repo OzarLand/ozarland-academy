@@ -2,6 +2,13 @@
 
 **Where:** bastion.
 
+## In short
+
+- Two levels: the smoke test checks that every layer reports healthy; the
+  functional test also boots an instance on the compute node.
+- Both are safe to run again at any time, for example after a change or a
+  reboot.
+
 ## Smoke test
 
 **[READ-ONLY]**

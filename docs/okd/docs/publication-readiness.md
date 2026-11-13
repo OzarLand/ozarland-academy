@@ -1,6 +1,8 @@
 # Publication readiness report
 
-Review performed on 2026-11-12 on the working branch. The repository is **private**; this report lists what was
+Review performed on 2026-11-12 on the working branch; scans of the tree and
+of the history of `main` repeated on 2026-11-13 after the knowledge base,
+the contribution workspace and the documentation review were merged. The repository is **private**; this report lists what was
 checked before a possible public release and what remains for the
 maintainers to decide. Nothing in it changes the repository visibility.
 
@@ -15,7 +17,7 @@ maintainers to decide. Nothing in it changes the repository visibility.
 | Scripts and configuration | Lint-clean; executed end to end on one environment |
 | Documentation consistency | Links valid; every scenario page carries a validation status |
 | License and third-party content | Apache-2.0; derived files attributed |
-| Git history | Two commits on `main`, Conventional Commits style |
+| Git history | Eleven commits on `main` (one per merged pull request), Conventional Commits style |
 | Contribution guidelines | Present |
 | Examples generic and reproducible | Yes, with the limits listed below |
 
@@ -142,8 +144,10 @@ templates, a code of conduct, a security policy.
    opened the pull request (a personal `noreply` address), like the initial
    commit. Confirm this is the identity wanted in public history; rewriting
    it later would change the commit hashes.
-2. **Working branch.** The branch used to prepare the first version still
-   exists on the remote; delete it before publication.
+2. **Working branches.** The branches used to prepare the merged pull
+   requests still exist on the remote (the first working branch, the
+   `ops-kb*` branches and `contrib-prep`); everything they hold is in
+   `main`. Delete them before publication.
 3. **Catalog refresh.** The example settings pin the validated catalog
    digest; decide how often to re-validate against a newer catalog.
 4. **Community files.** Add issue/PR templates, a code of conduct and a
