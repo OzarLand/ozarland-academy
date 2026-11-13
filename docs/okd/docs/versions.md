@@ -93,7 +93,9 @@ Legend:
 | Second compute node: scale-out and clean scale-in | Tested | 2026-11-12, temporary. Added to the existing NodeSet with a new deployment (21 minutes, no effect on running instances), removed again (services, agents, NodeSet, Terraform). The validated baseline remains one compute node |
 | Scheduling on two nodes, aggregates and zones, cold migration, resize to another node, evacuation | Tested | 2026-11-12, small CirrOS instances with a 1 GB local disk |
 | Live migration without shared storage (block migration over TLS) | Tested | 2026-11-12. Failed with the configuration as first deployed; works since `live_migration_inbound_addr` is set by the lab template (1.5 to 2.7 s without answer). Not tested under memory pressure |
-| OVN gateway failover | Tested, does not fail over | With two chassis the survivor does not take over the router gateway; floating IPs are distributed and keep working. Three chassis not tested |
+| Three compute nodes: scale-out by two and scale-in by two | Tested | 2026-11-13, temporary. One deployment for the two new nodes (27 min 30 s for three nodes), removed again the same way as one node |
+| OVN gateway failover | Tested | With two chassis the survivor does not take over the router gateway. With three (2026-11-13) the next chassis took over in 3.3 s and the returning node took the gateway back (15.8 s without answer). Floating IPs are distributed and never lost a ping |
+| Planned move of the OVN gateway | Tested, cuts source NAT | 2026-11-13. The port moves within a second but the router address stayed unreachable for up to 3 minutes because of the chassis address mapping set by the data plane deployment; workaround documented, proper fix open |
 | Smoke and functional tests | Tested | `tests/smoke-test.sh --functional` boots an instance |
 | Operations guide scenarios | Partially tested | Every page was run against the lab on 2026-11-11; each page carries its own status line. Not executed: rotation of the database passwords |
 | Troubleshooting runbooks | Partially tested | Read-only commands and the safe reproductions were run on 2026-11-11; each page states in its status line what was not provoked (faults that would risk an unrecoverable lab, host cloud faults, QEMU emulation) |
@@ -116,7 +118,12 @@ Legend:
 - **No automatic gateway failover with two compute nodes.** If the node
   that hosts the router gateway is lost, instances without floating IP
   lose their outbound path until the node is back or the gateway is moved
-  by hand. Instances with a floating IP are not affected.
+  by hand. Instances with a floating IP are not affected. Three nodes
+  fail over by themselves.
+- **A planned gateway move cuts source NAT.** With more than one compute
+  node, moving the router gateway to another node leaves the router
+  address unreachable until the chassis address mapping is removed on
+  the new gateway node. See the knowledge base.
 - **No public connectivity for instances.** Floating IPs of the lab cloud
   are only reachable inside the lab.
 - **Local storage.** Control plane data lives on the OKD node root volume;

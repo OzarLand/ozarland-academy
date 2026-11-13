@@ -148,6 +148,7 @@ os resource provider list -f value -c uuid -c name
 nb lrp-get-gateway-chassis lrp-<router-port-id>
 sb --bare --columns=chassis find port_binding type=chassisredirect
 compute 'sudo ovs-vsctl --columns=name,bfd_status list interface | grep -A1 ovn-'
+compute 'sudo ovs-vsctl get open . external_ids:ovn-chassis-mac-mappings'
 compute 'sudo podman logs --since 10m nova_compute 2>&1 | grep -E "Live Migration failure|libvirtError: " | tail -2'
 ```
 
@@ -159,6 +160,7 @@ osa server migrate --live-migration --host edpm-compute-1.ctlplane.okd.lab.examp
 osa server migrate $id && osa server migration confirm $id <migration-id>
 osa server evacuate $id
 nb lrp-set-gateway-chassis lrp-<router-port-id> <chassis-name> 3
+compute 'sudo ovs-vsctl remove open . external_ids ovn-chassis-mac-mappings'   # router address silent after a gateway move
 os network agent delete <agent-id>
 os compute service delete <service-id>
 oc patch openstackdataplanenodeset openstack-edpm --type=json -p '[{"op":"remove","path":"/spec/nodes/edpm-compute-1"}]'

@@ -76,6 +76,12 @@ rm -rf ~/kb-demo
 oc annotate keystoneendpoint placement kb1/poke-
 ```
 
+On 2026-11-13 the test with three compute nodes added two deployments
+to the history, `edpm-scale-out-2` and `edpm-scale-in-2` (the most
+recent one that ran every service: keep it), which makes 11 deployments,
+and nothing else: its instances, floating IP and node records were
+removed, and the functional smoke test reported 0 failed afterwards.
+
 **Observed on the lab** (2026-11-12, after the cleanup of the fourth
 campaign):
 

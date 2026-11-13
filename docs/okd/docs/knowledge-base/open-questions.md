@@ -44,11 +44,23 @@ person starts from facts.
   What remains open: deploying nodes whose operating-system host name is
   already the control-plane FQDN, which would remove the difference, was
   not tried.
-- **Gateway not taken over with two chassis.** When the node hosting the
-  router gateway was stopped, the other chassis saw the tunnel down and
-  did not claim the gateway port. This matches the isolation guard of
-  `ovn-controller` (no working tunnel at all means "I am the one cut
-  off"), read from its behaviour, not confirmed with a third chassis.
+- **Router address black-holed after a planned gateway move.** With the
+  chassis address mapping the data plane deployment sets on every node
+  (`ovn-chassis-mac-mappings`), the new gateway node announces the
+  router address with the chassis address as Ethernet source, the lab
+  network keeps delivering to the previous node, and source NAT is cut
+  for minutes. Removing the mapping on the gateway node repairs it at
+  once. See
+  [why the router address stops answering](dataplane-scale-out-and-migration.md#why-does-the-router-address-stop-answering-after-a-planned-gateway-move).
+  Not established: whether the mapping can be left out through the
+  NodeSet variables, what removing it costs (it exists for distributed
+  routing on VLAN networks, the lab uses a flat one), and whether a
+  network that filters source addresses behaves the same.
+- **Gateway moved without a lost ping during the first scale-in.** On
+  2026-11-12 the router address did not lose a ping when the gateway
+  left a node whose agents were deleted, although the mapping was in
+  place. The stopped node kept its flows and most likely kept answering;
+  not verified.
 - **Certificates of a removed node.** The `Certificate` objects and
   Secrets of the node removed from the NodeSet were still present after
   the next deployment; they were deleted by hand. Whether the operator
@@ -171,10 +183,13 @@ person starts from facts.
   full**: mentioned in the entries, not provoked.
 - **Volumes**: no Cinder on the lab; boot from volume, attach and volume
   snapshots are not covered.
-- **Gateway failover with three chassis**: with two, the survivor does
-  not take over (see above); the working failover was not observed.
-  Source NAT traffic of an instance without floating IP was judged from
-  the router's external address, not from inside an instance.
+- **Gateway failover**: settled on 2026-11-13. With two chassis the
+  survivor does not take over; with three the next priority took over
+  in 3.3 s and the returning node preempted (15.8 s). Done with the
+  chassis address mapping removed; the failover with the mapping in
+  place was not measured. Not tested: a node lost without a clean
+  power-off of its virtual machine, several routers, traffic of a real
+  workload.
 - **Outbound Internet access from instances**: not available on the lab;
   SNAT was verified up to the control-plane gateway only.
 - **Database restore under real conditions**: the restore was executed

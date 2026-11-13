@@ -3,7 +3,9 @@
 A second compute node was added to the lab on 2026-11-12, used for
 scheduling, migration, evacuation and gateway tests, then removed again.
 Everything below was executed; the lab is back to its documented baseline
-of one compute node. The procedure pages are
+of one compute node. On 2026-11-13 two more nodes were added for a few
+hours to test the gateway with three chassis, then removed the same way.
+The procedure pages are
 [OpenStack data plane](../installation/06-openstack-data-plane.md) and
 [Data plane changes](../operations/08-dataplane-changes.md); this file
 records what happened and what had to be fixed.
@@ -77,6 +79,13 @@ some are restarted. An instance running on the first node answered a
 ping every 0.2 s during the whole run, without one lost packet. The OVN
 chassis of the new node appeared 13 minutes after the start, its
 `nova-compute` service 21 minutes after.
+
+Two nodes at once (2026-11-12 and 13, `compute_count = 3`, deployment
+`edpm-scale-out-2`): Terraform created 12 resources in 1 min 7 s, the
+deployment took 27 min 30 s for three nodes, and the three
+`nova-compute` services were up at the end. The return to one node
+(`edpm-scale-in-2`) is in
+[How do I remove a compute node cleanly?](#how-do-i-remove-a-compute-node-cleanly)
 
 **Why / how it works**: one NodeSet describes nodes that share their
 configuration; adding a node is one more key under `spec.nodes`. A new
@@ -536,8 +545,9 @@ command; Masakari when automatic.
 
 ### What happens to routers and floating IPs when the node hosting the gateway goes down?
 
-**Context**: two gateway chassis; one of them is lost or is going to be
-stopped.
+**Context**: several gateway chassis; the one that hosts the router
+gateway is lost or is going to be stopped. Tested with two chassis, then
+with three.
 
 **How**:
 
@@ -583,6 +593,27 @@ the node was added.
   rescheduled the gateway to the remaining node, and the router address
   did not lose a ping.
 
+**Observed on the lab with three nodes** (2026-11-13, ping every 0.2 s
+to the router address and to a floating IP):
+
+- Neutron gave the priorities 3, 2 and 1 by itself: the first node kept
+  the highest one and stayed active, the two new nodes received 2 and 1
+  (not in the order of their names).
+- Loss of the active gateway node (its virtual machine stopped, the
+  address mapping described in the
+  [next entry](#why-does-the-router-address-stop-answering-after-a-planned-gateway-move)
+  removed beforehand): the chassis with the next priority claimed the
+  gateway port 6 s after the stop request, and the router address was
+  silent for 3.3 s (16 pings). The two survivors showed their tunnel to
+  the dead node `down` and the tunnel between them `up`.
+- Return of the node: it has the highest priority and took the gateway
+  back by itself, 16 s after it answered on the network again. The router
+  address was silent for 15.8 s: longer than the failover itself. The
+  Southbound database showed no chassis for the port during the first
+  8 s.
+- The floating IP of an instance on another node did not lose one ping
+  during the whole drill, planned moves included.
+
 **Why / how it works**: floating IPs are distributed
 (`enable_distributed_floating_ip = True`): the translation happens on
 the node of the instance, with the MAC address of its port, and does not
@@ -591,7 +622,11 @@ live on the gateway chassis. Failover between gateway chassis is decided
 by each `ovn-controller` from the BFD state of its tunnels; a chassis
 that sees no working tunnel at all considers itself isolated and does
 not take over. With two chassis, the survivor of a failure is always in
-that situation: automatic gateway failover needs three chassis.
+that situation: automatic gateway failover needs three chassis, and the
+test with three confirmed it. The takeover takes the BFD detection time
+plus the claim. A node that comes back with the highest priority
+preempts the gateway: there is no "stay where you are" setting, which
+costs a second, longer interruption.
 Kolla-Ansible equivalent: same OVN behaviour; the gateway chassis are
 the hosts of the `network` group.
 
@@ -602,12 +637,116 @@ the hosts of the `network` group.
   gateway is moved by hand with `lrp-set-gateway-chassis`.
 - A priority changed with `ovn-nbctl` is not known to Neutron; it was
   replaced when Neutron rescheduled the router.
+- With three nodes, the return of the highest-priority node interrupts
+  the router address a second time. Before starting a node again after a
+  failure, give it the lowest priority, or accept the cut.
+- A planned move is not free on this lab: see the next entry.
 - The metadata agent of a node that just started was reported not alive
   for about a minute; with no instance on the node it has nothing to
   serve. Each node serves the metadata of its own instances only: the
   loss of a node does not affect the metadata of the others.
 
 **See also**: [OpenStack networking with OVN](openstack-networking-ovn.md#which-chassis-is-the-gateway-and-how-is-it-scheduled).
+
+### Why does the router address stop answering after a planned gateway move?
+
+**Context**: the gateway was moved to another chassis with
+`lrp-set-gateway-chassis`. OVN shows the port on the new chassis within
+a second, but the router address and the instances without floating IP
+are cut off from the outside for minutes.
+
+**How**:
+
+**[READ-ONLY]** Compare the Ethernet source address of what the new
+gateway node sends on the provider interface with the address of the
+router port, and look for a chassis address mapping.
+
+```bash
+os port show <router-gateway-port-id> -c mac_address
+compute 'sudo ovs-vsctl get open . external_ids:ovn-chassis-mac-mappings'
+compute 'sudo timeout 20 tcpdump -eni <provider-interface> "arp or icmp" -c 20'
+```
+
+**[CHANGE]** Workaround used on the lab: remove the mapping on the node
+that hosts the gateway. `ovn-controller` applies it at once.
+
+```bash
+compute 'sudo ovs-vsctl get open . external_ids:ovn-chassis-mac-mappings'     # note the value
+compute 'sudo ovs-vsctl remove open . external_ids ovn-chassis-mac-mappings'
+```
+
+Revert, with the value noted before:
+
+```bash
+compute 'sudo ovs-vsctl set open . external_ids:ovn-chassis-mac-mappings="datacentre:<address>"'
+```
+
+**Observed on the lab** (2026-11-13, three chassis, four planned moves
+in ten minutes):
+
+```text
+move                      port claimed   router address silent
+first node -> second      within 1 s     17.5 s  (ended by the move back)
+back to the first         within 1 s     23.7 s
+to the third              within 1 s     124 s   (ended by the next move)
+to the third again        within 1 s     191.6 s (ended by the workaround)
+```
+
+- The floating IP of an instance did not lose one ping during the four
+  moves.
+- From an instance without floating IP, a ping to the gateway of the
+  provider network lost every packet (0 of 3, 0 of 4) while the router
+  address was silent.
+- Packet captures on the nodes: the new gateway node sent five
+  gratuitous ARP for the router address (1, 2, 4 and 8 s apart), with
+  the address of the chassis mapping as Ethernet source, not the address
+  of the router port. The source-NAT packets it forwarded carried the
+  same source address. The answers, sent to the router port address,
+  arrived on the node that hosted the gateway before, which dropped
+  them.
+- After the mapping was removed on the gateway node, the first packet
+  it forwarded (a ping from the instance, 10 s later) carried the router
+  port address; the answers came back to the right node from the next
+  packet on (2 of 3 answered), and the ping to the router address
+  resumed in the same second.
+- The failover and failback measured in the previous entry were done
+  with the mapping removed on the three nodes.
+- The data plane deployment sets the mapping on every node
+  (`datacentre:<address>`); the next deployment put it back on the
+  remaining node.
+
+**Why / how it works**: the address of a router port exists once in the
+provider network, on the gateway chassis. When the port moves, the
+switches between the nodes must learn that the address now sits behind
+another node. They learn from the source address of the frames they
+see. `ovn-chassis-mac-mappings` gives each chassis its own source
+address for routed traffic leaving on a provider network; it is meant
+for distributed routing on VLAN networks, where the same router address
+must not appear behind several nodes. Here it also replaces the source
+address of the frames the gateway chassis sends for the router, so the
+network of the lab never sees the router port address coming from the
+new node and keeps delivering to the old one. Only the answers of the
+router itself (an echo reply) carry its own address, and they are only
+sent when a request arrives, which no longer happens. The network that
+carries the lab nodes learns addresses and does not filter them (port
+security is disabled on the node ports); a different switch may time
+out or flood differently.
+Kolla-Ansible equivalent: the same OVN key; Kolla-Ansible sets it on
+the compute nodes when distributed floating IPs are enabled.
+
+**Pitfalls**:
+
+- `lrp-get-gateway-chassis` and the Southbound database show a perfect
+  move. Only a ping from outside, or from an instance without floating
+  IP, shows the cut.
+- The cut ended by itself only when something made the gateway move
+  again. Do not wait for it.
+- The mapping removed by hand comes back with the next data plane
+  deployment.
+- A test that only pings a floating IP does not see any of this: the
+  floating IPs are distributed and use the address of the instance port.
+
+**See also**: [Open questions](open-questions.md#observed-but-not-explained).
 
 ### How do I remove a compute node cleanly?
 
@@ -667,6 +806,14 @@ the end of Terraform:
   `True` again; `nova_compute` restarted, `ovn_controller` did not; the
   removed node was gone from `/etc/ssh/ssh_known_hosts`. The two
   instances on the node kept running.
+
+Two nodes removed at once (2026-11-13, from three to one): steps 1 to 3
+in a loop over the two nodes took 35 s, Terraform destroyed the twelve
+resources in 13 s, and the deployment `edpm-scale-in-2` on the remaining
+node took 14 min 26 s. The gateway went back to the remaining chassis
+when the agents were deleted. The six `Certificate` objects of the two
+nodes and their Secrets were still there after the deployment and were
+deleted by hand, as the first time.
 
 **Why / how it works**: deleting a compute service through the API also
 deletes its resource provider when no allocation is left, which is why
