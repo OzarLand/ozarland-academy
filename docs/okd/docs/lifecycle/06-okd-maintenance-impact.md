@@ -10,10 +10,12 @@
 - Instances on the compute node keep running, with their network.
 - Everything comes back by itself, as the same pods restarted: about 6
   minutes for a planned reboot on the lab.
-- One thing does not always come back: the OVN agents of the compute node
-  can stay disconnected (metadata agent after four node restarts out of
-  five, OVN controller after three or four; tally in section 4). Check
-  them after every restart of the OKD node and restart them if needed.
+- One thing comes back late: the OVN agents of the compute node can
+  stay disconnected after the control plane is healthy (metadata agent
+  after four node restarts out of five, OVN controller after three or
+  four; tally in section 4). Left alone they reconnected after 15
+  minutes; a restart reconnects them in seconds. Check them after
+  every restart of the OKD node.
 - Always shut down cleanly, from inside the node. Leave a new cluster
   running for a day before a long power-off (certificate window, section
   7).
@@ -149,8 +151,8 @@ and is restarted until the database answers.
 | Galera (one replica per instance) | The operator detects that no node is running, reads the last recorded sequence number of each replica and bootstraps the cluster from the most advanced one. With a single replica this is automatic. | `oc get galera`; see [Galera and RabbitMQ](../troubleshooting/galera-and-rabbitmq.md) |
 | RabbitMQ | Restarts from its PVC; queues are re-declared by services | `oc get rabbitmq`; services reconnecting |
 | OVN NB/SB databases | Restart from their PVCs | `oc get ovndbcluster` |
-| OVN controllers on compute nodes | Lose the southbound connection during the outage. **Stayed disconnected** after three of the five restarts of the OKD node (tally below); reconnected alone after a compute reboot. Existing flows keep working, new ports are not wired | `sudo podman exec ovn_controller ovn-appctl connection-status` on the compute node; `sudo systemctl restart edpm_ovn_controller` |
-| OVN metadata agent on compute nodes | **Stayed disconnected** after four of the five restarts of the OKD node (tally below), including each of the three reboots of the OKD node alone; reconnected alone after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
+| OVN controllers on compute nodes | Lose the southbound connection during the outage. **Stayed disconnected** after the control plane was back on three of the five restarts of the OKD node (tally below): for 15 minutes when left alone, until a manual restart otherwise; reconnected at once after a compute reboot. Existing flows keep working, new ports are not wired | `sudo podman exec ovn_controller ovn-appctl connection-status` on the compute node; `sudo systemctl restart edpm_ovn_controller` |
+| OVN metadata agent on compute nodes | **Stayed disconnected** after the control plane was back on four of the five restarts of the OKD node (tally below), including each of the three reboots of the OKD node alone: for 16 minutes when left alone, until a manual restart otherwise; reconnected at once after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
 | nova-compute on compute nodes | Loses RabbitMQ, retries; reported `down` until it reconnects | `openstack compute service list` |
 | MetalLB addresses | Announced again when the speaker pod is running | Services of type `LoadBalancer` have their address |
 | Certificates | Unchanged if within validity | cert-manager pods running |
@@ -162,27 +164,37 @@ RabbitMQ and went through a few restarts before settling.
 Tally of the OVN agents of the compute node after each restart of the
 OKD node or outage of the control plane on this lab (times in UTC). No
 restart was provoked to complete it; the last line was observed with
-read-only commands.
+read-only commands. "Disconnected until restarted" means that the
+agent was restarted by hand before anyone knew whether it would have
+recovered: the journal of the compute node, re-read on 2026-11-14,
+gives the delays.
 
 | Date | Event | OVN controller | OVN metadata agent |
 |---|---|---|---|
-| 2026-11-11 23:54 | Planned reboot of the OKD node, compute node running | Reported alive by the agent list after a change in OVN; `connection-status` was not read that time | **Stuck** until restarted |
+| 2026-11-11 23:54 | Planned reboot of the OKD node, compute node running | Reported alive by the agent list after a change in OVN; `connection-status` was not read that time | **Disconnected** until restarted, about fifteen minutes later (notes of that day; journal no longer available) |
 | 2026-11-12 00:27 | Graceful shutdown and start of the whole lab (compute node restarted too) | Reconnected alone | Reconnected alone |
-| 2026-11-12 19:06 | MachineConfig roll (reboot of the OKD node), compute node running | **Stuck** until restarted | **Stuck** until restarted |
-| 2026-11-12 19:18 | Second MachineConfig roll, compute node running | **Stuck** until restarted | **Stuck** until restarted |
+| 2026-11-12 19:06 | MachineConfig roll (reboot of the OKD node), compute node running | **Disconnected** until restarted, 9 min 28 s after the connection dropped | **Disconnected** until restarted, 10 min 28 s after the drop |
+| 2026-11-12 19:18 | Second MachineConfig roll, compute node running | **Disconnected** until restarted, 8 min 03 s after the drop | **Disconnected** until restarted, 8 min 03 s after the drop |
 | 2026-11-13 05:48 to 06:10 | etcd restore: two outages of the API, no node reboot, the OVN database pods kept running | Reported alive by the agent list after changes in OVN; `connection-status` was not read | Reported alive, same remark |
-| 2026-11-14 07:37 | Start of the whole lab after a power-off requested from outside the nodes; the compute node booted at the same time as the OKD node, five minutes before the southbound database answered | **Stuck**: `not connected` and container `unhealthy` ten minutes after the boot, five minutes after the database was back | **Stuck**: both agents `XXX` in the agent list at 07:45:56 and 07:47:45 |
+| 2026-11-14 07:37 | Start of the whole lab after a power-off requested from outside the nodes; the compute node booted at the same time as the OKD node, five minutes before the southbound database answered | **Disconnected for 15 min 08 s**, then reconnected alone at 07:53:10, 9 min 23 s after the DNS service was back; container `unhealthy` in between | **Disconnected for 16 min 27 s**, then reconnected alone at 07:54:29; both agents `XXX` in the agent list at 07:45:56 and 07:47:45, alive at 09:03 |
 
 Counted over the five restarts of the OKD node (the etcd restore is
 not one): the metadata agent stayed disconnected four times, the OVN
 controller three times for certain. The first line rests on the agent
 list alone, which this page shows to be a late indicator, so "three out
 of five" for the controller is a minimum. A restart of the whole lab
-is **not** safe either: the agents came back alone on 2026-11-12 and
-not on 2026-11-14. What differed between the two was not established
-(on 2026-11-14 the node had to pull every image again, see below, so
-the databases came up later). On 2026-11-14 the agents were left as
-found: restarting them is a change and was outside that check.
+is **not** safe either: the agents were connected two minutes after
+their start on 2026-11-12 and only after 15 minutes on 2026-11-14.
+The difference that the journal shows: on 2026-11-12 the agents
+connected about 100 seconds after they started, so the DNS service of
+the control plane answered by then; on 2026-11-14 it answered after
+almost six minutes (the node had to pull
+every image again, see below). On 2026-11-14 the agents were left as
+found, which is how their recovery without help was seen: the
+controller logged its last error exactly 900 seconds after its start.
+The probable mechanism (the resolver library of the agents ignores a
+nameserver that timed out for 900 seconds) is not proven; see the
+[open questions](../knowledge-base/open-questions.md).
 
 An **unclean** stop (VM powered off or crashed) is different: databases have
 to recover, and an open OKD issue on recent releases reports nodes staying
@@ -203,8 +215,9 @@ the NodeSet were settled at 07:44:53, a little over seven minutes after
 the boot, without any action and without the `NotReady` deadlock
 mentioned above. Two kubelet certificate requests were approved
 automatically. Without a reachable registry or proxy the node would
-have had nothing to start. The only thing that did not recover was the
-OVN agents (last line of the tally).
+have had nothing to start. The only thing that recovered late was the
+OVN agents: eight to ten minutes after everything else (last line of
+the tally).
 
 ## 5. Procedures
 
@@ -260,7 +273,8 @@ The outage is the one of a planned reboot (5.1):
 
 Removing the MachineConfig is a second roll of the same length and brings
 the original rendered configuration back. After each roll both OVN
-services of the compute node had to be restarted (section 4;
+services of the compute node were found disconnected and restarted
+(section 4;
 [diagnosis and fix](../knowledge-base/okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them)
 in the knowledge base).
 

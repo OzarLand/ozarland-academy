@@ -65,24 +65,28 @@ being able to explain, and what they could not test.
 - **`restore_galera` exits with 0 after a failed file**, and its cleanup
   trap contains a malformed variable reference; whether this is fixed
   upstream after 18-stable was not checked.
-- **OVN controller and metadata agent never reconnect after a restart
-  of the OKD node.** Both log `connect: Address family not supported by
-  protocol` for `ssl:ovsdbserver-sb.openstack.svc:6642` every 8 seconds,
-  from the moment the DNS pod stops and for as long as they run, while
-  `getent hosts` on the same node resolves the name. Seen on both
-  MachineConfig rolls of 2026-11-12 and again on the start of the whole
-  lab of 2026-11-14, where the compute node booted before the database
-  was up (OVN 24.03, OVS library 3.3; full
-  [tally](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order):
-  metadata agent four restarts of the OKD node out of five, controller
-  at least three). Supposed cause: the
-  asynchronous resolver of the OVS library keeps a failed state; not
-  verified in the source, and not tried: an IP address instead of the
-  name in `ovn-remote`. On the first reboot of the lab only the metadata
-  agent was stuck; why the controller reconnected that time is unknown
-  (its `connection-status` was not read then). Why both agents
-  reconnected after the start of the whole lab of 2026-11-12 and not
-  after the one of 2026-11-14 is unknown too.
+- **OVN controller and metadata agent stay disconnected for up to 15
+  minutes after a restart of the OKD node.** Both fail to open
+  `ssl:ovsdbserver-sb.openstack.svc:6642` (`connect: Address family
+  not supported by protocol` every 8 seconds for the controller) and
+  keep failing after `getent hosts` on the same node resolves the name
+  again. On 2026-11-14 they were left alone and reconnected by
+  themselves 15 and 16 minutes after their start, more than nine
+  minutes after the DNS service and the database were back; the
+  earlier "never reconnect" rested on observations cut short by a
+  manual restart after 8 to 15 minutes
+  ([tally](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)).
+  Established by reading the code on 2026-11-14: the error text only
+  means "the name did not resolve", and the OVS library asks its
+  resolver library again at every attempt. **Probable, not proven**:
+  the resolver library (libunbound) marks the only nameserver as down
+  and does not ask it again for 900 seconds (`infra-host-ttl`), which
+  the negative-TTL file shipped for the agents does not change.
+  Missing: a DNS capture during an outage, and a run with
+  `infra-keep-probing: yes`. Neither was done; details and plan in
+  [contribution topic 05](../../contributions/topics/05-ovn-agents-stuck-after-dns-outage.md).
+  Still unknown: whether the delay is always close to 15 minutes when
+  a long-running agent loses its connection.
 - **The node shutdown takes 2 min 30 with a silent gap of 84 seconds**,
   and the journal of the previous boot shows `kubepods-burstable.slice:
   A process of this unit has been killed by the OOM killer` near the

@@ -2,7 +2,8 @@
 
 One entry per action taken towards upstream, newest first. The journal is
 the memory of the contribution effort: what was sent, where, and what came
-back. It is empty on purpose: nothing has been sent upstream yet.
+back. Nothing has been sent upstream yet: the entries so far are lab
+observations and code reading.
 
 ## Entry format
 
@@ -32,4 +33,22 @@ Rules:
 
 ## Entries
 
-No entry yet.
+## 2026-11-14 — OVN agents: recovery without restart timed, code read
+
+- **Topic:** [05-ovn-agents-stuck-after-dns-outage](topics/05-ovn-agents-stuck-after-dns-outage.md)
+- **Action:** read-only observation of a start of the whole lab that
+  nobody provoked (package `ovn24.03-24.03.8-55.el9s`, Open vSwitch
+  library 3.3.8, `unbound-libs` 1.26.1, one nameserver); journals of
+  the two previous boots re-read; Open vSwitch, OVN, Unbound and
+  edpm-ansible sources read. No outage was provoked and nothing was
+  changed on the node.
+- **Link:** lab evidence directory `ovn-stuck/`, files 01 to 11
+- **Outcome:** the agents reconnect by themselves, 15 and 16 minutes
+  after their start; "never reconnect" and "18 hours" withdrawn; the
+  shipped Unbound file is in the lab build and does not prevent the
+  delay; origin of the error text established in the code; mechanism
+  of the delay (libunbound infrastructure cache, 900 s) probable, not
+  proven. Topic 06 corrected on the same points.
+- **Next step:** a provoked DNS outage with a packet capture, then
+  the same with `infra-keep-probing: yes` (plan in the topic); to be
+  decided by the lab owner. Nothing to send upstream before that.

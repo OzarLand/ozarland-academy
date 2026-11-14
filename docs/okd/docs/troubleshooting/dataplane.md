@@ -411,7 +411,9 @@ sudo systemctl restart edpm_ovn_metadata_agent
 The agent was reported alive ten seconds later.
 
 On the two reboots of 2026-11-12 and on the start of the whole lab of
-2026-11-14 the OVN controller was stuck as well.
+2026-11-14 the OVN controller was disconnected as well. On 2026-11-14
+both agents were left alone and reconnected by themselves 15 and 16
+minutes after their start; the restart saves that wait.
 Check it with `sudo podman exec ovn_controller ovn-appctl
 connection-status` and restart both units if it is `not connected`: see
 [why the OVN agents are dead after a reboot](../knowledge-base/okd-node-maintenance.md#why-are-the-ovn-agents-of-the-compute-node-dead-after-a-reboot-of-the-okd-node-and-how-do-i-fix-them).

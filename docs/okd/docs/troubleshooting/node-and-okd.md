@@ -257,7 +257,8 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
   (`sudo podman exec ovn_controller ovn-appctl connection-status`), its
   container `unhealthy`, logging `connect: Address family not supported
   by protocol` for the southbound database every 8 seconds although the
-  name resolved again. Treat it like the metadata agent below.
+  name resolved again, until it was restarted by hand 8 to 10 minutes
+  later. Treat it like the metadata agent below.
 - The OVN metadata agent of the compute node did **not** reconnect. The OVN
   southbound database was unreachable for about four minutes; the agent
   logged "continuing to reconnect in the background but suppressing further
@@ -270,8 +271,12 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
   2026-11-12 (three reboots of the OKD node alone out of three), and
   again for both agents on the start of the whole lab of 2026-11-14
   (dated tally in
-  [Impact of OKD maintenance](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order));
-  see the resolution below.
+  [Impact of OKD maintenance](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)).
+  That last time nobody restarted them and both reconnected by
+  themselves, 15 and 16 minutes after their start; "did not
+  reconnect" above therefore means "not within the 8 to 15 minutes
+  it was watched". See the resolution below: the restart saves the
+  wait.
 - Instances on compute nodes keep running and keep their network
   connectivity (the OVN flows are already programmed on the compute node).
   New API calls fail until the control plane is back.

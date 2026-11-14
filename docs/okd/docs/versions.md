@@ -149,11 +149,16 @@ Legend:
   [tally](lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)),
   while both were still reported alive until the next change in OVN; new
   instances then get no network or no metadata. It happened after one of
-  the two starts of the whole lab and not after a compute reboot. Check
-  the agents after any
-  control plane outage; the remedy is a restart of `edpm_ovn_controller`
-  and `edpm_ovn_metadata_agent`
-  ([runbook](troubleshooting/node-and-okd.md)).
+  the two starts of the whole lab and not after a compute reboot. The
+  disconnection is not permanent: left alone on 2026-11-14, both
+  agents reconnected by themselves 15 and 16 minutes after their
+  start; the other times they were restarted by hand after 8 to 15
+  minutes. Check the agents after any control plane outage; a restart
+  of `edpm_ovn_controller` and `edpm_ovn_metadata_agent` reconnects
+  them in seconds
+  ([runbook](troubleshooting/node-and-okd.md)). Cause probable, not
+  proven: see the
+  [open questions](knowledge-base/open-questions.md).
 - **Password rotation is a two-step change.** Changing a service password
   in `osp-secret` rolls the service with the new value, but the operator
   does not change the password of the Keystone user: the service fails

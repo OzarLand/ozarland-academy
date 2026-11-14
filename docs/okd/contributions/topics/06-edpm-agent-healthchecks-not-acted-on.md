@@ -26,7 +26,8 @@ plane agents:
 2. When a check does fail, the container is marked `unhealthy` and that
    is all. The units restart on process exit (`Restart=always`), not on
    health status, and no alerting hook is described. On the lab
-   `ovn_controller` stayed `unhealthy` for 18 hours.
+   `ovn_controller` stayed `unhealthy` for as long as it was
+   disconnected (8 to 15 minutes, see topic 05) and nothing reacted.
 
 ## Why it matters in production
 
@@ -43,7 +44,16 @@ Lab collection: 18-stable before the new health check scripts.
 
 - 2026-11-12: `ovn_controller Up 18 hours (unhealthy)`, error
   `ERROR - OVN-Controller is not connected to OVN SB database`; no
-  restart happened by itself.
+  restart happened by itself. The 18 hours are the age of the
+  container: the journal, re-read on 2026-11-14, shows the controller
+  disconnected for 9 min 28 s when it was restarted by hand. An
+  earlier version of this page read it as 18 hours of `unhealthy`.
+- 2026-11-14, start of the whole lab, agents left alone:
+  `ovn_controller` was `unhealthy` from 07:39:38 until it reconnected
+  by itself at 07:53:10 UTC, then `healthy` again; `NRestarts=0`.
+  `ovn_metadata_agent` was disconnected until 07:54:29 and never left
+  `healthy`: the check deployed on the lab is a script that only runs
+  `true` (read in the container on 2026-11-14).
 - Same day, after a second control-plane restart:
   `ovn_controller Up 9 minutes (unhealthy)` and
   `ovn_metadata_agent Up 8 minutes (healthy)` while the metadata agent
@@ -139,8 +149,8 @@ choice of a new connection may have been discussed there or in Jira.
 >
 > **Observation:** the check opens its own connection with
 > `ovsdb-client get-schema`, which succeeds, while the agent process
-> keeps failing. `ovn_controller` is correctly reported unhealthy, and
-> stays so until a manual restart.
+> keeps failing. `ovn_controller` is correctly reported unhealthy for
+> as long as it is disconnected, and nothing reacts to it.
 >
 > **Questions:** is the check meant to cover the agent's own connection?
 > What is the intended reaction to an unhealthy agent container: alert

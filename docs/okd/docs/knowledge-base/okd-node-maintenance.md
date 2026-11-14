@@ -477,7 +477,9 @@ os network agent list -c 'Agent Type' -c Host -c Alive
 ```
 
 **[CHANGE]** Fix: restart both services on every compute node. Running
-instances keep their flows; the restart takes a few seconds.
+instances keep their flows; the restart takes a few seconds. Left
+alone, the agents reconnected by themselves 15 minutes after their
+start on 2026-11-14 (see below): the restart only saves that wait.
 
 ```bash
 compute 'sudo systemctl restart edpm_ovn_controller edpm_ovn_metadata_agent'
@@ -503,14 +505,37 @@ OVN Metadata agent             True           # within 30 s
 
 `nova-compute` reconnected to RabbitMQ without help both times.
 
+**Observed on the lab without the fix** (2026-11-14, start of the
+whole lab, read-only, times UTC):
+
+```text
+07:38:02  both agent containers start; the DNS service is not up yet
+07:39:38  ovn_controller: first "Address family not supported by protocol", then every 8 s; container unhealthy
+07:43:09  southbound database pod Ready
+07:43:47  dnsmasq-dns pod Ready; the name resolves on the node
+07:53:02  last error of ovn_controller (900 s after its start)
+07:53:10  ovn_controller: connected, container healthy again
+07:54:29  ovn_metadata_agent: connected
+09:03     NRestarts=0 for both units; smoke test with --functional: 16 checks, 0 failed
+```
+
 **Why / how it works**: both agents reach the southbound database by
 name (`ovn-remote=ssl:ovsdbserver-sb.openstack.svc:6642`), resolved by
 the `dnsmasq-dns` pod, which runs on the OKD node and disappears with
-it. The error starts at the moment that DNS service stops and never
-stops, although the system resolver of the compute node answers
-correctly again once the pod is back. The process seems to keep the
-failed resolution instead of asking again; this was not confirmed in
-the source code and is listed in the open questions. Neutron computes
+it. The error starts when that DNS service stops and goes on for
+minutes after the system resolver of the compute node answers
+correctly again. The error text is misleading: in the OVS library it
+only means that the name did not resolve (read in the source of
+version 3.3.8). The agents do not use the system resolver but their
+own copy of a resolver library (libunbound), and the OVS library asks
+it again at every attempt. The probable reason for the delay, not
+proven on the lab: that library marks the only nameserver as down
+after a few timeouts and does not query it again for 900 seconds
+(its default `infra-host-ttl`); a restarted process starts with an
+empty memory, which is why the restart works at once. On 2026-11-14
+the controller logged its last error exactly 900 seconds after its
+start and connected at the next attempt. See
+the open questions for what is missing. Neutron computes
 "alive" by comparing a counter that each agent copies from the
 northbound database; with no northbound change the counters stay
 equal and a disconnected agent still looks alive. Kolla-Ansible
@@ -519,12 +544,20 @@ reboot does not leave them stuck.
 
 **Pitfalls**:
 
-- The first reboot of this lab had shown only the metadata agent stuck,
-  and the controller reconnecting alone. With these two rolls both were
-  stuck, twice, and again on the start of the whole lab of 2026-11-14,
-  although the same start on 2026-11-12 had left both connected. Treat
-  the restart of both as a mandatory step after any restart of the OKD
-  node, the compute node restarted or not.
+- The first reboot of this lab had shown only the metadata agent
+  disconnected. With these two rolls both were, twice, and they were
+  restarted by hand after 8 to 10 minutes, so nobody saw whether they
+  would have recovered. On the start of the whole lab of 2026-11-14
+  they were left alone and did, after 15 minutes; the same start on
+  2026-11-12 had left both connected within two minutes, presumably
+  because the DNS service came back sooner. After any restart of the OKD node,
+  the compute node restarted or not: check `connection-status`, then
+  either restart both services or wait a quarter of an hour and check
+  again.
+- Right after a quiet period the first `network agent list` can show
+  an agent `XXX` although it is connected, and the next one, seconds
+  later, shows it alive (seen on 2026-11-14 at 09:03): the list
+  itself triggers the counter update. Read it twice.
 - The smoke test passes or fails depending on whether the test creates
   a port before the agents are fixed. Do not use it as the only check;
   use `ovn-appctl connection-status`.

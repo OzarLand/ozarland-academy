@@ -81,7 +81,7 @@ the evidence, and size of the first step.
 | [10](topics/10-infra-operator-crashloop-without-frr-crd.md) | 7 | Operator crash-loops when an optional resource type is absent | `infra-operator` | robustness fix (Go) | small | candidate, seen once |
 | [09](topics/09-dataplane-scale-in-doc-gaps.md) | 8 | Scale-in procedure misses three steps | `openstack-operator` | documentation | small to medium | candidate |
 | [11](topics/11-okd-update-service-docs.md) | 9 | FAQ and upgrade notes ignore the new update service | `okd-web` | documentation | small | candidate, switch not tested |
-| [05](topics/05-ovn-agents-stuck-after-dns-outage.md) | 10 | OVN agents never reconnect after a DNS outage | `edpm-ansible`, possibly Open vSwitch | investigation | medium | candidate, cause not established |
+| [05](topics/05-ovn-agents-stuck-after-dns-outage.md) | 10 | OVN agents stay disconnected up to 15 minutes after a DNS outage | `edpm-ansible` | test report | small to medium | candidate, cause probable, not proven |
 | [06](topics/06-edpm-agent-healthchecks-not-acted-on.md) | 11 | Agent health checks: one can pass while cut off, none triggers an action | `edpm-ansible` | test report | small to medium | candidate, lower confidence |
 | [12](topics/12-install-yamls-okd-path-outdated.md) | 12 | The `OKD=true` developer path dates from 2023 | `install_yamls` | test report | medium | candidate, path not run |
 | [13](topics/13-okd-issue-triage-data-points.md) | 13 | Data points on three open OKD 4.22 reports | `okd` | triage help | small | candidate, modest value |
