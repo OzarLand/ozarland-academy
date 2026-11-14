@@ -141,12 +141,16 @@ Legend:
 - **One environment.** Everything was validated on a single deployment, on
   one host cloud, with KVM on the compute node and behind an HTTPS proxy.
 - **OVN agents of the compute node after an OKD node reboot.** After a
-  reboot of the OKD node alone, the metadata agent of the compute node
-  was left disconnected from the OVN southbound database three times out
-  of three, and the OVN controller two times out of three, while both
-  were still reported alive until the next change in OVN; new instances
-  then get no network or no metadata. It did not happen after a restart
-  of the whole lab or a compute reboot. Check the agents after any
+  restart of the OKD node, the metadata agent of the compute node was
+  left disconnected from the OVN southbound database four times out of
+  five, and the OVN controller at least three times out of five (three
+  reboots of the node alone and two starts of the whole lab, 2026-11-11
+  to 2026-11-14; dated
+  [tally](lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)),
+  while both were still reported alive until the next change in OVN; new
+  instances then get no network or no metadata. It happened after one of
+  the two starts of the whole lab and not after a compute reboot. Check
+  the agents after any
   control plane outage; the remedy is a restart of `edpm_ovn_controller`
   and `edpm_ovn_metadata_agent`
   ([runbook](troubleshooting/node-and-okd.md)).

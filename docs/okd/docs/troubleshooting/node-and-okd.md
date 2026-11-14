@@ -267,7 +267,11 @@ oc rsh openstackclient openstack server list --all-projects -c Name -c Status
   network or port), then shows `XXX`. This is why the smoke test passed
   right after the recovery and failed on "OVN agents alive" after the
   functional test. Observed on this reboot and on both reboots of
-  2026-11-12 (three out of three); see the resolution below.
+  2026-11-12 (three reboots of the OKD node alone out of three), and
+  again for both agents on the start of the whole lab of 2026-11-14
+  (dated tally in
+  [Impact of OKD maintenance](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order));
+  see the resolution below.
 - Instances on compute nodes keep running and keep their network
   connectivity (the OVN flows are already programmed on the compute node).
   New API calls fail until the control plane is back.

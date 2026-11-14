@@ -69,12 +69,20 @@ being able to explain, and what they could not test.
   of the OKD node.** Both log `connect: Address family not supported by
   protocol` for `ssl:ovsdbserver-sb.openstack.svc:6642` every 8 seconds,
   from the moment the DNS pod stops and for as long as they run, while
-  `getent hosts` on the same node resolves the name. Reproduced on two
-  reboots out of two (OVN 24.03, OVS library 3.3). Supposed cause: the
+  `getent hosts` on the same node resolves the name. Seen on both
+  MachineConfig rolls of 2026-11-12 and again on the start of the whole
+  lab of 2026-11-14, where the compute node booted before the database
+  was up (OVN 24.03, OVS library 3.3; full
+  [tally](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order):
+  metadata agent four restarts of the OKD node out of five, controller
+  at least three). Supposed cause: the
   asynchronous resolver of the OVS library keeps a failed state; not
   verified in the source, and not tried: an IP address instead of the
   name in `ovn-remote`. On the first reboot of the lab only the metadata
-  agent was stuck; why the controller reconnected that time is unknown.
+  agent was stuck; why the controller reconnected that time is unknown
+  (its `connection-status` was not read then). Why both agents
+  reconnected after the start of the whole lab of 2026-11-12 and not
+  after the one of 2026-11-14 is unknown too.
 - **The node shutdown takes 2 min 30 with a silent gap of 84 seconds**,
   and the journal of the previous boot shows `kubepods-burstable.slice:
   A process of this unit has been killed by the OOM killer` near the
@@ -110,8 +118,10 @@ being able to explain, and what they could not test.
   full claim fills the disk that etcd uses; which alert to add for
   `/var` is undecided.
 - **System reservation of 1 GiB** for kubelet while the host services
-  (`system.slice`) use about 4.4 GiB: the scheduler believes it has 3 GiB
-  more than it has. The value to set (a MachineConfig-level change, one
+  (`system.slice`) used 3.9 to 4.4 GiB on 2026-11-12 (page cache
+  included; 9.9 GiB ten minutes after the boot of 2026-11-14, of which
+  1.5 GiB cannot be reclaimed): the scheduler believes it has about
+  3 GiB more than it has. The value to set (a MachineConfig-level change, one
   reboot) is undecided.
 - **Memory requests far from real use**: the 22 operator pods request
   6 GiB and use 1.4, RabbitMQ requests 4 GiB and uses 0.3, while Galera

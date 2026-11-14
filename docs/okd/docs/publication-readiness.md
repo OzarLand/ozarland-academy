@@ -17,7 +17,7 @@ maintainers to decide. Nothing in it changes the repository visibility.
 | Scripts and configuration | Lint-clean; executed end to end on one environment |
 | Documentation consistency | Links valid; every scenario page carries a validation status |
 | License and third-party content | Apache-2.0; derived files attributed |
-| Git history | Eleven commits on `main` (one per merged pull request), Conventional Commits style |
+| Git history | One commit per merged pull request on `main`, Conventional Commits style |
 | Contribution guidelines | Present |
 | Examples generic and reproducible | Yes, with the limits listed below |
 

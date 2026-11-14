@@ -454,7 +454,10 @@ intermediate state to wait for.
 **Context**: after any restart of the OKD node (reboot, MachineConfig
 roll, stop and start of the lab), new instances get no network or no
 metadata, or `openstack network agent list` shows the compute node
-agents down. Reproduced on both MachineConfig rolls of 2026-11-12.
+agents down. Reproduced on both MachineConfig rolls of 2026-11-12 and
+observed again, read-only, on the start of the whole lab of 2026-11-14
+(dated tally of every restart in
+[Impact of OKD maintenance](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)).
 
 **How**:
 
@@ -465,7 +468,7 @@ until the next change in the northbound database.
 os network agent list -c 'Agent Type' -c Host -c Alive
 compute 'sudo podman ps --format "{{.Names}} {{.Status}}" | grep ovn'
 compute 'sudo podman exec ovn_controller ovn-appctl connection-status'
-compute 'sudo tail -3 /var/log/containers/openvswitch/ovn-controller.log'
+compute 'sudo journalctl -u edpm_ovn_controller -n 3 --no-pager -o cat'
 compute 'sudo ss -tn | grep -c :6642'
 compute 'getent hosts ovsdbserver-sb.openstack.svc'
 # make the stale state visible: any northbound change, then wait a minute
@@ -518,8 +521,10 @@ reboot does not leave them stuck.
 
 - The first reboot of this lab had shown only the metadata agent stuck,
   and the controller reconnecting alone. With these two rolls both were
-  stuck, twice. Treat the restart of both as a mandatory step after any
-  restart of the OKD node.
+  stuck, twice, and again on the start of the whole lab of 2026-11-14,
+  although the same start on 2026-11-12 had left both connected. Treat
+  the restart of both as a mandatory step after any restart of the OKD
+  node, the compute node restarted or not.
 - The smoke test passes or fails depending on whether the test creates
   a port before the agents are fixed. Do not use it as the only check;
   use `ovn-appctl connection-status`.

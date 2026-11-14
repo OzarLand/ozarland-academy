@@ -10,8 +10,8 @@
 - The host is an image-based system (CentOS Stream CoreOS): no package
   installation, every durable change is a MachineConfig and a reboot.
 - One 150 GiB partition holds images, logs, etcd and every OpenStack
-  volume; 1 GiB of memory is reserved for host services that use
-  about 3.9 GiB.
+  volume; 1 GiB of memory is reserved for host services that used
+  3.9 to 4.4 GiB when measured (2026-11-12).
 - Evidence is short-lived: events 3 hours, API audit log about 10
   hours, container logs gone with the pod, journal about two weeks.
 - Cordon only blocks new pods; a drain of the single node is an outage
@@ -404,6 +404,25 @@ hard eviction threshold. The system slice really uses 3.9 GiB (CRI-O
 2.8 GiB with its page cache, kubelet 0.6 GiB), four times what is
 reserved for it. With every pod running, 12.9 GiB are still available.
 
+The figure of `system.slice` is a reading at one moment, not a constant.
+`memory.current` counts the page cache charged to the slice, and CRI-O
+is charged for the image layers it writes. Readings of the same file on
+this node:
+
+| Date (UTC) | `system.slice` `memory.current` | Context |
+|---|---|---|
+| 2026-11-12 11:45 | 4220813312 (3.9 GiB) | Node up for 11 hours; CRI-O 2.8 GiB, kubelet 0.6 GiB (output above) |
+| 2026-11-12 12:26 | 4742664192 (4.4 GiB) | Same boot, 40 minutes later; the figure quoted in the [workloads file](okd-workloads-and-resources.md) |
+| 2026-11-14 07:44 | 17172406272 (16.0 GiB) | 7 minutes after a boot in which CRI-O pulled every image again; 14.0 GiB of it is page cache (`file` in `memory.stat`) |
+| 2026-11-14 07:47 | 10679451648 (9.9 GiB) | 10 minutes after the same boot; page cache 8.0 GiB, anonymous memory 0.8 GiB, kernel memory 0.7 GiB; CRI-O 9.0 GiB, kubelet 0.5 GiB |
+
+The two readings of 2026-11-12 are the same measurement taken twice,
+not two methods. The part that cannot be reclaimed (`anon` plus `kernel`
+in `/sys/fs/cgroup/system.slice/memory.stat`) was 1.5 GiB on 2026-11-14;
+it was not read on 2026-11-12, and no reading was taken on 2026-11-14
+once the page cache had settled. In every reading the slice is above
+the 1 GiB reserved for it.
+
 **Why / how it works**: pods live under the `kubepods.slice` cgroup,
 whose `memory.max` is capacity minus the system reservation; host
 services live under `system.slice` without a limit. Kubelet evicts pods
@@ -420,7 +439,7 @@ only arbiter.
 **Pitfalls**:
 
 - The 1 GiB system reservation is a static default
-  (`NODE_SIZING_ENABLED=false`); it does not protect the 3.9 GiB that
+  (`NODE_SIZING_ENABLED=false`); it does not protect the 3.9 to 4.4 GiB (2026-11-12) that
   host services really use. Pods can fill `kubepods.slice` up to
   30.3 GiB and push the host services into reclaim. Enabling automatic
   sizing needs a `KubeletConfig` with `autoSizingReserved: true`, hence a

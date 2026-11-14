@@ -186,8 +186,12 @@ What runs on the lab compute node:
 | libvirt | host services, not containers: `virtqemud`, `virtlogd`, `virtnodedevd`, `virtsecretd`, `virtproxyd` (socket-activated), grouped by `edpm_libvirt.target` | `journalctl -u virtqemud`; one file per instance in `/var/log/libvirt/qemu/` |
 | Open vSwitch | host services `ovs-vswitchd`, `ovsdb-server` | `/var/log/openvswitch/` |
 
-The containers log to the journal: there is no `/var/log/containers/`
-directory and no per-service file under `/var/log/` for Nova or OVN. A
+The containers log to the journal (podman log driver `journald`): there
+is no `/var/log/containers/` directory and no per-service file under
+`/var/log/` for Nova or OVN (checked again on 2026-11-14: the only
+service log files are `ovs-vswitchd.log` and `ovsdb-server.log` in
+`/var/log/openvswitch/` and the instance files in
+`/var/log/libvirt/qemu/`). A
 fourth container, `nova_compute_init`, shows as `Exited (0)` in `podman ps
 -a`; it runs once before `nova_compute` and that state is normal.
 

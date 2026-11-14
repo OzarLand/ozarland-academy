@@ -1,6 +1,6 @@
 # Impact of OKD maintenance on OpenStack
 
-> Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) and a MachineConfig change applied then removed (2026-11-12, two rolls) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; not executed: an unclean stop, and a restart after a power-off long enough to need certificate approval
+> Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) and a MachineConfig change applied then removed (2026-11-12, two rolls) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; a start of the whole lab after a power-off that was not initiated from inside the nodes was observed with read-only commands on 2026-11-14, not provoked; not executed: a deliberate unclean stop, and a restart after a power-off long enough to need certificate approval
 
 ## In short
 
@@ -11,8 +11,9 @@
 - Everything comes back by itself, as the same pods restarted: about 6
   minutes for a planned reboot on the lab.
 - One thing does not always come back: the OVN agents of the compute node
-  can stay disconnected. Check them after every restart of the OKD node
-  and restart them if needed.
+  can stay disconnected (metadata agent after four node restarts out of
+  five, OVN controller after three or four; tally in section 4). Check
+  them after every restart of the OKD node and restart them if needed.
 - Always shut down cleanly, from inside the node. Leave a new cluster
   running for a day before a long power-off (certificate window, section
   7).
@@ -148,8 +149,8 @@ and is restarted until the database answers.
 | Galera (one replica per instance) | The operator detects that no node is running, reads the last recorded sequence number of each replica and bootstraps the cluster from the most advanced one. With a single replica this is automatic. | `oc get galera`; see [Galera and RabbitMQ](../troubleshooting/galera-and-rabbitmq.md) |
 | RabbitMQ | Restarts from its PVC; queues are re-declared by services | `oc get rabbitmq`; services reconnecting |
 | OVN NB/SB databases | Restart from their PVCs | `oc get ovndbcluster` |
-| OVN controllers on compute nodes | Lose the southbound connection during the outage. **Stayed disconnected** after two node reboots out of three (reconnected alone after the first one, after a restart of the whole lab and after a compute reboot). Existing flows keep working, new ports are not wired | `sudo podman exec ovn_controller ovn-appctl connection-status` on the compute node; `sudo systemctl restart edpm_ovn_controller` |
-| OVN metadata agent on compute nodes | **Stays disconnected** after an outage of the OKD node alone: seen after each of the three node reboots, not after a restart of the whole lab nor after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
+| OVN controllers on compute nodes | Lose the southbound connection during the outage. **Stayed disconnected** after three of the five restarts of the OKD node (tally below); reconnected alone after a compute reboot. Existing flows keep working, new ports are not wired | `sudo podman exec ovn_controller ovn-appctl connection-status` on the compute node; `sudo systemctl restart edpm_ovn_controller` |
+| OVN metadata agent on compute nodes | **Stayed disconnected** after four of the five restarts of the OKD node (tally below), including each of the three reboots of the OKD node alone; reconnected alone after a compute reboot. The agent list keeps showing it alive until the next change in OVN | [node and OKD troubleshooting](../troubleshooting/node-and-okd.md); `sudo systemctl restart edpm_ovn_metadata_agent` on the compute node |
 | nova-compute on compute nodes | Loses RabbitMQ, retries; reported `down` until it reconnects | `openstack compute service list` |
 | MetalLB addresses | Announced again when the speaker pod is running | Services of type `LoadBalancer` have their address |
 | Certificates | Unchanged if within validity | cert-manager pods running |
@@ -158,10 +159,52 @@ and is restarted until the database answers.
 The order is not strict: on the lab `nova-scheduler` started before
 RabbitMQ and went through a few restarts before settling.
 
+Tally of the OVN agents of the compute node after each restart of the
+OKD node or outage of the control plane on this lab (times in UTC). No
+restart was provoked to complete it; the last line was observed with
+read-only commands.
+
+| Date | Event | OVN controller | OVN metadata agent |
+|---|---|---|---|
+| 2026-11-11 23:54 | Planned reboot of the OKD node, compute node running | Reported alive by the agent list after a change in OVN; `connection-status` was not read that time | **Stuck** until restarted |
+| 2026-11-12 00:27 | Graceful shutdown and start of the whole lab (compute node restarted too) | Reconnected alone | Reconnected alone |
+| 2026-11-12 19:06 | MachineConfig roll (reboot of the OKD node), compute node running | **Stuck** until restarted | **Stuck** until restarted |
+| 2026-11-12 19:18 | Second MachineConfig roll, compute node running | **Stuck** until restarted | **Stuck** until restarted |
+| 2026-11-13 05:48 to 06:10 | etcd restore: two outages of the API, no node reboot, the OVN database pods kept running | Reported alive by the agent list after changes in OVN; `connection-status` was not read | Reported alive, same remark |
+| 2026-11-14 07:37 | Start of the whole lab after a power-off requested from outside the nodes; the compute node booted at the same time as the OKD node, five minutes before the southbound database answered | **Stuck**: `not connected` and container `unhealthy` ten minutes after the boot, five minutes after the database was back | **Stuck**: both agents `XXX` in the agent list at 07:45:56 and 07:47:45 |
+
+Counted over the five restarts of the OKD node (the etcd restore is
+not one): the metadata agent stayed disconnected four times, the OVN
+controller three times for certain. The first line rests on the agent
+list alone, which this page shows to be a late indicator, so "three out
+of five" for the controller is a minimum. A restart of the whole lab
+is **not** safe either: the agents came back alone on 2026-11-12 and
+not on 2026-11-14. What differed between the two was not established
+(on 2026-11-14 the node had to pull every image again, see below, so
+the databases came up later). On 2026-11-14 the agents were left as
+found: restarting them is a change and was outside that check.
+
 An **unclean** stop (VM powered off or crashed) is different: databases have
 to recover, and an open OKD issue on recent releases reports nodes staying
 `NotReady` after an unclean shutdown because of a container-runtime/network
 plugin deadlock. Always shut down cleanly.
+
+One such stop happened on the lab without being provoked. On 2026-11-13
+at 09:09:31 UTC the OKD node received a power-off request from outside
+(`systemd-logind: Power key pressed short`); its journal ends 31
+seconds later, where a clean shutdown of this node takes 2 min 30. At
+the next start (2026-11-14 07:37:31) the filesystem replayed its
+journal and CRI-O logged `Wiping storage directory
+/var/lib/containers/storage because of suspected unclean shutdown`:
+every image was pulled again through the proxy, with transient
+`ErrImagePull` and `ImagePullBackOff` on many pods. The node was
+`Ready` at 07:42:23 and every cluster operator, the control plane and
+the NodeSet were settled at 07:44:53, a little over seven minutes after
+the boot, without any action and without the `NotReady` deadlock
+mentioned above. Two kubelet certificate requests were approved
+automatically. Without a reachable registry or proxy the node would
+have had nothing to start. The only thing that did not recover was the
+OVN agents (last line of the tally).
 
 ## 5. Procedures
 

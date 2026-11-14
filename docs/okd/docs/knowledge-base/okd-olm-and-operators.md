@@ -547,9 +547,14 @@ oc delete job -n openstack <manual-job>
 - Keep at least the **last successful** data plane deployment of each
   node set: it documents what was applied, and the node set status
   refers to it.
-- The 16-hour-old `Error` pods in `openshift-kube-scheduler` and
-  `openshift-kube-controller-manager` are installer pods interrupted by
-  a node reboot; a later revision succeeded. Harmless.
+- The two `Error` pods in `openshift-kube-scheduler` and
+  `openshift-kube-controller-manager` are installer pods of the
+  installation (2026-11-11, 19:48 UTC): each exited with code 1 on an
+  API request that timed out while the control plane was still being
+  rolled out. They were not interrupted by a node reboot (none
+  happened before 23:57 UTC that day), and a later revision succeeded.
+  Harmless; details in
+  [OKD cluster health and etcd](okd-cluster-health-and-etcd.md).
 - Completed pods keep their logs on the node's disk until deleted
   (bounded by the per-container log rotation); the cost is small but
   not zero.

@@ -301,8 +301,10 @@ logs in `/var/log/kolla/nova/`.
 
 **Pitfalls**:
 
-- There is **no** `/var/log/containers/nova` or `/var/log/kolla`: logs are
-  in `podman logs` and the journal only.
+- There is **no** `/var/log/containers/` directory at all on the compute
+  node (so no `/var/log/containers/nova`) and no `/var/log/kolla`: the
+  logs of the three containers are in `podman logs` and the journal
+  only (checked again on 2026-11-14).
 - `virsh` runs on the host with `sudo`, not inside a container.
 - The image cache in `_base` is not emptied when instances are deleted;
   Nova removes unused base images later with a periodic task. A busy test

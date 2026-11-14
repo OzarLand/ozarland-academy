@@ -266,7 +266,20 @@ Restart counts (10, 9, 6) are the two node restarts of the lab multiplied
 by the number of containers, not crashes. Two `installer-N` pods ended in
 `Error` during the installation (controller manager revision 1,
 scheduler revision 3); later revisions succeeded and nothing refers to
-them.
+them. Checked again on 2026-11-14: `installer-1-okd-0` in
+`openshift-kube-controller-manager` was created on 2026-11-11 at
+19:47:40 UTC and its container exited with code 1 at 19:48:26;
+`installer-3-okd-0` in `openshift-kube-scheduler` was created at
+19:47:36 and exited with code 1 at 19:48:32. Both end on the same
+message, a request to the API server that got no answer in time
+(`Get "https://172.30.0.1:443/...pods?labelSelector=app%3Dinstaller":
+context deadline exceeded`). The first etcd revision had just been
+installed (the installer pod of `openshift-etcd` finished at
+19:48:05); that the API server was unavailable for that reason is
+likely but was not verified. No node reboot is involved: `journalctl
+--list-boots` shows one boot from 19:42:49 to 23:57:38 UTC that day.
+The next installer pod of each operator completed (19:49:50 and
+19:56:21).
 
 **Why / how it works**: the four control plane components are static
 pods: the kubelet starts them from files in `/etc/kubernetes/manifests`

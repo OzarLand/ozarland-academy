@@ -110,7 +110,9 @@ exists; all containers are equal before the kernel unless you set
 - "BestEffort" does not mean "limited": these pods can take all the
   memory. It means "first to go".
 - The 1 GiB system reservation is far below what the host services
-  really use (4.4 GiB in `system.slice`, see the node file): the
+  really use (4.4 GiB in `system.slice` on 2026-11-12, page cache
+  included; 3.9 GiB forty minutes earlier, see the dated readings in
+  the [node file](okd-node-and-host.md)): the
   scheduler believes it has 30.2 GiB for pods when about 27 exist.
 - `MemoryPressure=False` is true until the last 100 MiB. Watch
   `MemAvailable` (monitoring file), not the condition.
