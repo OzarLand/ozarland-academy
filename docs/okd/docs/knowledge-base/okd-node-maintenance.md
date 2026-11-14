@@ -528,14 +528,16 @@ correctly again. The error text is misleading: in the OVS library it
 only means that the name did not resolve (read in the source of
 version 3.3.8). The agents do not use the system resolver but their
 own copy of a resolver library (libunbound), and the OVS library asks
-it again at every attempt. The probable reason for the delay, not
-proven on the lab: that library marks the only nameserver as down
-after a few timeouts and does not query it again for 900 seconds
-(its default `infra-host-ttl`); a restarted process starts with an
-empty memory, which is why the restart works at once. On 2026-11-14
-the controller logged its last error exactly 900 seconds after its
-start and connected at the next attempt. See
-the open questions for what is missing. Neutron computes
+it again at every attempt. The reason for the delay: that library
+marks the only nameserver as down after a few timeouts and does not
+query it again for 900 seconds (its default `infra-host-ttl`); a
+restarted process starts with an empty memory, which is why the
+restart works at once. Shown on the lab on 2026-11-14 with a provoked
+six-minute DNS outage and a capture on the compute node: for nine
+minutes after the DNS service was back the agents sent no query for
+the database name, then asked once, 904 seconds after their first
+failed query, and connected. See the open questions for what is
+still missing. Neutron computes
 "alive" by comparing a counter that each agent copies from the
 northbound database; with no northbound change the counters stay
 equal and a disconnected agent still looks alive. Kolla-Ansible

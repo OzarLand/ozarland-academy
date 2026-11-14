@@ -192,8 +192,9 @@ almost six minutes (the node had to pull
 every image again, see below). On 2026-11-14 the agents were left as
 found, which is how their recovery without help was seen: the
 controller logged its last error exactly 900 seconds after its start.
-The probable mechanism (the resolver library of the agents ignores a
-nameserver that timed out for 900 seconds) is not proven; see the
+The mechanism (the resolver library of the agents ignores a
+nameserver that timed out for 900 seconds) was shown the same day
+with a provoked DNS outage and a capture on the compute node; see the
 [open questions](../knowledge-base/open-questions.md).
 
 An **unclean** stop (VM powered off or crashed) is different: databases have

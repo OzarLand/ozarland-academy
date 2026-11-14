@@ -4,12 +4,12 @@
   it already ships for the two agents); the OVN stable branch only as
   a side note
 - **Type:** test report, then possibly a one-line configuration change
-- **Effort:** small to medium (one controlled DNS outage with a packet
-  capture, one more with a changed Unbound file)
-- **Status:** candidate — symptom timed on the lab on 2026-11-14,
-  origin of the error message established in the code, the mechanism
-  of the delay is **probable, not proven** (no capture, no test of the
-  proposed setting)
+- **Effort:** small (the lab runs are done; what is left is writing
+  the report and comparing it with the tracker ticket)
+- **Status:** candidate, lab evidence complete — cause **established**
+  on the lab on 2026-11-14 with three provoked DNS outages and a packet
+  capture; two candidate settings measured, each with a side effect to
+  report
 - **Upstream state checked on:** 2026-11-14
 
 ## Summary
@@ -35,12 +35,17 @@ the corrections below).
 
 The Unbound file that edpm-ansible mounts for both agents
 (`cache-max-negative-ttl: 30`) **is** in the lab build and did not
-prevent the delay. The delay matches another libunbound default: a
+prevent the delay. The delay comes from another libunbound default: a
 server that timed out is not asked again until its entry in the
 infrastructure cache expires (`infra-host-ttl`, 900 seconds), unless
-`infra-keep-probing` is set. The useful contribution is a clean
-measurement on a single-nameserver node, with a capture, with and
-without that setting.
+`infra-keep-probing` is set. A capture on the node shows it: for more
+than nine minutes after the DNS service was back, the agents sent
+**no** query for the database name while other programs of the node
+resolved normally, and they reconnected 904 seconds after the first
+failed query. With `infra-keep-probing: yes` or `infra-host-ttl: 60`
+in the Unbound file, the same outage ended with a reconnection within
+a minute. The useful contribution is that measurement on a
+single-nameserver node.
 
 ## Why it matters in production
 
@@ -128,19 +133,97 @@ disconnected fifteen minutes later" before it was restarted.
 - "The mitigation is not in the lab build": wrong. The file and the
   variable are present in both containers.
 
+### Provoked outages with a capture, 2026-11-14
+
+Method, the same for the three runs: `tcpdump -ni any 'port 53 or
+icmp'` on the compute node; the `dnsmasq-dns` deployment of the
+control plane scaled to zero through the `OpenStackControlPlane`
+(`spec.dns.template.replicas: 0`); 15 seconds later the established
+connections of the node to the southbound database closed with
+`ss -K`; replica count put back after six minutes; state sampled every
+15 seconds (`ovn-appctl connection-status`, established connections to
+port 6642, resolution of another service name with `getent` on the
+node). The database itself stayed available the whole time. Evidence
+directory of the lab: `contrib/05/`.
+
+| | Run 1: file as deployed | Run 2: `infra-keep-probing: yes` added | Run 3: `infra-host-ttl: 60` added |
+| --- | --- | --- | --- |
+| Agents | running since 07:38 | both restarted 10:59:40 | both restarted 11:08:58 |
+| DNS pod removed | 10:38:09 | 11:00:35 | 11:09:53 |
+| Connections closed | 10:38:23 | 11:00:50 | 11:10:08 |
+| `ovn-controller` blocked poll intervals | 95940 ms, 96285 ms | 73519 ms, 73796 ms, 120059 ms, 120105 ms | one of 312380 ms |
+| `Address family not supported` errors | 90, one every 8 s from 10:41:39 to 10:53:19 | 5 | 12, from 11:15:21 to 11:16:15 |
+| Node resolves again (`getent`) | 10:44:25 | 11:06:58 | 11:16:12 |
+| Queries for the database name after that | none until 10:53:27.68 | 11:07:02, 11:07:36, 11:07:48 | 11:16:23.6 to 11:16:23.8 |
+| Metadata agent connected (two processes) | 10:53:27.699, 10:53:28.179 | 11:07:02.651, 11:07:36.542 | 11:16:23.633, 11:16:23.800 |
+| `ovn-controller` connected | 10:53:27 | 11:07:48 | 11:16:23 |
+| From "node resolves" to all connected | 9 min 03 s | 50 s | 11 s |
+| From the connection drop to all connected | 904 s | 418 s | 375 s |
+
+What run 1 establishes:
+
+- Between 10:44:25 and 10:53:27 the capture contains the queries of
+  other programs of the node, answered by the new DNS pod every
+  minute, and **not one** packet for `ovsdbserver-sb.openstack.svc`,
+  while `ovn-controller` logged an error every 8 seconds. The errors
+  are answered from the libunbound cache without asking the server.
+- The first query for the name leaves at 10:53:27.68, 904 seconds
+  after the connections were closed (900 seconds plus the position in
+  the 8-second retry cycle), is answered, and the three processes
+  connect within half a second.
+- The delay is therefore counted from the first failed query of the
+  process, not from its start: a long-running agent that loses its
+  connection during a DNS outage waits the full 15 minutes.
+- The metadata agent behaves the same way with its Python binding: its
+  two processes connected in the same second as `ovn-controller`. It
+  logs `Connection refused` where `ovn-controller` logs
+  `Address family not supported by protocol`.
+
+During the outage itself the queries do not reach the capture: the
+service address has no neighbour entry any more and the kernel answers
+locally (ICMP host unreachable on the loopback interface). The
+conclusion above only uses the period after the DNS service was back.
+
+What runs 2 and 3 show:
+
+- Both settings remove the delay on both agents for a six-minute
+  outage.
+- With `infra-keep-probing: yes`, `ovn-controller` on OVN 24.03 never
+  reaches the fast-failure state: every connection attempt blocks its
+  main loop for about 120 seconds for the whole outage, and its
+  reconnection is as late as the end of the attempt in progress (50
+  seconds here).
+- With `infra-host-ttl: 60`, the main loop was blocked once for 312
+  seconds, then failed fast for one minute; the name was asked again
+  62 seconds after the first fast failure. The wait after the DNS
+  service is back is bounded by the configured 60 seconds; 11 seconds
+  were observed.
+
+After the runs both files were put back as deployed (same checksum on
+both, `cache-max-negative-ttl: 30` only), both services restarted at
+11:17:16, `connection-status` `connected`, three established
+connections, both containers `healthy`; the capture files were removed
+from the node.
+
 **Not verified on the lab:**
 
-- Whether libunbound sends DNS queries while the error repeats: no
-  capture was taken. This is the missing proof.
-- Whether `infra-keep-probing: yes` or a short `infra-host-ttl`
-  removes the delay: not tested.
-- What exactly makes the two pauses last 96 s (72 s in one case).
-- The time at which the metadata agent created its resolver context;
-  its recovery time is only known to the granularity of its retry
-  delay (180 s at that point).
-- Behaviour with more than one nameserver.
-- The libunbound code was read on its main branch, not on the 1.26.1
-  tag that the containers run.
+- The two settings together, and other values of `infra-host-ttl`.
+- Behaviour with more than one nameserver. An open Unbound issue
+  (see below) reports that `infra-keep-probing` did not help recovery
+  in a setup with several upstream servers.
+- An outage shorter than the first blocking call (about 96 seconds)
+  and one longer than 15 minutes.
+- The start-up case on purpose (agents started while the DNS service
+  is down): only observed once, unprovoked, with the deployed file.
+- A real reboot of the control-plane node with either setting.
+- What makes the blocking calls last 96 s, 72 s, 120 s or 312 s
+  depending on the file: the libunbound timeouts that add up to these
+  values were not worked out.
+- OVN 24.09 or later, where the resolution is asynchronous: the
+  blocked main loop should not exist there, the 15-minute silence
+  should; neither was run.
+- Applying the setting through the edpm-ansible variables and a
+  deployment: on the lab the two files were edited on the node.
 
 ## What the code says
 
@@ -154,32 +237,57 @@ Read on 2026-11-14.
 | Open vSwitch asks libunbound again at every connection attempt in this path: it keeps no failed state of its own | Open vSwitch `lib/dns-resolve.c`, tag `v3.3.8` | Established |
 | libunbound defaults: `infra-host-ttl` 900 s, `infra-keep-probing` off, and the manual says a host marked down "may take infra-host-ttl time to get probed again" | Unbound `util/config_file.c` and `doc/unbound.conf.rst` at `f0653284d69076f22c769170714045019ab4c261` (main, 1.26.3 in development) | Established for that commit |
 | The expiry time of an infrastructure cache entry is set when the entry is created, not when the server is marked down; a server above the timeout limit is skipped until then | Unbound `services/cache/infra.c` (`data_entry_init`, `infra_get_lame_rtt`), same commit | Established for that commit |
+| The container runs `unbound-libs-1.26.1-1.el9`; the files `services/cache/infra.c` and `services/cache/infra.h` are identical at the tag `release-1.26.1` (`13b6717f1716810523ffb60f971a6c9c5e8ce127`) and at the main commit above; at the tag, `util/config_file.c` sets `host_ttl = 900` (L182), `infra_cache_max_rtt = 120000` (L194), `infra_keep_probing = 0` (L195) and `data_entry_init` sets the expiry to "now plus `host_ttl`" (`infra.c` L528-L532) | Unbound, tag `release-1.26.1`, compared on 2026-11-14 | Established |
 | The Unbound file shipped for both agents sets only `cache-max-negative-ttl: 30` | edpm-ansible `roles/edpm_ovn/defaults/main.yml` L67-L76 and `roles/edpm_neutron_metadata/defaults/main.yml` at `3e5e2930038443693cecd21caab5a50db051d93a`; pull requests #1337 and #1338 | Established |
 | The units start after `openvswitch.service` only; nothing orders them after name resolution or after the database | edpm-ansible `roles/edpm_ovn/templates/quadlet/ovn_controller.container.j2` L21-L22, same commit; the lab units only add the container shutdown unit | Established |
 
-Put together, the **probable** mechanism: the agent starts (or loses
-its connection) while the only nameserver is unreachable; libunbound
-times out on it, marks it down in its infrastructure cache and
-answers every later request at once with a failure, without sending a
-query; the entry expires 900 s after it was created, the server is
-probed again, and the next connection attempt succeeds. Three
-observations fit: the last error 900 s after the process start on
-2026-11-14, the change from long blocking calls to immediate failures
-every 8 s, and the instant recovery after a restart (a new process
-has an empty cache). None of them is a proof.
+Put together, the mechanism, **established** by run 1 above: the
+agent loses its connection (or starts) while the only nameserver is
+unreachable; libunbound times out on it, marks it down in its
+infrastructure cache and answers every later request at once with a
+failure, without sending a query; the entry expires 900 s after it
+was created, the server is asked again, and the next connection
+attempt succeeds. A restart recovers at once because a new process
+has an empty cache.
 
 ## Upstream state
 
-Duplicate search on 2026-11-13 (not repeated on 2026-11-14):
-edpm-ansible (issues and pull requests, open and closed) for
-"unbound", "negative ttl", "Address family not supported": pull
-requests #1337 and #1338 and their copies to other branches (#1343
-and #1346) only.
-`openvswitch/ovs-issues` and `ovn-org/ovn` for "Address family not
-supported": nothing relevant. Not searched: "infra-host-ttl" and
-"infra-keep-probing" in the same places, the `ovs-discuss` and
-`ovs-dev` archives, and Jira OSPRH-38451 (not readable without an
-account): its description may already cover this case.
+Re-read on 2026-11-14: edpm-ansible `main` is still at
+`3e5e2930038443693cecd21caab5a50db051d93a` (2026-11-06); the two
+default files are unchanged (variables
+`edpm_ovn_controller_unbound_conf_content` in
+`roles/edpm_ovn/defaults/main.yml` L67-L76 and
+`edpm_neutron_metadata_unbound_conf_content` in
+`roles/edpm_neutron_metadata/defaults/main.yml` L28-L37).
+
+Duplicate search on 2026-11-14, issues and pull requests, open and
+closed:
+
+| Repository | Query | Result |
+| --- | --- | --- |
+| `openstack-k8s-operators/edpm-ansible` | `infra-host-ttl`, `infra-keep-probing` | 0 |
+| same | `unbound` | 6: pull requests #1337, #1338 and their copies #1343, #1346 (negative TTL file), two unrelated |
+| same | `negative ttl` | 2, the same pull requests |
+| same | `Address family not supported` | 0 |
+| same | `OVS_UNBOUND_CONF` | 2, the same pull requests |
+| same | `ovn-controller DNS reconnect` | 2, not about this delay |
+| `openstack-k8s-operators/ovn-operator` | `infra-host-ttl`, `infra-keep-probing` | 1, unrelated (#154) |
+| `ovn-org/ovn`, `openvswitch/ovs-issues` | `infra-host-ttl`, `infra-keep-probing` | 0 |
+
+Related, in the resolver itself: `NLnetLabs/unbound` issue #1461
+"[Infra cache] Upstream servers do not recover after connectivity
+loss" (open, 2026-06-15). A maintainer answers there that the
+back-off without `infra-keep-probing` is intended; a comment of
+2026-10-06 reports the same with forwarders; the reporter says the
+option did not help in a setup with several servers. Its pull
+request #1241 "Fix infra-keep-probing for low infra-cache-max-rtt
+values" was closed in 2025-02. This confirms the behaviour is by design on
+the Unbound side and that the place to act is the file shipped by
+edpm-ansible.
+
+Not searched: the `ovs-discuss` and `ovs-dev` archives, and Jira
+OSPRH-38451 (not readable without an account): its description may
+already cover this case.
 
 **Not specific to the lab:** the single nameserver that lives on the
 control plane is how the data plane DNS is designed; the lab only makes
@@ -187,24 +295,35 @@ the outage longer because the control plane has one node.
 
 ## Proposed contribution
 
-In this order, and stopping as soon as the question is answered:
-
-1. Reproduce once with a capture and publish the timeline as an issue
-   on edpm-ansible: the shipped Unbound file does not cover an
-   unreachable nameserver, here is what a single-nameserver node does.
-2. If the capture confirms the mechanism and the setting removes the
-   delay on both agents: propose it in the same issue, and as a pull
-   request on the two default files only if a maintainer asks for it.
+1. An issue on edpm-ansible with the three timelines: the shipped
+   Unbound file does not cover an unreachable nameserver; on a
+   single-nameserver node the agents stay cut off for 15 minutes
+   counted from their first failed query.
+2. In the same issue, the two measured settings with their side
+   effects, and a question rather than a demand: which one, if any,
+   would the maintainers take in the two default files? From the lab
+   runs, a short `infra-host-ttl` looks like the smaller change for
+   `ovn-controller` 24.03 (bounded wait, no 120-second blocking call
+   at every attempt); `infra-keep-probing` is the option the Unbound
+   manual names for this case. A pull request on the two default
+   files only if a maintainer asks for it.
 3. Mention, without asking for anything, that `ovn-controller` on the
    24.03 branch resolves synchronously and stops its main loop for
-   more than three minutes during the outage. Newer branches do not
-   have this; a backport request is the maintainers' call.
+   minutes during the outage. Newer branches do not have this; a
+   backport request is the maintainers' call.
+
+Until then the operator can set the two variables named above in the
+NodeSet; this was not run on the lab (files edited on the node).
 
 Nothing was posted upstream.
 
 ## Reproduction and validation plan
 
-Not executed; every step below is a plan.
+Steps 1 to 6 were executed on 2026-11-14 (results above; step 2
+needed no installation, `tcpdump` 4.99.0 is on the node; the outage
+lasted six minutes; the connections were closed with `ss -K` because
+scaling the DNS service down does not close them). Step 7 was not
+executed.
 
 1. `[READ-ONLY]` Record versions and resolver configuration:
    `podman exec ovn_controller ovn-controller --version`,
@@ -238,66 +357,88 @@ value, and the address of the database pod is not stable.
 
 ## Effort and risk
 
-- Three short outages of the lab DNS service and about two hours of
-  observation; no code.
+- Lab part done (three six-minute outages of the lab DNS service).
+  What is left is writing; no code.
 - Risk of duplicate: medium. The maintainers know the area (they
-  merged the negative-TTL file); the value is in the timed
-  single-nameserver data.
-- Risk of being wrong on the mechanism: real until step 4 is done.
-  Report observations and keep the hypothesis clearly marked.
-- Risk on the setting: `infra-keep-probing` sends one probe at a time
-  to a dead server; harmless with one nameserver, to be confirmed
-  with several.
+  merged the negative-TTL file) and the tracker ticket could not be
+  read; the value is in the timed single-nameserver data.
+- Risk on the settings: both were measured for one outage length, one
+  nameserver and OVN 24.03 only. `infra-keep-probing` keeps the main
+  loop of `ovn-controller` 24.03 blocked during the outage; a short
+  `infra-host-ttl` makes every program using that file ask a dead
+  server again every minute. Report both, recommend neither as proven
+  for production.
 
 ## Review-readiness checklist
 
 - [x] Versions and resolver configuration recorded (2026-11-14)
 - [x] Recovery without restart timed once (2026-11-14, start of the
       whole lab)
-- [ ] Outage reproduced on purpose, with capture
-- [ ] Same run with `infra-keep-probing: yes`, for both agents
+- [x] Outage reproduced on purpose, with capture (2026-11-14, run 1)
+- [x] Same run with `infra-keep-probing: yes`, for both agents
+      (2026-11-14, run 2)
+- [x] Same run with `infra-host-ttl: 60` (2026-11-14, run 3)
+- [x] Installed Unbound version compared with the code read
+- [x] Duplicate search repeated with the two setting names
 - [ ] Jira OSPRH-38451 read (needs an account) and compared
-- [ ] Duplicate search repeated with the two setting names
-- [ ] Report written from the issue template, hypothesis separated from
-      facts
+- [ ] Report adapted to the issue template of the repository by the
+      sender
 
 ## Open questions
 
-- Does the capture show the silence that the mechanism predicts?
-- Does the Python resolver of the metadata agent behave like the C one
-  with the same Unbound file? Its recovery on 2026-11-14 is compatible
-  with it but only timed to within three minutes.
-- Why two pauses of 96 s and then immediate failures: which libunbound
-  timeouts add up to that value?
-- After a connection drop on a long-running agent, is the delay
-  counted from the first failed query (which would make it close to
-  15 minutes every time) or can it be shorter?
+- Answered on 2026-11-14: the capture shows the silence; the Python
+  resolver of the metadata agent behaves like the C one; the delay is
+  counted from the first failed query.
+- Which libunbound timeouts add up to the blocking calls of 96 s,
+  120 s and 312 s?
+- Which of the two settings do the maintainers prefer, and do they
+  want it for both agents?
+- What happens with two nameservers of which one is down?
 
 ## Draft issue text
 
 > **Title:** ovn-controller and ovn-metadata-agent stay disconnected
-> for up to 15 minutes after a DNS outage on a single-nameserver data
-> plane, with the Unbound negative-TTL file in place
+> for 15 minutes after a DNS outage on a single-nameserver data plane,
+> with the Unbound negative-TTL file in place
 >
-> **Environment:** (versions from step 1), one nameserver on the EDPM
-> node (control-plane dnsmasq), TLS to the southbound database,
-> `OVS_UNBOUND_CONF` file with `cache-max-negative-ttl: 30`
-> (#1337/#1338).
+> **Environment:** EDPM node on CentOS Stream 9; `ovn_controller`
+> container with `ovn-controller 24.03.10-55.el9s`, Open vSwitch
+> library 3.3.8, `unbound-libs-1.26.1-1.el9`; metadata agent with
+> `python3-unbound` 1.26.1; one nameserver on the node (control-plane
+> dnsmasq); TLS to the southbound database by name; `OVS_UNBOUND_CONF`
+> file with `cache-max-negative-ttl: 30` only (#1337/#1338).
 >
-> **Observed:** after N minutes without DNS, `ovn-controller` logs two
+> **Reproduction:** capture port 53 on the node, scale the dnsmasq
+> deployment to zero, close the node's connections to port 6642, wait
+> six minutes, scale back. The database stays available.
+>
+> **Observed with the shipped file:** `ovn-controller` logs two
 > `Unreasonably long ~96000ms poll interval` warnings, then
-> `connect: Address family not supported by protocol` every 8 s. The
-> errors continue after the name resolves again on the node and stop
-> M seconds after (process start / first failed query); it then
-> connects at once. The metadata agent follows on its next retry.
-> Capture: (queries seen / not seen during the error period).
+> `connect: Address family not supported by protocol` every 8 s, 90
+> times. The node resolves names again six minutes after the start of
+> the outage; the errors continue for nine more minutes. In that
+> period the capture shows the queries of other programs being
+> answered and no query at all for the database name. The first one
+> leaves 904 s after the connection drop and both agents connect in
+> the same second. The metadata agent logs `Connection refused`
+> during that time.
 >
-> **With `infra-keep-probing: yes` added to the file:** (result for
-> each agent).
+> **Same outage with `infra-keep-probing: yes` added to both files:**
+> both agents connected within 50 s of the name resolving again;
+> `ovn-controller` logged poll intervals of about 120 s for the whole
+> outage (synchronous resolution on 24.03).
 >
-> **Reading:** libunbound seems to mark the only forwarder as down and
-> not probe it again before `infra-host-ttl` (900 s by default).
-> (Keep or drop this paragraph depending on the capture.)
+> **Same outage with `infra-host-ttl: 60` instead:** both agents
+> connected 11 s after the name resolved again; one poll interval of
+> 312 s, then fast failures for one minute.
 >
-> **Question:** would you take `infra-keep-probing: yes` (or a short
-> `infra-host-ttl`) in the default Unbound file of both roles?
+> **Reading:** libunbound marks the only forwarder as down in its
+> infrastructure cache and does not ask it again before
+> `infra-host-ttl` (900 s by default, counted from the creation of the
+> entry). Checked in the 1.26.1 sources (`services/cache/infra.c`,
+> `util/config_file.c`); Unbound issue #1461 describes the same
+> back-off as intended.
+>
+> **Question:** would you take one of these settings in the default
+> Unbound file of both roles, and which one? Tested with one outage
+> length, one nameserver and OVN 24.03 only.

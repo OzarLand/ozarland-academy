@@ -66,22 +66,24 @@ pull request number) and the date it was read.
 
 ## Status board
 
-Upstream state of every topic was read on 2026-11-13. "Rank" is the
+Upstream state of every topic was read on 2026-11-13; a topic whose
+status says "lab evidence complete" was closed on the lab and re-read
+upstream on the date given in its file. "Rank" is the
 suggested order of work: value for a production operator, strength of
 the evidence, and size of the first step.
 
 | Id | Rank | Topic | Repository | Type | Effort | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| [07](topics/07-dataplane-troubleshooting-doc-removed-resource.md) | 1 | Troubleshooting page uses a resource removed in 2024 | `openstack-operator` | documentation fix | small | candidate |
-| [04](topics/04-edpm-bootstrap-masked-package-failure-backport.md) | 2 | Bootstrap hides a failed package installation on CentOS Stream; fixed on `main` only | `edpm-ansible` | backport request | small | candidate |
-| [01](topics/01-galerabackup-retention-deletes-nothing.md) | 3 | GaleraBackup `retention` never deletes a file | `mariadb-operator` | bug fix, test | small | candidate |
-| [02](topics/02-galera-backup-restore-scripts-lose-errexit.md) | 4 | Backup and restore scripts lose `set -e`; a failed restore exits 0 | `mariadb-operator` | bug fix, test | small to medium | candidate |
-| [08](topics/08-dataplane-confirm-delete-annotation-undocumented.md) | 5 | Annotation required to delete a running deployment is undocumented | `openstack-operator` | documentation | small | candidate |
+| [07](topics/07-dataplane-troubleshooting-doc-removed-resource.md) | 1 | Troubleshooting page uses a resource removed in 2024 | `openstack-operator` | documentation fix | small | candidate, lab evidence complete (2026-11-14), diff ready |
+| [04](topics/04-edpm-bootstrap-masked-package-failure-backport.md) | 2 | Bootstrap hides a failed package installation on CentOS Stream; fixed on `main` only | `edpm-ansible` | backport request | small | candidate, lab evidence complete (2026-11-14), issue text ready |
+| [01](topics/01-galerabackup-retention-deletes-nothing.md) | 3 | GaleraBackup `retention` never deletes a file | `mariadb-operator` | bug fix, test | small | candidate, lab evidence complete (2026-11-14), diff ready, chainsaw test to write |
+| [02](topics/02-galera-backup-restore-scripts-lose-errexit.md) | 4 | Backup and restore scripts lose `set -e`; a failed restore exits 0 | `mariadb-operator` | bug fix, test | small to medium | candidate, lab evidence complete (2026-11-14), diff ready, chainsaw test to write |
+| [08](topics/08-dataplane-confirm-delete-annotation-undocumented.md) | 5 | Annotation required to delete a running deployment is undocumented | `openstack-operator` | documentation | small | candidate, lab evidence complete (2026-11-14), diff ready, `make docs` not run |
 | [03](topics/03-nodeset-stale-certificates-after-scale-in.md) | 6 | Certificates of a removed node are left behind after scale-in | `openstack-operator` | bug fix (Go), test | medium | candidate, mechanism from code reading |
 | [10](topics/10-infra-operator-crashloop-without-frr-crd.md) | 7 | Operator crash-loops when an optional resource type is absent | `infra-operator` | robustness fix (Go) | small | candidate, seen once |
 | [09](topics/09-dataplane-scale-in-doc-gaps.md) | 8 | Scale-in procedure misses three steps | `openstack-operator` | documentation | small to medium | candidate |
 | [11](topics/11-okd-update-service-docs.md) | 9 | FAQ and upgrade notes ignore the new update service | `okd-web` | documentation | small | candidate, switch not tested |
-| [05](topics/05-ovn-agents-stuck-after-dns-outage.md) | 10 | OVN agents stay disconnected up to 15 minutes after a DNS outage | `edpm-ansible` | test report | small to medium | candidate, cause probable, not proven |
+| [05](topics/05-ovn-agents-stuck-after-dns-outage.md) | 10 | OVN agents stay disconnected up to 15 minutes after a DNS outage | `edpm-ansible` | test report | small | candidate, lab evidence complete (cause established) |
 | [06](topics/06-edpm-agent-healthchecks-not-acted-on.md) | 11 | Agent health checks: one can pass while cut off, none triggers an action | `edpm-ansible` | test report | small to medium | candidate, lower confidence |
 | [12](topics/12-install-yamls-okd-path-outdated.md) | 12 | The `OKD=true` developer path dates from 2023 | `install_yamls` | test report | medium | candidate, path not run |
 | [13](topics/13-okd-issue-triage-data-points.md) | 13 | Data points on three open OKD 4.22 reports | `okd` | triage help | small | candidate, modest value |

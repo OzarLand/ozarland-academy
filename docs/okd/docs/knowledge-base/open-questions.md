@@ -78,15 +78,22 @@ being able to explain, and what they could not test.
   ([tally](../lifecycle/06-okd-maintenance-impact.md#4-explanation-what-recovers-by-itself-and-in-which-order)).
   Established by reading the code on 2026-11-14: the error text only
   means "the name did not resolve", and the OVS library asks its
-  resolver library again at every attempt. **Probable, not proven**:
-  the resolver library (libunbound) marks the only nameserver as down
-  and does not ask it again for 900 seconds (`infra-host-ttl`), which
-  the negative-TTL file shipped for the agents does not change.
-  Missing: a DNS capture during an outage, and a run with
-  `infra-keep-probing: yes`. Neither was done; details and plan in
+  resolver library again at every attempt. **Established on
+  2026-11-14** with three provoked six-minute DNS outages and a
+  capture on the compute node: the resolver library (libunbound)
+  marks the only nameserver as down and does not ask it again for 900
+  seconds (`infra-host-ttl`), counted from the first failed query,
+  which the negative-TTL file shipped for the agents does not change.
+  A long-running agent that loses its connection during the outage
+  therefore waits the full 15 minutes (904 s measured). With
+  `infra-keep-probing: yes` or `infra-host-ttl: 60` added to the
+  Unbound file of both agents on the node, the same outage ended with
+  a reconnection within a minute; both settings were then removed.
+  Still open: the side effects of each setting (the controller of
+  OVN 24.03 blocks its main loop for minutes while it resolves),
+  several nameservers, other outage lengths, and setting it through
+  the NodeSet variables; details in
   [contribution topic 05](../../contributions/topics/05-ovn-agents-stuck-after-dns-outage.md).
-  Still unknown: whether the delay is always close to 15 minutes when
-  a long-running agent loses its connection.
 - **The node shutdown takes 2 min 30 with a silent gap of 84 seconds**,
   and the journal of the previous boot shows `kubepods-burstable.slice:
   A process of this unit has been killed by the OOM killer` near the

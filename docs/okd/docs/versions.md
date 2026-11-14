@@ -156,8 +156,9 @@ Legend:
   minutes. Check the agents after any control plane outage; a restart
   of `edpm_ovn_controller` and `edpm_ovn_metadata_agent` reconnects
   them in seconds
-  ([runbook](troubleshooting/node-and-okd.md)). Cause probable, not
-  proven: see the
+  ([runbook](troubleshooting/node-and-okd.md)). Cause established on
+  2026-11-14 (the resolver library of the agents ignores a nameserver
+  that timed out for 900 seconds); no setting adopted yet: see the
   [open questions](knowledge-base/open-questions.md).
 - **Password rotation is a two-step change.** Changing a service password
   in `osp-secret` rolls the service with the new value, but the operator
