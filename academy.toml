@@ -54,7 +54,7 @@ step = "Deploy"
 title = "Deployment patterns"
 summary = "Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed."
 kind = "single"
-status = "planned"
+status = "available"
 
 [[module]]
 id = "day2"

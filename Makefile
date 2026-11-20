@@ -8,6 +8,8 @@
 #
 #   make docs-deps      install the pinned build dependencies, fetch the vendored Mermaid
 #   make docs-check     check the Markdown sources (no build needed)
+#   make docs-content   content conventions of the OzarLand hub, for the
+#                       modules that follow them (HUB=<checkout of OzarLand/ozarland>)
 #   make docs-build     unit tests, strict build into site/, checks on the built portal
 #   make docs-test      unit tests of tools/site only
 #   make docs-serve     live preview of one site, rebuilt on change
@@ -57,11 +59,12 @@ RELEASE_FLAG := $(if $(RELEASE),--release $(RELEASE))
 SITE_ENV := PYTHONPATH="$(CURDIR)/tools/site$(if $(PYTHONPATH),:$(PYTHONPATH))"
 
 .DEFAULT_GOAL := help
-.PHONY: help docs-deps docs-check docs-test docs-build docs-serve docs-preview docs-clean
+.PHONY: help docs-deps docs-check docs-content docs-test docs-build docs-serve docs-preview docs-clean
 
 help:
 	@echo "make docs-deps      install the pinned build dependencies, fetch the vendored Mermaid"
 	@echo "make docs-check     check the Markdown sources (no build needed)"
+	@echo "make docs-content   content conventions of the OzarLand hub (HUB=<checkout of OzarLand/ozarland>)"
 	@echo "make docs-build     unit tests, strict build into $(SITE_DIR)/, checks on the built portal"
 	@echo "make docs-test      unit tests of tools/site only"
 	@echo "make docs-serve     live preview of one site on http://$(DEV_ADDR)"
@@ -81,6 +84,11 @@ docs-deps:
 docs-check:
 	$(PYTHON) tools/site/check_docs.py $(CHECK_FLAGS) $(RELEASE_FLAG)
 	$(PYTHON) tools/site/check_learning.py $(CHECK_FLAGS) $(RELEASE_FLAG)
+
+HUB ?=
+docs-content:
+	$(if $(HUB),,$(error docs-content: set HUB to a checkout of OzarLand/ozarland))
+	$(PYTHON) tools/site/check_content.py --hub $(HUB)
 
 docs-test:
 ifneq ($(wildcard tools/site/tests),)

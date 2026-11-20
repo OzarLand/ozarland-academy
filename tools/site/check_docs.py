@@ -549,7 +549,8 @@ def parse_front_matter(text: str) -> tuple[dict[str, object], dict[str, int], in
 
     Returns (values, line of each key, number of lines of the block). Only the
     subset the portal uses is understood: top-level keys with a scalar, a list
-    (flow or block) or a block scalar. Nested tables are kept as text.
+    (flow or block) or a block scalar. Nested tables, and inline tables (also
+    as items of a block list), are kept as text.
     Raises FrontMatterError when the block is missing or cannot be read.
     """
     lines = text.split("\n")
@@ -602,8 +603,12 @@ def parse_front_matter(text: str) -> tuple[dict[str, object], dict[str, int], in
                 raw = " ".join([raw, *(b.strip() for b in block if b.strip())])
             values[key] = _scalar(raw, number, key)
         elif block and all(b.lstrip().startswith("- ") or not b.strip() for b in block):
+            # An item that is an inline table (`- { who: …, date: … }`) is kept
+            # as text, as an inline table of a key is.
             values[key] = [
-                _scalar(b.lstrip()[2:], number, key) for b in block if b.strip()
+                b.lstrip()[2:].strip() if b.lstrip()[2:].lstrip().startswith("{") else _scalar(b.lstrip()[2:], number, key)
+                for b in block
+                if b.strip()
             ]
         elif block:
             values[key] = "\n".join(block)  # nested table: not interpreted
@@ -1273,7 +1278,14 @@ class Checker:
         if not match:
             return
         branch, path = match.group(1), unquote(match.group(2)).rstrip("/")
-        if in_docs and (path == self.docs_dir or path.startswith(self.docs_dir + "/")):
+        inside = path == self.docs_dir or path.startswith(self.docs_dir + "/")
+        # A page of the site is linked by its .md file. Another file of the
+        # docs directory (a script) or a file excluded from the site (a
+        # template to copy) is not a page: it is read on GitHub.
+        is_page = inside and (path == self.docs_dir or path.endswith(".md")) and not self.config.exclude.match(
+            path[len(self.docs_dir) + 1 :]
+        )
+        if in_docs and is_page:
             self.report.error(
                 doc.rel,
                 link.line,

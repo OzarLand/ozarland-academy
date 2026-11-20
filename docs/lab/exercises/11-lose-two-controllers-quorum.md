@@ -12,7 +12,7 @@ description: "Make two of the three controllers fail at once, see the Galera clu
 then recover the cluster with Kolla-Ansible's `mariadb-recovery`.
 **Time:** about 30 minutes, or 45 with the optional recovery of step 4.
 **Procedure:** the recovery step of
-[kolla-ansible deploy fails part-way because Ubuntu upgraded packages during the deploy](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster.md#recover-the-failed-deploy)
+[kolla-ansible deploy fails part-way because Ubuntu upgraded packages during the deploy](../../deploy/deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster/#recover-the-failed-deploy)
 (its `mariadb-recovery` part, with the warning and the backup it asks for)
 
 ## Before you start

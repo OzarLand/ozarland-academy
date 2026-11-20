@@ -189,7 +189,7 @@ sudo grep '^keystone_admin_password' /etc/kolla/passwords.yml
 | `prechecks --use-test-images` when the images come from quay.io | Kolla-Ansible 2026.1 refuses the quay.io images, which are published for testing, unless told so; a lab is that use |
 
 The full reasoning, with the errors met while building this lab, is in the
-[all-in-one lab pattern](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/all-in-one-lab-on-a-single-vm.md).
+[all-in-one lab pattern](../../../deploy/topologies/all-in-one-lab-on-a-single-vm/).
 
 ## Releases
 

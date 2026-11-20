@@ -126,6 +126,44 @@ class CheckDocsTest(Repo):
         self.assertIn("docs/day2/ussuri.toml", out)
         self.assertIn("nav entry `gone.md` does not exist under docs/day2/ussuri/", out)
 
+    # -- pages of a single module moved from another repository ----------------
+
+    def test_inline_tables_in_a_block_list(self) -> None:
+        front = (
+            "---\ntitle: Runbooks\ndescription: A page.\nconfirmed_by:\n"
+            '  - { who: "agent:lab", type: lab, date: 2026-10-24 }\n---\n\n# Runbooks\n'
+        )
+        write(self.root, "docs/runbooks/index.md", front)
+        status, out = self.check("--strict")
+        self.assertEqual(status, 0, out)
+
+    def test_old_layout_is_only_checked_in_the_versioned_module(self) -> None:
+        write(self.root, "docs/runbooks/index.md", page("Runbooks", "See `exercises/01-dhcp-agents-down.md`."))
+        status, out = self.check("--strict")
+        self.assertEqual(status, 0, out)
+        write(self.root, "docs/day2/ussuri/index.md", page("Home", "[Operations](operations/index.md), `01-old-file.md`."))
+        status, out = self.check()
+        self.assertEqual(status, 1)
+        self.assertIn("removed-path", out)
+
+    def test_blob_link_to_a_file_that_is_not_a_page(self) -> None:
+        repo = "https://github.com/example/portal/blob/main/docs/runbooks"
+        write(self.root, "docs/runbooks/scripts/check.sh", "#!/bin/sh\n")
+        write(self.root, "docs/runbooks/templates/runbook.md", page("Template"))
+        write(
+            self.root,
+            "docs/runbooks.toml",
+            '[project]\nsite_description = "Runbooks."\nexclude_docs = "/templates/"\nnav = ["index.md"]\n',
+        )
+        body = f"[script]({repo}/scripts/check.sh) and [template]({repo}/templates/runbook.md)"
+        write(self.root, "docs/runbooks/index.md", page("Runbooks", body))
+        status, out = self.check("--strict")
+        self.assertEqual(status, 0, out)
+        write(self.root, "docs/runbooks/index.md", page("Runbooks", f"[me]({repo}/index.md)"))
+        status, out = self.check()
+        self.assertEqual(status, 1)
+        self.assertIn("points to a page of the portal", out)
+
     def link(self, target: str) -> str:
         """Findings for one link from the home page of the release wallaby."""
         self.add_wallaby()

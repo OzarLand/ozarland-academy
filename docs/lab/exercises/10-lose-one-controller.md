@@ -12,7 +12,7 @@ description: "Make one of the three controllers fail, see that the APIs keep ans
 keepalived moves the VIP if that controller held it, and that the Galera and RabbitMQ clusters keep their quorum;
 then bring the controller back and watch it rejoin.
 **Time:** about 40 minutes, most of it waiting for the agents and the clock.
-**Pattern:** [Three controllers and two computes, nested inside an existing OpenStack cloud](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md)
+**Pattern:** [Three controllers and two computes, nested inside an existing OpenStack cloud](../../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/)
 (how the VIP, keepalived and the clusters are set up in this lab)
 
 ## Before you start

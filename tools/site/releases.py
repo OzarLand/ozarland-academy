@@ -117,8 +117,9 @@ DERIVED_KEYS = ("docs_dir", "site_dir", "site_url")
 ROOT_DROPPED_FEATURES = ("navigation.", "toc.", "search.", "content.action.")
 
 INDEX_NAMES = ("index.md", "README.md")
-#: Not pages: generated data of a site (updates.json).
-SKIPPED_TOP_DIRS = ("assets",)
+#: Not pages: generated data of a site (updates.json), and templates/, which
+#: Zensical does not build (in deploy/ it holds the page template to copy).
+SKIPPED_TOP_DIRS = ("assets", "templates")
 
 
 class RegistryError(Exception):

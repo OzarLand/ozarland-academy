@@ -9,7 +9,7 @@ and its own site in the portal:
 | Step | Module | What it gives you | Sources | Status |
 |---|---|---|---|---|
 | Discover | Quick lab | A disposable OpenStack lab on cloud VMs in about an hour, with break-and-repair exercises | [docs/lab/](docs/lab/index.md) | available |
-| Deploy | Deployment patterns | Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed | `docs/deploy/` | being moved in |
+| Deploy | Deployment patterns | Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed | [docs/deploy/](docs/deploy/index.md) | available |
 | Operate | Kolla-Ansible Academy | Kolla-Ansible Day-2 operations learned from the source code, one study per OpenStack release | [docs/day2/](docs/day2/2024.1/index.md) | available |
 | Intervene | VM runbooks | Symptom-driven runbooks for instance and hypervisor problems | `docs/runbooks/` | being moved in |
 | Go to production | Production guide | Visual memos for production: one operational lesson per page | `docs/production/` | being moved in |
@@ -159,6 +159,8 @@ is added and which checks to run before a pull request.
 - [tools/service_cards.py](tools/service_cards.py) rewrites the service cards of the component pages of a release
   (`docs/day2/ussuri/components/`), between their `GENERATED` markers.
 - Both take `--release <id>`; without it they write into the default release of the day-2 module.
+- [tools/site/check_content.py](tools/site/check_content.py) runs the content checks of the OzarLand hub on the
+  modules that follow its conventions (`make docs-content HUB=<checkout of OzarLand/ozarland>`).
 - [tools/site/rewrite_links.py](tools/site/rewrite_links.py) rewrites the links of the pages after a former
   repository is moved into its module ([Moving a repository into a module](CONTRIBUTING.md#moving-a-repository-into-a-module)).
 - [tools/site/](tools/site/README.md) holds the site tooling: the registry, the build, the checks, the pre-build step
