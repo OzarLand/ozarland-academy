@@ -112,6 +112,24 @@ GitHub Pages ignores `CNAME` when the site is deployed by a workflow, as here: t
 4. Tick **Enforce HTTPS** once the certificate is issued. GitHub then redirects the former `github.io` address to the
    domain.
 
+### The former site of Kolla-Ansible Academy
+
+Before it became the module `day2`, Kolla-Ansible Academy was published by `OzarLand/kolla-ansible-academy` at
+`https://ozarland.github.io/kolla-ansible-academy/`. GitHub Pages does not redirect the site of a moved repository:
+that repository publishes a redirection site instead, written by `tools/site/redirect_site.py` once the portal is
+served at its final address.
+
+```bash
+python3 tools/site/redirect_site.py ../redirect --to https://<domain>/
+```
+
+It writes one page per address of the former site: its root (to `day2/`), the home of every release, every page of
+every available release (to `day2/<release>/<page>/`), and the addresses without a release of its first version (to
+`day2/ussuri/<page>/`). Each page redirects without a script (`<meta http-equiv="refresh">`), keeps the query and the
+fragment with one, is `noindex` and names its target as `canonical`. `404.html` applies the same rules to any other
+address. Copy the output to the published directory of the former repository, deploy, and check a few addresses
+with and without a fragment.
+
 ### Release selector
 
 The header of every page shows the release being read and, when the registry has more than one release, a list of all
