@@ -4,9 +4,9 @@
 # site/ is the whole portal, with each site under site/<path>/.
 #
 # The address of the portal is the repository variable SITE_DOMAIN (Settings,
-# Secrets and variables, Actions, Variables): empty, the portal is built for
-# https://ozarland.github.io/ozarland-academy/; set to a domain name, for
-# https://<SITE_DOMAIN>/. The custom domain itself is set in Settings, Pages
+# Secrets and variables, Actions, Variables), academy.ozarland.com: the portal
+# is built for https://<SITE_DOMAIN>/ (empty, for the github.io address of
+# zensical.base.toml). The custom domain itself is set in Settings, Pages
 # (tools/site/README.md, "Address of the portal").
 # One-time repository setup and behaviour before it: tools/site/README.md.
 #

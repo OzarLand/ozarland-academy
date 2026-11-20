@@ -29,7 +29,9 @@
 #                       docs-serve: the site to preview (default: the
 #                       default release of the day-2 module)
 #   SITE_DOMAIN=<domain>  build and check the portal for https://<domain>/
-#                       (default: site_url of zensical.base.toml); CI sets it
+#                       (default: academy.ozarland.com, the domain of the
+#                       published portal; SITE_DOMAIN= builds for site_url of
+#                       zensical.base.toml, the github.io address). CI sets it
 #                       from the repository variable of the same name
 #   STRICT=1            the warnings of the checks are errors (CI runs
 #                       docs-check and docs-build with STRICT=1)
@@ -47,6 +49,11 @@ endif
 SITE_DIR := site
 DEV_ADDR ?= localhost:8000
 # Read by tools/site/releases.py (portal_root_url): the address of the portal.
+# The default is the domain of the published portal, the value of the
+# repository variable SITE_DOMAIN that CI uses: a local check sees the address
+# that README.md writes. An empty value given on the command line or in the
+# environment (CI, when the variable is empty) is kept.
+SITE_DOMAIN ?= academy.ozarland.com
 export SITE_DOMAIN
 STRICT ?=
 RELEASE ?=
