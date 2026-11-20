@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/oslo.messaging/latest/admin/rabbit.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "When every provisioning request fails or hangs at once, the cause is rarely in Nova."
 ---
 
 # VM creation fails platform-wide while instances keep running. Check the shared dependencies first

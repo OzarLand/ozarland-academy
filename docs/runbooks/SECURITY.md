@@ -1,3 +1,8 @@
+---
+title: "Security policy"
+description: "What security issues can arise in OzarLand pages and scripts, and how to report them."
+---
+
 # Security policy
 
 ## What this policy covers
@@ -20,7 +25,7 @@ concerned. Only you and the maintainers see the report. If the Security tab does
 organization owner on GitHub. OzarLand has no e-mail contact.
 
 Questions, errors in a page and proposals that involve nothing sensitive go in a GitHub issue. Anything about the
-code of conduct or a personal matter follows the [code of conduct](CODE_OF_CONDUCT.md#reporting).
+code of conduct or a personal matter follows the [code of conduct](https://github.com/OzarLand/ozarland/blob/main/CODE_OF_CONDUCT.md#reporting).
 
 Tell us which repository and page, what you found, and, for an unsafe procedure, what could go wrong. Do not
 include the sensitive data itself in the report beyond what is needed to locate it.

@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/security-group-rule.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "The instance is ACTIVE. It got its fixed address and its metadata: the console log shows the SSH key and the hostname set by cloud-init."
 ---
 
 # Instance has its address and metadata, but is unreachable from outside

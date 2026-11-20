@@ -34,6 +34,7 @@ upstream_refs:
   - https://github.com/openstack/nova/blob/stable/2026.1/nova/conf/libvirt.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the storage logs of a compute. iscsid, multipathd, NFS client messages and Ceph client (librbd) logs."
 ---
 
 # Reading the storage logs of a compute. iscsid, multipathd, NFS client messages and Ceph client (librbd) logs

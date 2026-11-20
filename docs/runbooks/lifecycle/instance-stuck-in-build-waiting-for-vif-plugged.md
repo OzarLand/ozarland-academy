@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/latest/admin/ovn/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "A networking problem wearing a compute symptom. The instance sits in BUILD with task state spawning for about five minutes, then goes to ERROR."
 ---
 
 # Instance stuck in BUILD, then ERROR after vif_plugging_timeout

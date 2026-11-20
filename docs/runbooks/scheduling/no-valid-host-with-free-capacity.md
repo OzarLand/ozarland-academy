@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/osc-placement/latest/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "Instances fail to schedule while hypervisors show free CPU, memory and disk."
 ---
 
 # No valid host was found, although capacity exists

@@ -23,6 +23,7 @@ upstream_refs:
   - https://opendev.org/openstack/oslo.log/src/branch/stable/2026.1/oslo_log/_options.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the Keystone logs, and the authentication lines every service writes (401, 503, Fernet)."
 ---
 
 # Reading the Keystone logs, and the authentication lines every service writes (401, 503, Fernet)
@@ -176,7 +177,7 @@ address is not the last field: the grep above extracts it after `from`.
 - [401 for tokens that should be valid: Fernet keys differ between Keystone nodes, or a clock is off](../recovery/keystone-401-for-every-request-fernet-keys-or-clock.md) (the fix)
 - [Every API call fails at once: expired certificates or Fernet keys](../diagnostics/expired-certificates-and-fernet-keys-break-every-api-call.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

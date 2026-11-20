@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "New instance is ACTIVE but unreachable, it never got an IP address."
 ---
 
 # New instance is ACTIVE but unreachable, it never got an IP address

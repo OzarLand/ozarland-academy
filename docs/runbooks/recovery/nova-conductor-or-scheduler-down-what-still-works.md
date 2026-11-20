@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/api-guide/compute/down_cells.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "nova-conductor and nova-scheduler run on the controllers and talk to everything else over RabbitMQ."
 ---
 
 # nova-conductor or nova-scheduler is down. What still works, what waits, what fails, and where failed builds go (cell0)

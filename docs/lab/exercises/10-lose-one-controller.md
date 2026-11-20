@@ -132,7 +132,7 @@ ssh -i ~/.ssh/quicklab_ed25519 ubuntu@<ctl-x-address> 'sudo systemctl restart sy
 ```
 
 On the lab, the clock was 9 minutes behind after a 9-minute pause; once it was stepped, every service was `up` within
-40 s and stayed so. The runbook [clock skew](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/diagnostics/compute-clock-skew.md) explains the symptom on a compute; it is the same here.
+40 s and stayed so. The runbook [clock skew](../../runbooks/diagnostics/compute-clock-skew/) explains the symptom on a compute; it is the same here.
 
 Then, on any controller:
 

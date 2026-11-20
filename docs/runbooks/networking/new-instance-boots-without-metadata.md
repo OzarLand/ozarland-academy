@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/admin/config-drive.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "The instance asks 169.254.169.254 for its metadata at first boot."
 ---
 
 # New instance has an address, but no SSH key, no user data, default hostname

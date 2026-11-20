@@ -27,6 +27,7 @@ upstream_refs:
   - https://opendev.org/openstack/octavia/src/branch/stable/2026.1/octavia/controller/housekeeping/house_keeping.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the Octavia logs. Health manager, amphora heartbeats, failovers and the worker."
 ---
 
 # Reading the Octavia logs. Health manager, amphora heartbeats, failovers and the worker
@@ -131,7 +132,7 @@ with [Nova's logs](reading-nova-logs.md) for the amphora's server id.
 
 - [Reading the Nova logs](reading-nova-logs.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

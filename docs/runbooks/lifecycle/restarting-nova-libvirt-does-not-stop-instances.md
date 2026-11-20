@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/admin/configuration/hypervisor-kvm.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "I need to restart nova_libvirt on a compute. Its instances keep running."
 ---
 
 # I need to restart nova_libvirt on a compute. Its instances keep running

@@ -38,6 +38,7 @@ upstream_refs:
   - https://github.com/torvalds/linux/blob/v7.3/arch/x86/kvm/x86.c
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Reading the kernel log of a compute (dmesg, journalctl -k). OOM killer, KVM, links and bonds, MTU, disks, conntrack, hung tasks."
 ---
 
 # Reading the kernel log of a compute (dmesg, journalctl -k). OOM killer, KVM, links and bonds, MTU, disks, conntrack, hung tasks

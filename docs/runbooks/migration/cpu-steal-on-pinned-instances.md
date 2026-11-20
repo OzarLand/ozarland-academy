@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/releasenotes/nova/train.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "Instances created with hw:cpu_policy=dedicated should not see steal time: each guest vCPU owns a host CPU."
 ---
 
 # CPU steal time on instances with dedicated (pinned) CPUs. Live migration moves the symptom, not the cause

@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/image-v2.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Boot refused or aborted because the flavor's disk is too small for the image."
 ---
 
 # Boot refused or aborted because the flavor's disk is too small for the image

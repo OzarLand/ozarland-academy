@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/admin/scheduling.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "New instance in ERROR with \"Exceeded maximum number of retries\". The real error is on the computes that tried."
 ---
 
 # New instance in ERROR with "Exceeded maximum number of retries". The real error is on the computes that tried

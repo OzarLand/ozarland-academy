@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/admin/tls.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Every API call fails at once. Expired TLS certificates or inconsistent Keystone Fernet keys."
 ---
 
 # Every API call fails at once. Expired TLS certificates or inconsistent Keystone Fernet keys

@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/admin/cells.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A failed VM creation says what the user experienced, not which service caused it."
 ---
 
 # What a VM creation traverses, and how to trace one failed boot by request id

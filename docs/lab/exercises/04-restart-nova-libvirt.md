@@ -8,7 +8,7 @@ description: "Restart the container that runs libvirt, the way a reconfigure or 
 **Goal:** restart the container that runs libvirt, the way a reconfigure or an upgrade does, and measure that the
 instances keep running.
 **Time:** about 10 minutes.
-**Runbook:** [I need to restart nova_libvirt on a compute. Its instances keep running](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/lifecycle/restarting-nova-libvirt-does-not-stop-instances.md)
+**Runbook:** [I need to restart nova_libvirt on a compute. Its instances keep running](../../runbooks/lifecycle/restarting-nova-libvirt-does-not-stop-instances/)
 
 ## Before you start
 

@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/compute-service.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "Two independent faults on one host: its nova-compute agent stopped, and the SSH user of your monitoring or automation is refused there."
 ---
 
 # nova-compute is down and the compute refuses an SSH login, but the host is alive

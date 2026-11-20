@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/admin/migration.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-25
+description: "Moving instances off a compute host for planned maintenance (patching, reboot, hardware)."
 ---
 
 # Moving instances off a compute host for planned maintenance

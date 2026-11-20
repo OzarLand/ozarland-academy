@@ -1,40 +1,19 @@
-[← OzarLand home](https://github.com/OzarLand/ozarland)
+---
+title: "VM runbooks"
+description: "Community runbooks for diagnosing and resolving virtual machine problems in OpenStack."
+---
 
-<div align="center">
-
-# 🔧 openstack-vm-runbooks
+# 🔧 VM runbooks
 
 **Community runbooks for diagnosing and resolving virtual machine problems in OpenStack.**
 
-<p>
-<!-- status-badges:start -->
-  <img src="https://img.shields.io/badge/pages-72-informational.svg" alt="72 pages">
-  <img src="https://img.shields.io/badge/lab--verified-44-16a34a.svg" alt="44 pages lab-verified">
-  <img src="https://img.shields.io/badge/draft-28-9ca3af.svg" alt="28 pages draft">
-  <img src="https://img.shields.io/badge/validated-0-2563eb.svg" alt="0 pages validated">
-<!-- status-badges:end -->
-  <img src="https://img.shields.io/badge/OpenStack-2026.1-ED1944.svg" alt="OpenStack 2026.1">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-</p>
+[Start from a symptom](#-start-from-what-you-see) · [Index](#index) · [Status](#-how-much-each-page-was-checked) ·
+[Contribute](#-contributing)
 
-<p>
-  <a href="#-start-from-what-you-see"><b>Start from a symptom</b></a> ·
-  <a href="#index"><b>Index</b></a> ·
-  <a href="#-how-much-each-page-was-checked"><b>Status</b></a> ·
-  <a href="#-contributing"><b>Contribute</b></a>
-</p>
-
-</div>
-
----
-
-Part of [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* No imposed
-tools, no single way of operating OpenStack.
+No imposed tools, no single way of operating OpenStack.
 
 - 🧪 Practise these runbooks on a disposable lab with
-  [openstack-quick-lab](https://github.com/OzarLand/openstack-quick-lab).
-- 🤖 The [openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills) Claude skills draw on
-  them and keep their status attached. A correction belongs here first.
+  the [Quick lab](../lab/).
 
 ## 🧭 How a runbook works
 
@@ -63,7 +42,7 @@ Everything an operator does when an instance misbehaves, from the first symptom 
 
 | ✅ In scope | ❌ Out of scope |
 |---|---|
-| Instances stuck in an unexpected state (`BUILD`, `deleting`, `resizing`, `migrating`, `ERROR`, `SHUTOFF` when it should run, task states that never clear) | Deploying OpenStack: see [kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns) |
+| Instances stuck in an unexpected state (`BUILD`, `deleting`, `resizing`, `migrating`, `ERROR`, `SHUTOFF` when it should run, task states that never clear) | Deploying OpenStack: see [kolla-ansible-deployment-patterns](../deploy/) |
 | Boot and scheduling failures: `No valid host`, Placement allocation problems, image or flavor issues, boot from volume failures, console not available | Upgrade campaigns: planned for a future `openstack-upgrade-playbooks` repository |
 | Create, delete and migration errors: live and cold migration, resize, evacuation. Shelve and unshelve: no page yet, [wanted](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml) | Storage-backend-only problems |
 | Instance networking: no DHCP lease, no metadata, no floating IP connectivity, security group surprises, MTU symptoms as seen from the instance, port binding failures | Control-plane failures (database, message queue, load balancer, Keystone), except where they affect instances: see `recovery/` and `logs/` |
@@ -81,7 +60,7 @@ Everything an operator does when an instance misbehaves, from the first symptom 
 | 🌐 `networking/` | Instance connectivity, DHCP, metadata, floating IPs, security groups, port binding |
 | 💾 `volumes/` | Attach, detach, stale attachments, boot volumes |
 | 🩺 `diagnostics/` | Cross-cutting investigations: what a request traverses, platform-wide failures, clock skew |
-| 📜 `logs/` | Where the logs are and how to read them: services, infrastructure, hypervisor (see [logs/README.md](logs/README.md)) |
+| 📜 `logs/` | Where the logs are and how to read them: services, infrastructure, hypervisor (see [logs/README.md](logs/index.md)) |
 | 🚑 `recovery/` | After a compute, storage or control plane incident, evacuation; post-incident checks |
 | 📄 `templates/` | Runbook template |
 
@@ -353,24 +332,16 @@ behind it; open a *Problem solved* issue if you have one.
 > Rules that are not optional: no secrets, hostnames, addresses or unredacted logs; flag state-changing and
 > destructive commands; say where your solution was observed. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 🌍 Part of OzarLand
+## 🌍 Part of OzarLand Academy
 
-**OzarLand: a shared land for better OpenStack operations.** It started as a personal initiative by Soufian Zaouam
-to share practical OpenStack operational knowledge, and it is meant to grow into a space where operators exchange
-experience, document solutions and help each other run more reliable platforms. It is open to everyone: your
-knowledge, questions and corrections are welcome.
-
-| | Repository | What it holds |
-|:-:|---|---|
-| | [ozarland](https://github.com/OzarLand/ozarland) | Start here: newcomer path, community rules, [Discussions](https://github.com/OzarLand/ozarland/discussions) |
-| 🔧 | `openstack-vm-runbooks` **(you are here)** | Symptom-driven runbooks for instance problems |
-| 🏗️ | [kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns) | Ways to deploy with Kolla-Ansible, compared |
-| 🧪 | [openstack-quick-lab](https://github.com/OzarLand/openstack-quick-lab) | A disposable OpenStack lab to practise on |
-| 🤖 | [openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills) | Claude skills that apply this knowledge |
+This module is the fourth stop of [OzarLand Academy](../), the learning path of
+[OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* Practise these
+runbooks on the [Quick lab](../lab/); the [deployment patterns](../deploy/) explain how the platform underneath was
+built, and the production guide closes the path.
 
 ## ⚖️ License
 
-All content, documentation and code alike, is licensed under the Apache License 2.0 ([LICENSE](LICENSE)). Reuse it
+All content, documentation and code alike, is licensed under the Apache License 2.0 ([LICENSE](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE)). Reuse it
 freely with attribution. See [licensing](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/licensing.md).
 
 OpenStack is a project of the OpenInfra Foundation community. OzarLand is an independent community initiative.

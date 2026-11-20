@@ -22,6 +22,7 @@ upstream_refs:
   - https://opendev.org/openstack/nova/src/branch/stable/2026.1/nova/scheduler/manager.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Placement holds the inventory of every compute and the allocation of every instance."
 ---
 
 # Reading the Placement logs, and the Placement lines in Nova's logs
@@ -166,7 +167,7 @@ not put its own value back within 3 minutes: it was restored by hand.
 - [No valid host with free capacity](../scheduling/no-valid-host-with-free-capacity.md)
 - [Stale records, phantom allocations](../lifecycle/stale-records-stuck-instances-orphan-ports-attachments.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

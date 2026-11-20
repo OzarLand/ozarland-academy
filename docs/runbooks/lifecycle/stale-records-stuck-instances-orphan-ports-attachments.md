@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/cinder/latest/cli/cinder-manage.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A long-lived platform accumulates records that describe nothing real: every host failure, interrupted operation and recovery adds some."
 ---
 
 # Stale records. Instances stuck in BUILD, ERROR or deleting, orphan ports and attachments, phantom allocations
@@ -107,7 +108,7 @@ cause; the clean-up is routine maintenance.
 ## Resolution
 
 Work with project tools in this order. Take a database backup before anything that touches the database directly
-(with Kolla-Ansible: [backing up the MariaDB cluster](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/operations/mariadb-backup-and-restore-with-mariabackup.md)).
+(with Kolla-Ansible: [backing up the MariaDB cluster](../../deploy/operations/mariadb-backup-and-restore-with-mariabackup/)).
 
 ### Instances: reset state, then delete through the API
 

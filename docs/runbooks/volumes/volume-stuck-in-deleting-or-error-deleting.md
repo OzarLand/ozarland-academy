@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/volume.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Volume stuck in deleting, in error_deleting, or back to available after a delete."
 ---
 
 # Volume stuck in deleting, in error_deleting, or back to available after a delete

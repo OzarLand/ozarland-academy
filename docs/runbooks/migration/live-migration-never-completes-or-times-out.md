@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/server-migration.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Live migration runs for a long time, then is aborted: the instance writes memory faster than it can be copied."
 ---
 
 # Live migration runs for a long time, then is aborted. The instance writes memory faster than it can be copied

@@ -188,7 +188,7 @@ certificates, Ceph keyrings, HashiCorp Vault as the password store, and secrets 
 
 - [Laying out the configuration](inventory-globals-overrides-and-secrets-layout.md): where `passwords.yml` lives,
   and how to run `kolla-genpwd` and `kolla-mergepwd` with Ansible Vault.
-- [Every API call fails at once: expired certificates or inconsistent Fernet keys](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/diagnostics/expired-certificates-and-fernet-keys-break-every-api-call.md)
+- [Every API call fails at once: expired certificates or inconsistent Fernet keys](../../runbooks/diagnostics/expired-certificates-and-fernet-keys-break-every-api-call/)
 - Kolla-Ansible 2026.1: [password rotation](https://docs.openstack.org/kolla-ansible/2026.1/admin/password-rotation.html),
   [operating Kolla](https://docs.openstack.org/kolla-ansible/2026.1/user/operating-kolla.html)
 

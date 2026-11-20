@@ -21,6 +21,7 @@ upstream_refs:
   - https://keepalived.readthedocs.io/en/latest/configuration_synopsis.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "On Kolla-Ansible, every API call goes to a virtual IP (VIP) that keepalived holds on one node of the loadbalancer group."
 ---
 
 # The API returns 503, an HAProxy backend is DOWN, or the VIP flaps or sits on two nodes

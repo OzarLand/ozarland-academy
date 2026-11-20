@@ -25,6 +25,7 @@ upstream_refs:
   - https://www.freedesktop.org/software/systemd/man/latest/journalctl.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "One user action touches several services on several hosts, and each writes its own log with its own clock."
 ---
 
 # Following one request, instance, port or volume through the logs of every service and host
@@ -278,7 +279,7 @@ boot followed by the `create` request id from `openstack server event list`.
 - [What a VM creation traverses](../diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md)
 - [Instance stuck in BUILD, waiting for vif_plugged](../lifecycle/instance-stuck-in-build-waiting-for-vif-plugged.md)
 - [Clock skew on one compute](../diagnostics/compute-clock-skew.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 - journalctl manual: https://www.freedesktop.org/software/systemd/man/latest/journalctl.html
 
 ---

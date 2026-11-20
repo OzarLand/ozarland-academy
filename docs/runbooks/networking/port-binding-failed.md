@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/reference/networking/neutron.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Instance build or live migration fails with \"Binding failed for port\". Neutron could not bind the port on that host."
 ---
 
 # Instance build or live migration fails with "Binding failed for port". Neutron could not bind the port on that host
@@ -145,7 +146,7 @@ renamed, Neutron finds no agent for the name Nova gives.
 
 A flat or VLAN network on a physical network (`physnet1`, ...) that this host's bridge mappings do not include: a
 compute added without the provider network, or `neutron_physical_networks` / `bridge_mappings` set per host and
-missing one ([provider networks](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/networking/provider-networks-instances-on-flat-or-vlan-networks.md)).
+missing one ([provider networks](../../deploy/networking/provider-networks-instances-on-flat-or-vlan-networks/)).
 
 ### Cause 4: the network type is not handled on that host
 
@@ -277,7 +278,7 @@ flat `physnet1` external network mapped on the controllers only), Neutron server
 - [New instance in ERROR with "Exceeded maximum number of retries"](../scheduling/build-fails-exceeded-maximum-number-of-retries.md)
 - [Moving instances off a compute host](../migration/moving-instances-off-a-host-for-maintenance.md): live migration
   pre-checks.
-- Kolla-Ansible: [provider networks](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/networking/provider-networks-instances-on-flat-or-vlan-networks.md)
+- Kolla-Ansible: [provider networks](../../deploy/networking/provider-networks-instances-on-flat-or-vlan-networks/)
 - Neutron 2026.1: [ML2 configuration](https://docs.openstack.org/neutron/2026.1/admin/config-ml2.html)
 
 ---

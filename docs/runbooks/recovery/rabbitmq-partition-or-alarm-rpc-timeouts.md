@@ -21,6 +21,7 @@ upstream_refs:
   - https://www.rabbitmq.com/docs/4.2/quorum-queues
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "RPC timeouts in every service, computes reported down. RabbitMQ is partitioned, blocked by an alarm, or a node is missing."
 ---
 
 # RPC timeouts in every service, computes reported down. RabbitMQ is partitioned, blocked by an alarm, or a node is missing
@@ -304,7 +305,7 @@ Then a test build, and the clean-up of what stayed stuck:
 - RabbitMQ 4.3 removes Mnesia and partition handling strategies; on a later Kolla-Ansible release, read that
   release's RabbitMQ version first.
 - Not covered: TLS problems between services and RabbitMQ, credentials (see
-  [rotating the secrets in passwords.yml](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/configuration/rotating-secrets-in-passwords-yml.md)), RabbitMQ upgrades, and notification queues filled by a missing consumer
+  [rotating the secrets in passwords.yml](../../deploy/configuration/rotating-secrets-in-passwords-yml/)), RabbitMQ upgrades, and notification queues filled by a missing consumer
   (Ceilometer, Designate).
 
 ## Related

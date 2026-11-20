@@ -34,6 +34,7 @@ upstream_refs:
   - https://github.com/containers/common/blob/main/docs/containers.conf.5.md
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the systemd journal and the container engine on an OpenStack host. Units, priorities, time ranges, restart loops."
 ---
 
 # Reading the systemd journal and the container engine on an OpenStack host. Units, priorities, time ranges, restart loops

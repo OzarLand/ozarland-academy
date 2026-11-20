@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/volume.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A user creates a volume (openstack volume create --size …, possibly --image, --snapshot or --type)."
 ---
 
 # Volume stuck in creating, or in error right after create
@@ -290,7 +291,7 @@ Not run: cause 5 as a separate case (seen during cause 3), Ceph, NFS, a real Rab
 
 ## Related
 
-- [Instance fails to boot from volume](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/scheduling/instance-fails-to-boot-from-volume.md): the same failures seen
+- [Instance fails to boot from volume](../scheduling/instance-fails-to-boot-from-volume.md): the same failures seen
   from Nova, when it creates the volume.
 - [Volume stuck in attaching, reserved or detaching](volume-stuck-in-attaching-or-detaching.md)
 - [Stale volume attachment after the instance was deleted or evacuated](stale-volume-attachment-after-instance-deleted-or-evacuated.md)

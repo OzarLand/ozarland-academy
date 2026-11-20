@@ -25,6 +25,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/reference/gmr.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Every investigation starts with two questions: where does this service write, and what does each field of its line mean."
 ---
 
 # Where the OpenStack logs are, and how to read one log line
@@ -420,7 +421,7 @@ time without a zone. On a host whose time zone is not UTC, the same event appear
 
 - [What a VM creation traverses, and how to trace one failed boot by request id](../diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md)
 - [The logs of one compute do not line up with the controllers: clock skew](../diagnostics/compute-clock-skew.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 - oslo.log configuration options: https://docs.openstack.org/oslo.log/latest/configuration/index.html
 - Kolla-Ansible central logging guide: https://docs.openstack.org/kolla-ansible/latest/reference/logging-and-monitoring/central-logging-guide.html
 

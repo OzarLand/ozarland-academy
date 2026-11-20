@@ -36,6 +36,7 @@ upstream_refs:
   - https://github.com/openstack/kolla-ansible/blob/stable/2026.1/ansible/roles/cron/templates/cron-logrotate-global.conf.j2
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the Open vSwitch logs (ovs-vswitchd, ovsdb-server) and changing their levels with ovs-appctl."
 ---
 
 # Reading the Open vSwitch logs (ovs-vswitchd, ovsdb-server) and changing their levels with ovs-appctl

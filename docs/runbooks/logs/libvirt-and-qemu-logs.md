@@ -37,6 +37,7 @@ upstream_refs:
   - https://github.com/openstack/python-openstackclient/blob/stable/2026.1/openstackclient/compute/v2/console.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the libvirt and QEMU logs of a compute, and the guest console log."
 ---
 
 # Reading the libvirt and QEMU logs of a compute, and the guest console log

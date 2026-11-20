@@ -24,6 +24,7 @@ upstream_refs:
   - https://opendev.org/openstack/kolla-ansible/src/branch/stable/2026.1/ansible/roles/neutron/defaults/main.yml
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Reading the Neutron logs with ML2/OVS. Server, RPC server, OVS, L3, DHCP and metadata agents."
 ---
 
 # Reading the Neutron logs with ML2/OVS. Server, RPC server, OVS, L3, DHCP and metadata agents
@@ -205,7 +206,7 @@ Source: `neutron/agent/metadata/proxy_base.py`.
 - [ovs-vswitchd down on a compute](../networking/ovs-vswitchd-down-on-compute.md)
 - [No IP: DHCP agents down](../networking/new-instance-gets-no-ip-dhcp-agents-down.md)
 - [No metadata](../networking/new-instance-boots-without-metadata.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

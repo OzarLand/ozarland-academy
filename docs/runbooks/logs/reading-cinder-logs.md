@@ -24,6 +24,7 @@ upstream_refs:
   - https://opendev.org/openstack/os-brick/src/branch/stable/2026.1/os_brick/initiator/connectors/iscsi.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the Cinder logs. cinder-api, cinder-scheduler, cinder-volume, and os-brick on the compute."
 ---
 
 # Reading the Cinder logs. cinder-api, cinder-scheduler, cinder-volume, and os-brick on the compute
@@ -220,7 +221,7 @@ INFO nova.compute.manager [...] [instance: <server-id>] Detaching volume <volume
 - [Volume stuck in attaching or detaching](../volumes/volume-stuck-in-attaching-or-detaching.md)
 - [Instance fails to boot from volume](../scheduling/instance-fails-to-boot-from-volume.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

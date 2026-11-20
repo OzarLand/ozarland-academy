@@ -20,6 +20,7 @@ upstream_refs:
   - https://opendev.org/openstack/heat/src/branch/stable/2026.1/heat/common/config.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Heat rarely fails by itself: a stack fails because one of its resources failed in Nova, Neutron, Cinder or another service."
 ---
 
 # Reading the Heat logs. From a failed stack to the service that really failed
@@ -122,7 +123,7 @@ id), even when Heat's own context carried one. Link the two by the physical id a
 
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
 - [Reading the Nova logs](reading-nova-logs.md), [the Neutron logs](reading-neutron-logs-ml2-ovs.md), [the Cinder logs](reading-cinder-logs.md): where a failed resource's error continues
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

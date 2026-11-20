@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "ovs-vswitchd is the process that switches the traffic of the instances on a compute (br-int, br-tun)."
 ---
 
 # Every instance on one compute loses the network while Nova shows them ACTIVE (ovs-vswitchd down)

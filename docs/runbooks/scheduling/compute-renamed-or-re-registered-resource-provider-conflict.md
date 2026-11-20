@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/osc-placement/latest/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "A compute was renamed, reinstalled or re-added. nova-compute refuses to start, or gets no resource provider."
 ---
 
 # A compute was renamed, reinstalled or re-added. nova-compute refuses to start, or gets no resource provider

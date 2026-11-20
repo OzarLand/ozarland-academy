@@ -27,6 +27,7 @@ upstream_refs:
   - https://opendev.org/openstack/kolla-ansible/src/branch/stable/2026.1/ansible/roles/rabbitmq/templates/rabbitmq.conf.j2
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the RabbitMQ logs, and the oslo.messaging lines that go with them."
 ---
 
 # Reading the RabbitMQ logs, and the oslo.messaging lines that go with them
@@ -306,7 +307,7 @@ How the shared dependencies fail together: [VM creation fails platform-wide](../
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
 - [VM creation fails platform-wide: check the shared dependencies first](../diagnostics/vm-creation-fails-platform-wide-check-shared-dependencies.md)
 - [Reopening provisioning after a control-plane incident](../recovery/reopening-provisioning-after-control-plane-incident.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

@@ -7,7 +7,7 @@ description: "See an instance that Nova reports ACTIVE but that never got an IP 
 
 **Goal:** see an instance that Nova reports `ACTIVE` but that never got an IP address, find why, and repair it.
 **Time:** about 20 minutes.
-**Runbook:** [New instance is ACTIVE but unreachable, it never got an IP address](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/new-instance-gets-no-ip-dhcp-agents-down.md)
+**Runbook:** [New instance is ACTIVE but unreachable, it never got an IP address](../../runbooks/networking/new-instance-gets-no-ip-dhcp-agents-down/)
 
 ## Before you start
 

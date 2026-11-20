@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/reference/compute/nova-guide.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "The instance console (noVNC or SPICE) does not open, fails at once, or says that the token is invalid or has expired."
 ---
 
 # Instance console (noVNC or SPICE) does not open, fails at once, or shows "invalid or has expired"

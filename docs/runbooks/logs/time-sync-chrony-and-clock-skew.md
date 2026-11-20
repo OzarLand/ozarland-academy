@@ -33,6 +33,7 @@ upstream_refs:
   - https://github.com/openstack/neutron/blob/stable/2026.1/neutron/plugins/ml2/drivers/ovn/agent/neutron_agent.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "OpenStack services compare timestamps written by different hosts: service heartbeats, agent reports, token expiry."
 ---
 
 # Reading the time synchronisation logs (chrony, systemd-timesyncd), and how clock skew shows in OpenStack logs

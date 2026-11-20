@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/api-ref/block-storage/v3/#messages-messages
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Instance fails to boot from volume. ERROR at build, or ACTIVE with no bootable disk."
 ---
 
 # Instance fails to boot from volume. ERROR at build, or ACTIVE with no bootable disk

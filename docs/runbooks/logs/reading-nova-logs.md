@@ -28,6 +28,7 @@ upstream_refs:
   - https://opendev.org/openstack/oslo.messaging/src/branch/stable/2026.1/oslo_messaging/_drivers/amqpdriver.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Nova writes four logs that matter for an instance: nova-api, nova-conductor, nova-scheduler (on the controllers) and nova-compute (on each compute)."
 ---
 
 # Reading the Nova logs. What normal looks like, and what the common lines mean
@@ -237,7 +238,7 @@ level field only (`' [0-9]+ (ERROR|CRITICAL) '`), not those lines. The files are
 - [No valid host with free capacity](../scheduling/no-valid-host-with-free-capacity.md)
 - [Exceeded maximum number of retries](../scheduling/build-fails-exceeded-maximum-number-of-retries.md)
 - [Waiting for vif_plugged](../lifecycle/instance-stuck-in-build-waiting-for-vif-plugged.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

@@ -234,7 +234,7 @@ in detail, BGP, and Kayobe's network configuration.
 - [Laying out the configuration](../configuration/inventory-globals-overrides-and-secrets-layout.md)
 - [Three controllers and two computes, nested inside an existing OpenStack cloud](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md):
   a lab where the hosting cloud forced a lower MTU
-- [Tunnel MTU mismatch, large packets dropped](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/tunnel-mtu-mismatch-large-packets-dropped.md)
+- [Tunnel MTU mismatch, large packets dropped](../../runbooks/networking/tunnel-mtu-mismatch-large-packets-dropped/)
 - Kolla-Ansible 2026.1: [Neutron guide](https://docs.openstack.org/kolla-ansible/2026.1/reference/networking/neutron.html),
   [multinode](https://docs.openstack.org/kolla-ansible/2026.1/user/multinode.html)
 - Neutron 2026.1: [MTU considerations](https://docs.openstack.org/neutron/2026.1/admin/config-mtu.html),

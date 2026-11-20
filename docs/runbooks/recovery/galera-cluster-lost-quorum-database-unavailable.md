@@ -20,6 +20,7 @@ upstream_refs:
   - https://galeracluster.com/library/documentation/quorum-reset.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Every API fails on database errors. The Galera cluster lost quorum, or stopped on every node."
 ---
 
 # Every API fails on database errors. The Galera cluster lost quorum, or stopped on every node

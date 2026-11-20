@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/compute-service.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "Compute disk full. An instance that writes is frozen, while Nova still shows it ACTIVE."
 ---
 
 # Compute disk full. An instance that writes is frozen, while Nova still shows it ACTIVE

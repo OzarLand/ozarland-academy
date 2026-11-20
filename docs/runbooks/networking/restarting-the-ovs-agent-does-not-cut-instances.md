@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "I need to restart the Open vSwitch agent on a compute. Its instances keep their network."
 ---
 
 # I need to restart the Open vSwitch agent on a compute. Its instances keep their network

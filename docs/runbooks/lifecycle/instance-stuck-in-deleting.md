@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/server.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Instance stuck in deleting, or in ERROR after a delete. Deleting it again does nothing."
 ---
 
 # Instance stuck in deleting, or in ERROR after a delete. Deleting it again does nothing

@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/latest/admin/ovn/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "The facts that make \"stop the APIs, protect the running workloads\" a credible option rather than a euphemism for an outage."
 ---
 
 # Control plane down. What still works for running instances, and what does not

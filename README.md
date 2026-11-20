@@ -11,7 +11,7 @@ and its own site in the portal:
 | Discover | Quick lab | A disposable OpenStack lab on cloud VMs in about an hour, with break-and-repair exercises | [docs/lab/](docs/lab/index.md) | available |
 | Deploy | Deployment patterns | Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed | [docs/deploy/](docs/deploy/index.md) | available |
 | Operate | Kolla-Ansible Academy | Kolla-Ansible Day-2 operations learned from the source code, one study per OpenStack release | [docs/day2/](docs/day2/2024.1/index.md) | available |
-| Intervene | VM runbooks | Symptom-driven runbooks for instance and hypervisor problems | `docs/runbooks/` | being moved in |
+| Intervene | VM runbooks | Symptom-driven runbooks for instance and hypervisor problems | [docs/runbooks/](docs/runbooks/index.md) | available |
 | Go to production | Production guide | Visual memos for production: one operational lesson per page | `docs/production/` | being moved in |
 
 The modules come from separate OzarLand repositories, moved here one at a time with their history. Until a module is

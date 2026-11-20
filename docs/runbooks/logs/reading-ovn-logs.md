@@ -21,6 +21,7 @@ upstream_refs:
   - https://opendev.org/openstack/kolla-ansible/src/branch/stable/2026.1/ansible/group_vars/all/ovn.yml
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Reading the OVN logs with Neutron. ovn-controller, ovn-northd, the OVN databases and the Neutron OVN driver."
 ---
 
 # Reading the OVN logs with Neutron. ovn-controller, ovn-northd, the OVN databases and the Neutron OVN driver
@@ -165,7 +166,7 @@ stopped; if Nova timed out, see [waiting for vif_plugged](../lifecycle/instance-
 - [Reading the Neutron logs with ML2/OVS](reading-neutron-logs-ml2-ovs.md)
 - [Waiting for vif_plugged](../lifecycle/instance-stuck-in-build-waiting-for-vif-plugged.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

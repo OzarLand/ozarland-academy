@@ -8,7 +8,7 @@ description: "Stop the Nova agent of the compute and see that the instances do n
 **Goal:** stop the Nova agent of the compute and see that the instances do not notice, while the control plane
 does.
 **Time:** about 15 minutes.
-**Runbook:** [nova-compute is down on a compute, but its instances are still running](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/recovery/nova-compute-down-instances-still-running.md)
+**Runbook:** [nova-compute is down on a compute, but its instances are still running](../../runbooks/recovery/nova-compute-down-instances-still-running/)
 
 ## Before you start
 

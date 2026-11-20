@@ -20,6 +20,7 @@ upstream_refs:
   - https://mariadb.com/kb/en/server-system-variables/#max_connections
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "On Kolla-Ansible 2026.1, every OpenStack service reaches MariaDB through ProxySQL on the internal VIP."
 ---
 
 # Services fail on "Too many connections", "Max connect timeout" or "QueuePool limit". Database connections are exhausted

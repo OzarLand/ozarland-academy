@@ -144,7 +144,7 @@ step = "Intervene"
 title = "VM runbooks"
 summary = "Symptom-driven runbooks for instance and hypervisor problems."
 kind = "single"
-status = "planned"
+status = "available"
 
 [[module]]
 id = "production"

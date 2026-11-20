@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/latest/cli/command-objects/compute-service.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "\"Compute down\" in Nova means \"Nova has heard nothing from the nova-compute agent of this host for service_down_time seconds\". It does not mean the host is dead."
 ---
 
 # nova-compute is down on a compute, but its instances are still running

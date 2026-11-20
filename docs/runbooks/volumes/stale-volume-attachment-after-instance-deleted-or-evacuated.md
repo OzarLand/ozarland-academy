@@ -22,6 +22,7 @@ upstream_refs:
   - https://bugs.launchpad.net/nova/+bug/2004555
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Stale volume attachment. The volume is still in-use for an instance that was deleted or evacuated."
 ---
 
 # Stale volume attachment. The volume is still in-use for an instance that was deleted or evacuated

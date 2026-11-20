@@ -21,6 +21,7 @@ upstream_refs:
   - https://bugs.launchpad.net/nova/+bug/2004555
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "Volume stuck in attaching, reserved or detaching. The attach or detach never finishes."
 ---
 
 # Volume stuck in attaching, reserved or detaching. The attach or detach never finishes

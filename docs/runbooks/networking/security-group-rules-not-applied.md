@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/security-group-rule.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "A rule was added to a security group, and the traffic it allows still does not reach the instance (a port stays closed, ping fails)."
 ---
 
 # A security group rule has no effect. Traffic it allows is still blocked, or traffic it should block still passes

@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/reference/networking/neutron.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "The router's namespace, NAT rules and floating IPs are kernel state that the L3 agent set up. They stay when the agent stops, so traffic keeps flowing."
 ---
 
 # L3 agent dead, instances still reachable, router not moved

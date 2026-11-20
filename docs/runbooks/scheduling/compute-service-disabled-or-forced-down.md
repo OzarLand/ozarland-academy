@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/api-ref/compute/#update-compute-service
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "openstack compute service list gives each nova-compute two independent fields."
 ---
 
 # A compute shows disabled or down. Why, what still works on it, and how to bring it back

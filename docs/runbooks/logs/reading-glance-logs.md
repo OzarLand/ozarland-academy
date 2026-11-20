@@ -20,6 +20,7 @@ upstream_refs:
   - https://opendev.org/openstack/kolla-ansible/src/branch/stable/2026.1/ansible/roles/glance/templates/glance-api.conf.j2
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the Glance logs, and the image lines in Nova's logs (boot, snapshot)."
 ---
 
 # Reading the Glance logs, and the image lines in Nova's logs (boot, snapshot)
@@ -158,7 +159,7 @@ grep -n "<server-id>" /var/log/kolla/nova/nova-compute.log | grep -E "snapshot|S
 - [Volume stuck in creating or error after create](../volumes/volume-stuck-in-creating-or-error-after-create.md) (volumes from images)
 - [Compute disk full](../lifecycle/compute-disk-full-instance-paused.md)
 - [Where the OpenStack logs are, and how to read one log line](where-openstack-logs-are-and-how-to-read-a-line.md)
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

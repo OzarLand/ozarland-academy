@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/latest/admin/node-down.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "Evacuation (openstack server evacuate) rebuilds an instance on another host and reuses its volumes."
 ---
 
 # Compute host unreachable, instances down. Fence before you evacuate

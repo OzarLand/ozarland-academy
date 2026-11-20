@@ -27,6 +27,7 @@ upstream_refs:
   - https://github.com/openstack/nova/blob/stable/2026.1/nova/servicegroup/drivers/db.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Error messages: messaging and database. MessagingTimeout, AMQP connection and heartbeat lines, DBConnectionError."
 ---
 
 # Error messages: messaging and database. MessagingTimeout, AMQP connection and heartbeat lines, DBConnectionError

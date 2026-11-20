@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/admin/advanced-configuration.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
+description: "The interface that carries the VXLAN tunnels of one compute has a smaller MTU than Neutron assumes."
 ---
 
 # Instances of one compute answer ping, but large transfers stall

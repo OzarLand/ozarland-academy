@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/python-openstackclient/2026.1/cli/command-objects/server.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Nova sees the instance as ACTIVE, but the guest operating system is broken."
 ---
 
 # The guest does not boot or cannot be reached (broken fstab, kernel, network or SSH configuration). Repair its disk in rescue mode

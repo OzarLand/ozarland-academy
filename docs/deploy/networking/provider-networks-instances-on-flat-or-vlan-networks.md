@@ -161,9 +161,9 @@ own provider network settings in detail, and RBAC to share a provider network wi
 
 - [Network interfaces, VLANs and MTU, with Open vSwitch and OVN side by side](interfaces-vlans-and-mtu-ovs-and-ovn.md)
 - [ML2/OVS versus ML2/OVN](../comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md)
-- Runbooks: [instance unreachable from outside](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/instance-unreachable-from-outside.md),
-  [new instance gets no IP](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/new-instance-gets-no-ip-dhcp-agents-down.md),
-  [new instance boots without metadata](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/new-instance-boots-without-metadata.md)
+- Runbooks: [instance unreachable from outside](../../runbooks/networking/instance-unreachable-from-outside/),
+  [new instance gets no IP](../../runbooks/networking/new-instance-gets-no-ip-dhcp-agents-down/),
+  [new instance boots without metadata](../../runbooks/networking/new-instance-boots-without-metadata/)
 - Kolla-Ansible 2026.1: [Neutron guide](https://docs.openstack.org/kolla-ansible/2026.1/reference/networking/neutron.html)
 - Neutron 2026.1: [Open vSwitch provider networks](https://docs.openstack.org/neutron/2026.1/admin/deploy-ovs-provider.html),
   [networking introduction](https://docs.openstack.org/neutron/2026.1/admin/intro-os-networking.html)

@@ -11,7 +11,7 @@ description: "See a compute reported down while its instances may still be runni
 **Goal:** see a compute reported `down` while its instances may still be running, make sure it is really off
 (fence it), and only then rebuild its instances on the other compute (evacuate).
 **Time:** about 30 minutes (about 15 minutes of commands and waiting on the lab, plus reading).
-**Runbook:** [A compute host has failed: fence it before you evacuate](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/recovery/compute-host-failure-fence-before-evacuate.md)
+**Runbook:** [A compute host has failed: fence it before you evacuate](../../runbooks/recovery/compute-host-failure-fence-before-evacuate/)
 
 ## Before you start
 

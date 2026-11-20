@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/config-mtu.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "After a compute reboot, instances stay SHUTOFF or come back without network."
 ---
 
 # After a compute reboot, instances stay SHUTOFF or come back without network

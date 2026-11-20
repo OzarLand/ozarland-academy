@@ -24,6 +24,7 @@ upstream_refs:
   - https://opendev.org/openstack/kolla-ansible/src/branch/stable/2026.1/ansible/roles/memcached/templates/memcached.json.j2
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Every API call goes through a virtual IP held by keepalived, to HAProxy, to one API backend; Keystone and the keystonemiddleware of every service use memcached."
 ---
 
 # Reading the HAProxy, keepalived and memcached logs in front of the OpenStack APIs
@@ -278,7 +279,7 @@ list` took 1.9 to 3.0 s, as after the restart: one node lost out of three left n
 - [Every API call fails at once: certificates or Fernet keys](../diagnostics/expired-certificates-and-fernet-keys-break-every-api-call.md)
 - [VM creation fails platform-wide: check the shared dependencies first](../diagnostics/vm-creation-fails-platform-wide-check-shared-dependencies.md)
 - HAProxy configuration manual, log formats (8.2) and stream state at disconnection (8.5): https://docs.haproxy.org/3.0/configuration.html
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/osc-placement/latest/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Placement holds one allocation per consumer (an instance, or a migration) on each resource provider (a compute node)."
 ---
 
 # Placement allocations do not match the instances. Compute looks full or empty, audit and heal

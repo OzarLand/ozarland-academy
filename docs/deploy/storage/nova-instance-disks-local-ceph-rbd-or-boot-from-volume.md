@@ -109,7 +109,7 @@ clusters are used (`ceph_cluster` per host). The Ceph keyrings are secrets: keep
 |---|---|---|---|
 | Local instance store | Ceph RBD, boot from volume | No storage cluster to run; local disk latency; Kolla-Ansible's default | **Live migration copies the disks** (block migration: more time, more network and storage load, and, per Nova's guide, incompatible with read-only devices such as CD-ROMs and config drives). **Evacuation rebuilds the root disk from its image**: the data written in the instance is lost (Nova's evacuate guide: shared storage is what preserves it). A full compute disk pauses the instances that write. |
 | Nova on Ceph RBD | Local, boot from volume | Disks survive a compute failure; migrations do not copy disks (external Ceph guide); one pool to size instead of one disk per compute | A Ceph cluster to deploy and operate outside Kolla-Ansible. Every instance's I/O depends on the storage network and on Ceph's health. Images should be `raw` in Glance for copy-on-write. |
-| Boot from volume | Local, Ceph RBD | Per instance: the instances that must keep their disk get it, without changing the platform | Root disks count against Cinder quotas and depend on Cinder at build time (see [instance fails to boot from volume](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/scheduling/instance-fails-to-boot-from-volume.md)). The disk survives a compute failure and live migration does not copy it. |
+| Boot from volume | Local, Ceph RBD | Per instance: the instances that must keep their disk get it, without changing the platform | Root disks count against Cinder quotas and depend on Cinder at build time (see [instance fails to boot from volume](../../runbooks/scheduling/instance-fails-to-boot-from-volume/)). The disk survives a compute failure and live migration does not copy it. |
 | Local store, but Glance on Ceph | Glance on `file` | Faster image downloads to the computes | Nova's KVM guide describes `[glance] enable_rbd_download = true` on the computes with `show_image_direct_url` on Glance, to fetch images by RBD export instead of the Glance API. |
 
 ## What went wrong during deployment
@@ -118,11 +118,11 @@ Nothing recorded for this page. Two lab records in the runbooks show the local s
 
 - **Evacuation:** on a two-compute lab with local disks, an evacuated instance with a local disk was rebuilt from its
   image, while a boot-from-volume instance kept its disk
-  ([fence before evacuate](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/recovery/compute-host-failure-fence-before-evacuate.md),
+  ([fence before evacuate](../../runbooks/recovery/compute-host-failure-fence-before-evacuate/),
   lab confirmation of 2026-10-23).
 - **Full disk:** with the instance store on a dedicated 5 GB file system filled by a stray file, an instance that
   wrote was paused while Nova still showed it `ACTIVE`; `df` on the Docker volume path needed `sudo`
-  ([compute disk full](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/lifecycle/compute-disk-full-instance-paused.md)).
+  ([compute disk full](../../runbooks/lifecycle/compute-disk-full-instance-paused/)).
 
 ## Version notes
 
@@ -153,10 +153,10 @@ ephemeral disks, images with `hw_disk_bus` or `hw_scsi_model` properties, and im
 ## Related
 
 - [Cinder and Glance back-ends compared](cinder-and-glance-backends-compared-lvm-ceph-nfs.md)
-- Runbooks: [fence before evacuate](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/recovery/compute-host-failure-fence-before-evacuate.md),
-  [compute disk full](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/lifecycle/compute-disk-full-instance-paused.md),
-  [moving instances off a host for maintenance](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/migration/moving-instances-off-a-host-for-maintenance.md),
-  [instance fails to boot from volume](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/scheduling/instance-fails-to-boot-from-volume.md)
+- Runbooks: [fence before evacuate](../../runbooks/recovery/compute-host-failure-fence-before-evacuate/),
+  [compute disk full](../../runbooks/lifecycle/compute-disk-full-instance-paused/),
+  [moving instances off a host for maintenance](../../runbooks/migration/moving-instances-off-a-host-for-maintenance/),
+  [instance fails to boot from volume](../../runbooks/scheduling/instance-fails-to-boot-from-volume/)
 - Kolla-Ansible 2026.1: [external Ceph guide](https://docs.openstack.org/kolla-ansible/2026.1/reference/storage/external-ceph-guide.html)
 - Nova 2026.1: [KVM](https://docs.openstack.org/nova/2026.1/admin/configuration/hypervisor-kvm.html),
   [configuring migrations](https://docs.openstack.org/nova/2026.1/admin/configuring-migrations.html),

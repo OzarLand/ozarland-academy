@@ -23,6 +23,7 @@ upstream_refs:
   - https://mariadb.com/kb/en/galera-cluster-status-variables/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reading the MariaDB and Galera logs, and the oslo.db lines that go with them."
 ---
 
 # Reading the MariaDB and Galera logs, and the oslo.db lines that go with them
@@ -249,7 +250,7 @@ failing over: read the proxy's log and the database node logs at that second.
 - [VM creation fails platform-wide: check the shared dependencies first](../diagnostics/vm-creation-fails-platform-wide-check-shared-dependencies.md)
 - [Reopening provisioning after a control-plane incident](../recovery/reopening-provisioning-after-control-plane-incident.md)
 - MariaDB Galera status variables: https://mariadb.com/kb/en/galera-cluster-status-variables/
-- [Logs index](README.md)
+- [Logs index](index.md)
 
 ---
 

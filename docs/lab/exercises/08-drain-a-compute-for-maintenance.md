@@ -11,7 +11,7 @@ description: "Take a compute out of service without stopping anyone's instances:
 **Goal:** take a compute out of service without stopping anyone's instances: stop new instances landing on it, move
 its instances to the other compute, work on it, and put it back.
 **Time:** about 30 minutes (about 10 minutes of commands on the lab, plus the reboot wait and reading).
-**Runbook:** [Moving instances off a host for maintenance](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/migration/moving-instances-off-a-host-for-maintenance.md) (`status: lab-verified`; it
+**Runbook:** [Moving instances off a host for maintenance](../../runbooks/migration/moving-instances-off-a-host-for-maintenance/) (`status: lab-verified`; it
 also covers live migration)
 
 ## Before you start

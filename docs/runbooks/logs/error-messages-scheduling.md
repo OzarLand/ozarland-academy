@@ -21,6 +21,7 @@ upstream_refs:
   - https://github.com/openstack/nova/blob/stable/2026.1/nova/conf/scheduler.py
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Error messages: scheduling. No valid host was found, Exceeded maximum number of retries."
 ---
 
 # Error messages: scheduling. No valid host was found, Exceeded maximum number of retries

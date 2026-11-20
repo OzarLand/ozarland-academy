@@ -18,6 +18,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/latest/user/operating-kolla.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Reopening provisioning after a control-plane incident. Stop the APIs, recover, verify, reopen."
 ---
 
 # Reopening provisioning after a control-plane incident. Stop the APIs, recover, verify, reopen

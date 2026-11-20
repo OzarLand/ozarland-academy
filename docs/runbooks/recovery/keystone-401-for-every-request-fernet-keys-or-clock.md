@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/reference/shared-services/keystone-guide.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Calls to Nova, Neutron or any other service are refused with 401, for some tokens or every other time, although the user authenticated without trouble."
 ---
 
 # Requests fail with 401 for tokens that should be valid. Fernet keys differ between Keystone nodes, or a clock is off

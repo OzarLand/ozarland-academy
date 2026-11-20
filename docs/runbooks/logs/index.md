@@ -1,4 +1,9 @@
-[← openstack-vm-runbooks](../README.md)
+---
+title: "Logs: where they are and how to read them"
+description: "How to find, read and interpret the logs of OpenStack services and of the system around them (infrastructure services, hypervisor, kernel)."
+---
+
+[← openstack-vm-runbooks](../index.md)
 
 # Logs: where they are and how to read them
 
