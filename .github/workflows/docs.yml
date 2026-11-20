@@ -128,9 +128,39 @@ jobs:
         with:
           path: site
 
+  # The Production guide (docs/production/) is generated from its memo sources
+  # by a Node script that renders each memo with Playwright: the job checks
+  # every memo against the VM runbooks (docs/runbooks/), renders the
+  # collection to prove that each memo fits its canvas, and fails when the
+  # committed pages are not what the sources generate. It does not deploy
+  # anything: the pages and images it checks are the committed ones.
+  production:
+    name: Production guide (memos)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: docs/production
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Install the generator and the browser it renders with
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Validate, check the runbook references, render
+        run: node scripts/build.cjs --runbooks ../runbooks
+
+      - name: Generated pages are up to date
+        run: git diff --exit-code -- index.md LINKEDIN.md categories
+
   deploy:
     name: Deploy to GitHub Pages
-    needs: build
+    needs: [build, production]
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     timeout-minutes: 15

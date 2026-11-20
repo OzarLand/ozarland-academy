@@ -31,3 +31,9 @@ docs/lab/variants/*/.state/
 
 # Checkout of the OzarLand hub made by CI for tools/site/check_content.py.
 .ozarland-hub/
+
+# Production guide (docs/production/): what its generator installs and writes
+# besides the committed pages and images.
+docs/production/node_modules/
+docs/production/.cache/
+docs/production/dist/*@2x.png

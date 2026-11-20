@@ -9,8 +9,9 @@ Most of this page is about the day-2 module: how to add or change one of its pag
 releases are available today; the paths below are those of `ussuri`, and another release has the same layout under
 its own directory. The other modules have their own rules, in the pages of the module
 ([Quick lab](docs/lab/CONTRIBUTING.md), [Deployment patterns](docs/deploy/CONTRIBUTING.md),
-[VM runbooks](docs/runbooks/CONTRIBUTING.md)); Deployment patterns and VM runbooks also follow the content conventions
-of the OzarLand hub, checked by `make docs-content`; every module follows the rules on links below and the
+[VM runbooks](docs/runbooks/CONTRIBUTING.md), [Production guide](docs/production/CONTRIBUTING.md)); Deployment
+patterns and VM runbooks also follow the content conventions of the OzarLand hub, checked by `make docs-content`, and
+the pages of the Production guide are generated from its memo sources by its own build (`docs/production/`, Node); every module follows the rules on links below and the
 checks of [Before a pull request](#before-a-pull-request). How a former repository becomes a module is at the end:
 [Moving a repository into a module](#moving-a-repository-into-a-module).
 

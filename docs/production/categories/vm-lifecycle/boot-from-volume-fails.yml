@@ -1,0 +1,79 @@
+id: PG-32
+category: vm-lifecycle
+title: Boot from volume fails?
+situation: >-
+  Local-disk instances build fine. Those whose root disk is a Cinder volume are refused, go to `ERROR`, or
+  boot nothing.
+
+diagram:
+  type: branches
+  head: [What happens, Look at]
+  split: 52
+  rows:
+    - see: Refused at once, no instance created
+      means: The request
+      sub: Size, bootable flag, boot index, zone
+      tone: mute
+    - see: "`ERROR`, the volume `error` or still `creating`"
+      means: Cinder
+      sub: It failed, or was not ready in about 3 min
+      tone: stop
+    - see: "`ERROR` after retries, the volume `available`"
+      means: The compute
+      sub: It cannot connect to the volume
+      tone: stop
+    - see: "`ACTIVE`, but nothing boots"
+      means: What the volume holds
+      sub: No system on it, or firmware and bus properties
+      tone: warn
+
+checks:
+  - label: Status and fault of the instance
+    hint: openstack server show <id> -c status -c fault
+  - label: The volume of the build
+    hint: openstack volume show <volume> -c status -c bootable
+  - label: Cinder's own explanation
+    hint: openstack --os-volume-api-version 3.3 volume message list
+  - label: Are the volume services up?
+    hint: openstack volume service list
+
+caution:
+  - level: avoid
+    text: >-
+      Retrying blindly. Each retry from an image creates another volume, which counts in the quota and
+      fills the backend.
+  - level: destructive
+    text: >-
+      Deleting the failed instance also deletes its volume when "Delete On Termination" is true.
+
+lesson: The fault names the volume. Read its status and Cinder's message before you retry.
+
+runbook:
+  path: scheduling/instance-fails-to-boot-from-volume.md
+  status: lab-verified
+  release: "2026.1"
+  also:
+    - volumes/volume-stuck-in-creating-or-error-after-create.md
+
+scope: >-
+  Written from the Nova and Cinder 2026.1 sources; its five causes were partly reproduced on an all-in-one lab
+  with Cinder LVM over iSCSI. The three minutes are Nova's default wait (block_device_allocate_retries). Cinder
+  2026.1 refuses a qcow2 image declared raw: the volume goes to error, it is not written as it is. Fixing an
+  image property and rebooting does not help: the instance keeps the properties copied at build time. Fault
+  wording varies with the client and microversion. Ironic and encrypted volumes are not covered.
+
+linkedin:
+  title: "Boot from volume fails: Nova reports it, Cinder explains it"
+  caption: |
+    Instances with a local disk build fine. The ones that boot from a volume do not.
+
+    What happens tells you where to look:
+    → refused at once, no instance: the request itself. Volume smaller than the image's min_disk, a volume that is not bootable, no boot index 0.
+    → ERROR, the volume in "error" or still "creating": Cinder. It failed, or the volume was not ready when Nova stopped waiting, after about three minutes by default.
+    → ERROR with "Exceeded maximum number of retries", the volume "available": the compute. It could not connect to the volume, and neither could the others.
+    → ACTIVE, but nothing boots: what the volume holds. A blank volume marked bootable, or an image that needs a firmware or disk bus the instance did not get.
+
+    For a volume in error, Cinder usually says why in one line: openstack volume message list.
+
+    What not to do: retry in a loop. Each retry from an image creates another volume, which counts in the quota.
+  hashtags: [OpenStack, Nova, Cinder, Storage, CloudOperations, OzarLand]
