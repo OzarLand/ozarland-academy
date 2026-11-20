@@ -18,8 +18,10 @@
 {% set img = root ~ "assets/images/ozarland/" %}
 {% set hub = "https://github.com/OzarLand/ozarland" %}
 {% set first = namespace(module=none) %}
-{% for module in portal.modules if module.status == "available" and not first.module %}
-  {% set first.module = module %}
+{#- The test is in the body: the condition of a `for … if` is evaluated for
+    every item before the body runs, so it cannot see `first.module`. -#}
+{% for module in portal.modules if module.status == "available" %}
+  {% if not first.module %}{% set first.module = module %}{% endif %}
 {% endfor %}
 
 {% block htmltitle %}
