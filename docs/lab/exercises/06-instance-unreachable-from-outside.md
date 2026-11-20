@@ -8,7 +8,7 @@ description: "Make an instance unreachable from outside in two different ways, a
 **Goal:** make an instance unreachable from outside in two different ways, and find each cause with the runbook's
 checks, in order.
 **Time:** about 20 minutes.
-**Runbook:** [Instance has its address and metadata, but is unreachable from outside](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/instance-unreachable-from-outside.md)
+**Runbook:** [Instance has its address and metadata, but is unreachable from outside](../../runbooks/networking/instance-unreachable-from-outside/)
 
 ## Before you start
 

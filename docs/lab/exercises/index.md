@@ -7,7 +7,7 @@ description: "Eleven exercises that break one thing on purpose in the lab and re
 
 Six short exercises on the all-in-one lab, three on the multinode variant and two on its 3-controller size. Each
 one breaks one thing on purpose, shows you what an operator would see, and walks you through the repair with a
-runbook from [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) (exercises 10 and 11 use
+runbook from [openstack-vm-runbooks](../../runbooks/) (exercises 10 and 11 use
 pages of [kolla-ansible-deployment-patterns](../../deploy/)
 instead). The runbooks of exercises 1 to 9 are
 `status: lab-verified`; exercise 10 relies on a `draft` pattern page. The exercises themselves were run on the

@@ -1,0 +1,112 @@
+# Settings of the VM runbooks site (module `runbooks` of academy.toml), merged
+# with zensical.base.toml by tools/site/releases.py. The pages are the history
+# of OzarLand/openstack-vm-runbooks, moved under docs/runbooks/. Sections in
+# the order of the home page; within a section, its index page (when it has
+# one), then the pages by name.
+
+[project]
+# templates/ holds the runbook template to copy, not a page: it is read on
+# GitHub (Zensical does not build a top-level templates/ directory either).
+exclude_docs = """
+/templates/
+"""
+site_description = "Symptom-driven runbooks for OpenStack instances and hypervisors: lifecycle, scheduling, migration, networking, volumes, logs and recovery."
+
+nav = [
+  { "Home" = [
+    "index.md",
+  ] },
+  { "Lifecycle" = [
+    "lifecycle/compute-disk-full-instance-paused.md",
+    "lifecycle/console-not-available-or-disconnects.md",
+    "lifecycle/instance-shut-off-by-host-oom-killer.md",
+    "lifecycle/instance-stuck-in-build-waiting-for-vif-plugged.md",
+    "lifecycle/instance-stuck-in-deleting.md",
+    "lifecycle/rescue-mode-repair-an-unbootable-guest.md",
+    "lifecycle/resize-stuck-in-verify-resize-or-failed.md",
+    "lifecycle/restarting-nova-libvirt-does-not-stop-instances.md",
+    "lifecycle/snapshot-stuck-in-image-uploading.md",
+    "lifecycle/stale-records-stuck-instances-orphan-ports-attachments.md",
+  ] },
+  { "Scheduling" = [
+    "scheduling/build-fails-exceeded-maximum-number-of-retries.md",
+    "scheduling/compute-renamed-or-re-registered-resource-provider-conflict.md",
+    "scheduling/compute-service-disabled-or-forced-down.md",
+    "scheduling/image-larger-than-flavor-disk.md",
+    "scheduling/instance-fails-to-boot-from-volume.md",
+    "scheduling/no-valid-host-with-free-capacity.md",
+    "scheduling/placement-allocations-out-of-sync-audit-and-heal.md",
+  ] },
+  { "Migration" = [
+    "migration/cpu-steal-on-pinned-instances.md",
+    "migration/live-migration-never-completes-or-times-out.md",
+    "migration/moving-instances-off-a-host-for-maintenance.md",
+  ] },
+  { "Networking" = [
+    "networking/instance-unreachable-from-outside.md",
+    "networking/new-instance-boots-without-metadata.md",
+    "networking/new-instance-gets-no-ip-dhcp-agents-down.md",
+    "networking/ovs-vswitchd-down-on-compute.md",
+    "networking/port-binding-failed.md",
+    "networking/restarting-the-ovs-agent-does-not-cut-instances.md",
+    "networking/router-stuck-on-dead-l3-agent.md",
+    "networking/security-group-rules-not-applied.md",
+    "networking/tunnel-mtu-mismatch-large-packets-dropped.md",
+  ] },
+  { "Volumes" = [
+    "volumes/extend-in-use-volume-guest-sees-old-size.md",
+    "volumes/stale-volume-attachment-after-instance-deleted-or-evacuated.md",
+    "volumes/volume-stuck-in-attaching-or-detaching.md",
+    "volumes/volume-stuck-in-creating-or-error-after-create.md",
+    "volumes/volume-stuck-in-deleting-or-error-deleting.md",
+  ] },
+  { "Diagnostics" = [
+    "diagnostics/compute-clock-skew.md",
+    "diagnostics/control-plane-down-what-still-works-for-instances.md",
+    "diagnostics/expired-certificates-and-fernet-keys-break-every-api-call.md",
+    "diagnostics/vm-creation-fails-platform-wide-check-shared-dependencies.md",
+    "diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md",
+  ] },
+  { "Logs" = [
+    "logs/index.md",
+    "logs/error-messages-messaging-and-database.md",
+    "logs/error-messages-scheduling.md",
+    "logs/host-storage-logs-iscsi-multipath-nfs-rbd.md",
+    "logs/kernel-messages-on-computes.md",
+    "logs/libvirt-and-qemu-logs.md",
+    "logs/open-vswitch-logs.md",
+    "logs/reading-cinder-logs.md",
+    "logs/reading-glance-logs.md",
+    "logs/reading-haproxy-keepalived-memcached-logs.md",
+    "logs/reading-heat-logs.md",
+    "logs/reading-keystone-and-auth-logs.md",
+    "logs/reading-mariadb-galera-logs.md",
+    "logs/reading-neutron-logs-ml2-ovs.md",
+    "logs/reading-nova-logs.md",
+    "logs/reading-octavia-logs.md",
+    "logs/reading-ovn-logs.md",
+    "logs/reading-placement-logs.md",
+    "logs/reading-rabbitmq-logs.md",
+    "logs/systemd-journal-and-container-engine.md",
+    "logs/time-sync-chrony-and-clock-skew.md",
+    "logs/tracing-one-request-across-services-and-hosts.md",
+    "logs/where-openstack-logs-are-and-how-to-read-a-line.md",
+  ] },
+  { "Recovery" = [
+    "recovery/after-a-compute-reboot-instances-shutoff-or-without-network.md",
+    "recovery/api-returns-503-haproxy-backend-down-or-vip-flapping.md",
+    "recovery/compute-host-failure-fence-before-evacuate.md",
+    "recovery/database-too-many-connections-or-pool-exhausted.md",
+    "recovery/galera-cluster-lost-quorum-database-unavailable.md",
+    "recovery/keystone-401-for-every-request-fernet-keys-or-clock.md",
+    "recovery/nova-compute-down-host-alive-ssh-refused.md",
+    "recovery/nova-compute-down-instances-still-running.md",
+    "recovery/nova-conductor-or-scheduler-down-what-still-works.md",
+    "recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md",
+    "recovery/reopening-provisioning-after-control-plane-incident.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+  ] },
+]

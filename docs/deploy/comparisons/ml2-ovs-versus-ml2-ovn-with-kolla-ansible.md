@@ -153,9 +153,9 @@ other deployment tools.
 
 - [Network interfaces, VLANs and MTU, with Open vSwitch and OVN side by side](../networking/interfaces-vlans-and-mtu-ovs-and-ovn.md)
 - [From 2025.1 to 2026.1](../version-notes/2025.1-to-2026.1.md)
-- Runbooks written on ML2/OVS: [router stuck on a dead L3 agent](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/router-stuck-on-dead-l3-agent.md),
-  [restarting the OVS agent](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/restarting-the-ovs-agent-does-not-cut-instances.md),
-  [tunnel MTU mismatch](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/tunnel-mtu-mismatch-large-packets-dropped.md)
+- Runbooks written on ML2/OVS: [router stuck on a dead L3 agent](../../runbooks/networking/router-stuck-on-dead-l3-agent/),
+  [restarting the OVS agent](../../runbooks/networking/restarting-the-ovs-agent-does-not-cut-instances/),
+  [tunnel MTU mismatch](../../runbooks/networking/tunnel-mtu-mismatch-large-packets-dropped/)
 - Kolla-Ansible 2026.1: [Neutron guide](https://docs.openstack.org/kolla-ansible/2026.1/reference/networking/neutron.html)
 - Neutron 2026.1: [gaps from ML2/OVS](https://docs.openstack.org/neutron/2026.1/ovn/gaps.html),
   [OVN features](https://docs.openstack.org/neutron/2026.1/admin/ovn/features.html),

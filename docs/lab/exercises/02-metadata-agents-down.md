@@ -8,7 +8,7 @@ description: "See an instance that has its address but not its SSH key, find whe
 **Goal:** see an instance that has its address but not its SSH key, find where the key should have come from, and
 repair it.
 **Time:** about 20 minutes.
-**Runbook:** [New instance has an address, but no SSH key, no user data, default hostname](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/new-instance-boots-without-metadata.md)
+**Runbook:** [New instance has an address, but no SSH key, no user data, default hostname](../../runbooks/networking/new-instance-boots-without-metadata/)
 
 ## Before you start
 

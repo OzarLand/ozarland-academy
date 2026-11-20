@@ -232,7 +232,7 @@ detail, multi-attach, encryption, and migrating volumes between back-ends.
 ## Related
 
 - [Laying out the configuration](../configuration/inventory-globals-overrides-and-secrets-layout.md)
-- [Volume runbooks](https://github.com/OzarLand/openstack-vm-runbooks/tree/main/volumes)
+- [Volume runbooks](https://github.com/OzarLand/ozarland-academy/tree/main/docs/runbooks/volumes)
 - Kolla-Ansible 2026.1: [Cinder](https://docs.openstack.org/kolla-ansible/2026.1/reference/storage/cinder-guide.html),
   [external Ceph](https://docs.openstack.org/kolla-ansible/2026.1/reference/storage/external-ceph-guide.html),
   [Glance](https://docs.openstack.org/kolla-ansible/2026.1/reference/shared-services/glance-guide.html)

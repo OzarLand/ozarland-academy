@@ -8,7 +8,7 @@ description: "Restart the Neutron Open vSwitch agent and see that running instan
 **Goal:** restart the Neutron Open vSwitch agent and see that running instances keep their network, while new
 instances wait for it.
 **Time:** about 10 minutes.
-**Runbook:** [I need to restart the Open vSwitch agent on a compute. Its instances keep their network](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/networking/restarting-the-ovs-agent-does-not-cut-instances.md)
+**Runbook:** [I need to restart the Open vSwitch agent on a compute. Its instances keep their network](../../runbooks/networking/restarting-the-ovs-agent-does-not-cut-instances/)
 
 ## Before you start
 
