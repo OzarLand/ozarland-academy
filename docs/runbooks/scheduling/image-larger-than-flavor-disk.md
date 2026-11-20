@@ -183,5 +183,5 @@ with a CirrOS image resized to a virtual size of 2 GB (file 21 MB) and the 1 GB 
 documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=scheduling/image-larger-than-flavor-disk.md&title=Feedback%3A+scheduling/image-larger-than-flavor-disk.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/scheduling/image-larger-than-flavor-disk.md&title=Feedback%3A+docs/runbooks/scheduling/image-larger-than-flavor-disk.md):
 your release, your deployment method, and what happened.

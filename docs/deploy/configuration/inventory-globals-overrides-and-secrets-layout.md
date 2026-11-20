@@ -317,5 +317,5 @@ multi-region layouts.
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=configuration/inventory-globals-overrides-and-secrets-layout.md&title=Feedback%3A+configuration/inventory-globals-overrides-and-secrets-layout.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/configuration/inventory-globals-overrides-and-secrets-layout.md&title=Feedback%3A+docs/deploy/configuration/inventory-globals-overrides-and-secrets-layout.md):
 your release, your topology, and what happened.

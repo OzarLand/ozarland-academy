@@ -122,6 +122,30 @@ class RewriteTest(unittest.TestCase):
         )
         self.assertEqual(self.rewrite("docs/lab/index.md", text), text)
 
+    def test_new_issue_opens_in_this_repository(self) -> None:
+        text = (
+            f"[p]({RUNBOOKS}/issues/new?template=problem-solved.yml) [x]({LAB}/issues/new?template=exercise-problem.yml) "
+            f"[n]({LAB}/issues/new) [old]({LAB}/issues/25) "
+            "[q](https://github.com/OzarLand/production-guide/issues/new)"
+        )
+        out = self.rewrite("docs/lab/index.md", text)
+        repo = rewrite_links.REPOSITORY
+        self.assertIn(f"[p]({repo}/issues/new?template=problem-solved.yml)", out)
+        self.assertIn(f"[x]({repo}/issues/new?template=lab-exercise-problem.yml)", out)
+        self.assertIn(f"[n]({repo}/issues/new)", out)
+        self.assertIn(f"[old]({LAB}/issues/25)", out)
+        self.assertIn("[q](https://github.com/OzarLand/production-guide/issues/new)", out)  # planned: stays
+
+    def test_prefilled_page_path_gets_its_module(self) -> None:
+        text = (
+            f"[f]({RUNBOOKS}/issues/new?template=documentation-proposal.yml&page=logs%2Fnova.md&title=Feedback%3A+logs%2Fnova.md) "
+            f"[g]({RUNBOOKS}/issues/new?template=documentation-proposal.yml&page=networking/no-ip.md&title=Feedback%3A+networking/no-ip.md)"
+        )
+        out = self.rewrite("docs/runbooks/index.md", text)
+        self.assertIn("page=docs%2Frunbooks%2Flogs%2Fnova.md&title=Feedback%3A+docs%2Frunbooks%2Flogs%2Fnova.md)", out)
+        self.assertIn("page=docs/runbooks/networking/no-ip.md&title=Feedback%3A+docs/runbooks/networking/no-ip.md)", out)
+        self.assertEqual(self.rewrite("docs/runbooks/index.md", out), out)
+
     def test_missing_file_is_reported(self) -> None:
         text = f"[gone]({RUNBOOKS}/blob/main/networking/gone.md)"
         self.assertEqual(self.rewrite("docs/lab/index.md", text), text)

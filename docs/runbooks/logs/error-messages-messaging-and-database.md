@@ -265,5 +265,5 @@ How to read the RabbitMQ broker log itself is on
 lab samples from Kolla-Ansible 2026.1 (2026-10-27, by the lab reviewer).
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=logs/error-messages-messaging-and-database.md&title=Feedback%3A+logs/error-messages-messaging-and-database.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/logs/error-messages-messaging-and-database.md&title=Feedback%3A+docs/runbooks/logs/error-messages-messaging-and-database.md):
 your release, your deployment method, and what happened.

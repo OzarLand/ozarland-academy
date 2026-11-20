@@ -168,5 +168,5 @@ other deployment tools.
 release notes.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md&title=Feedback%3A+comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md&title=Feedback%3A+docs/deploy/comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md):
 your release, your topology, and what happened.

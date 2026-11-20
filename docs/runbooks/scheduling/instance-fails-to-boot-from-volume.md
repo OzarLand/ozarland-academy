@@ -437,5 +437,5 @@ the 2.93 rebuild of cause 5, `cross_az_attach`, Ceph.
 source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=scheduling/instance-fails-to-boot-from-volume.md&title=Feedback%3A+scheduling/instance-fails-to-boot-from-volume.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/scheduling/instance-fails-to-boot-from-volume.md&title=Feedback%3A+docs/runbooks/scheduling/instance-fails-to-boot-from-volume.md):
 your release, your deployment method, and what happened.

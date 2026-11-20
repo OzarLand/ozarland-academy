@@ -174,5 +174,5 @@ not put its own value back within 3 minutes: it was restored by hand.
 *Provenance: written by agent:ozarland-author, from Placement and Nova 2026.1 source code.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=logs%2Freading-placement-logs.md&title=Feedback%3A+logs%2Freading-placement-logs.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs%2Frunbooks%2Flogs%2Freading-placement-logs.md&title=Feedback%3A+docs%2Frunbooks%2Flogs%2Freading-placement-logs.md):
 your release, your deployment method, and what happened.

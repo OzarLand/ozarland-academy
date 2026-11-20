@@ -250,5 +250,5 @@ out that line and running `kolla-ansible deploy`:
 Kolla-Ansible 2026.1 source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=deployment-errors/mariadb-exits-address-in-use-proxysql-on-a-node-without-haproxy.md&title=Feedback%3A+deployment-errors/mariadb-exits-address-in-use-proxysql-on-a-node-without-haproxy.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/deployment-errors/mariadb-exits-address-in-use-proxysql-on-a-node-without-haproxy.md&title=Feedback%3A+docs/deploy/deployment-errors/mariadb-exits-address-in-use-proxysql-on-a-node-without-haproxy.md):
 your release, your topology, and what happened.

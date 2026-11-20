@@ -264,5 +264,5 @@ RadosGW, Ceph without cephx, migrating existing data into Ceph, and Ceph's own s
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and code, and the Ceph
 documentation. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=services/external-ceph-for-glance-cinder-and-nova.md&title=Feedback%3A+services/external-ceph-for-glance-cinder-and-nova.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/services/external-ceph-for-glance-cinder-and-nova.md&title=Feedback%3A+docs/deploy/services/external-ceph-for-glance-cinder-and-nova.md):
 your release, your topology, and what happened.

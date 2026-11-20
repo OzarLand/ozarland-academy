@@ -183,5 +183,5 @@ Reproduced on 2026-10-27 on another all-in-one lab (Kolla-Ansible 22.2.0, Docker
 Kolla-Ansible 2026.1 documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=deployment-errors/pull-fails-http-response-to-https-client-insecure-registry.md&title=Feedback%3A+deployment-errors/pull-fails-http-response-to-https-client-insecure-registry.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/deployment-errors/pull-fails-http-response-to-https-client-insecure-registry.md&title=Feedback%3A+docs/deploy/deployment-errors/pull-fails-http-response-to-https-client-insecure-registry.md):
 your release, your topology, and what happened.

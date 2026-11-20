@@ -323,5 +323,5 @@ Then a test build, and the clean-up of what stayed stuck:
 the RabbitMQ 4.2 documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md&title=Feedback%3A+recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md&title=Feedback%3A+docs/runbooks/recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md):
 your release, your deployment method, and what happened.

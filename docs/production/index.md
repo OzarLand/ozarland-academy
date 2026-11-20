@@ -222,10 +222,10 @@ does not fit the canvas: the template never shrinks text to make it fit.
 
 | | How |
 |:-:|---|
-| 🐛 | **Something is wrong, or your platform behaves differently:** [open an issue](https://github.com/OzarLand/ozarland-academy/issues/new). If the runbook is wrong too, the correction belongs [there first](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml) |
+| 🐛 | **Something is wrong, or your platform behaves differently:** [open an issue](https://github.com/OzarLand/ozarland-academy/issues/new). If the runbook is wrong too, the correction belongs [there first](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml) |
 | 💡 | **Propose a memo:** open an issue with the situation, the lesson and the runbook it would rest on |
 | ✍️ | **Write a memo:** `npm run new`, fill in the YAML, build, open a pull request. No design tool needed |
-| 🧱 | **No runbook for your lesson?** Share the problem you solved in [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml) first. The memo follows |
+| 🧱 | **No runbook for your lesson?** Share the problem you solved with the [*Problem solved* form](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) first, for a runbook. The memo follows |
 | 💬 | **A question:** [start a discussion](https://github.com/OzarLand/ozarland/discussions/new?category=q-a) in `ozarland`, where all OzarLand discussions live |
 
 > [!IMPORTANT]

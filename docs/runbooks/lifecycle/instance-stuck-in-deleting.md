@@ -300,5 +300,5 @@ from a lost heartbeat (unit stopped).
 source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=lifecycle/instance-stuck-in-deleting.md&title=Feedback%3A+lifecycle/instance-stuck-in-deleting.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/lifecycle/instance-stuck-in-deleting.md&title=Feedback%3A+docs/runbooks/lifecycle/instance-stuck-in-deleting.md):
 your release, your deployment method, and what happened.

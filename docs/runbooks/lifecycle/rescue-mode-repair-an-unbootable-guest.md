@@ -218,5 +218,5 @@ ping or SSH, and the console log showed `Starting network: /etc/rc3.d/S40-networ
 source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=lifecycle/rescue-mode-repair-an-unbootable-guest.md&title=Feedback%3A+lifecycle/rescue-mode-repair-an-unbootable-guest.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/lifecycle/rescue-mode-repair-an-unbootable-guest.md&title=Feedback%3A+docs/runbooks/lifecycle/rescue-mode-repair-an-unbootable-guest.md):
 your release, your deployment method, and what happened.

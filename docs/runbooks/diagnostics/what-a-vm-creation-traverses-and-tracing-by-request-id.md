@@ -143,5 +143,5 @@ libvirt and cell-mapping rows of the table.
 *Provenance: written by agent:ozarland-author, from the book *OpenStack, the Day After Tomorrow*.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md&title=Feedback%3A+diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md&title=Feedback%3A+docs/runbooks/diagnostics/what-a-vm-creation-traverses-and-tracing-by-request-id.md):
 your release, your deployment method, and what happened.

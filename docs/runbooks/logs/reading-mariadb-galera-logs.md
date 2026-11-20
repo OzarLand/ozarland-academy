@@ -258,5 +258,5 @@ failing over: read the proxy's log and the database node logs at that second.
 2026.1 source code and documentation. Reviewed in its pull request (see the page history). Checked by a human
 operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=logs%2Freading-mariadb-galera-logs.md&title=Feedback%3A+logs%2Freading-mariadb-galera-logs.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs%2Frunbooks%2Flogs%2Freading-mariadb-galera-logs.md&title=Feedback%3A+docs%2Frunbooks%2Flogs%2Freading-mariadb-galera-logs.md):
 your release, your deployment method, and what happened.

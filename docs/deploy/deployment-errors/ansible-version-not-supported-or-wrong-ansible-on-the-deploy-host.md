@@ -207,5 +207,5 @@ kolla-ansible prechecks -i <inventory>            # passes "Checking Ansible ver
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 code and documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md&title=Feedback%3A+deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md&title=Feedback%3A+docs/deploy/deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md):
 your release, your topology, and what happened.

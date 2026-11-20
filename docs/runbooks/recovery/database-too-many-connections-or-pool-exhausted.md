@@ -294,5 +294,5 @@ ML2/OVS, 2026-10-27.
 oslo.db and SQLAlchemy versions of the 2026.1 upper constraints. Reviewed in its pull request (see the page
 history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=recovery/database-too-many-connections-or-pool-exhausted.md&title=Feedback%3A+recovery/database-too-many-connections-or-pool-exhausted.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/recovery/database-too-many-connections-or-pool-exhausted.md&title=Feedback%3A+docs/runbooks/recovery/database-too-many-connections-or-pool-exhausted.md):
 your release, your deployment method, and what happened.

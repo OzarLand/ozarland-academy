@@ -287,5 +287,5 @@ flat `physnet1` external network mapped on the controllers only), Neutron server
 documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=networking/port-binding-failed.md&title=Feedback%3A+networking/port-binding-failed.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/networking/port-binding-failed.md&title=Feedback%3A+docs/runbooks/networking/port-binding-failed.md):
 your release, your deployment method, and what happened.

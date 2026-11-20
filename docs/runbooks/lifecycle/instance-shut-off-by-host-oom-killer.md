@@ -281,5 +281,5 @@ cgroup-level OOM of one running `m1.tiny` CirrOS instance, by writing `50M` to `
 Linux kernel and libvirt source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=lifecycle/instance-shut-off-by-host-oom-killer.md&title=Feedback%3A+lifecycle/instance-shut-off-by-host-oom-killer.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/lifecycle/instance-shut-off-by-host-oom-killer.md&title=Feedback%3A+docs/runbooks/lifecycle/instance-shut-off-by-host-oom-killer.md):
 your release, your deployment method, and what happened.

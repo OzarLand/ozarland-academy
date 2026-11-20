@@ -274,5 +274,5 @@ procedure in the upstream guide has had the same shape for several releases; che
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and code.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=operations/adding-a-compute-node.md&title=Feedback%3A+operations/adding-a-compute-node.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/operations/adding-a-compute-node.md&title=Feedback%3A+docs/deploy/operations/adding-a-compute-node.md):
 your release, your topology, and what happened.

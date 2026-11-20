@@ -243,5 +243,5 @@ detail, multi-attach, encryption, and migrating volumes between back-ends.
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and source, and the Ceph documentation.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md&title=Feedback%3A+storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md&title=Feedback%3A+docs/deploy/storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md):
 your release, your topology, and what happened.

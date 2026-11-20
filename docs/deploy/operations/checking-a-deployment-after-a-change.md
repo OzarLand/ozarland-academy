@@ -215,5 +215,5 @@ return codes are documented by Nova 2026.1 (0 success, 1 warnings, 2 or more fai
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 code and documentation and the Nova
 documentation. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=operations/checking-a-deployment-after-a-change.md&title=Feedback%3A+operations/checking-a-deployment-after-a-change.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/operations/checking-a-deployment-after-a-change.md&title=Feedback%3A+docs/deploy/operations/checking-a-deployment-after-a-change.md):
 your release, your topology, and what happened.

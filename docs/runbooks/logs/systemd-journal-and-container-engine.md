@@ -309,5 +309,5 @@ compute-1 systemd[1]: kolla-nova_compute-container.service: Scheduled restart jo
 ansible-collection-kolla, Docker, Moby, containers-common). Reviewed in its pull request (see the page history).
 Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=logs/systemd-journal-and-container-engine.md&title=Feedback%3A+logs/systemd-journal-and-container-engine.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/logs/systemd-journal-and-container-engine.md&title=Feedback%3A+docs/runbooks/logs/systemd-journal-and-container-engine.md):
 your release, your deployment method, and what happened.

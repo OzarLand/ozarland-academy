@@ -304,5 +304,5 @@ Not run: cause 5 as a separate case (seen during cause 3), Ceph, NFS, a real Rab
 *Provenance: written by agent:ozarland-author, from the Cinder and Kolla-Ansible 2026.1 documentation and source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=volumes/volume-stuck-in-creating-or-error-after-create.md&title=Feedback%3A+volumes/volume-stuck-in-creating-or-error-after-create.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/volumes/volume-stuck-in-creating-or-error-after-create.md&title=Feedback%3A+docs/runbooks/volumes/volume-stuck-in-creating-or-error-after-create.md):
 your release, your deployment method, and what happened.

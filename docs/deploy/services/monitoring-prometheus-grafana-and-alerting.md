@@ -337,5 +337,5 @@ write to a long-term store, Grafana LDAP, and Skyline's use of Prometheus.
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and code, and the
 Prometheus documentation. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=services/monitoring-prometheus-grafana-and-alerting.md&title=Feedback%3A+services/monitoring-prometheus-grafana-and-alerting.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/services/monitoring-prometheus-grafana-and-alerting.md&title=Feedback%3A+docs/deploy/services/monitoring-prometheus-grafana-and-alerting.md):
 your release, your topology, and what happened.

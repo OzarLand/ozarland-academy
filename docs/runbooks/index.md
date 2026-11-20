@@ -44,11 +44,11 @@ Everything an operator does when an instance misbehaves, from the first symptom 
 |---|---|
 | Instances stuck in an unexpected state (`BUILD`, `deleting`, `resizing`, `migrating`, `ERROR`, `SHUTOFF` when it should run, task states that never clear) | Deploying OpenStack: see [kolla-ansible-deployment-patterns](../deploy/) |
 | Boot and scheduling failures: `No valid host`, Placement allocation problems, image or flavor issues, boot from volume failures, console not available | Upgrade campaigns: planned for a future `openstack-upgrade-playbooks` repository |
-| Create, delete and migration errors: live and cold migration, resize, evacuation. Shelve and unshelve: no page yet, [wanted](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml) | Storage-backend-only problems |
+| Create, delete and migration errors: live and cold migration, resize, evacuation. Shelve and unshelve: no page yet, [wanted](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) | Storage-backend-only problems |
 | Instance networking: no DHCP lease, no metadata, no floating IP connectivity, security group surprises, MTU symptoms as seen from the instance, port binding failures | Control-plane failures (database, message queue, load balancer, Keystone), except where they affect instances: see `recovery/` and `logs/` |
-| Volumes: attach and detach failures, stale attachments, volumes stuck `attaching`/`detaching`/`in-use`, boot volume problems. Multi-attach: no page yet, [wanted](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml) | |
+| Volumes: attach and detach failures, stale attachments, volumes stuck `attaching`/`detaching`/`in-use`, boot volume problems. Multi-attach: no page yet, [wanted](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) | |
 | Diagnostics across Nova, Neutron, Glance, Cinder and Placement with the OpenStack CLI, service logs and the hypervisor (libvirt, QEMU) | |
-| Recovery after an incident (compute node loss, control plane outage) as it affects instances, and the verifications to run afterwards. Storage outage: no page yet, [wanted](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml) | |
+| Recovery after an incident (compute node loss, control plane outage) as it affects instances, and the verifications to run afterwards. Storage outage: no page yet, [wanted](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) | |
 
 ## 🗂️ How content is organised
 
@@ -324,8 +324,8 @@ behind it; open a *Problem solved* issue if you have one.
 | | How |
 |:-:|---|
 | 💬 | **Ask a question:** [open a Q&A discussion](https://github.com/OzarLand/ozarland/discussions/new?category=q-a) in `ozarland`, where all OzarLand discussions live |
-| 🛠️ | **Share a problem you solved:** open an issue with the [*Problem solved* form](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml), or a pull request with a runbook |
-| ✅ | **Confirm a runbook in your environment:** open a [*Documentation proposal* issue](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml) and choose "I confirmed an existing page in my environment". This is how runbooks become validated |
+| 🛠️ | **Share a problem you solved:** open an issue with the [*Problem solved* form](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml), or a pull request with a runbook |
+| ✅ | **Confirm a runbook in your environment:** open a [*Documentation proposal* issue](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml) and choose "I confirmed an existing page in my environment". This is how runbooks become validated |
 | ✍️ | **Add or improve a runbook:** copy `templates/runbook.md`, open a pull request |
 
 > [!IMPORTANT]

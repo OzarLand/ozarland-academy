@@ -272,8 +272,8 @@ Click a category to open it.
 |:-:|---|
 | 💬 | **Ask a question or compare approaches:** [open a Q&A discussion](https://github.com/OzarLand/ozarland/discussions/new?category=q-a) in `ozarland`, where all OzarLand discussions live |
 | 🏗️ | **Share your pattern:** copy `templates/deployment-pattern.md`, open a pull request. Describe your context first |
-| ✅ | **Confirm a page, add a variant or a consequence to it:** open a pull request or a [*Documentation proposal* issue](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml) |
-| 🧯 | **Report a deployment error you solved:** open an issue with the [*Problem solved* form](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=problem-solved.yml) |
+| ✅ | **Confirm a page, add a variant or a consequence to it:** open a pull request or a [*Documentation proposal* issue](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml) |
+| 🧯 | **Report a deployment error you solved:** open an issue with the [*Problem solved* form](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) |
 
 > [!IMPORTANT]
 > Rules that are not optional: no secrets (never `passwords.yml` content), no real hostnames, addresses or
