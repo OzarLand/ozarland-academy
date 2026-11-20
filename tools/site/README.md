@@ -301,7 +301,8 @@ hand (Actions, "Docs", "Run workflow").
 | Job | When | What it does |
 |---|---|---|
 | `build` | Always | Full-history checkout (the "Last updated" dates come from the Git history), Python 3.13, `make docs-deps`, `make docs-check STRICT=1`, a checkout of the hub `OzarLand/ozarland` and `make docs-content`, `make docs-build STRICT=1`, with `SITE_DOMAIN` set from the repository variable of the same name. One run covers every site of `academy.toml` and the root of the portal; adding a module or a release needs no change of the workflow. |
-| `deploy` | Push to `main`, or manual run on `main`, after `build` succeeded | `actions/configure-pages`, then `actions/deploy-pages` to the `github-pages` environment. |
+| `production` | Always | In `docs/production/`: `npm ci`, Playwright Chromium, `node scripts/build.cjs --runbooks ../runbooks` (validates the memos, checks their runbook references against `docs/runbooks/`, renders each memo), then `git diff --exit-code` on the generated pages. |
+| `deploy` | Push to `main`, or manual run on `main`, after `build` and `production` succeeded | `actions/configure-pages`, then `actions/deploy-pages` to the `github-pages` environment. |
 
 - Both check scripts run with `--strict`: a warning (a missing `description`, a leftover `<!-- TODO editorial`
   marker, a duplicate `id` in a built page) fails the `build` job like an error.

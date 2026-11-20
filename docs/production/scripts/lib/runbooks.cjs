@@ -1,34 +1,29 @@
 'use strict';
-// Checks every runbook reference against a real checkout of OzarLand/openstack-vm-runbooks:
-// the page exists, and its status and release are the ones the memo prints.
-// A memo never links to a path that was not seen in the repository.
+// Checks every runbook reference against the pages of the module VM runbooks of OzarLand Academy
+// (docs/runbooks/, next to this module): the page exists, and its status and release are the ones the memo
+// prints. A memo never links to a path that was not seen there.
 
 const fs = require('fs');
 const path = require('path');
-const { execFileSync } = require('child_process');
 const { ROOT } = require('./content.cjs');
 
-const REPO = 'https://github.com/OzarLand/openstack-vm-runbooks';
-const BLOB = `${REPO}/blob/main/`;
+const REPO = 'https://github.com/OzarLand/ozarland-academy';
+// The runbook on GitHub: for plain text that leaves the portal (a LinkedIn caption).
+const BLOB = `${REPO}/blob/main/docs/runbooks/`;
+
+// Address of the page of a runbook in the portal, relative to a generated page of this module (`from` is its
+// directory under docs/production/, '' for the home page). The modules are separate sites of the portal: a link
+// to another one is the address of its page, ending with '/', checked by tools/site/check_docs.py.
+function runbookLink(p, from) {
+  const page = `runbooks/${p.replace(/\.md$/, '').replace(/(^|\/)index$/, '$1')}`;
+  const rel = path.posix.relative(path.posix.join('production', from), page);
+  return rel.endsWith('/') ? rel : `${rel}/`;
+}
 
 function findCheckout(explicit) {
-  const candidates = [
-    explicit,
-    process.env.RUNBOOKS_DIR,
-    path.join(ROOT, '..', 'openstack-vm-runbooks'),
-    path.join(ROOT, '..', 'ozarland', 'openstack-vm-runbooks'),
-    path.join(ROOT, '.cache', 'openstack-vm-runbooks'),
-  ].filter(Boolean);
-  for (const c of candidates) if (fs.existsSync(path.join(c, 'README.md')) && fs.existsSync(path.join(c, 'lifecycle'))) return c;
-  // Not found: fetch a shallow copy into .cache (ignored by git).
-  const target = path.join(ROOT, '.cache', 'openstack-vm-runbooks');
-  try {
-    fs.mkdirSync(path.dirname(target), { recursive: true });
-    execFileSync('git', ['clone', '--depth', '1', '--quiet', REPO, target], { stdio: 'pipe', timeout: 180000 });
-    return target;
-  } catch (e) {
-    return null;
-  }
+  const candidates = [explicit, process.env.RUNBOOKS_DIR, path.join(ROOT, '..', 'runbooks')].filter(Boolean);
+  for (const c of candidates) if (fs.existsSync(path.join(c, 'index.md')) && fs.existsSync(path.join(c, 'lifecycle'))) return c;
+  return null;
 }
 
 function frontMatter(file) {
@@ -53,7 +48,7 @@ function checkRunbooks(memos, dir) {
     for (const p of all) {
       const file = path.join(dir, p);
       if (!fs.existsSync(file)) {
-        errors.push(`${m._file}: runbook "${p}" does not exist in openstack-vm-runbooks`);
+        errors.push(`${m._file}: runbook "${p}" does not exist in docs/runbooks`);
         continue;
       }
       const fm = frontMatter(file);
@@ -67,4 +62,4 @@ function checkRunbooks(memos, dir) {
   return errors;
 }
 
-module.exports = { REPO, BLOB, findCheckout, checkRunbooks };
+module.exports = { REPO, BLOB, runbookLink, findCheckout, checkRunbooks };

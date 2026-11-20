@@ -1,4 +1,9 @@
-[← Production Guide](README.md)
+---
+title: "Contributing to the Production guide"
+description: "How to propose a production memo: it is written from a runbook, adds nothing to it, and is checked before review."
+---
+
+[← Production Guide](index.md)
 
 # Contributing
 
@@ -20,7 +25,7 @@ In short:
 A memo is a summary of a runbook. That fixes the order of things:
 
 - **The runbook comes first.** A memo is written from a page of
-  [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks). If your lesson has no runbook, share
+  the [VM runbooks](../runbooks/). If your lesson has no runbook, share
   the problem there first ([*Problem solved*](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml));
   the memo follows.
 - **Nothing is added.** No check, default value, command or cause that the runbook does not contain. If you know
@@ -28,7 +33,7 @@ A memo is a summary of a runbook. That fixes the order of things:
 - **A correction goes to the source.** If a memo is wrong because its runbook is wrong, fix the runbook, then the
   memo.
 - **Accuracy over quantity.** A memo that is not written is a gap, listed in the
-  [README](README.md#-not-covered-yet). A memo that is wrong is a risk for whoever trusts it during an incident.
+  [README](index.md#-not-covered-yet). A memo that is wrong is a risk for whoever trusts it during an incident.
 
 ## Writing a memo
 
@@ -47,7 +52,7 @@ npm run new -- <category> <slug>
 ```
 
 For example `npm run new -- networking security-group-rule-has-no-effect`. This creates
-`categories/<category>/<slug>.yml` from [`templates/memo.yml`](templates/memo.yml), with the next memo number. The
+`categories/<category>/<slug>.yml` from [`templates/memo.yml`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/templates/memo.yml), with the next memo number. The
 categories are `vm-lifecycle`, `compute`, `networking`, `storage`, `control-plane` and `production-operations`.
 
 Fill it in, then render it as often as you need:
@@ -98,7 +103,7 @@ memo: open an issue first, and include the regenerated images in the pull reques
 
 ## What the automated check covers
 
-The `check` workflow validates the memo sources, checks every runbook reference against the runbooks repository
-(path, status, release), renders the collection to prove that each memo fits, and fails if the generated pages are
-out of date. It checks form and links. It cannot check that a memo is technically right: that is what the review,
+The job "Production guide (memos)" of the `Docs` workflow of OzarLand Academy validates the memo sources, checks
+every runbook reference against the VM runbooks, `docs/runbooks/` (path, status, release), renders the collection to
+prove that each memo fits, and fails if the generated pages are out of date. It checks form and links. It cannot check that a memo is technically right: that is what the review,
 and your experience, are for.

@@ -1,11 +1,16 @@
-[← Production Guide](README.md)
+---
+title: "Design system of the memos"
+description: "The design system of the production memos: format, signature, layout, colour, typography, icons and diagram components."
+---
+
+[← Production Guide](index.md)
 
 # Design system
 
 How an OzarLand memo looks, and why. The goal is that an operator recognises a memo before reading a word of it,
 and that the twentieth and the two-hundredth look like the first. The rules below are implemented in
-[`templates/tokens.css`](templates/tokens.css), [`templates/memo.css`](templates/memo.css) and
-[`templates/memo.cjs`](templates/memo.cjs), and enforced by the build wherever a rule can be checked.
+[`templates/tokens.css`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/templates/tokens.css), [`templates/memo.css`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/templates/memo.css) and
+[`templates/memo.cjs`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/templates/memo.cjs), and enforced by the build wherever a rule can be checked.
 
 ## Principles
 
@@ -41,9 +46,9 @@ Four things make a memo recognisable without its name:
 - **Square-bullet section labels** in spaced monospace capitals: `■ FIRST CHECKS`, `■ THINK BEFORE ACTING`.
 - **Warm paper, white card**: the page is off-white, and the diagram sits on the only white card.
 
-The OzarLand mark ([`assets/brand/ozarland-mark.svg`](assets/brand/ozarland-mark.svg)) is a cloud above a ground
+The OzarLand mark ([`assets/brand/ozarland-mark.svg`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/assets/brand/ozarland-mark.svg)) is a cloud above a ground
 line on an ink square: the cloud of the OzarLand banner, and the "shared land". It appears once, small, in the
-header, next to `OzarLand / production-guide`, which is also the address of the repository.
+header, next to `OzarLand / production guide`, the name of this module of OzarLand Academy.
 
 ## Layout
 
@@ -96,14 +101,14 @@ is its state (a red node is where it failed).
 | Commands, states, paths | JetBrains Mono | 19 px and up | 500 |
 | Section labels, footer | JetBrains Mono | 18 px | 600 to 700, capitals with wide tracking |
 
-Two families, both vendored in [`assets/fonts`](assets/README.md) so that every machine renders the same image.
+Two families, both vendored in [`assets/fonts`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/assets/index.md) so that every machine renders the same image.
 Anything typed at a prompt or returned by an API is in monospace: commands, option names, states, log messages.
 In the sources, wrap it in backticks.
 
 ## Icons
 
 [Lucide](https://lucide.dev) outline icons, 2 px stroke, in the colour of the text around them, from
-[`assets/icons`](assets/README.md). One icon per diagram node at most, chosen for the object it stands for (a
+[`assets/icons`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/assets/index.md). One icon per diagram node at most, chosen for the object it stands for (a
 server, a network, a disk), never for mood. No emoji on a memo: they render differently on every system.
 
 ## Diagram components
@@ -117,7 +122,7 @@ Three components cover the first collection. Choose by what the memo must show.
 | `compare` | Two to four columns side by side, each with a verdict | Two things look alike and are not (PG-06, PG-08), or several views of one object disagree (PG-05, PG-13) | 2 to 4 columns, 4 points each |
 
 Every component takes an optional `caption` above it and a `note` below it. The fields of each are in
-[`templates/memo.yml`](templates/memo.yml) and in the existing memos.
+[`templates/memo.yml`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/production/templates/memo.yml) and in the existing memos.
 
 A new component is justified when a lesson cannot be told with these three, not when a memo would merely look
 different. Add its function to `templates/memo.cjs`, its styles to `templates/memo.css` with the existing tokens,

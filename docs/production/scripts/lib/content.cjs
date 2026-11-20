@@ -142,7 +142,7 @@ function validateMemo(m, icons = iconNames()) {
 
   // Runbook reference
   const rb = m.runbook || {};
-  if (!/^[a-z]+\/[a-z0-9-]+\.md$/.test(rb.path || '')) err('runbook.path must be a path inside openstack-vm-runbooks, like lifecycle/<page>.md');
+  if (!/^[a-z]+\/[a-z0-9-]+\.md$/.test(rb.path || '')) err('runbook.path must be a path inside docs/runbooks, like lifecycle/<page>.md');
   if (!STATUSES.includes(rb.status)) err(`runbook.status must be one of ${STATUSES.join(', ')}`);
   if (!/^\d{4}\.[12]$/.test(String(rb.release || ''))) err('runbook.release must be an upstream release name such as 2026.1');
   for (const p of rb.also || []) if (!/^[a-z]+\/[a-z0-9-]+\.md$/.test(p)) err(`runbook.also: "${p}" is not a runbook path`);

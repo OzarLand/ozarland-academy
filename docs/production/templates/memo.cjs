@@ -169,7 +169,7 @@ function renderMemo(m) {
   <header class="top">
     <div class="tab">${esc(m.id.replace('-', '·'))}</div>
     <div class="cat">${esc(CATEGORIES[m.category])}</div>
-    <div class="brand">${MARK}<b>OzarLand</b><span>/ production-guide</span></div>
+    <div class="brand">${MARK}<b>OzarLand</b><span>/ production guide</span></div>
   </header>
   <div class="body">
     <div class="head">
@@ -194,7 +194,7 @@ function renderMemo(m) {
     <div class="lesson-label">Operational lesson</div>
     <p class="lesson-text">${inline(m.lesson)}</p>
     <div class="foot">
-      <div class="ref"><b>Go deeper:</b> github.com/OzarLand/openstack-vm-runbooks<br><span class="path">${esc(rb.path)}</span></div>
+      <div class="ref"><b>Go deeper:</b> OzarLand Academy · VM runbooks<br><span class="path">${esc(rb.path)}</span></div>
       <div class="status">runbook status<br><span class="pill ${esc(rb.status)}">${esc(rb.status)} · ${esc(rb.release)}</span></div>
     </div>
   </footer>

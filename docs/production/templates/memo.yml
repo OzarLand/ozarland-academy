@@ -47,7 +47,7 @@ caution:                        # 1 or 2. level: destructive | state-changing | 
 lesson: The one sentence to remember. 100 characters at most.
 
 runbook:
-  path: lifecycle/the-runbook-page.md     # must exist in OzarLand/openstack-vm-runbooks, checked by the build
+  path: lifecycle/the-runbook-page.md     # must exist in docs/runbooks (OzarLand Academy), checked by the build
   status: lab-verified                    # copied from the runbook's front matter, checked by the build
   release: "2026.1"                       # a release listed in the runbook's openstack_releases
   # also:                                 # other runbooks the memo draws on
