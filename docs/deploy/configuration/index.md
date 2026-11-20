@@ -1,8 +1,13 @@
+---
+title: "configuration"
+description: "Inventory layouts, variable organisation, configuration overrides, registries, TLS and secrets handling (never their content)."
+---
+
 # configuration
 
-Inventory layouts, variable organisation, configuration overrides, registries, TLS and secrets handling (never their content). Add a page with [`templates/deployment-pattern.md`](../templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
+Inventory layouts, variable organisation, configuration overrides, registries, TLS and secrets handling (never their content). Add a page with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
 
-The status of each page is its front matter `status`; see the [repository README](../README.md#-how-much-each-page-was-checked) for what each status means.
+The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
 |---|---|

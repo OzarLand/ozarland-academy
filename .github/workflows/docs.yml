@@ -95,6 +95,19 @@ jobs:
       - name: Check the Markdown sources
         run: make docs-check STRICT=1
 
+      # The content conventions of the OzarLand hub (front matter by kind,
+      # required sections, risk markers, sensitive data) for the modules that
+      # came from repositories which followed them (tools/site/check_content.py).
+      - name: Check out the OzarLand hub (content checker)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: OzarLand/ozarland
+          path: .ozarland-hub
+          persist-credentials: false
+
+      - name: Check the content conventions of the hub
+        run: make docs-content HUB=.ozarland-hub
+
       - name: Build the site (strict) and check the result
         run: make docs-build STRICT=1
 

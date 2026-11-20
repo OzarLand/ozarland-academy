@@ -28,3 +28,6 @@ __pycache__/
 # Quick lab (docs/lab/): the settings and state of a lab run from a checkout.
 docs/lab/variants/*/config.env
 docs/lab/variants/*/.state/
+
+# Checkout of the OzarLand hub made by CI for tools/site/check_content.py.
+.ozarland-hub/

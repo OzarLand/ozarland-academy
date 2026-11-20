@@ -1,8 +1,13 @@
+---
+title: "operations"
+description: "Day-2 procedures on a running Kolla-Ansible deployment: adding and removing hosts, choosing between deploy, reconfigure and upgrade, backups and recoveries."
+---
+
 # operations
 
-Day-2 procedures on a running Kolla-Ansible deployment: adding and removing hosts, choosing between `deploy`, `reconfigure` and `upgrade`, backups and recoveries, checks after a change. One page per procedure, written as a pattern (`kind: pattern`) with [`templates/deployment-pattern.md`](../templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)), its procedure steps carrying the ⚠️ and 🛑 warnings of the [risk conventions](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/risk-warnings.md).
+Day-2 procedures on a running Kolla-Ansible deployment: adding and removing hosts, choosing between `deploy`, `reconfigure` and `upgrade`, backups and recoveries, checks after a change. One page per procedure, written as a pattern (`kind: pattern`) with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)), its procedure steps carrying the ⚠️ and 🛑 warnings of the [risk conventions](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/risk-warnings.md).
 
-The status of each page is its front matter `status`; see the [repository README](../README.md#-how-much-each-page-was-checked) for what each status means.
+The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
 |---|---|

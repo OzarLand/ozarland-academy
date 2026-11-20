@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/user/operating-kolla.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "passwords.yml holds every internal secret of a Kolla-Ansible deployment: service passwords, database and message queue credentials, keys."
 ---
 
 # Rotating the secrets in passwords.yml. Which ones a reconfigure applies, which need manual steps, and which need an outage

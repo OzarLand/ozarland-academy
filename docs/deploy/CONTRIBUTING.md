@@ -1,3 +1,8 @@
+---
+title: "Contributing"
+description: "How to contribute a deployment pattern: the OzarLand contribution guide and the rules of this module."
+---
+
 # Contributing
 
 This repository follows the OzarLand community contribution guide:

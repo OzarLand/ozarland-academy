@@ -19,6 +19,7 @@ upstream_refs:
   - https://prometheus.io/docs/alerting/latest/configuration/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Monitoring with Prometheus, Grafana and Alertmanager in Kolla-Ansible: what is deployed, and what you still have to bring."
 ---
 
 # Monitoring with Prometheus, Grafana and Alertmanager in Kolla-Ansible. What is deployed, and the rules, receivers and dashboards you still have to bring

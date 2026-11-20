@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/user/operating-kolla.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "kolla-ansible prechecks stops at \"Checking Ansible version\": an unsupported or wrong Ansible on the deploy host."
 ---
 
 # kolla-ansible prechecks fails with "Ansible version should be between ...": the wrong Ansible or collections on the deploy host

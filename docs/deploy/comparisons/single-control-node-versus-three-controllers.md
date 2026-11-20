@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/reference/message-queues/rabbitmq.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "The control group of a Kolla-Ansible inventory runs the API services, MariaDB and RabbitMQ."
 ---
 
 # Single control node versus three controllers. What high availability really costs in Kolla-Ansible

@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/ovn/routing.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
+description: "The first globals.yml decision of a multinode deployment is which host interface carries which traffic."
 ---
 
 # Network interfaces, VLANs and MTU for a multinode deployment, with Open vSwitch and OVN side by side

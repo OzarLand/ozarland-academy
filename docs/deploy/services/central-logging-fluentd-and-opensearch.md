@@ -19,6 +19,7 @@ upstream_refs:
   - https://opensearch.org/docs/latest/im-plugin/index/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Central logging with Fluentd and OpenSearch in Kolla-Ansible: where logs go, how to search them by request ID, how long they are kept."
 ---
 
 # Central logging with Fluentd and OpenSearch in Kolla-Ansible. Where logs go, how to search them by request ID, and how long they are kept

@@ -163,9 +163,9 @@ The same as the [single-VM variant](../openstack-cloud/index.md):
   - It must pass VRRP (IP protocol 112) between them. Only your provider or a test between two VMs can tell. The
     scripts use keepalived in unicast mode, so multicast is not needed.
   - The pattern's
-    [context](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md#context)
+    [context](../../../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/#context)
     lists what was measured on the hosting cloud before designing the lab. Its
-    [network design](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md#network-design)
+    [network design](../../../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/#network-design)
     shows how the virtual IP and VRRP are set up.
 
 ## Steps
@@ -232,7 +232,7 @@ The exercises written for this variant are listed in [`exercises/`](../../exerci
 ## How the lab is built
 
 The design follows the pattern
-[Three controllers and two computes, nested inside an existing OpenStack cloud](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md).
+[Three controllers and two computes, nested inside an existing OpenStack cloud](../../../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/).
 Read it for the reasoning and the errors met while building such a lab; this page does not repeat it. Where the
 scripts differ from that pattern:
 

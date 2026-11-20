@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/user/operating-kolla.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "One of three controllers is lost (hardware failure, a reinstalled disk) or must be rebuilt."
 ---
 
 # Replacing a failed controller in a three-controller Kolla-Ansible deployment

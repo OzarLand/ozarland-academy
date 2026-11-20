@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/admin/support-compute.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "kolla-ansible deploy fails in the nova-cell role because the nova-compute services of new hosts failed to register."
 ---
 
 # kolla-ansible deploy fails with "The following Nova compute services failed to register themselves"

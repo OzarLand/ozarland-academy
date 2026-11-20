@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.ceph.com/en/latest/rados/operations/user-management/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Kolla-Ansible \"does not provide support for provisioning and configuring a Ceph cluster directly\" (external Ceph guide)."
 ---
 
 # External Ceph for Glance, Cinder, Cinder backup and Nova. Pools, users, the files Kolla-Ansible expects, and the libvirt secrets

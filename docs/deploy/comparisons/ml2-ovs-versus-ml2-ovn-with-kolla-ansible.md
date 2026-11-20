@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/config-mtu.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
+description: "ML2/OVS or ML2/OVN as the Neutron mechanism driver of a Kolla-Ansible 2026.1 deployment, compared."
 ---
 
 # ML2/OVS versus ML2/OVN with Kolla-Ansible. What changes in globals.yml, in operations and at upgrade time

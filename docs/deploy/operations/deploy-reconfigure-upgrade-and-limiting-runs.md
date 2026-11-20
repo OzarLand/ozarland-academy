@@ -21,6 +21,7 @@ upstream_refs:
   - https://bugs.launchpad.net/kolla-ansible/+bug/2054348
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Kolla-Ansible has one playbook, site.yml, and most commands run it with a different kolla_action."
 ---
 
 # deploy, reconfigure, upgrade and the others

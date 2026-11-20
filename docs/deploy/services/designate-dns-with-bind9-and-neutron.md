@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/config-dns-int-ext-serv.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Designate gives projects DNS zones and records through an API."
 ---
 
 # Designate with the BIND9 back-end in Kolla-Ansible. Name servers, NS records, Neutron DNS integration, and how to check a record end to end

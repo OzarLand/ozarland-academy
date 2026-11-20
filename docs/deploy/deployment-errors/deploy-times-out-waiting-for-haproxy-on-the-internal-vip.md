@@ -20,6 +20,7 @@ upstream_refs:
   - https://keepalived.readthedocs.io/en/latest/configuration_synopsis.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "kolla-ansible deploy, reconfigure or upgrade times out in the loadbalancer role, waiting for HAProxy on the internal VIP."
 ---
 
 # kolla-ansible deploy times out at "Wait for haproxy to listen on VIP"

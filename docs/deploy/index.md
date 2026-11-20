@@ -1,39 +1,19 @@
-[← OzarLand home](https://github.com/OzarLand/ozarland)
+---
+title: "Deployment patterns"
+description: "Ways to deploy OpenStack with Kolla-Ansible, compared side by side."
+---
 
-<div align="center">
-
-# 🏗️ kolla-ansible-deployment-patterns
+# 🏗️ Deployment patterns
 
 **Ways to deploy OpenStack with Kolla-Ansible, compared side by side.**
 
-<p>
-<!-- status-badges:start -->
-  <img src="https://img.shields.io/badge/pages-39-informational.svg" alt="39 pages">
-  <img src="https://img.shields.io/badge/lab--verified-8-16a34a.svg" alt="8 pages lab-verified">
-  <img src="https://img.shields.io/badge/draft-31-9ca3af.svg" alt="31 pages draft">
-  <img src="https://img.shields.io/badge/validated-0-2563eb.svg" alt="0 pages validated">
-<!-- status-badges:end -->
-  <img src="https://img.shields.io/badge/OpenStack-2026.1-ED1944.svg" alt="OpenStack 2026.1">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-</p>
-
-<p>
-  <a href="#index"><b>Index</b></a> ·
-  <a href="#-how-much-each-page-was-checked"><b>Status</b></a> ·
-  <a href="#-first-pages-to-write"><b>Wanted</b></a> ·
-  <a href="#-contributing"><b>Contribute</b></a>
-</p>
-
-</div>
-
----
+[Index](#index) · [Status](#-how-much-each-page-was-checked) · [Wanted](#-first-pages-to-write) ·
+[Contribute](#-contributing)
 
 Written so far from upstream documentation and lab builds; **operators' own patterns are what this repository is
 waiting for.**
 
-Part of [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* No imposed
-tools, no single way of operating OpenStack. The [🤖 openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills)
-Claude skills draw on these pages and carry their status with them; a correction belongs here first.
+No imposed tools, no single way of operating OpenStack.
 
 > [!NOTE]
 > **No architecture is presented as correct.** Every pattern states its context, its benefits, its limits and the
@@ -299,24 +279,16 @@ Click a category to open it.
 > Rules that are not optional: no secrets (never `passwords.yml` content), no real hostnames, addresses or
 > unredacted logs; say where your pattern runs and for how long. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 🌍 Part of OzarLand
+## 🌍 Part of OzarLand Academy
 
-**OzarLand: a shared land for better OpenStack operations.** It started as a personal initiative by Soufian Zaouam
-to share practical OpenStack operational knowledge, and it is meant to grow into a space where operators exchange
-experience, document solutions and help each other run more reliable platforms. It is open to everyone: your
-knowledge, questions and corrections are welcome.
-
-| | Repository | What it holds |
-|:-:|---|---|
-| | [ozarland](https://github.com/OzarLand/ozarland) | Start here: newcomer path, community rules, [Discussions](https://github.com/OzarLand/ozarland/discussions) |
-| 🔧 | [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) | Symptom-driven runbooks for instance problems |
-| 🏗️ | `kolla-ansible-deployment-patterns` **(you are here)** | Ways to deploy with Kolla-Ansible, compared |
-| 🧪 | [openstack-quick-lab](https://github.com/OzarLand/openstack-quick-lab) | A disposable OpenStack lab to practise on |
-| 🤖 | [openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills) | Claude skills that apply this knowledge |
+This module is the second stop of [OzarLand Academy](../), the learning path of
+[OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* Before it, the
+[Quick lab](../lab/) gives you a disposable OpenStack to practise on; after it, the path goes on with day-2
+operations with Kolla-Ansible, VM runbooks and the production guide.
 
 ## ⚖️ License
 
-All content, documentation and code alike, is licensed under the Apache License 2.0 ([LICENSE](LICENSE)). Reuse it
+All content, documentation and code alike, is licensed under the Apache License 2.0 ([LICENSE](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE)). Reuse it
 freely with attribution. See [licensing](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/licensing.md).
 
 OpenStack, Kolla and Kolla-Ansible are projects of the OpenInfra Foundation community. OzarLand is an independent

@@ -1,8 +1,13 @@
+---
+title: "services"
+description: "How Kolla-Ansible deploys an OpenStack service or an integration (Octavia, Designate, monitoring, logging, external Ceph and others)."
+---
+
 # services
 
-How Kolla-Ansible deploys an OpenStack service or an integration (Octavia, Designate, monitoring, logging, external Ceph and others): what to prepare, what to set, where it fails and which logs to read. One page per service, written with [`templates/deployment-pattern.md`](../templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
+How Kolla-Ansible deploys an OpenStack service or an integration (Octavia, Designate, monitoring, logging, external Ceph and others): what to prepare, what to set, where it fails and which logs to read. One page per service, written with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
 
-The status of each page is its front matter `status`; see the [repository README](../README.md#-how-much-each-page-was-checked) for what each status means.
+The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
 |---|---|

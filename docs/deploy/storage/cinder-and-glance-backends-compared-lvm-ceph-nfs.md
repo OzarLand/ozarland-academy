@@ -23,6 +23,7 @@ upstream_refs:
   - https://docs.ceph.com/en/latest/rbd/rbd-openstack/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Kolla-Ansible 2026.1 deploys Cinder with the lvm, nfs, ceph and iscsi back-ends, and Glance with file, ceph and s3 (Cinder and Glance guides)."
 ---
 
 # Cinder and Glance back-ends compared. LVM, Ceph RBD and NFS, and what each choice implies

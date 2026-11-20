@@ -1,8 +1,13 @@
+---
+title: "comparisons"
+description: "Side-by-side comparisons of two approaches on one dimension (container engine, ML2 driver, controller count, where the network services run)."
+---
+
 # comparisons
 
 Side-by-side comparisons of two approaches on one dimension (container engine, ML2 driver, controller count, where the network services run). There is no comparison template yet: copy the structure of an existing page (`kind: comparison`, a *Validity and limits* section, the shared front matter of the [content metadata conventions](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/content-metadata.md)).
 
-The status of each page is its front matter `status`; see the [repository README](../README.md#-how-much-each-page-was-checked) for what each status means.
+The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
 |---|---|

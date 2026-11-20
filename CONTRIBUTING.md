@@ -7,8 +7,9 @@ nothing exists only in a template, a script or a stylesheet.
 
 Most of this page is about the day-2 module: how to add or change one of its pages, and how to add a release. Three
 releases are available today; the paths below are those of `ussuri`, and another release has the same layout under
-its own directory. The other modules have their own rules, in the pages of the module (for the Quick lab,
-[docs/lab/CONTRIBUTING.md](docs/lab/CONTRIBUTING.md)); every module follows the rules on links below and the
+its own directory. The other modules have their own rules, in the pages of the module
+([Quick lab](docs/lab/CONTRIBUTING.md), [Deployment patterns](docs/deploy/CONTRIBUTING.md)); Deployment patterns
+also follows the content conventions of the OzarLand hub, checked by `make docs-content`; every module follows the rules on links below and the
 checks of [Before a pull request](#before-a-pull-request). How a former repository becomes a module is at the end:
 [Moving a repository into a module](#moving-a-repository-into-a-module).
 
@@ -433,6 +434,8 @@ with their history, in the order of the path. One pull request per repository:
    `git clone`, are updated by hand.
 5. Give each page a front matter with `title` and `description`, and fit the home page into the portal: no badges, no
    "OzarLand home" link, no table of the former repositories.
-6. `make docs-check STRICT=1` and `make docs-build STRICT=1`, then the pull request. The former repository is archived
+6. If the former repository ran the content checker of the hub, add the module to `MODULES` in
+   [tools/site/check_content.py](tools/site/check_content.py).
+7. `make docs-check STRICT=1`, `make docs-content` and `make docs-build STRICT=1`, then the pull request. The former repository is archived
    after the portal is published, with a README that points to the module.
 

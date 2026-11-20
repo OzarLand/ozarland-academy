@@ -107,7 +107,7 @@ costing.
 
 Each exercise breaks one thing on purpose and repairs it with a runbook from
 [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks), or, for 10 and 11, a page of
-[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns). [All the exercises](exercises/index.md).
+[kolla-ansible-deployment-patterns](../deploy/). [All the exercises](exercises/index.md).
 
 ```mermaid
 flowchart LR
@@ -141,8 +141,8 @@ flowchart LR
 | 7 | [A compute goes down: fence it before you evacuate](exercises/07-compute-down-fence-before-evacuate.md) | 🖥️🖥️🖥️ Multinode | [Fence it before you evacuate](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/recovery/compute-host-failure-fence-before-evacuate.md) |
 | 8 | [Drain a compute for planned maintenance](exercises/08-drain-a-compute-for-maintenance.md) | 🖥️🖥️🖥️ Multinode | [Moving instances off a host for maintenance](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/migration/moving-instances-off-a-host-for-maintenance.md) |
 | 9 | [Live migration between the two computes](exercises/09-live-migration-between-computes.md) | 🖥️🖥️🖥️ Multinode | [Moving instances off a host for maintenance](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/migration/moving-instances-off-a-host-for-maintenance.md) |
-| 10 | [Lose one controller: what keeps working](exercises/10-lose-one-controller.md) | 🖥️×5 Multinode, 3 controllers | Pattern (`draft`): [three controllers, two computes](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) |
-| 11 | [Lose two controllers: quorum lost, and recovered](exercises/11-lose-two-controllers-quorum.md) | 🖥️×5 Multinode, 3 controllers | Procedure: [MariaDB cluster recovery](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster.md#recover-the-failed-deploy) |
+| 10 | [Lose one controller: what keeps working](exercises/10-lose-one-controller.md) | 🖥️×5 Multinode, 3 controllers | Pattern (`draft`): [three controllers, two computes](../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/) |
+| 11 | [Lose two controllers: quorum lost, and recovered](exercises/11-lose-two-controllers-quorum.md) | 🖥️×5 Multinode, 3 controllers | Procedure: [MariaDB cluster recovery](../deploy/deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster/#recover-the-failed-deploy) |
 
 > [!TIP]
 > **In one minute (for managers)**
@@ -161,7 +161,7 @@ flowchart LR
 | | |
 |:-:|---|
 | 👥 | Who this is for: newcomers who learn by doing, and operators who want a disposable lab to try a runbook. The [newcomer path](https://github.com/OzarLand/ozarland/tree/main/newcomers) explains the vocabulary as you go. |
-| 🏗️ | How the labs are built: the [all-in-one lab pattern](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/all-in-one-lab-on-a-single-vm.md) and the [multinode pattern](https://github.com/OzarLand/kolla-ansible-deployment-patterns/blob/main/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md). Each guide states the releases its scripts were last run on. |
+| 🏗️ | How the labs are built: the [all-in-one lab pattern](../deploy/topologies/all-in-one-lab-on-a-single-vm/) and the [multinode pattern](../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/). Each guide states the releases its scripts were last run on. |
 | 🔒 | This repository never contains credentials (`clouds.yaml` with secrets, `passwords.yml`) or marketing. Keep yours out of any fork or pull request. |
 | 🤝 | New variants, exercises and fixes are welcome: [CONTRIBUTING.md](CONTRIBUTING.md). Any provider can be added as a variant on equal terms; nothing in the exercises depends on the provider. |
 

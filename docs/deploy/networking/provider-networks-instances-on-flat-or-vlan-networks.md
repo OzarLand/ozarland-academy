@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/intro-os-networking.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A self-service network lives in a tunnel (VXLAN or Geneve) and reaches the outside through a Neutron router and floating IPs."
 ---
 
 # Provider networks with Kolla-Ansible. Instances directly on a flat or VLAN network, without tunnels or routers

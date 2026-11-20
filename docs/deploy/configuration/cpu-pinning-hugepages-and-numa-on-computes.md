@@ -21,6 +21,7 @@ upstream_refs:
   - https://docs.openstack.org/kolla-ansible/2026.1/admin/advanced-configuration.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Network functions, real-time and latency-sensitive workloads ask for instances whose vCPUs are pinned to host CPUs, whose memory comes from huge pages."
 ---
 
 # CPU pinning, huge pages and NUMA on Kolla-Ansible computes. Host preparation, nova.conf overrides and the scheduler filter Kolla-Ansible does not enable

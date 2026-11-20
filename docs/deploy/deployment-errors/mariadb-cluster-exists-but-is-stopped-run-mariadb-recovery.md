@@ -20,6 +20,7 @@ upstream_refs:
   - https://mariadb.com/kb/en/getting-started-with-mariadb-galera-cluster/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "After every controller was down at the same time (power loss, all rebooted, every mariadb container stopped), MariaDB does not come back by itself."
 ---
 
 # kolla-ansible fails with "MariaDB cluster exists but is stopped"

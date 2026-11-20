@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/admin/pci-passthrough.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "SR-IOV splits a physical NIC (the PF) into virtual functions (VFs) that can be passed directly to instances."
 ---
 
 # SR-IOV with Kolla-Ansible. VFs on the host, the Neutron SR-IOV agent, the PCI whitelist Kolla-Ansible writes, and the scheduler filter

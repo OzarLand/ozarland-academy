@@ -20,6 +20,7 @@ upstream_refs:
   - https://distribution.github.io/distribution/recipes/mirror/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A local registry and an offline Kolla-Ansible deployment: what has to be mirrored, and the variables that point at the mirrors."
 ---
 
 # A local registry and an offline deployment with Kolla-Ansible. What has to be mirrored, the variables that point at the mirrors, and the Docker setting that does not help

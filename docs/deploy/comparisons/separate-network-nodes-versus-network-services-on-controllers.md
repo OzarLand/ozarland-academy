@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/2026.1/admin/ovn/routing.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "The network group of a Kolla-Ansible inventory decides where north-south traffic leaves the cloud."
 ---
 
 # Separate network nodes versus network services on the controllers

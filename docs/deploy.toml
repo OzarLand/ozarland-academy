@@ -1,0 +1,88 @@
+# Settings of the Deployment patterns site (module `deploy` of academy.toml),
+# merged with zensical.base.toml by tools/site/releases.py. The pages are the
+# history of OzarLand/kolla-ansible-deployment-patterns, moved under
+# docs/deploy/. Within a section: its index page, then the pages by name.
+
+[project]
+# templates/ holds the page template to copy, not a page: it is read on GitHub
+# (Zensical does not build a top-level templates/ directory either).
+exclude_docs = """
+/templates/
+"""
+site_description = "Ways to deploy OpenStack with Kolla-Ansible, compared side by side: topologies, networking, storage, services, errors and their fixes."
+
+nav = [
+  { "Home" = [
+    "index.md",
+  ] },
+  { "Topologies" = [
+    "topologies/index.md",
+    "topologies/all-in-one-lab-on-a-single-vm.md",
+    "topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md",
+  ] },
+  { "Networking" = [
+    "networking/index.md",
+    "networking/interfaces-vlans-and-mtu-ovs-and-ovn.md",
+    "networking/provider-networks-instances-on-flat-or-vlan-networks.md",
+  ] },
+  { "Storage" = [
+    "storage/index.md",
+    "storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md",
+    "storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md",
+  ] },
+  { "Configuration" = [
+    "configuration/index.md",
+    "configuration/cpu-pinning-hugepages-and-numa-on-computes.md",
+    "configuration/inventory-globals-overrides-and-secrets-layout.md",
+    "configuration/local-registry-and-offline-deployment.md",
+    "configuration/rotating-secrets-in-passwords-yml.md",
+    "configuration/sriov-neutron-ports-and-nova-pci-alias.md",
+    "configuration/tls-on-internal-and-external-endpoints.md",
+  ] },
+  { "Services" = [
+    "services/index.md",
+    "services/central-logging-fluentd-and-opensearch.md",
+    "services/designate-dns-with-bind9-and-neutron.md",
+    "services/external-ceph-for-glance-cinder-and-nova.md",
+    "services/monitoring-prometheus-grafana-and-alerting.md",
+    "services/octavia-amphora-certificates-and-management-network.md",
+  ] },
+  { "Deployment errors" = [
+    "deployment-errors/index.md",
+    "deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md",
+    "deployment-errors/deploy-times-out-waiting-for-haproxy-on-the-internal-vip.md",
+    "deployment-errors/keystone-fernet-bootstrap-or-key-distribution-fails.md",
+    "deployment-errors/mariadb-cluster-exists-but-is-stopped-run-mariadb-recovery.md",
+    "deployment-errors/mariadb-exits-address-in-use-proxysql-on-a-node-without-haproxy.md",
+    "deployment-errors/nova-compute-services-failed-to-register.md",
+    "deployment-errors/pull-fails-http-response-to-https-client-insecure-registry.md",
+    "deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md",
+    "deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster.md",
+  ] },
+  { "Operations" = [
+    "operations/index.md",
+    "operations/adding-a-compute-node.md",
+    "operations/bootstrap-servers-what-it-changes-and-its-pitfalls.md",
+    "operations/checking-a-deployment-after-a-change.md",
+    "operations/deploy-reconfigure-upgrade-and-limiting-runs.md",
+    "operations/mariadb-backup-and-restore-with-mariabackup.md",
+    "operations/removing-or-replacing-a-compute-node.md",
+    "operations/replacing-a-failed-controller.md",
+  ] },
+  { "Version notes" = [
+    "version-notes/index.md",
+    "version-notes/2025.1-to-2026.1.md",
+    "version-notes/upgrade-report-2025.1-to-2026.1-all-in-one-lab.md",
+  ] },
+  { "Comparisons" = [
+    "comparisons/index.md",
+    "comparisons/docker-versus-podman-with-kolla-ansible.md",
+    "comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible.md",
+    "comparisons/separate-network-nodes-versus-network-services-on-controllers.md",
+    "comparisons/single-control-node-versus-three-controllers.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+  ] },
+]

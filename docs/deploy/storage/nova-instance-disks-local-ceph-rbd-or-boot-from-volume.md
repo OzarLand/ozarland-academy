@@ -22,6 +22,7 @@ upstream_refs:
   - https://docs.ceph.com/en/latest/rbd/rbd-openstack/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Every instance has a root disk, and some have ephemeral and swap disks."
 ---
 
 # Where instance disks live. Local on each compute, in Ceph RBD, or boot from volume

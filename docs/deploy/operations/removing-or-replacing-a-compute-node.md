@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/admin/node-down.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "A compute node leaves a deployment for good (decommissioning, a smaller cloud), or is replaced by a new machine, sometimes with the same name."
 ---
 
 # Removing or replacing a compute node in a Kolla-Ansible deployment

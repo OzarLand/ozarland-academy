@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.podman.io/en/stable/Commands.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Docker or Podman as the container engine of a Kolla-Ansible deployment: what changes for operators, and what migrating costs."
 ---
 
 # Docker versus Podman as the container engine of a Kolla-Ansible deployment

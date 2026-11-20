@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/neutron/latest/admin/config-mtu.html
 authored_by: agent:lab-reviewer
 last_verified: 2026-10-24
+description: "A complete OpenStack 2026.1 (Keystone, Glance, Nova, Neutron with Open vSwitch, Placement, Heat, Horizon) on one VM of an existing cloud."
 ---
 
 # All-in-one lab on a single VM, nested inside an existing OpenStack cloud
@@ -318,7 +319,7 @@ rm -rf ~/.lab/<lab-vm>
 ## What went wrong during deployment
 
 - **`prechecks` failed with `No module named 'docker'`.**
-  ```
+  ```text
   fatal: [localhost]: FAILED! => {"cmd": [".../kolla-venv/bin/python3.12", "-c", "import docker; ..."],
    "stderr": "ModuleNotFoundError: No module named 'docker'"}
   ```

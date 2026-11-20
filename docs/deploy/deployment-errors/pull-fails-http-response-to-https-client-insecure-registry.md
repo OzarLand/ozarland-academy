@@ -1,5 +1,5 @@
 ---
-title: kolla-ansible pull fails with "http: server gave HTTP response to HTTPS client". Docker does not know the registry is plain HTTP
+title: 'kolla-ansible pull fails with "http: server gave HTTP response to HTTPS client". Docker does not know the registry is plain HTTP'
 kind: runbook
 status: lab-verified
 openstack_releases: ["2026.1"]
@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.docker.com/reference/cli/dockerd/#insecure-registries
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "kolla-ansible pull fails on the first image with an HTTP response to an HTTPS client: Docker does not know the registry is plain HTTP."
 ---
 
 # kolla-ansible pull fails with "http: server gave HTTP response to HTTPS client". Docker does not know the registry is plain HTTP

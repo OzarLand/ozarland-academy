@@ -19,6 +19,7 @@ upstream_refs:
   - https://docs.openstack.org/keystone/2026.1/admin/fernet-token-faq.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "The Keystone Fernet bootstrap or key distribution fails during kolla-ansible deploy, reconfigure or upgrade."
 ---
 
 # kolla-ansible deploy fails in the keystone role: Fernet bootstrap, key distribution, or key 0 missing

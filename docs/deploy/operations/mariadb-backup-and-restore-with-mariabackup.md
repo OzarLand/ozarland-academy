@@ -20,6 +20,7 @@ upstream_refs:
   - https://mariadb.com/kb/en/mariadb-backup-overview/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "Every OpenStack service of a Kolla-Ansible deployment keeps its state in the MariaDB (Galera) cluster: instances, volumes, networks, users, quotas."
 ---
 
 # Backing up and restoring the MariaDB cluster with kolla-ansible mariadb-backup

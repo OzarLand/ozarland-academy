@@ -14,8 +14,9 @@ environment:
 risk: read-only
 confirmed_by: []
 upstream_refs: []
-authored_by: <"@handle" or agent:name>      # who wrote the page
+authored_by: '<"@handle" or agent:name>'    # who wrote the page
 last_verified: <YYYY-MM-DD>
+description: "Template of a deployment pattern page: the front matter and the sections that every pattern has."
 ---
 
 # <Pattern name>

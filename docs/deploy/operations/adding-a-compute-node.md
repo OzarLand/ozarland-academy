@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/admin/cells.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "How to bring a new hypervisor into a deployment that already runs workloads."
 ---
 
 # Adding a compute node to a running Kolla-Ansible deployment

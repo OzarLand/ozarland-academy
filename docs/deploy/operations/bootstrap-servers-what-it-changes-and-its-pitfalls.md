@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.docker.com/engine/daemon/live-restore/
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "kolla-ansible bootstrap-servers prepares hosts for Kolla-Ansible: packages, Docker, users, /etc/hosts, security settings."
 ---
 
 # kolla-ansible bootstrap-servers: what it changes on the hosts, and its pitfalls

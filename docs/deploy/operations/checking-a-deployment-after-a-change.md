@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/nova/2026.1/cli/nova-status.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
+description: "A kolla-ansible run that ends with failed=0 says that every task passed, not that the cloud works."
 ---
 
 # Checking a Kolla-Ansible deployment after a change

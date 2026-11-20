@@ -20,6 +20,7 @@ upstream_refs:
   - https://docs.openstack.org/octavia/2026.1/install/install-amphorav2.html
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
+description: "Octavia gives users load balancers. With the amphora provider, each load balancer is one Nova instance (two with ACTIVE_STANDBY) running HAProxy."
 ---
 
 # Octavia with the amphora provider. Certificates, the management network and the amphora image

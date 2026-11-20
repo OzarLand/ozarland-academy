@@ -1,8 +1,13 @@
+---
+title: "deployment-errors"
+description: "Errors met during deploy, reconfigure, pull or upgrade, each with its symptom, cause and fix."
+---
+
 # deployment-errors
 
 Errors met during `deploy`, `reconfigure`, `pull` or `upgrade`, each with its symptom, cause and fix. One page per error, written as a runbook (`kind: runbook`) with the shared [runbook template](https://github.com/OzarLand/ozarland/blob/main/community/templates/runbook.md).
 
-The status of each page is its front matter `status`; see the [repository README](../README.md#-how-much-each-page-was-checked) for what each status means.
+The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
 |---|---|
