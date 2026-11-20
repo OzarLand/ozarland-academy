@@ -161,6 +161,8 @@ is added and which checks to run before a pull request.
 - Both take `--release <id>`; without it they write into the default release of the day-2 module.
 - [tools/site/check_content.py](tools/site/check_content.py) runs the content checks of the OzarLand hub on the
   modules that follow its conventions (`make docs-content HUB=<checkout of OzarLand/ozarland>`).
+- [tools/site/redirect_site.py](tools/site/redirect_site.py) writes the site that redirects the former address of
+  Kolla-Ansible Academy to the module `day2`.
 - [tools/site/rewrite_links.py](tools/site/rewrite_links.py) rewrites the links of the pages after a former
   repository is moved into its module ([Moving a repository into a module](CONTRIBUTING.md#moving-a-repository-into-a-module)).
 - [tools/site/](tools/site/README.md) holds the site tooling: the registry, the build, the checks, the pre-build step
