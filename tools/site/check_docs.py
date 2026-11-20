@@ -34,8 +34,10 @@ place where one of the authoring rules is broken:
     link-repo-file  absolute links to a file of this repository (branch main)
                     point to a file that exists
     code-language   every fenced code block has a language
-    removed-path    no reference to paths of the old layout (annex/, docs/01-…);
-                    inside an HTML comment it is a warning until --strict
+    removed-path    no reference to paths of the old layout (annex/, docs/01-…)
+                    in the pages of the versioned module, the only one that
+                    had it; inside an HTML comment it is a warning until
+                    --strict
     callout         callouts are GitHub alerts of the five known types
     todo-editorial  no leftover `<!-- TODO editorial` marker (warning until
                     --strict)
@@ -987,7 +989,13 @@ class Checker:
         self._front_matter(doc)
         self._fences(doc)
         self._callouts(doc)
-        self._removed_paths(doc)
+        site = self._site_of(rel)
+        if site is not None and site.versioned:
+            # The old layout (annex/, docs/0N-...) is the one of the versioned
+            # module before the portal; the other modules never had it, and a
+            # numbered file name such as exercises/01-dhcp-agents-down.md is
+            # their own.
+            self._removed_paths(doc)
         for line in doc.todo_lines:
             self.report.warning(rel, line, "todo-editorial", "leftover `<!-- TODO editorial` marker")
         self._site_addresses(doc, in_docs=True)

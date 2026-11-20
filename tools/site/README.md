@@ -43,6 +43,12 @@ moves an existing address. How to add a release is in [CONTRIBUTING.md](../../CO
 A single module and a release are `available` or `planned`. A planned one has no `docs/<path>/` and no
 `docs/<path>.toml`. Only one module can be versioned: the release selector of the header serves that module.
 
+The learning kit of a release (the learning journey of `extra.journey`, the levels, the districts of the island with
+their banners and tab icons, the definitions on hover, Lumo's notes) is built for the versioned module only: its
+pages follow the sections it expects. A single module is a plain site: its configuration has no `extra.journey`, and
+its home page gets the module header of the art direction (breadcrumb, stage seal, section band, next stop) from
+`overrides/main.html`.
+
 What the build writes (all git-ignored):
 
 | Path | Content |
@@ -191,7 +197,7 @@ when there is at least one error. On GitHub Actions each error is also an annota
 | `link-reference` | error | A reference-style link `[text][label]` uses a label defined in the file. |
 | `link-repo-file` | error | An absolute link to a file of this repository on `main` points to a file that exists. |
 | `code-language` | error | Every fenced code block has a language and is closed. |
-| `removed-path` | error | No reference to a path of the former layout (`annex/`, `docs/01-...` to `docs/10-...`). Inside an HTML comment it is a warning. |
+| `removed-path` | error | No reference to a path of the former layout (`annex/`, `docs/01-...` to `docs/10-...`), in the pages of the versioned module (the only one that had it). Inside an HTML comment it is a warning. |
 | `callout` | error | Callouts are GitHub alerts of the five types `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`, with the marker alone on the first line of the blockquote. |
 | `todo-editorial` | warning | No `<!-- TODO editorial` marker is left. |
 | `nav` | error | Every page of a site is listed in the `nav` of `docs/<path>.toml`, and every `nav` entry exists, once. |

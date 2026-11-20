@@ -46,7 +46,7 @@ step = "Discover"
 title = "Quick lab"
 summary = "A disposable OpenStack lab on cloud VMs in about an hour, with break-and-repair exercises."
 kind = "single"
-status = "planned"
+status = "available"
 
 [[module]]
 id = "deploy"

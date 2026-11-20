@@ -24,3 +24,7 @@ __pycache__/
 
 # Downloaded by tools/site/fetch_vendor.py (make docs-deps)
 /overrides/assets/vendor/mermaid/mermaid.min.js
+
+# Quick lab (docs/lab/): the settings and state of a lab run from a checkout.
+docs/lab/variants/*/config.env
+docs/lab/variants/*/.state/

@@ -2759,8 +2759,9 @@ a.portal-cta:focus-visible {
   box-shadow: inset 0 -0.16rem 0 #f0b440;
 }
 
-/* District icon before each tab label (the order of the nav of a release). */
-.md-tabs__link::before {
+/* District icon before each tab label (the order of the nav of a release
+   of the versioned module, day2; the other modules have their own nav). */
+.md-header[data-oz-module="day2"] .md-tabs__link::before {
   flex: none;
   width: 0.9rem;
   height: 0.9rem;
@@ -2770,13 +2771,13 @@ a.portal-cta:focus-visible {
   mask: var(--oz-tab-icon) center / contain no-repeat;
 }
 
-.md-tabs__item:nth-child(1) { --oz-tab-icon: url("../images/ozarland/districts/tab-harbour.svg"); }
-.md-tabs__item:nth-child(2) { --oz-tab-icon: url("../images/ozarland/districts/tab-workshop.svg"); }
-.md-tabs__item:nth-child(3) { --oz-tab-icon: url("../images/ozarland/districts/tab-bridge.svg"); }
-.md-tabs__item:nth-child(4) { --oz-tab-icon: url("../images/ozarland/districts/tab-citadel.svg"); }
-.md-tabs__item:nth-child(5) { --oz-tab-icon: url("../images/ozarland/districts/tab-lighthouse.svg"); }
-.md-tabs__item:nth-child(6) { --oz-tab-icon: url("../images/ozarland/districts/tab-library.svg"); }
-.md-tabs__item:nth-child(7) { --oz-tab-icon: url("../images/ozarland/districts/tab-archives.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(1) { --oz-tab-icon: url("../images/ozarland/districts/tab-harbour.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(2) { --oz-tab-icon: url("../images/ozarland/districts/tab-workshop.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(3) { --oz-tab-icon: url("../images/ozarland/districts/tab-bridge.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(4) { --oz-tab-icon: url("../images/ozarland/districts/tab-citadel.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(5) { --oz-tab-icon: url("../images/ozarland/districts/tab-lighthouse.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(6) { --oz-tab-icon: url("../images/ozarland/districts/tab-library.svg"); }
+.md-header[data-oz-module="day2"] .md-tabs__item:nth-child(7) { --oz-tab-icon: url("../images/ozarland/districts/tab-archives.svg"); }
 
 /* Headings; H2 opens with the emblem of the page's district. */
 .md-typeset :is(h1, h2, h3),
@@ -3799,4 +3800,27 @@ a.portal-cta:focus-visible {
   :is(a, button).portal-cta {
     min-height: 2.2rem;
   }
+}
+
+/* Home page of a single module (overrides/main.html): breadcrumb, stage
+   seal and band under the title written in its Markdown. */
+.md-typeset .oz-module-head {
+  max-width: 50rem;
+  margin: 0.4rem 0 1.4rem;
+}
+
+.md-typeset .oz-module-head__stop {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin: 0.4rem 0 0;
+}
+
+.oz-module-head__seal {
+  width: 2.8rem;
+  height: 2.8rem;
+}
+
+.md-typeset .oz-module-head .oz-band {
+  border-top: 0.25rem solid var(--oz-accent);
 }

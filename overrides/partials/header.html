@@ -15,7 +15,9 @@
 {% elif "navigation.tabs" not in features %}
   {% set class = class ~ " md-header--shadow" %}
 {% endif %}
-<header class="{{ class }}" data-md-component="header">
+{#- data-oz-module: the module of this site; the tab icons of portal.css
+    (the districts of a release) apply to the versioned module only. -#}
+<header class="{{ class }}" data-md-component="header"{% if config.extra.portal and config.extra.portal.module %} data-oz-module="{{ config.extra.portal.module.id }}"{% endif %}>
   <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
     <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
       {% include "partials/logo.html" %}

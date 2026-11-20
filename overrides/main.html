@@ -40,6 +40,11 @@
   "archives": "Open parchment scrolls, brass details and an archive room look out through white stone arches.",
 } %}
 
+{#- The learning kit of a release (journey, levels, districts, glossary on
+    hover, Lumo's notes) is built for the versioned module, day2: its pages
+    follow the sections it expects. The other modules are plain sites. -#}
+{% set oz_day2 = config.extra.portal.kind == "release" and config.extra.portal.module.kind == "versioned" %}
+
 {% block extrahead %}
   {#- Home-screen icon and link previews (OzarLand brand kit). The preview
       image is the one of the portal root, so its URL is absolute. -#}
@@ -57,6 +62,8 @@
   <meta name="twitter:card" content="summary_large_image">
   {% if config.extra.portal.kind == "release" %}
     <meta name="portal-updates" content="{{ 'assets/data/updates.json' | url }}">
+  {% endif %}
+  {% if oz_day2 %}
     {#- Definitions on hover (learning.js), except on the glossary itself. -#}
     {% if page and page.url != "reference/glossary/" %}
       <meta name="portal-glossary" content="{{ 'assets/data/glossary.json' | url }}">
@@ -131,7 +138,7 @@
 
   {#- Learning journey (extra.journey of zensical.base.toml): the level of
       the page, and its place in the journey when the journey lists it. -#}
-  {% set journey = config.extra.journey if config.extra.portal.kind == "release" else none %}
+  {% set journey = config.extra.journey if oz_day2 else none %}
   {% set oz = namespace(level=none, key="", found=false, stage=0, stage_name="", pos=0, count=0, prev=none, next=none, last=none) %}
   {% if journey and page.url and page.url != journey.page %}
     {% if page.meta and page.meta.level %}
@@ -171,7 +178,7 @@
   {#- Lumo's caution on the pages of an operation rated Critical (impact
       class `critical`, see start/conventions), and his reading note on the
       glossary, whose terms are the definitions shown on hover. -#}
-  {% if config.extra.portal.kind == "release" and "critical" in impact %}
+  {% if oz_day2 and "critical" in impact %}
     {% set chips %}{{ chips }}
       <div class="oz-lumo oz-lumo--caution">
         <img class="oz-lumo__pose" src="{{ 'assets/images/ozarland/lumo/caution.webp' | url }}" width="400" height="400" alt="Lumo holds a lantern forward and raises a palm in a careful gesture.">
@@ -184,7 +191,7 @@
       </div>
     {% endset %}
   {% endif %}
-  {% if config.extra.portal.kind == "release" and page.url == "reference/glossary/" %}
+  {% if oz_day2 and page.url == "reference/glossary/" %}
     {% set chips %}{{ chips }}
       <div class="oz-lumo">
         <img class="oz-lumo__pose" src="{{ 'assets/images/ozarland/lumo/reading.webp' | url }}" width="400" height="400" alt="Lumo sits on a wooden crate and reads an open book beside a lantern.">
@@ -201,7 +208,7 @@
       page shows the whole banner; another page a thin decorative strip.
       The home page and the journey page have their own art. -#}
   {% set dz = namespace(id=none) %}
-  {% if config.extra.portal.kind == "release" %}
+  {% if oz_day2 %}
     {% for prefix, district in oz_districts %}
       {% if not dz.id and page.url[:prefix | length] == prefix %}{% set dz.id = district %}{% endif %}
     {% endfor %}
@@ -210,6 +217,31 @@
   {% if dz.id %}
     {% set banner %}<span class="oz-district" data-oz-district="{{ dz.id }}" hidden></span>{% if page.url and page.url != config.extra.journey.page %}{% if (page.url | split("/") | list | length) == 2 %}<figure class="oz-banner"><img src="{{ ('assets/images/ozarland/districts/' ~ dz.id ~ '-banner.webp') | url }}" width="1400" height="350" alt="{{ oz_banners[dz.id] }}"></figure>{% else %}<img class="oz-strip" src="{{ ('assets/images/ozarland/districts/' ~ dz.id ~ '-banner.webp') | url }}" width="1400" height="350" alt="">{% endif %}{% endif %}{% endset %}
     {% set chips %}{{ banner }}{{ chips }}{% endset %}
+  {% endif %}
+
+  {#- Home page of a single module: its place on the learning path under
+      the title (breadcrumb, stage seal, section band of the module), and
+      the next stop at the end of the page. -#}
+  {% set portal = config.extra.portal %}
+  {% set module_home = portal.kind == "release" and portal.module.kind == "single" and page.url in ("", "./", "index.html") %}
+  {% if module_home %}
+    {% include "partials/module-stop.html" %}
+    {% set root = base_url ~ "/" ~ portal.up %}
+    {% set img = 'assets/images/ozarland/' | url %}
+    {% set chips %}
+      <div class="oz-module-head oz-module--{{ portal.module.id }}">
+        <nav class="oz-crumbs" aria-label="Breadcrumb">
+          <a href="{{ root }}">OzarLand Academy</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ portal.module.title }}</span>
+        </nav>
+        <p class="oz-module-head__stop">
+          <img class="oz-module-head__seal" src="{{ img }}seals/stage-{{ stop.index }}.svg" width="96" height="96" alt="">
+          <span class="oz-stop__step">Stop {{ stop.index }} · {{ portal.module.step }}</span>
+        </p>
+        <img class="oz-band" src="{{ img }}bands/{{ portal.module.id }}.webp" width="1600" height="400" alt="">
+      </div>
+    {{ chips }}{% endset %}
   {% endif %}
 
   {#- The chips go right under the page's H1, which is part of the Markdown. -#}
@@ -226,6 +258,21 @@
 
   {#- What a page template adds after the Markdown (overrides/journey.html). -#}
   {% block page_extra %}{% endblock %}
+
+  {% if module_home %}
+    <nav class="oz-next" aria-label="Learning path">
+      {% if stop.next %}
+        <a class="oz-next__stop oz-module--{{ stop.next.id }}" href="{{ root }}{{ stop.next.path }}/">
+          <span class="oz-stop__step">Next stop · {{ stop.next.step }}</span>
+          <span class="oz-next__title">{{ stop.next.title }}{% if stop.next.status != "available" %} (coming soon){% endif %} <span aria-hidden="true">→</span></span>
+        </a>
+      {% endif %}
+      <a class="oz-next__stop" href="{{ root }}">
+        <span class="oz-stop__step">OzarLand Academy</span>
+        <span class="oz-next__title">The whole learning path</span>
+      </a>
+    </nav>
+  {% endif %}
 
   {#- "Remember": the `remember` of the front matter, 3 to 5 short
       takeaways that restate the page with its evidence labels. learning.js

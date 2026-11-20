@@ -1,0 +1,84 @@
+---
+title: "Exercise 4. Restarting nova_libvirt without stopping instances"
+description: "Restart the container that runs libvirt, the way a reconfigure or an upgrade does, and measure that the instances keep running."
+---
+
+# Exercise 4. Restarting nova_libvirt without stopping instances
+
+**Goal:** restart the container that runs libvirt, the way a reconfigure or an upgrade does, and measure that the
+instances keep running.
+**Time:** about 10 minutes.
+**Runbook:** [I need to restart nova_libvirt on a compute. Its instances keep running](https://github.com/OzarLand/openstack-vm-runbooks/blob/main/lifecycle/restarting-nova-libvirt-does-not-stop-instances.md)
+
+## Before you start
+
+Read [before every exercise](index.md#before-every-exercise). You need an instance you can ping from the lab VM:
+create one with a floating IP. The lab's `default` security group, which the instance gets, already allows ping and
+SSH.
+
+```bash
+openstack server create --image cirros --flavor m1.tiny --network demo-net --key-name mykey --wait ex4-test
+openstack floating ip create public1 -f value -c floating_ip_address
+openstack server add floating ip ex4-test <floating-ip>
+```
+
+The second command prints only the address: that is `<floating-ip>`. Wait about 30 seconds (the instance is still
+booting, and the floating IP takes a few seconds to apply), then:
+
+```bash
+ping -c 3 <floating-ip>
+```
+
+If it still does not answer after a minute, check that the instance is `ACTIVE` and that the floating IP is
+attached (`openstack server show ex4-test -c status -c addresses`).
+
+Note the domain ID libvirt gives the instance:
+
+```bash
+sudo docker exec nova_libvirt virsh list
+```
+
+## 1. Do it
+
+In a second SSH session, leave a ping running:
+
+```bash
+ping -i 0.5 <floating-ip>
+```
+
+Then, in the first session, follow the runbook's **Resolution** step:
+
+> ⚠️ **State-changing.** Restarts libvirt. With Kolla-Ansible's default settings the runbook's lab saw no instance
+> stop; check the runbook's preconditions before doing this on any platform someone relies on.
+
+```bash
+sudo systemctl restart kolla-nova_libvirt-container.service
+```
+
+## 2. What you should see
+
+- The ping keeps answering. On the runbook's lab: 174 requests in the first minute, none lost.
+- `sudo docker exec nova_libvirt virsh list` shows the **same domain ID** as before: libvirt took the running
+  instance back; it did not start it again.
+
+Before reading on: where does the instance actually run, if libvirt can restart under it?
+
+## 3. Read the runbook
+
+Read its **Diagnosis** and **Validity and limits**: why the instances survive, and which settings would change that.
+
+## 4. Check
+
+Follow the runbook's **Verification**.
+
+## 5. Clean up
+
+Stop the ping (Ctrl-C), then:
+
+```bash
+openstack server delete --wait ex4-test
+openstack floating ip delete <floating-ip>
+```
+
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
+keeps costing.

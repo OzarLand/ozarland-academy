@@ -324,6 +324,7 @@ class ConfigTest(RepoTest):
         self.assertEqual((portal["current"], portal["path"], portal["up"]), ("runbooks", "runbooks", "../"))
         self.assertEqual([r["path"] for r in portal["releases"]], ["runbooks"])
         self.assertEqual(portal["module"]["kind"], "single")
+        self.assertNotIn("journey", project["extra"])
 
     def test_domain_sets_every_address(self) -> None:
         os.environ["SITE_DOMAIN"] = "academy.example.org"
