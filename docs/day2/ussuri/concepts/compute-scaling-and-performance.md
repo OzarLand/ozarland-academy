@@ -107,7 +107,7 @@ skipped tasks, includes and `meta` tasks are counted at run time; the sources do
 | `-t nova reconfigure --limit compute001` (no change) | NOT AVAILABLE | NOT AVAILABLE | 53 + delegated fact loop (*N* − 1) | 6 | breakdown below; `gather-facts.yml:29-50` |
 | `-t nova deploy-containers --limit compute001` (no change) | NOT AVAILABLE | NOT AVAILABLE | 7 (`setup` + 6 `compare_container`) + delegated fact loop (*N* − 1) | 6 | `roles/common/tasks/deploy-containers.yml:2`, `roles/nova-cell/tasks/deploy-containers.yml:2` |
 | `pull` (all) | NOT AVAILABLE | NOT AVAILABLE | 13 (`setup`, CentOS `slurp`, 11 image pulls) | 0 | `site.yml:97-105`; `roles/service-images-pull/tasks/main.yml:2-14` |
-| `-t haproxy reconfigure` | 5 (facts + group_by only) | 5 | 1 (`setup`) | 0 | `docs/ussuri/reference/listings/list-tasks-nova.txt:106-119` (plays tagged `always`); `site.yml:126-136` (the only play tagged `haproxy` targets the `haproxy` group) |
+| `-t haproxy reconfigure` | 5 (facts + group_by only) | 5 | 1 (`setup`) | 0 | `docs/day2/ussuri/reference/listings/list-tasks-nova.txt:106-119` (plays tagged `always`); `site.yml:126-136` (the only play tagged `haproxy` targets the `haproxy` group) |
 
 Breakdown of the 46 remote invocations of a no-change `-t nova` run on one compute, read from the task files [CODE]
 (compute001 adds 7 delegated invocations, for 53):
@@ -288,7 +288,7 @@ What the code shows:
      (ansible 2.9.27 `lib/ansible/executor/task_queue_manager.py:257-258`) [CODE].
 2. **The compute-wide plays grow with C.**
    - The plays that run on every compute include chrony (with common), nova-cell, openvswitch and neutron
-     (`docs/ussuri/reference/listings/list-tasks-nova.txt:127, :226, :268, :280`; `compute` is in the chrony and
+     (`docs/day2/ussuri/reference/listings/list-tasks-nova.txt:127, :226, :268, :280`; `compute` is in the chrony and
      openvswitch
      groups: `inventory/multinode:50-55, :144-147`) [CODE]. The share of run time they take as C grows is
      [NOT AVAILABLE].

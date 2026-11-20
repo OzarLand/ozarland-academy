@@ -181,27 +181,28 @@ class PrebuildTest(unittest.TestCase):
 
     def test_releases_of_the_registry(self) -> None:
         git(self.repo, "mv", "docs", "ussuri")
-        (self.repo / "docs").mkdir()
-        git(self.repo, "mv", "ussuri", "docs/ussuri")
+        (self.repo / "docs/day2").mkdir(parents=True)
+        git(self.repo, "mv", "ussuri", "docs/day2/ussuri")
         write(
             self.repo,
-            "versions.toml",
-            'default = "ussuri"\n'
-            '[[release]]\nid = "ussuri"\nstatus = "available"\nopenstack = "Ussuri"\n'
+            "academy.toml",
+            '[[module]]\nid = "day2"\nstep = "Operate"\ntitle = "Day two"\nsummary = "S."\n'
+            'kind = "versioned"\ndefault = "ussuri"\n'
+            '[[module.release]]\nid = "ussuri"\nstatus = "available"\nopenstack = "Ussuri"\n'
             'kolla_ansible = "10.x"\ntag = "ussuri-eol"\n'
-            '[[release]]\nid = "2023.1"\nstatus = "planned"\nopenstack = "2023.1 Antelope"\n'
+            '[[module.release]]\nid = "2023.1"\nstatus = "planned"\nopenstack = "2023.1 Antelope"\n'
             'kolla_ansible = "16.x"\n',
         )
         err = io.StringIO()
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
             self.assertEqual(prebuild.main(["--root", str(self.repo), "--skip-vendor"]), 0)
             # A planned release has no pages to prepare; an unknown one is refused.
-            self.assertEqual(prebuild.main(["--root", str(self.repo), "--skip-vendor", "--release", "2023.1"]), 1)
+            self.assertEqual(prebuild.main(["--root", str(self.repo), "--skip-vendor", "--release", "day2/2023.1"]), 1)
             self.assertEqual(prebuild.main(["--root", str(self.repo), "--skip-vendor", "--release", "nope"]), 1)
-        self.assertTrue((self.repo / "docs/ussuri/assets/data/updates.json").is_file())
-        self.assertFalse((self.repo / "docs/2023.1").exists())
+        self.assertTrue((self.repo / "docs/day2/ussuri/assets/data/updates.json").is_file())
+        self.assertFalse((self.repo / "docs/day2/2023.1").exists())
         self.assertIn("planned", err.getvalue())
-        self.assertIn("not a release", err.getvalue())
+        self.assertIn("not a site", err.getvalue())
 
     def test_front_matter_title_forms(self) -> None:
         title = prebuild.front_matter_title

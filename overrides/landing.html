@@ -1,10 +1,9 @@
 {#-
-  Root of the portal (/index.html), built from a stub that
-  tools/site/releases.py generates. The welcome page: a project of the
-  OzarLand organisation whose purpose is to make learning Kolla-Ansible Day-2
-  operations easier. It holds why the project exists, a suggested learning
-  path in the default release, the list of the releases and the shared
-  "Part of OzarLand" block. The main call to action carries
+  Home of the versioned module, Kolla-Ansible Academy (/day2/index.html),
+  built on the root site from a stub that tools/site/releases.py generates.
+  Its purpose is to make learning Kolla-Ansible Day-2 operations easier. It
+  holds why the module exists, a suggested learning path in the default
+  release and the list of the releases. The main call to action carries
   data-portal-default, the default release that tools/site/check_site.py
   checks. The illustrations and icons (overrides/assets/images/ozarland/)
   come from the OzarLand brand kit of the project, painted in the style of
@@ -16,14 +15,13 @@
 {% set root = base_url ~ "/" ~ portal.up %}
 {% set start = root ~ portal.default ~ "/" %}
 {% set img = root ~ "assets/images/ozarland/" %}
-{% set hub = "https://github.com/OzarLand/ozarland" %}
 {% set default = namespace(title=portal.default) %}
-{% for release in portal.releases if release.id == portal.default %}
+{% for release in portal.releases if release.path == portal.default %}
   {% set default.title = release.title %}
 {% endfor %}
 
 {% block htmltitle %}
-  <title>{{ config.site_name }} · OzarLand</title>
+  <title>{{ page.title }} · {{ config.site_name }}</title>
 {% endblock %}
 
 {% block hero %}
@@ -31,10 +29,10 @@
     <div class="md-grid portal-hero__inner oz-hero__inner">
       <div class="oz-hero__text">
         <p class="oz-hero__org">
-          <a href="{{ hub }}"><span aria-hidden="true">←</span> OzarLand home</a>
-          <span class="oz-hero__badge">An OzarLand project</span>
+          <a href="{{ root }}"><span aria-hidden="true">←</span> {{ config.site_name }}</a>
+          <span class="oz-hero__badge">Step: {{ portal.module.step }}</span>
         </p>
-        <h1 class="portal-hero__title" id="welcome">{{ config.site_name }}</h1>
+        <h1 class="portal-hero__title" id="welcome">{{ page.title }}</h1>
         <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
         <p class="portal-hero__lead">
           A learning resource for Kolla-Ansible Day-2 operations. It explains, from the source code of each release,
@@ -165,28 +163,4 @@
   {% set release_heading = 3 %}
   {% include "partials/release-lists.html" %}
 
-  <section class="oz-land" aria-labelledby="ozarland">
-    <h2 id="ozarland">Part of OzarLand</h2>
-    <p>
-      <strong>OzarLand: a shared land for better OpenStack operations.</strong> It started as a personal initiative by
-      Soufian Zaouam to share practical OpenStack operational knowledge, and it is meant to grow into a space where
-      operators exchange experience, document solutions and help each other run more reliable platforms. It is open
-      to everyone: your knowledge, questions and corrections are welcome.
-    </p>
-    <table>
-      <thead><tr><th></th><th>Repository</th><th>What it holds</th></tr></thead>
-      <tbody>
-        <tr><td></td><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
-        <tr><td>🔧</td><td><a href="https://github.com/OzarLand/openstack-vm-runbooks">openstack-vm-runbooks</a></td><td>Symptom-driven runbooks for instance problems</td></tr>
-        <tr><td>🏗️</td><td><a href="https://github.com/OzarLand/kolla-ansible-deployment-patterns">kolla-ansible-deployment-patterns</a></td><td>Ways to deploy with Kolla-Ansible, compared</td></tr>
-        <tr><td>🧪</td><td><a href="https://github.com/OzarLand/openstack-quick-lab">openstack-quick-lab</a></td><td>A disposable OpenStack lab to practise on</td></tr>
-        <tr><td>🤖</td><td><a href="https://github.com/OzarLand/openstack-operator-skills">openstack-operator-skills</a></td><td>Claude skills that apply this knowledge</td></tr>
-        <tr class="oz-land__here"><td>📘</td><td><strong>kolla-ansible-academy</strong> (you are here)</td><td>Learn Kolla-Ansible Day-2 operations from the source code, one study per release</td></tr>
-      </tbody>
-    </table>
-    <p class="oz-land__actions">
-      <a class="portal-cta portal-cta--primary" href="{{ hub }}">Visit OzarLand</a>
-      <a class="portal-cta" href="{{ hub }}/discussions">Ask a question</a>
-    </p>
-  </section>
 {% endblock %}

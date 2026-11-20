@@ -1,18 +1,16 @@
 {#-
   Not-found page. Two uses:
 
-  * In the site of a release it is <id>/404.html, the page `zensical serve`
-    shows for an unknown address.
+  * In a site (a module or a release) it is <path>/404.html, the page
+    `zensical serve` shows for an unknown address.
   * In the root site it is /404.html, which GitHub Pages serves for every
     unknown address of the whole portal. Its script, placed in <head> so that
     it runs before anything is drawn, looks at the address:
-      - under a planned release (/<id>/anything): go to /<id>/, the only page
-        of that release;
-      - under no release (/operations/reconfigure-nova/): the address was
-        published before the portal had releases. When it is a page of the
-        release named by `unprefixed` in versions.toml, go to the same page
-        under /<that release>/, query and fragment kept;
+      - under a planned module or release (/<path>/anything): go to
+        /<path>/, its only page;
       - anything else: stay, and show the page below.
+    Addresses of the former sites (kolla-ansible-academy) are redirected by
+    those sites, not here.
 -#}
 {% extends "main.html" %}
 {% set portal = config.extra.portal %}
@@ -25,7 +23,7 @@
   {{ super() }}
   {% if portal.kind == "root" %}
     <meta name="robots" content="noindex">
-    <script id="portal-not-found" type="application/json">{{ {"root_url": portal.root_url, "releases": portal.releases, "unprefixed": portal.unprefixed} | tojson }}</script>
+    <script id="portal-not-found" type="application/json">{{ {"root_url": portal.root_url, "sites": portal.sites} | tojson }}</script>
     <script>
       (function () {
         var data = JSON.parse(document.getElementById("portal-not-found").textContent);
@@ -37,23 +35,16 @@
         } catch (error) {
           /* keep the encoded form */
         }
-        var first = rel.split("/")[0];
-        var release = null;
-        data.releases.forEach(function (entry) {
-          if (entry.id === first) release = entry;
+        var site = null;
+        data.sites.forEach(function (entry) {
+          var prefix = entry.path + "/";
+          if (rel.indexOf(prefix) === 0 && (!site || prefix.length > site.path.length + 1)) site = entry;
         });
-        var target = null;
-        if (release) {
-          if (release.status === "planned" && rel !== first + "/") target = root + first + "/";
-        } else {
-          var page = rel.replace(/(^|\/)index\.html$/, "$1").replace(/\.html$/, "/");
-          if (page && page.slice(-1) !== "/") page += "/";
-          if (data.unprefixed.pages.indexOf(page) !== -1) {
-            target = root + data.unprefixed.release + "/" + page + location.search + location.hash;
-          }
+        if (site && site.status === "planned" && rel !== site.path + "/") {
+          location.replace(root + site.path + "/");
+          return;
         }
-        if (target) location.replace(target);
-        else window.portalNotFoundRelease = release;
+        window.portalNotFoundRelease = site;
       })();
     </script>
   {% endif %}
@@ -69,8 +60,19 @@
     <p>This address does not match a page of the portal.</p>
     {#- Shown by the script below when the address is under an available release. -#}
     <p data-portal-not-found-release hidden>
-      It is under the release <a href="#"></a>: its home page and its search are the place to look.
+      It is under <a href="#"></a>: its home page and its search are the place to look.
     </p>
+    <h2 id="modules">The learning path</h2>
+    <ul class="portal-releases">
+      {% for module in portal.modules %}
+        <li>
+          <a href="{{ base_url }}/{{ module.path }}/">{{ module.title }}</a>
+          <span class="portal-releases__note">{{ module.step }}{% if module.status != "available" %} · coming soon{% endif %}</span>
+        </li>
+      {% endfor %}
+    </ul>
+    <h2 id="releases">Releases of {{ portal.module.title }}</h2>
+    {% set release_heading = 3 %}
     {% include "partials/release-lists.html" %}
     <script>
       (function () {
@@ -79,12 +81,12 @@
         if (!release || release.status !== "available" || !line) return;
         var link = line.querySelector("a");
         link.textContent = release.title;
-        link.href = "{{ base_url }}/" + release.id + "/";
+        link.href = "{{ base_url }}/" + release.path + "/";
         line.hidden = false;
       })();
     </script>
   {% else %}
-    <p>This address does not match a page of this release.</p>
+    <p>This address does not match a page of this site.</p>
     <p>
       <button type="button" class="portal-search portal-search--inline" data-portal-search hidden>
         {% include ".icons/" ~ (config.theme.icon.search or "material/magnify") ~ ".svg" %}
@@ -92,8 +94,8 @@
         <kbd class="portal-search__kbd" aria-hidden="true"></kbd>
       </button>
     </p>
-    {#- Only the home page is linked: it is the one page every release has.
-        The tabs of the header lead to the sections of this release. -#}
-    <p><a href="{{ '.' | url }}">Home page of this release</a></p>
+    {#- Only the home page is linked: it is the one page every site has.
+        The tabs of the header lead to the sections of this site. -#}
+    <p><a href="{{ '.' | url }}">Home page of this site</a></p>
   {% endif %}
 {% endblock %}

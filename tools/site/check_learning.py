@@ -26,7 +26,7 @@ right, so this script checks their shape and their text:
   exists) or, in a challenge, the path of a page of the release, with an
   optional anchor, whose Markdown source exists.
 
-    python3 tools/site/check_learning.py [--strict] [--release ID]
+    python3 tools/site/check_learning.py [--strict] [--release PATH]
 
 Exit status 1 when an error is found. Needs PyYAML, a pinned dependency of
 the build (requirements-docs.txt).
@@ -41,6 +41,10 @@ import tomllib
 from pathlib import Path
 
 import yaml
+
+# The registry of the portal (academy.toml) is read by releases.py, next to this file.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import releases  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 JOURNEY_PAGE = "start/learning-journey.md"
@@ -255,21 +259,26 @@ def stage_ids(root: Path) -> list[str]:
 
 
 def release_dirs(root: Path, release: str | None) -> list[Path]:
-    dirs = sorted(path for path in (root / "docs").iterdir() if path.is_dir())
-    if release:
-        dirs = [path for path in dirs if path.name == release]
-    return dirs
+    """Docs directories of the available sites of academy.toml, or of the one named."""
+    registry = releases.load_registry(root)
+    return [root / site.docs_dir for site in releases.select(registry, release) if (root / site.docs_dir).is_dir()]
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--strict", action="store_true", help="accepted for symmetry: every finding is an error")
-    parser.add_argument("--release", help="check only this release id")
+    parser.add_argument("--release", metavar="PATH", help="check only this site, such as day2/2023.1")
     parser.add_argument("--root", type=Path, default=ROOT, help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
 
     checker = Checker(stage_ids(args.root))
-    for release_dir in release_dirs(args.root, args.release):
+    try:
+        dirs = release_dirs(args.root, args.release)
+    except releases.RegistryError as error:
+        for problem in error.problems:
+            print(f"check_learning: {releases.REGISTRY_FILE}: {problem}", file=sys.stderr)
+        return 1
+    for release_dir in dirs:
         for path in sorted(release_dir.rglob("*.md")):
             checker.page(path, path.relative_to(args.root).as_posix(), release_dir)
     for line in checker.errors:

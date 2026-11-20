@@ -96,6 +96,10 @@ class CheckLearningTest(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         (self.root / "zensical.base.toml").write_text(TOML, encoding="utf-8")
+        (self.root / "academy.toml").write_text(
+            '[[module]]\nid = "r1"\nstep = "S"\ntitle = "R1"\nsummary = "S."\nkind = "single"\nstatus = "available"\n',
+            encoding="utf-8",
+        )
         self.release = self.root / "docs" / "r1"
         (self.release / "risk").mkdir(parents=True)
         (self.release / "start").mkdir()

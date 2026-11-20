@@ -1,32 +1,72 @@
-# Registry of the releases of the portal. Every tool reads this file
-# (tools/site/releases.py); nothing else lists the releases.
+# Registry of OzarLand Academy. Every tool reads this file
+# (tools/site/releases.py); nothing else lists the modules or the releases.
 #
-# One [[release]] block per release, in the order of the version selector.
+# The academy is one learning path in five steps. Each step is a module,
+# published under its own URL segment; the order of the [[module]] blocks is
+# the order of the path.
 #
-#   id             directory under docs/, URL segment and site directory:
-#                  lowercase letters, digits, dots and hyphens ("2023.1")
-#   status         "available": docs/<id>/ and docs/<id>.toml exist, the
-#                               release is built as a site of its own;
+# One [[module]] block per module:
+#
+#   id        directory under docs/ and URL segment: lowercase letters,
+#             digits and hyphens ("day2"). An address of the portal: once
+#             published, do not change it.
+#   step      the step of the path, a verb ("Discover")
+#   title     display title of the module
+#   summary   one sentence: what the module gives the reader
+#   kind      "single":    one site, docs/<id>/ and docs/<id>.toml
+#             "versioned": one site per release, docs/<id>/<release>/ and
+#                          docs/<id>/<release>.toml, listed in its
+#                          [[module.release]] blocks
+#   status    single modules only. "available": docs/<id>/ and
+#             docs/<id>.toml exist and the module is built; "planned": no
+#             content, the portal publishes one "coming soon" page at /<id>/
+#   default   versioned modules only: the release its home page leads to. It
+#             must be available.
+#
+# One [[module.release]] block per release of a versioned module, in the
+# order of the version selector:
+#
+#   id             directory under docs/<module>/ and URL segment: lowercase
+#                  letters, digits, dots and hyphens ("2023.1")
+#   status         "available": docs/<module>/<id>/ and docs/<module>/<id>.toml
+#                               exist, the release is built as a site of its own;
 #                  "planned":   no docs directory and no content. The portal
 #                               lists it as "coming soon" and publishes one
-#                               generated page at /<id>/
+#                               generated page at /<module>/<id>/
 #   openstack      name of the OpenStack release
 #   kolla_ansible  Kolla-Ansible version or series
 #   tag            upstream tag that is studied (required when available)
 #   title          display title; default "<openstack> · Kolla-Ansible <kolla_ansible>"
 #
-# How to add a release, or to make a planned one available: CONTRIBUTING.md,
-# "Adding a release".
+# How to add a module or a release: CONTRIBUTING.md.
 
-# Release opened by the root of the portal. It must be available.
+[[module]]
+id = "lab"
+step = "Discover"
+title = "Quick lab"
+summary = "A disposable OpenStack lab on cloud VMs in about an hour, with break-and-repair exercises."
+kind = "single"
+status = "planned"
+
+[[module]]
+id = "deploy"
+step = "Deploy"
+title = "Deployment patterns"
+summary = "Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed."
+kind = "single"
+status = "planned"
+
+[[module]]
+id = "day2"
+step = "Operate"
+title = "Kolla-Ansible Academy"
+summary = "Kolla-Ansible Day-2 operations learned from the source code, one study per OpenStack release."
+kind = "versioned"
 default = "2024.1"
 
-# Release that was published without a release prefix before the portal had
-# releases: an old address such as /operations/reconfigure-nova/ is redirected
-# to the same page of this release. Do not change it when the default changes.
-unprefixed = "ussuri"
+# Releases studied, in the order of the version selector.
 
-[[release]]
+[[module.release]]
 id = "ussuri"
 status = "available"
 openstack = "Ussuri"
@@ -36,64 +76,80 @@ tag = "ussuri-eol"
 # Planned releases: nothing is studied yet. To add or remove one, add or
 # remove its block.
 
-[[release]]
+[[module.release]]
 id = "victoria"
 status = "planned"
 openstack = "Victoria"
 kolla_ansible = "11.x"
 
-[[release]]
+[[module.release]]
 id = "wallaby"
 status = "planned"
 openstack = "Wallaby"
 kolla_ansible = "12.x"
 
-[[release]]
+[[module.release]]
 id = "xena"
 status = "planned"
 openstack = "Xena"
 kolla_ansible = "13.x"
 
-[[release]]
+[[module.release]]
 id = "yoga"
 status = "planned"
 openstack = "Yoga"
 kolla_ansible = "14.x"
 
-[[release]]
+[[module.release]]
 id = "zed"
 status = "planned"
 openstack = "Zed"
 kolla_ansible = "15.x"
 
-[[release]]
+[[module.release]]
 id = "2023.1"
 status = "available"
 openstack = "2023.1 Antelope"
 kolla_ansible = "16.x"
 tag = "2023.1-eol"
 
-[[release]]
+[[module.release]]
 id = "2023.2"
 status = "planned"
 openstack = "2023.2 Bobcat"
 kolla_ansible = "17.x"
 
-[[release]]
+[[module.release]]
 id = "2024.1"
 status = "available"
 openstack = "2024.1 Caracal"
 kolla_ansible = "18.x"
 tag = "2024.1-eom"
 
-[[release]]
+[[module.release]]
 id = "2024.2"
 status = "planned"
 openstack = "2024.2 Dalmatian"
 kolla_ansible = "19.x"
 
-[[release]]
+[[module.release]]
 id = "2025.1"
 status = "planned"
 openstack = "2025.1 Epoxy"
 kolla_ansible = "20.x"
+
+[[module]]
+id = "runbooks"
+step = "Intervene"
+title = "VM runbooks"
+summary = "Symptom-driven runbooks for instance and hypervisor problems."
+kind = "single"
+status = "planned"
+
+[[module]]
+id = "production"
+step = "Go to production"
+title = "Production guide"
+summary = "Visual memos for production: one operational lesson per page."
+kind = "single"
+status = "planned"

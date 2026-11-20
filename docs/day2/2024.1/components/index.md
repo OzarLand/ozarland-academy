@@ -104,7 +104,7 @@ In the cards, "Play hosts" is the row "Node types in play (example inventory)" a
 types running its containers". There are 22 cards on 20 of the 21 component pages: the [Nova](nova.md) page has one for
 the role `nova` and one for the role `nova-cell`, the [OVN](ovn.md) page one for `ovn-controller` and one for `ovn-db`,
 and the [Chrony](chrony.md) page has none. The cards are generated from the 2024.1 tree by
-[tools/service_cards.py](https://github.com/OzarLand/kolla-ansible-academy/blob/main/tools/service_cards.py); a row
+[tools/service_cards.py](https://github.com/OzarLand/ozarland-academy/blob/main/tools/service_cards.py); a row
 the tool cannot resolve shows "–" (see the introduction for the three cards concerned).
 
 ## Related

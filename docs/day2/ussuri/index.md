@@ -88,7 +88,7 @@ lookup by tag](operations/command-quick-lookup.md) has one row per command and t
 <div data-portal-recent="8" markdown>
 
 Every change is in the
-[commit history of the repository](https://github.com/OzarLand/kolla-ansible-academy/commits/main/docs/ussuri).
+[commit history of the repository](https://github.com/OzarLand/ozarland-academy/commits/main/docs/day2/ussuri).
 
 </div>
 

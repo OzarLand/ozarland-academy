@@ -3,8 +3,8 @@
 
 Usage: extract_kolla_inventory.py [--release <id>] <kolla-ansible checkout> [output.md]
 
-Default output: docs/<id>/reference/generated-inventory.md, where <id> is the
-release given with --release, or the default release of versions.toml. The
+Default output: docs/day2/<id>/reference/generated-inventory.md, where <id> is the
+release given with --release, or the default release of academy.toml. The
 checkout must be at the tag of that release. If the output file starts
 with a front matter block (--- ... ---), that block is kept and only the body is
 rewritten.
@@ -23,7 +23,7 @@ def release_argument(argv):
     """Take `--release <id>` (or `--release=<id>`) out of the arguments.
 
     Returns (docs directory of the release, remaining arguments). Without the
-    option the release is the default one of versions.toml.
+    option the release is the default one of the day-2 module (academy.toml).
     """
     here = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, os.path.join(here, 'site'))
@@ -44,7 +44,7 @@ def release_argument(argv):
         registry = releases.load_registry(releases.Path(root))
         release = releases.select(registry, release or registry.default)[0]
     except releases.RegistryError as error:
-        sys.exit('versions.toml: ' + '; '.join(error.problems))
+        sys.exit('academy.toml: ' + '; '.join(error.problems))
     return os.path.join(root, *release.docs_dir.split('/')), rest
 
 

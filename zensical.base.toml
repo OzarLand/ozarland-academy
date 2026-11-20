@@ -1,40 +1,46 @@
-# Shared site configuration of the Kolla-Ansible Academy portal (Zensical,
-# native format): what every release has in common.
+# Shared site configuration of OzarLand Academy (Zensical, native format):
+# what every site of the portal has in common.
 #
-# This file is not given to Zensical. The portal is one site per release of
-# versions.toml, plus a small root site (landing page, not-found page, one
-# page per planned release). tools/site/releases.py merges this file with the
-# settings of a release (docs/<id>.toml: navigation, description) and writes
-# the configuration that is built, .zensical.<id>.toml (git-ignored):
+# This file is not given to Zensical. The portal is one site per available
+# module or release of academy.toml, plus a small root site (the learning
+# path, the home of the versioned module, the not-found page, one page per
+# planned module or release). tools/site/releases.py merges this file with
+# the settings of a site (docs/<path>.toml: navigation, description) and
+# writes the configuration that is built, .zensical.<name>.toml
+# (git-ignored):
 #
-#   make docs-build                 every release and the root
-#   make docs-build RELEASE=<id>    one release and the root
+#   make docs-build                     every site and the root
+#   make docs-build RELEASE=<path>      one site and the root
 #
-# The Markdown under docs/<id>/ is the single source of truth; nothing here
-# adds content.
+# The Markdown under docs/ is the single source of truth; nothing here adds
+# content.
 
 [project]
-site_name = "Kolla-Ansible Academy"
-# Address of the portal root. The site of a release is published one level
-# below, at <site_url><id>/.
-site_url = "https://ozarland.github.io/kolla-ansible-academy/"
-# Description of the root pages; each release sets its own in docs/<id>.toml.
-site_description = "Learn Kolla-Ansible Day-2 operations from the source code, one study per OpenStack release."
+# Name of the root site. A site is named after its module (`title` in
+# academy.toml) unless docs/<path>.toml sets site_name.
+site_name = "OzarLand Academy"
+# Default address of the portal root, used when the environment variable
+# SITE_DOMAIN is empty; with SITE_DOMAIN the address is https://<domain>/.
+# Only tools/site/releases.py (portal_root_url) reads it: the content never
+# writes the address of the portal. A site is published at <root><path>/.
+site_url = "https://ozarland.github.io/ozarland-academy/"
+# Description of the root pages; each site sets its own in docs/<path>.toml.
+site_description = "Learn to run OpenStack, step by step: discover, deploy, operate, intervene, go to production."
 site_author = "OzarLand"
 # Footer line. The licence is the one of the repository (LICENSE: Apache
 # License 2.0); HTML is allowed here.
-copyright = 'OzarLand &middot; Licensed under the <a href="https://github.com/OzarLand/kolla-ansible-academy/blob/main/LICENSE">Apache License 2.0</a>'
+copyright = 'OzarLand &middot; Licensed under the <a href="https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE">Apache License 2.0</a>'
 
-repo_url = "https://github.com/OzarLand/kolla-ansible-academy"
-repo_name = "OzarLand/kolla-ansible-academy"
+repo_url = "https://github.com/OzarLand/ozarland-academy"
+repo_name = "OzarLand/ozarland-academy"
 # "View source" opens the Markdown file on GitHub (content.action.view).
-# Prefix up to the repository root: the tooling appends docs/<id>/.
+# Prefix up to the repository root: the tooling appends docs/<path>/.
 edit_uri = "blob/main/"
 
-# docs_dir, site_dir and nav are not set here: they belong to a release.
+# docs_dir, site_dir and nav are not set here: they belong to a site.
 # `operations/reconfigure-nova.md` is served as `operations/reconfigure-nova/`.
 # Every link the templates and scripts build is relative to the page, so the
-# site works under /kolla-ansible-academy/ and unpacked at a web root alike
+# site works under /ozarland-academy/ and at the root of a domain alike
 # (404.html excepted: it is served for any path and uses site_url).
 use_directory_urls = true
 
@@ -109,7 +115,7 @@ toggle.name = "Switch to system preference"
 generator = false
 # `extra.version` (the theme's own version selector) is left unset on purpose:
 # the selector of the header is overrides/partials/releases.html. The tooling
-# adds `extra.portal` (the releases of versions.toml) to each built
+# adds `extra.portal` (the modules and releases of academy.toml) to each built
 # configuration.
 
 # The `tags` of a page's front matter are shown under the page and are the

@@ -1,7 +1,13 @@
 # Portal: source checks, strict build and built-site checks on every pull
 # request and on main; deployment to GitHub Pages from main only. One build
-# covers every release of versions.toml and the root of the portal: site/ is
-# the whole portal, with the site of each release under site/<id>/.
+# covers every module and release of academy.toml and the root of the portal:
+# site/ is the whole portal, with each site under site/<path>/.
+#
+# The address of the portal is the repository variable SITE_DOMAIN (Settings,
+# Secrets and variables, Actions, Variables): empty, the portal is built for
+# https://ozarland.github.io/ozarland-academy/; set to a domain name, for
+# https://<SITE_DOMAIN>/. The custom domain itself is set in Settings, Pages
+# (tools/site/README.md, "Address of the portal").
 # One-time repository setup and behaviour before it: tools/site/README.md.
 #
 # The `paths` filters below mean that the workflow does not start for a change
@@ -16,7 +22,7 @@ on:
       - "docs/**"
       - "overrides/**"
       - "tools/site/**"
-      - "versions.toml"
+      - "academy.toml"
       - "zensical.base.toml"
       - "requirements-docs.txt"
       - "Makefile"
@@ -31,7 +37,7 @@ on:
       - "docs/**"
       - "overrides/**"
       - "tools/site/**"
-      - "versions.toml"
+      - "academy.toml"
       - "zensical.base.toml"
       - "requirements-docs.txt"
       - "Makefile"
@@ -55,6 +61,8 @@ jobs:
     name: Build and check
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
     steps:
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7

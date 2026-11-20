@@ -1,11 +1,14 @@
 {#-
-  The only page of a planned release (/<id>/index.html), built from a stub
-  that tools/site/releases.py generates for each release of versions.toml
-  whose status is "planned". All the text of the page is here: the stub only
-  names the release (`portal_release` in its front matter).
+  The only page of a planned module (/<module>/index.html) or of a planned
+  release of the versioned module (/<module>/<id>/index.html), built from a
+  stub that tools/site/releases.py generates for each module or release of
+  academy.toml whose status is "planned". All the text of the page is here:
+  the stub only names the module (`portal_module`) and, for a release, the
+  release (`portal_release`).
 -#}
 {% extends "main.html" %}
 {% set portal = config.extra.portal %}
+{% set root = base_url ~ "/" ~ portal.up %}
 
 {% block extrahead %}
   {{ super() }}
@@ -13,28 +16,41 @@
 {% endblock %}
 
 {% block content %}
-  {% for release in portal.releases if release.id == page.meta.portal_release %}
-    <p class="portal-planned__eyebrow">Coming soon</p>
-    <h1>{{ release.title }}</h1>
-    <p>
-      The study of Kolla-Ansible {{ release.kolla_ansible }} (OpenStack {{ release.openstack }}) is not available yet.
-      This release has no page other than this one.
-    </p>
-  {% endfor %}
-  <figure class="oz-section-art">
-    <img src="{{ base_url }}/{{ portal.up }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship in a sunny harbour.">
-  </figure>
-  <h2 id="available">Available</h2>
-  <ul class="portal-releases">
-    {% for release in portal.releases if release.status != "planned" %}
-      <li>
-        <a href="{{ base_url }}/{{ portal.up }}{{ release.id }}/">{{ release.title }}</a>
-        {% if release.tag %}<span class="portal-releases__note">tag <code>{{ release.tag }}</code></span>{% endif %}
-      </li>
+  {% if page.meta.portal_release %}
+    {% for release in portal.releases if release.id == page.meta.portal_release %}
+      <p class="portal-planned__eyebrow">Coming soon</p>
+      <h1>{{ release.title }}</h1>
+      <p>
+        The study of Kolla-Ansible {{ release.kolla_ansible }} (OpenStack {{ release.openstack }}) is not available yet.
+        This release has no page other than this one.
+      </p>
     {% endfor %}
-  </ul>
-  <p>
-    A study is valid for its own release only: what the available release shows does not describe
-    {% for release in portal.releases if release.id == page.meta.portal_release %}{{ release.title }}{% endfor %}.
-  </p>
+    <figure class="oz-section-art">
+      <img src="{{ root }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship in a sunny harbour.">
+    </figure>
+    <h2 id="available">Available</h2>
+    <ul class="portal-releases">
+      {% for release in portal.releases if release.status != "planned" %}
+        <li>
+          <a href="{{ root }}{{ release.path }}/">{{ release.title }}</a>
+          {% if release.tag %}<span class="portal-releases__note">tag <code>{{ release.tag }}</code></span>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <p>
+      A study is valid for its own release only: what the available release shows does not describe
+      {% for release in portal.releases if release.id == page.meta.portal_release %}{{ release.title }}{% endfor %}.
+    </p>
+  {% else %}
+    {% for module in portal.modules if module.id == page.meta.portal_module %}
+      <p class="portal-planned__eyebrow">{{ module.step }} · coming soon</p>
+      <h1>{{ module.title }}</h1>
+      <p>{{ module.summary }}</p>
+      <p>This module of OzarLand Academy is being moved into the portal. It has no page other than this one yet.</p>
+    {% endfor %}
+    <figure class="oz-section-art">
+      <img src="{{ root }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship in a sunny harbour.">
+    </figure>
+    <p><a href="{{ root }}">Back to the learning path</a></p>
+  {% endif %}
 {% endblock %}

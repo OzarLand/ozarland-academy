@@ -6,8 +6,8 @@ Usage: service_cards.py [--release <id>] <kolla-ansible checkout> <inventory.jso
 `ansible-inventory -i ansible/inventory/multinode --list`> [components directory]
 
 The cards live in the component pages of one release (default directory:
-docs/<id>/components, where <id> is the release given with --release, or the
-default release of versions.toml). The checkout must be at the tag of that
+docs/day2/<id>/components, where <id> is the release given with --release, or the
+default release of the day-2 module in academy.toml). The checkout must be at the tag of that
 release. Each page holds its card(s) between two markers:
 
     <!-- BEGIN GENERATED: tools/service_cards.py <role> [<role> ...] -->
@@ -26,7 +26,7 @@ def release_argument(argv):
     """Take `--release <id>` (or `--release=<id>`) out of the arguments.
 
     Returns (docs directory of the release, remaining arguments). Without the
-    option the release is the default one of versions.toml.
+    option the release is the default one of the day-2 module (academy.toml).
     """
     here = os.path.dirname(os.path.abspath(__file__))
     sys.path.insert(0, os.path.join(here, 'site'))
@@ -47,7 +47,7 @@ def release_argument(argv):
         registry = releases.load_registry(releases.Path(root))
         release = releases.select(registry, release or registry.default)[0]
     except releases.RegistryError as error:
-        sys.exit('versions.toml: ' + '; '.join(error.problems))
+        sys.exit('academy.toml: ' + '; '.join(error.problems))
     return os.path.join(root, *release.docs_dir.split('/')), rest
 
 

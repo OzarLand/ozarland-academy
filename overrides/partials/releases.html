@@ -1,20 +1,28 @@
 {#-
   Release selector of the header.
 
-  The list comes from versions.toml (the tooling puts it in
-  `config.extra.portal`) and is written into every page, so it works without
-  JavaScript: each entry is a plain link to the home page of that release. An
-  available release is a site of its own under <portal root>/<id>/; a planned
-  one has a single "coming soon" page there. portal.js improves the links to
+  The list comes from academy.toml (the tooling puts the releases of the
+  versioned module in `config.extra.portal`) and is written into every page of
+  that module, so it works without JavaScript: each entry is a plain link to
+  the home page of that release. An available release is a site of its own
+  under <portal root>/<module>/<id>/; a planned one has a single "coming soon"
+  page there. The pages of the other modules and the learning path have no
+  selector. portal.js improves the links to
   available releases: it opens the same page in the other release when that
   release has it.
 
   `current` is the release the page belongs to: the release of the site, or
   on the root site the planned release named by the page (`portal_release`
-  in its front matter). The landing and not-found pages have none.
+  in its front matter). The home of the module and the not-found page have
+  none.
 -#}
 {% set portal = config.extra.portal %}
-{% if portal and portal.releases %}
+{% if portal.kind == "root" %}
+  {% set in_module = page and page.meta and page.meta.portal_module and page.meta.portal_module == portal.module.id %}
+{% else %}
+  {% set in_module = portal.module and portal.module.kind == "versioned" %}
+{% endif %}
+{% if portal and portal.releases and in_module %}
   {% set current_id = portal.current %}
   {% if page and page.meta and page.meta.portal_release %}
     {% set current_id = page.meta.portal_release %}
@@ -46,7 +54,7 @@
             {% for release in portal.releases %}
               {% if release.status != "planned" %}
                 <li>
-                  <a class="portal-release__link" href="{{ root }}{{ release.id }}/" data-portal-release-link="available"{% if release.id == current_id %} aria-current="true"{% endif %}>
+                  <a class="portal-release__link" href="{{ root }}{{ release.path }}/" data-portal-release-link="available"{% if release.id == current_id %} aria-current="true"{% endif %}>
                     <span class="portal-release__name">{{ release.title }}</span>
                   </a>
                 </li>
@@ -59,7 +67,7 @@
               {% for release in portal.releases %}
                 {% if release.status == "planned" %}
                   <li>
-                    <a class="portal-release__link portal-release__link--planned" href="{{ root }}{{ release.id }}/" data-portal-release-link="planned"{% if release.id == current_id %} aria-current="true"{% endif %}>
+                    <a class="portal-release__link portal-release__link--planned" href="{{ root }}{{ release.path }}/" data-portal-release-link="planned"{% if release.id == current_id %} aria-current="true"{% endif %}>
                       <span class="portal-release__name">{{ release.title }}</span>
                       <span class="portal-release__soon">coming soon</span>
                     </a>

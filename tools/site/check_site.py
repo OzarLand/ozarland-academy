@@ -39,13 +39,14 @@ On the site of each available release:
 
 On the root of the portal:
 
-    portal-root        versions.json is valid and says what versions.toml
-                       says; the landing page links to the default release, which
-                       is built; the not-found page knows the same releases
-                       and its list of addresses to redirect is exactly the
-                       pages of the release that was published without a
-                       prefix; a planned release has its "coming soon" page
-                       and nothing else; no directory belongs to no release
+    portal-root        the learning path lists the modules of academy.toml
+                       in order and opens the first available one; every
+                       module has its home page; the home of the versioned
+                       module links to its default release, which is built,
+                       and its versions.json says what academy.toml says;
+                       the not-found page knows the same sites; a planned
+                       module or release has its "coming soon" page and
+                       nothing else; no directory belongs to no site
 
 It prints the number of pages, links, anchors and the external hosts linked.
 Exit status: 0 when there is no error, 1 otherwise. With --strict every
@@ -367,7 +368,7 @@ class Site:
         elif rel not in self.files and rel in self.dirs:
             rel += "/index.html"
         if rel not in self.files:
-            if rel.split("/")[0] in self.not_built:
+            if any(rel == path or rel.startswith(path + "/") for path in self.not_built):
                 self.stats["not built"] += 1
                 return "skip", "", ""
             return "missing", rel, ""
@@ -643,52 +644,71 @@ class Site:
     # -- root of the portal ---------------------------------------------------------
 
     def check_root(self, registry: releases.Registry, root: Path) -> None:
-        """versions.json, landing page, not-found page, planned releases."""
+        """Learning path, homes and versions.json of the modules, not-found page, planned pages."""
         name = "portal-root"
 
         def error(path: str, message: str) -> None:
             self.report.error(path, 1, name, message)
 
-        # versions.json says what the registry says.
-        expected = releases.versions_json(registry)
-        if "versions.json" not in self.files:
-            error("versions.json", "the file is missing")
-        else:
-            try:
-                data = json.loads((self.dir / "versions.json").read_text(encoding="utf-8"))
-            except (OSError, ValueError) as exc:
-                error("versions.json", f"not valid JSON: {exc}")
-            else:
-                if data != expected:
-                    listed = [entry.get("version") for entry in data if isinstance(entry, dict)] if isinstance(data, list) else []
-                    error(
-                        "versions.json",
-                        f"does not match {releases.REGISTRY_FILE} (lists {listed}, the registry has "
-                        f"{list(registry.ids)}): build the portal again",
-                    )
+        def text_of(path: str) -> str:
+            return (self.dir / path).read_text(encoding="utf-8", errors="replace")
 
-        # Landing page: links to the default release, which must be there.
+        # Learning path: every module, in order; the first available one is the start.
         if "index.html" not in self.files:
-            error("index.html", "the landing page is missing")
+            error("index.html", "the page of the learning path is missing")
         else:
-            text = (self.dir / "index.html").read_text(encoding="utf-8", errors="replace")
+            text = text_of("index.html")
+            listed = re.findall(r'data-portal-module="([^"]*)"', text)
+            if listed != [m.id for m in registry.modules]:
+                error("index.html", f"the learning path lists {listed}, {releases.REGISTRY_FILE} has {[m.id for m in registry.modules]}")
+            start = re.search(r'data-portal-start="([^"]*)"', text)
+            first = next((m for m in registry.modules if m.available), None)
+            if first is not None and (not start or start.group(1) != first.id):
+                error("index.html", f"the call to action does not open the first available module `{first.id}`")
+
+        for module in registry.modules:
+            home = f"{module.id}/index.html"
+            if home not in self.files and module.id not in self.not_built:
+                error(home, f"the home page of the module `{module.id}` is missing")
+                continue
+            if not module.versioned:
+                continue
+            # Home of a versioned module: links to its default release, which must be there.
+            text = text_of(home)
+            default = f"{module.id}/{module.default}"
             match = re.search(r'data-portal-default="([^"]*)"', text)
             if not match:
-                error("index.html", "the landing page does not name the default release (data-portal-default)")
-            elif match.group(1) != registry.default:
-                error(
-                    "index.html",
-                    f"the landing page links to `{match.group(1)}`, the default release is `{registry.default}`",
-                )
-            if f"{registry.default}/index.html" not in self.files and registry.default not in self.not_built:
-                error("index.html", f"the default release is not built: {registry.default}/index.html is missing")
+                error(home, "the home of the module does not name the default release (data-portal-default)")
+            elif match.group(1) != default:
+                error(home, f"the home of the module links to `{match.group(1)}`, the default release is `{default}`")
+            if f"{default}/index.html" not in self.files and default not in self.not_built:
+                error(home, f"the default release is not built: {default}/index.html is missing")
+            # versions.json says what the registry says.
+            versions = f"{module.id}/versions.json"
+            expected = releases.versions_json(registry, module)
+            if versions not in self.files:
+                error(versions, "the file is missing")
+            else:
+                try:
+                    data = json.loads(text_of(versions))
+                except ValueError as exc:
+                    error(versions, f"not valid JSON: {exc}")
+                else:
+                    if data != expected:
+                        listed = [e.get("version") for e in data if isinstance(e, dict)] if isinstance(data, list) else []
+                        error(
+                            versions,
+                            f"does not match {releases.REGISTRY_FILE} (lists {listed}, the registry has "
+                            f"{[r.id for r in module.releases]}): build the portal again",
+                        )
 
-        # Not-found page: same releases, and the addresses published without a prefix.
+        # Not-found page: the sites it knows are those of the registry.
         if "404.html" not in self.files:
             error("404.html", "the not-found page of the portal is missing")
         else:
-            text = (self.dir / "404.html").read_text(encoding="utf-8", errors="replace")
-            match = re.search(r'<script id="portal-not-found" type="application/json">(.*?)</script>', text, re.DOTALL)
+            match = re.search(
+                r'<script id="portal-not-found" type="application/json">(.*?)</script>', text_of("404.html"), re.DOTALL
+            )
             data = None
             if match:
                 try:
@@ -698,48 +718,36 @@ class Site:
             if not isinstance(data, dict):
                 error("404.html", "the data of the redirections (script #portal-not-found) is missing or not valid JSON")
             else:
-                known = [(r.get("id"), r.get("status")) for r in data.get("releases", []) if isinstance(r, dict)]
-                if known != [(r.id, r.status) for r in registry.releases]:
-                    error("404.html", f"the releases it knows do not match {releases.REGISTRY_FILE}")
-                unprefixed = data.get("unprefixed") if isinstance(data.get("unprefixed"), dict) else {}
-                target = unprefixed.get("release")
-                if target != registry.unprefixed:
-                    error(
-                        "404.html",
-                        f"addresses without a release are sent to `{target}`, "
-                        f"{releases.REGISTRY_FILE} says `{registry.unprefixed}`",
-                    )
-                elif target not in self.not_built:
-                    pages = unprefixed.get("pages") if isinstance(unprefixed.get("pages"), list) else []
-                    for url in pages:
-                        if self.locate(f"{target}/index.html", url or "./")[0] != "file":
-                            error("404.html", f"redirection target `{target}/{url}` is not a page of the portal")
-                    listed = set(pages)
-                    release = registry.get(target)
-                    for url in releases.page_urls(root, release):
-                        if url not in listed:
-                            error("404.html", f"`{url}` is a page of `{target}` but an address without a release is not redirected to it")
+                known = [(r.get("path"), r.get("status")) for r in data.get("sites", []) if isinstance(r, dict)]
+                if known != [(r.path, r.status) for r in registry.releases]:
+                    error("404.html", f"the sites it knows do not match {releases.REGISTRY_FILE}")
 
-        # Planned releases: the "coming soon" page and nothing else.
+        # Planned modules and releases: the "coming soon" page and nothing else.
         for release in registry.planned:
-            page = f"{release.id}/index.html"
+            page = f"{release.path}/index.html"
             if page not in self.files:
-                error(page, f"the page of the planned release `{release.id}` is missing")
+                error(page, f"the page of the planned `{release.path}` is missing")
                 continue
-            others = sorted(f for f in self.files if f.startswith(release.id + "/") and f != page)
+            others = sorted(f for f in self.files if f.startswith(release.path + "/") and f != page)
             if others:
-                error(page, f"a planned release has one page only, found also: {', '.join(others[:5])}")
-            text = (self.dir / page).read_text(encoding="utf-8", errors="replace")
-            if "not available yet" not in text or release.title not in html_unescape(text):
-                error(page, "the page does not name the release or does not say that it is not available yet")
+                error(page, f"a planned module or release has one page only, found also: {', '.join(others[:5])}")
+            text = html_unescape(text_of(page))
+            if release.title not in text or not ("not available yet" in text or "coming soon" in text):
+                error(page, "the page does not name the module or release, or does not say that it is not available yet")
 
-        # Available releases, and nothing that belongs to no release.
+        # Available sites, and nothing that belongs to no site.
         for release in registry.available:
-            if f"{release.id}/index.html" not in self.files and release.id not in self.not_built:
-                error(f"{release.id}/index.html", f"the release `{release.id}` is available but its site is not built")
-        top = {d for d in self.dirs if "/" not in d}
-        for extra in sorted(top - set(registry.ids) - {"assets"}):
-            error(extra + "/", f"directory of no release of {releases.REGISTRY_FILE}")
+            if f"{release.path}/index.html" not in self.files and release.path not in self.not_built:
+                error(f"{release.path}/index.html", f"`{release.path}` is available but its site is not built")
+        modules = {m.id: m for m in registry.modules}
+        for directory in sorted(d for d in self.dirs if "/" not in d):
+            if directory != "assets" and directory not in modules:
+                error(directory + "/", f"directory of no module of {releases.REGISTRY_FILE}")
+        for module in registry.modules:
+            if module.versioned:
+                for directory in sorted(d for d in self.dirs if d.count("/") == 1 and d.startswith(module.id + "/")):
+                    if directory.split("/")[1] not in {r.id for r in module.releases}:
+                        error(directory + "/", f"directory of no release of the module `{module.id}`")
         self.check_sitemap()
 
 
@@ -753,10 +761,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root (default: the checkout)")
     parser.add_argument(
         "--release",
-        metavar="ID",
-        help="only this release was built: check it and the root, accept that the other releases are missing",
+        metavar="PATH",
+        help="only this site was built (day2/2024.1, lab): check it and the root, accept that the others are missing",
     )
-    parser.add_argument("--site-url", default=None, help="public URL of the portal root (default: site_url of zensical.base.toml)")
+    parser.add_argument("--site-url", default=None, help="public URL of the portal root (default: https://<SITE_DOMAIN>/, or site_url of zensical.base.toml)")
     parser.add_argument("--strict", action="store_true", help="report warnings as errors")
     args = parser.parse_args(argv)
 
@@ -782,9 +790,9 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     if args.release:
         site.not_built = {
-            release.id
+            release.path
             for release in registry.available
-            if release not in selected and f"{release.id}/index.html" not in site.files
+            if release not in selected and f"{release.path}/index.html" not in site.files
         }
 
     site.check_references()
@@ -795,13 +803,13 @@ def main(argv: list[str] | None = None) -> int:
 
     lines = []
     for release in selected:
-        prefix = release.id + "/"
+        prefix = release.path + "/"
         config = release_config(root, registry, release)
         if config.error:
             report.error(release.settings_file, 1, "portal-root", f"configuration cannot be read: {config.error}")
             continue
         if not (root / release.docs_dir).is_dir():
-            report.error(release.docs_dir, 1, "page-missing", "the docs directory of the release does not exist")
+            report.error(release.docs_dir, 1, "page-missing", "the docs directory of the site does not exist")
             continue
         sources = list_pages(root, config, release.docs_dir)
         expected = site.check_sources(sources, release.docs_dir, config.use_directory_urls, prefix)
@@ -809,7 +817,7 @@ def main(argv: list[str] | None = None) -> int:
         sitemap = site.check_sitemap(prefix)
         site.check_updates(prefix)
         lines.append(
-            f"Release {release.id}: {len(expected)} of {len(sources)} Markdown page(s) of {release.docs_dir}/ are built; "
+            f"Site {release.path}: {len(expected)} of {len(sources)} Markdown page(s) of {release.docs_dir}/ are built; "
             f"search index: {entries} entries; sitemap: {sitemap} URL(s) checked."
         )
     site.check_root(registry, root)
@@ -818,7 +826,7 @@ def main(argv: list[str] | None = None) -> int:
     ids = sum(len(values) for values in site.ids.values())
     hosts = ", ".join(f"{host} ({count})" for host, count in sorted(site.external_hosts.items())) or "none"
     script_hosts = ", ".join(sorted(site.script_hosts)) or "none"
-    planned = ", ".join(release.id for release in registry.planned) or "none"
+    planned = ", ".join(release.path for release in registry.planned) or "none"
     skipped = (
         f"\nNot built in this run, links to them not checked ({stats['not built']}): {', '.join(sorted(site.not_built))}."
         if site.not_built
@@ -828,8 +836,8 @@ def main(argv: list[str] | None = None) -> int:
         f"Portal: {site_dir}\n"
         f"Portal URL: {site.site_url}\n"
         + "\n".join(lines)
-        + f"\nRoot: landing page, not-found page, versions.json ({len(registry.releases)} releases); "
-        f"planned releases with their page: {planned}.{skipped}\n"
+        + f"\nRoot: learning path ({len(registry.modules)} modules), not-found page, versions.json; "
+        f"planned modules and releases with their page: {planned}.{skipped}\n"
         f"Pages: {len(site.pages)} HTML page(s) in the portal.\n"
         f"Links: {stats['links']} internal link(s), {stats['anchors']} with an anchor, checked against {ids} element id(s); "
         f"{stats['resources']} internal resource reference(s) (scripts, stylesheets, images, fonts).\n"

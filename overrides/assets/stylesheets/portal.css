@@ -1754,6 +1754,51 @@ a.portal-cta--primary:hover {
   border-radius: 50%;
 }
 
+/* Learning path of the portal root (overrides/academy.html): the modules in
+   order, one numbered card per step; a planned module is muted. */
+.md-typeset ol.oz-steps {
+  display: grid;
+  gap: 0.8rem;
+  max-width: 56rem;
+  padding: 0;
+  margin: 1rem 0 0;
+  list-style: none;
+}
+
+.md-typeset .oz-steps__item {
+  padding: 0.6rem 1rem;
+  margin: 0;
+  background-color: var(--oz-parchment-soft);
+  border: 0.05rem solid var(--oz-wood);
+  border-left: 0.3rem solid var(--portal-accent);
+  border-radius: 0.4rem;
+}
+
+.md-typeset .oz-steps__item--planned {
+  border-left-color: var(--oz-wood);
+}
+
+.md-typeset .oz-steps__item > p {
+  margin: 0.2rem 0;
+}
+
+.md-typeset .oz-steps__step {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--portal-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.md-typeset .oz-steps__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
 /* Closing block "Part of OzarLand". */
 .oz-land {
   max-width: 56rem;

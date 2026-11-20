@@ -1,6 +1,6 @@
 {#-
-  The releases of versions.toml as two lists, available then planned. Used by
-  the pages of the root site: landing page, not-found page, planned releases.
+  The releases of the versioned module (academy.toml) as two lists, available then planned. Used by
+  the pages of the root site: home of the module, not-found page, planned releases.
   `release_heading` sets the level of the two headings (default 2).
 -#}
 {% set h = "h" ~ (release_heading | d(2)) %}
@@ -14,7 +14,7 @@
 <ul class="portal-releases">
   {% for release in portal.releases if release.status != "planned" %}
     <li>
-      <a href="{{ root }}{{ release.id }}/">{{ release.title }}</a>
+      <a href="{{ root }}{{ release.path }}/">{{ release.title }}</a>
       {% if release.tag %}<span class="portal-releases__note">tag <code>{{ release.tag }}</code></span>{% endif %}
     </li>
   {% endfor %}
@@ -24,7 +24,7 @@
   <p>The study of these releases is not available yet.</p>
   <ul class="portal-releases portal-releases--planned">
     {% for release in portal.releases if release.status == "planned" %}
-      <li><a href="{{ root }}{{ release.id }}/">{{ release.title }}</a></li>
+      <li><a href="{{ root }}{{ release.path }}/">{{ release.title }}</a></li>
     {% endfor %}
   </ul>
 {% endif %}

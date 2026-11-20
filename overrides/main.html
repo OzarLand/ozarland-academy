@@ -3,12 +3,15 @@
   the Mermaid loader, the impact chips of the front matter and the
   "Last updated" line. Content stays in docs/<release>/.
 
-  The same templates build the site of every release and the root site of the
-  portal (overrides/landing.html, overrides/planned.html, the root 404.html).
-  `config.extra.portal` is written by tools/site/releases.py from
-  versions.toml: `kind` ("release" or "root"), `current` (id of the release
-  of this site), `up` (path from the base of this site to the portal root),
-  `default`, `root_url` and `releases`.
+  The same templates build every site of the portal and its root site
+  (overrides/academy.html, overrides/landing.html, overrides/planned.html,
+  the root 404.html). `config.extra.portal` is written by
+  tools/site/releases.py from academy.toml: `kind` ("release" for a site,
+  "root"), `current` (id of the release, or of the single module, of this
+  site), `path` (its URL prefix), `module`, `up` (path from the base of this
+  site to the portal root), `default` (path of the default release),
+  `root_url`, `modules`, `releases` (the sites of the module, for the release
+  selector) and `sites` (every site).
 -#}
 {% extends "base.html" %}
 

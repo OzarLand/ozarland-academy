@@ -23,7 +23,7 @@
           It keeps the id of that heading, so links to it still resolve. -#}
       {% set first = page.toc | first %}
       <h1 class="portal-hero__title"{% if first and first.level == 1 and first.id %} id="{{ first.id }}"{% endif %}>{{ page.meta.title | d(config.site_name, true) }}</h1>
-      {#- The release this site studies (versions.toml). -#}
+      {#- The release this site studies (academy.toml). -#}
       {% set portal = config.extra.portal %}
       {% for release in portal.releases if release.id == portal.current %}
         <p class="portal-hero__release">

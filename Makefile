@@ -1,14 +1,16 @@
 # Build and check the documentation portal. Details: tools/site/README.md.
 #
-# The portal is one site per release of versions.toml, published under its own
-# URL prefix (site/<id>/), plus the root of the portal (landing page,
-# not-found page, versions.json, one page per planned release).
+# The portal of OzarLand Academy is one site per available module or release
+# of academy.toml, published under its own URL prefix (site/<path>/: lab/,
+# day2/2024.1/ ...), plus the root of the portal (the learning path, the home
+# of the day-2 module, the not-found page, one page per planned module or
+# release).
 #
 #   make docs-deps      install the pinned build dependencies, fetch the vendored Mermaid
 #   make docs-check     check the Markdown sources (no build needed)
 #   make docs-build     unit tests, strict build into site/, checks on the built portal
 #   make docs-test      unit tests of tools/site only
-#   make docs-serve     live preview of one release, rebuilt on change
+#   make docs-serve     live preview of one site, rebuilt on change
 #   make docs-preview   serve the built portal as GitHub Pages publishes it
 #   make docs-clean     remove what the build generates
 #
@@ -20,9 +22,13 @@
 #   make docs-check docs-build
 #
 # Variables:
-#   RELEASE=<id>        docs-check, docs-build: that release only (docs-build
-#                       also rebuilds the root); docs-serve: the release to
-#                       preview (default: the default release of versions.toml)
+#   RELEASE=<path>      docs-check, docs-build: that site only, such as
+#                       day2/2024.1 (docs-build also rebuilds the root);
+#                       docs-serve: the site to preview (default: the
+#                       default release of the day-2 module)
+#   SITE_DOMAIN=<domain>  build and check the portal for https://<domain>/
+#                       (default: site_url of zensical.base.toml); CI sets it
+#                       from the repository variable of the same name
 #   STRICT=1            the warnings of the checks are errors (CI runs
 #                       docs-check and docs-build with STRICT=1)
 #   PYTHON=<interpreter>
@@ -38,6 +44,8 @@ endif
 # Must match SITE_DIR in tools/site/releases.py.
 SITE_DIR := site
 DEV_ADDR ?= localhost:8000
+# Read by tools/site/releases.py (portal_root_url): the address of the portal.
+export SITE_DOMAIN
 STRICT ?=
 RELEASE ?=
 CHECK_FLAGS := $(if $(filter-out 0,$(STRICT)),--strict)
@@ -56,12 +64,13 @@ help:
 	@echo "make docs-check     check the Markdown sources (no build needed)"
 	@echo "make docs-build     unit tests, strict build into $(SITE_DIR)/, checks on the built portal"
 	@echo "make docs-test      unit tests of tools/site only"
-	@echo "make docs-serve     live preview of one release on http://$(DEV_ADDR)"
+	@echo "make docs-serve     live preview of one site on http://$(DEV_ADDR)"
 	@echo "make docs-preview   serve the built portal on http://$(DEV_ADDR), as GitHub Pages publishes it"
 	@echo "make docs-clean     remove what the build generates"
-	@echo "Python: $(PYTHON)   (RELEASE=<id>: one release; STRICT=1: warnings of the checks are errors)"
-	@echo "Available releases: $$($(PYTHON) tools/site/releases.py list --status available | tr '\n' ' ')"
-	@echo "Planned releases:   $$($(PYTHON) tools/site/releases.py list --status planned | tr '\n' ' ')"
+	@echo "Python: $(PYTHON)   (RELEASE=<path>: one site; STRICT=1: warnings of the checks are errors)"
+	@echo "Address:         $$($(PYTHON) tools/site/releases.py url)"
+	@echo "Available sites: $$($(PYTHON) tools/site/releases.py list --status available | tr '\n' ' ')"
+	@echo "Planned:         $$($(PYTHON) tools/site/releases.py list --status planned | tr '\n' ' ')"
 
 # The only target that needs the network: PyPI, then the pinned Mermaid bundle
 # (not committed; fetch_vendor.py verifies its checksum).
@@ -85,8 +94,8 @@ docs-build: docs-test
 	$(PYTHON) tools/site/build.py --strict $(RELEASE_FLAG)
 	$(PYTHON) tools/site/check_site.py $(SITE_DIR) $(CHECK_FLAGS) $(RELEASE_FLAG)
 
-# One release at a time: the links of the release selector to the other
-# releases do not work in this preview. For the whole portal: docs-preview.
+# One site at a time: links to the other sites do not work in this preview.
+# For the whole portal: docs-preview.
 docs-serve:
 	$(PYTHON) tools/site/build.py --serve --dev-addr $(DEV_ADDR) $(RELEASE_FLAG)
 
@@ -95,5 +104,5 @@ docs-preview:
 
 # The downloaded Mermaid bundle is a dependency, not a build product: it stays.
 docs-clean:
-	rm -rf $(SITE_DIR) .cache .build .zensical.*.toml docs/*/assets/data/updates.json
+	rm -rf $(SITE_DIR) .cache .build .zensical.*.toml docs/*/assets/data/*.json docs/*/*/assets/data/*.json
 	find tools -type d -name __pycache__ -prune -exec rm -rf {} +

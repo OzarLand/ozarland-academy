@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Source checks for the Markdown of the portal (no build needed).
 
-The Markdown under docs/<release>/ is the single source of truth and must
+The Markdown under docs/<path>/ is the single source of truth and must
 work both on github.com and on the generated site. This script reads
-versions.toml, then the files of every available release as they are in the
-working tree, and reports every place where one of the authoring rules is
-broken:
+academy.toml, then the files of every available site (a module, or a release
+of the versioned module) as they are in the working tree, and reports every
+place where one of the authoring rules is broken:
 
-    registry        versions.toml can be read, and matches the docs tree: an
-                    available release has docs/<id>/ and docs/<id>.toml, a
-                    planned release has neither, nothing else is under docs/
+    registry        academy.toml can be read, and matches the docs tree: an
+                    available site has docs/<path>/ and docs/<path>.toml, a
+                    planned one has neither, nothing else is under docs/
 
     front-matter    every page starts with a YAML front matter block
     title           ... that has a non-empty `title`
@@ -20,10 +20,16 @@ broken:
     link-file       every relative link points to an existing file
     link-anchor     every `#fragment` is a heading anchor (GitHub slug) or an
                     explicit `<a id="...">` of the target file
-    link-style      internal links are relative, stay inside the release
-                    (docs/<id>/) and never point to a directory
-    link-release    a link to another release is the absolute address of its
-                    published page, and that page exists
+    link-style      internal links are relative, stay inside the site
+                    (docs/<path>/) and never point to a directory
+    link-site       a link to another site of the portal (another release,
+                    another module) is the address of its page relative to
+                    the file, ending with "/" (../../2023.1/start/conventions/),
+                    and that page exists
+    link-site-address  no address of the portal is written in full: not in
+                    docs/ (links are relative, so the site works on any
+                    domain), and outside docs/ only the current address
+                    (https://<SITE_DOMAIN>/, or site_url of zensical.base.toml)
     link-reference  `[text][label]` uses a defined label
     link-repo-file  absolute links to a file of this repository (branch main)
                     point to a file that exists
@@ -33,14 +39,14 @@ broken:
     callout         callouts are GitHub alerts of the five known types
     todo-editorial  no leftover `<!-- TODO editorial` marker (warning until
                     --strict)
-    nav             every page is in the nav of its release (docs/<id>.toml)
+    nav             every page is in the nav of its site (docs/<path>.toml)
                     and every nav entry exists
 
 Exit status: 0 when there is no error, 1 otherwise. With --strict every
 warning is an error. Standard library only (Python 3.11 or newer, for
 tomllib).
 
-Usage:  python3 tools/site/check_docs.py [--strict] [--release ID] [--root DIR]
+Usage:  python3 tools/site/check_docs.py [--strict] [--release PATH] [--root DIR]
         python3 tools/site/check_docs.py --list-rules
 """
 
@@ -104,7 +110,7 @@ EXTRA_FILES = ("README.md", "CONTRIBUTING.md", "tools/site/README.md")
 PRUNED_DIRS = {".git", ".venv", "venv", "node_modules", "__pycache__", ".cache", ".build"}
 
 RULES = {
-    "registry": "versions.toml can be read and matches the docs tree",
+    "registry": "academy.toml can be read and matches the docs tree",
     "encoding": "file is UTF-8",
     "front-matter": "page starts with a YAML front matter block that can be read",
     "title": "front matter has a non-empty `title`",
@@ -113,16 +119,17 @@ RULES = {
     "tags": "`tags` is a list of lowercase names",
     "link-file": "relative link target exists (exact case)",
     "link-anchor": "link fragment is a heading anchor or an explicit id of the target",
-    "link-style": "internal links are relative, inside the release (docs/<id>/), and point to a file",
-    "link-release": "link to another release is the absolute address of an existing published page",
+    "link-style": "internal links are relative, inside the site (docs/<path>/), and point to a file",
+    "link-site": "link to another site of the portal is the relative address of an existing page (ending with /)",
+    "link-site-address": "no address of the portal written in full (only the current one, outside docs/)",
     "link-reference": "reference-style link uses a defined label",
     "link-repo-file": "absolute link to a file of this repository points to an existing file",
     "code-language": "fenced code block has a language and is closed",
     "removed-path": "no reference to a path of the old layout",
     "callout": "callout is a GitHub alert: " + ", ".join(f"[!{t}]" for t in ALERT_TYPES),
     "todo-editorial": "no leftover `<!-- TODO editorial` marker",
-    "nav": "page is listed in the nav of its release (docs/<id>.toml), and nav entries exist",
-    "config": "configuration of the release can be read",
+    "nav": "page is listed in the nav of its site (docs/<path>.toml), and nav entries exist",
+    "config": "configuration of the site can be read",
 }
 
 #: Rules reported as warnings unless --strict is given.
@@ -231,11 +238,13 @@ class SiteConfig:
     not_in_nav: PatternSet = field(default_factory=PatternSet)
     #: Path shown in the findings (the file that holds the nav).
     name: str = ""
-    #: Address of the portal root, and the registry of releases (None when
-    #: the configuration is not the one of a release).
+    #: Address of the portal root, the registry (None when unknown) and the
+    #: path of the site this configuration builds ("" outside a site).
     portal_url: str = ""
     registry: releases.Registry | None = None
     release: str = ""
+    #: Every address of the portal (portal_addresses), without scheme.
+    addresses: list[str] = field(default_factory=list)
 
 
 def load_config(path: Path) -> SiteConfig:
@@ -258,22 +267,49 @@ def load_config(path: Path) -> SiteConfig:
 
 
 def release_config(root: Path, registry: releases.Registry, release: releases.Release) -> SiteConfig:
-    """Configuration of one available release, as the build merges it.
+    """Configuration of one available site, as the build merges it.
 
-    `path` is docs/<id>.toml, the file that holds the nav of the release.
+    `path` is docs/<path>.toml, the file that holds the nav of the site.
     """
     path = root / release.settings_file
     config = SiteConfig(path=path, name=release.settings_file, found=path.is_file())
     config.docs_dir = release.docs_dir
     config.registry = registry
-    config.release = release.id
+    config.release = release.path
     try:
-        project = releases.release_project(root, registry, release.id)
+        project = releases.release_project(root, registry, release.path)
     except releases.RegistryError as exc:
         config.error = "; ".join(exc.problems)
         return config
     config.portal_url = project["extra"]["portal"]["root_url"]
     return apply_project(config, project)
+
+
+#: Addresses the portal had before OzarLand Academy. A page never links to
+#: them: their sites only redirect to the portal.
+FORMER_ADDRESSES = ("https://ozarland.github.io/kolla-ansible-academy/",)
+
+
+def bare_address(address: str) -> str:
+    """`address` without its scheme, ending with "/"."""
+    return re.sub(r"^[A-Za-z][A-Za-z0-9+.-]*://", "", address.strip()).rstrip("/") + "/"
+
+
+def portal_addresses(root: Path) -> tuple[str, list[str]]:
+    """(current address of the portal root, every address of the portal).
+
+    The current one is https://<SITE_DOMAIN>/ or `site_url` of
+    zensical.base.toml (releases.portal_root_url); the others are that
+    `site_url` and the former addresses. Raises RegistryError.
+    """
+    base = releases.load_project(root / releases.BASE_CONFIG)
+    current = releases.portal_root_url(base)
+    known = [current, str(base.get("site_url", "")), *FORMER_ADDRESSES]
+    result: list[str] = []
+    for address in known:
+        if address and bare_address(address) not in result:
+            result.append(bare_address(address))
+    return current, result
 
 
 def apply_project(config: SiteConfig, project: dict) -> SiteConfig:
@@ -954,6 +990,7 @@ class Checker:
         self._removed_paths(doc)
         for line in doc.todo_lines:
             self.report.warning(rel, line, "todo-editorial", "leftover `<!-- TODO editorial` marker")
+        self._site_addresses(doc, in_docs=True)
         self._links(doc, in_docs=True)
 
     def check_extra(self, rel: str) -> None:
@@ -962,7 +999,40 @@ class Checker:
         self.stats["other files"] += 1
         if doc.unclosed_fence:
             self.report.error(rel, doc.unclosed_fence, "code-language", "code fence is never closed")
+        self._site_addresses(doc, in_docs=False)
         self._links(doc, in_docs=False)
+
+    def _site_addresses(self, doc: Document, in_docs: bool) -> None:
+        """No address of the portal written in full (links, autolinks, plain text).
+
+        Code is not looked at: a command may name an address.
+        """
+        addresses = self.config.addresses
+        if not addresses:
+            return
+        current = bare_address(self.config.portal_url) if self.config.portal_url else ""
+        pattern = re.compile(
+            r"(?<![\w.-])(?:[A-Za-z]+://)?(" + "|".join(re.escape(a.rstrip("/")) for a in addresses) + r")(?=[/\s)>\]\"'#?]|$)"
+        )
+        for match in pattern.finditer(doc.masked):
+            found = match.group(1) + "/"
+            line = doc._line(match.start())
+            if in_docs:
+                self.report.error(
+                    doc.rel,
+                    line,
+                    "link-site-address",
+                    f"`{match.group(0)}` is an address of the portal: use a relative link, so that the site works "
+                    "at any address (to another site: ../<path>/ relative to this file)",
+                )
+            elif found != current:
+                self.report.error(
+                    doc.rel,
+                    line,
+                    "link-site-address",
+                    f"`{match.group(0)}` is not the current address of the portal (https://{current}): "
+                    "write the current one",
+                )
 
     def _front_matter(self, doc: Document) -> None:
         error, warning = self.report.error, self.report.warning
@@ -1122,6 +1192,9 @@ class Checker:
             if resolved == ".." or resolved.startswith("../"):
                 error(doc.rel, link.line, "link-file", f"`{path}` points outside the repository")
                 return
+            if in_docs and path.endswith("/") and self.config.registry is not None:
+                self._site_link(doc, link, resolved, fragment)
+                return
             if resolved in self.dirs or resolved == ".":
                 if in_docs or "#" in target:
                     error(
@@ -1134,14 +1207,14 @@ class Checker:
             if resolved not in self.files:
                 error(doc.rel, link.line, "link-file", f"`{path}` does not exist" + self._file_hint(resolved))
                 return
-            other = self._release_of(resolved) if in_docs else None
-            if other is not None and other.id != self.config.release:
+            other = self._site_of(resolved) if in_docs else None
+            if other is not None and other.path != self.config.release:
                 error(
                     doc.rel,
                     link.line,
-                    "link-release",
-                    f"`{path}` is a file of another release ({other.docs_dir}/), which is another site; "
-                    f"link to its published page: {self._published_url(other, resolved)}",
+                    "link-site",
+                    f"`{path}` is a file of another site ({other.docs_dir}/): link to its page with an address "
+                    f"relative to this file, {self._site_address(doc.rel, other, resolved)}",
                 )
                 return
             if in_docs and not resolved.startswith(docs_prefix):
@@ -1179,21 +1252,13 @@ class Checker:
             )
 
     def _absolute(self, doc: Document, link: Link, target: str, in_docs: bool) -> None:
-        """Absolute URL: allowed, unless it is an internal link in disguise."""
-        site_url = self.config.site_url.rstrip("/")
+        """Absolute URL: allowed, unless it is an internal link in disguise.
+
+        An address of the portal is reported by _site_addresses.
+        """
+        if any(bare_address(target).startswith(a) for a in self.config.addresses):
+            return
         repo_url = self.config.repo_url.rstrip("/")
-        if in_docs and site_url and (target == site_url or target.startswith(site_url + "/")):
-            self.report.error(
-                doc.rel,
-                link.line,
-                "link-style",
-                f"`{target}` points to the site itself; use a relative link to the .md file",
-            )
-            return
-        portal_url = self.config.portal_url
-        if in_docs and portal_url and self.config.registry and target.startswith(portal_url):
-            self._other_release(doc, link, target[len(portal_url) :])
-            return
         if not repo_url or not target.startswith(repo_url + "/"):
             return
         match = re.match(r"^(?:blob|tree|raw)/([^/]+)/([^#?]*)", target[len(repo_url) + 1 :])
@@ -1215,77 +1280,80 @@ class Checker:
                 f"`{target}`: `{path}` does not exist in the repository",
             )
 
-    def _release_of(self, resolved: str) -> releases.Release | None:
-        """Release whose docs directory holds the repository path `resolved`."""
+    def _site_of(self, resolved: str) -> releases.Release | None:
+        """Available or planned site whose docs directory holds the repository path `resolved`."""
         registry = self.config.registry
-        parts = resolved.split("/")
-        if registry is None or len(parts) < 3 or parts[0] != releases.DOCS_ROOT:
+        if registry is None:
             return None
-        return registry.get(parts[1])
+        found = None
+        for release in registry.releases:
+            if resolved == release.docs_dir or resolved.startswith(release.docs_dir + "/"):
+                if found is None or len(release.docs_dir) > len(found.docs_dir):
+                    found = release
+        return found
 
-    def _published_url(self, release: releases.Release, resolved: str) -> str:
+    def _site_address(self, source: str, release: releases.Release, resolved: str) -> str:
+        """Address of the page of `resolved` (a file of `release`), relative to the file `source`."""
         rel = Path(resolved[len(release.docs_dir) + 1 :])
-        if rel.suffix != ".md":
-            return f"{self.config.portal_url}{release.id}/{rel.as_posix()}"
-        return f"{self.config.portal_url}{release.id}/{releases.page_url(rel)}"
+        page = rel.as_posix() if rel.suffix != ".md" else releases.page_url(rel)
+        target = f"{release.docs_dir}/{page}"
+        address = posixpath.relpath(target, posixpath.dirname(source))
+        return address + ("/" if page.endswith("/") or not page else "")
 
-    def _other_release(self, doc: Document, link: Link, rest: str) -> None:
-        """Absolute address under the portal root, outside the site of this release.
+    def _site_link(self, doc: Document, link: Link, resolved: str, fragment: str) -> None:
+        """A link written as a page address ("…/"): it must reach a page of another site.
 
-        This is the only accepted form of a link from one release to another:
-        each release is a separate site, so a relative link cannot reach it.
-        The address must be the root of the portal, the home page of a planned
-        release, or a page of an available release that exists in its sources.
+        Each site is built on its own, so a link to another one cannot name its
+        .md file; Zensical keeps a relative address and adjusts it to the
+        published page. The address is relative to the file, as a link to a
+        .md file is.
         """
         error = self.report.error
-        path, _, fragment = rest.partition("#")
-        path = unquote(path.partition("?")[0])
-        fragment = unquote(fragment)
-        if not path:
-            return  # the root of the portal
-        release_id, _, inner = path.partition("/")
-        release = self.config.registry.get(release_id)
-        if release is None:
+        registry = self.config.registry
+        target = link.target
+        # The root of the portal and the home of a versioned module are pages of the root site.
+        if resolved == releases.DOCS_ROOT or any(
+            m.versioned and resolved == m.docs_dir for m in registry.modules
+        ):
+            if fragment:
+                error(doc.rel, link.line, "link-site", f"`{target}`: a fragment cannot be checked on a page of the root site")
+            return
+        site = self._site_of(resolved)
+        if site is None:
+            error(doc.rel, link.line, "link-file", f"`{target}` is not a page of the portal (it does not lead into a site of {releases.REGISTRY_FILE})")
+            return
+        if site.path == self.config.release:
+            inner = resolved[len(site.docs_dir) + 1 :] if resolved != site.docs_dir else ""
             error(
                 doc.rel,
                 link.line,
-                "link-release",
-                f"`{link.target}`: `{release_id}` is not a release of {releases.REGISTRY_FILE}",
+                "link-style",
+                f"`{target}` is a page of this site: link to its .md file "
+                f"({(inner + '/index.md') if inner else 'index.md'} or {inner}.md, relative to this file)",
             )
             return
-        if not release.available:
+        inner = resolved[len(site.docs_dir) + 1 :] if resolved != site.docs_dir else ""
+        if not site.available:
             if inner:
-                error(
-                    doc.rel,
-                    link.line,
-                    "link-release",
-                    f"`{link.target}`: the release `{release_id}` is planned and has no page other than its home",
-                )
+                error(doc.rel, link.line, "link-site", f"`{target}`: `{site.path}` is planned and has no page other than its home")
+            elif fragment:
+                error(doc.rel, link.line, "link-site", f"`{target}`: `{site.path}` is planned, its page has no anchors to link to")
             return
-        inner = inner[: -len("index.html")] if inner.endswith("index.html") else inner
-        stem = inner.rstrip("/")
-        candidates = [f"{stem}/index.md", f"{stem}.md"] if stem else ["index.md"]
-        source = next(
-            (f"{release.docs_dir}/{c}" for c in candidates if f"{release.docs_dir}/{c}" in self.files), None
-        )
+        candidates = [f"{inner}/index.md", f"{inner}.md"] if inner else ["index.md"]
+        source = next((f"{site.docs_dir}/{c}" for c in candidates if f"{site.docs_dir}/{c}" in self.files), None)
         if source is None:
-            if f"{release.docs_dir}/{stem}" in self.files:
-                return  # a file that is not a page (a listing, an image)
             error(
                 doc.rel,
                 link.line,
-                "link-release",
-                f"`{link.target}`: the release `{release_id}` has no page `{inner}` "
-                f"(no {' or '.join(candidates)} under {release.docs_dir}/)",
+                "link-site",
+                f"`{target}`: `{site.path}` has no page `{inner or 'index'}` "
+                f"(no {' or '.join(candidates)} under {site.docs_dir}/)",
             )
             return
-        if fragment and fragment not in self.document(source).anchors:
-            error(
-                doc.rel,
-                link.line,
-                "link-anchor",
-                f"`{link.target}`: `#{fragment}` is not an anchor of {source}",
-            )
+        if fragment:
+            self.stats["links with a fragment"] += 1
+            if fragment not in self.document(source).anchors:
+                error(doc.rel, link.line, "link-anchor", f"`{target}`: `#{fragment}` is not an anchor of {source}")
 
     def _file_hint(self, resolved: str) -> str:
         name = posixpath.basename(resolved)
@@ -1404,7 +1472,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--root", type=Path, default=ROOT, help="repository root (default: the checkout)")
     parser.add_argument(
-        "--release", metavar="ID", help="check this release only (default: every available release)"
+        "--release", metavar="PATH", help="check this site only, such as day2/2024.1 (default: every available site)"
     )
     parser.add_argument("--strict", action="store_true", help="report warnings as errors")
     parser.add_argument(
@@ -1433,9 +1501,15 @@ def main(argv: list[str] | None = None) -> int:
     except releases.RegistryError as exc:
         for problem in exc.problems:
             report.error(releases.REGISTRY_FILE, 1, "registry", problem)
-        return print_report(report, "The registry of releases cannot be used: nothing else was checked.")
+        return print_report(report, "The registry cannot be used: nothing else was checked.")
     for problem in releases.layout_problems(root, registry):
         report.error(releases.REGISTRY_FILE, 1, "registry", problem)
+    try:
+        current_address, addresses = portal_addresses(root)
+    except releases.RegistryError as exc:
+        for problem in exc.problems:
+            report.error(releases.BASE_CONFIG, 1, "config", problem)
+        current_address, addresses = "", []
 
     stats: dict[str, int] = {}
     languages: dict[str, int] = {}
@@ -1445,6 +1519,7 @@ def main(argv: list[str] | None = None) -> int:
         if not (root / docs_dir).is_dir():
             continue  # reported above by the `registry` rule
         config = release_config(root, registry, release)
+        config.addresses = addresses
         checker = Checker(root, config, docs_dir, report)
         pages = list_pages(root, config, docs_dir)
         for page in pages:
@@ -1455,12 +1530,15 @@ def main(argv: list[str] | None = None) -> int:
             stats[key] = stats.get(key, 0) + value
         for name, count in checker.languages.items():
             languages[name] = languages.get(name, 0) + count
-        checked.append(f"{release.id} ({len(pages)})")
+        checked.append(f"{release.path} ({len(pages)})")
 
     # Files outside docs/: links only, against the shared configuration.
     base = load_config(root / releases.BASE_CONFIG)
     if not base.found or base.error:
         report.error(releases.BASE_CONFIG, 1, "config", base.error or "the file does not exist")
+    base.registry = registry
+    base.portal_url = current_address
+    base.addresses = addresses
     checker = Checker(root, base, releases.DOCS_ROOT, report)
     extras = args.extra if args.extra is not None else [f for f in EXTRA_FILES if (root / f).is_file()]
     for extra in extras:
@@ -1471,10 +1549,11 @@ def main(argv: list[str] | None = None) -> int:
     for key, value in checker.stats.items():
         stats[key] = stats.get(key, 0) + value
 
-    planned = ", ".join(release.id for release in registry.planned) or "none"
+    planned = ", ".join(release.path for release in registry.planned) or "none"
     language_list = ", ".join(f"{name} {count}" for name, count in sorted(languages.items()))
     summary = (
-        f"Releases checked (pages): {', '.join(checked) or 'none'}. Planned, no content: {planned}.\n"
+        f"Sites checked (pages): {', '.join(checked) or 'none'}. Planned, no content: {planned}.\n"
+        f"Address of the portal: {current_address or 'unknown'}\n"
         f"Checked {stats['pages']} page(s) under {releases.DOCS_ROOT}/ and {stats['other files']} other Markdown file(s): "
         f"{stats['headings']} headings, {stats['relative links']} relative links "
         f"({stats['links with a fragment']} with a fragment), {stats['external links']} absolute links, "

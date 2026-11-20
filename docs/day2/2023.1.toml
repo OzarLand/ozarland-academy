@@ -1,12 +1,12 @@
-# Settings of the release "2023.1" (registered in versions.toml).
+# Settings of the release "2023.1" of the module "day2" (registered in academy.toml).
 #
 # tools/site/releases.py merges this [project] table over the shared
 # zensical.base.toml to produce the configuration given to Zensical: tables
 # are merged, lists and plain values replace those of the base. It then sets
-# what follows from the release id: docs_dir (docs/2023.1), site_dir
-# (site/2023.1), site_url (<portal URL>2023.1/) and edit_uri
-# (blob/main/docs/2023.1/). site_url and edit_uri may be set here to override
-# them; docs_dir and site_dir may not.
+# what follows from the path of the site, day2/2023.1: docs_dir
+# (docs/day2/2023.1), site_dir (site/day2/2023.1), site_url (<portal address>day2/2023.1/)
+# and edit_uri (blob/main/docs/day2/2023.1/). edit_uri may be set here to
+# override it; docs_dir, site_dir and site_url may not.
 
 [project]
 site_description = "Source-code study of Kolla-Ansible 2023.1-eol for Day-2 operations: procedures, impact, risks and reference."

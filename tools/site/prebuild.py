@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Prepare the sources before the site of a release is built.
+"""Prepare the sources before the sites of the portal are built.
 
 1. Vendored Mermaid: ``overrides/assets/vendor/mermaid/mermaid.min.js`` is not
    committed. When it is missing (or is not the pinned release) it is fetched
    by ``tools/site/fetch_vendor.py``, which verifies it. This is the only
    step that may need the network; ``--skip-vendor`` turns it off. The file is
-   shared by all releases.
+   shared by all sites.
 
-2. ``docs/<id>/assets/data/updates.json``, one per available release: for
+2. ``docs/<path>/assets/data/updates.json``, one per available site: for
    every Markdown page of the release, the date of the last commit that
    changed it. The page template shows it as "Last updated" and the home page
    of the release lists the most recently updated pages
@@ -31,7 +31,7 @@ Properties of updates.json:
   from the wall clock, so the same commit always gives the same file;
 * one pass over the history (a single ``git log``), whatever the page count;
 * a commit that only moves a file (a rename without a change of content, as
-  when the pages moved to ``docs/<id>/``) is not an update of the page: the
+  when the pages moved to ``docs/day2/<id>/``) is not an update of the page: the
   date is the one of the last commit that changed its content, under any
   earlier name;
 * shallow clones: a page whose last change is not in the fetched history gets
@@ -39,7 +39,7 @@ Properties of updates.json:
   CI, for exact dates);
 * standard library only.
 
-3. ``docs/<id>/assets/data/glossary.json``, one per available release: the
+3. ``docs/<path>/assets/data/glossary.json``, one per available site: the
    terms of the release's glossary, for the definitions shown on hover
    (tools/site/glossary.py describes the file).
 
@@ -47,8 +47,8 @@ These outputs are generated: they are git-ignored and must not be edited.
 
 Usage (from anywhere):
 
-    python3 tools/site/prebuild.py                    every available release of versions.toml
-    python3 tools/site/prebuild.py --release ussuri   one release (repeatable)
+    python3 tools/site/prebuild.py                    every available site of academy.toml
+    python3 tools/site/prebuild.py --release day2/ussuri   one site (repeatable)
     python3 tools/site/prebuild.py --docs-dir DIR     a docs directory that is not in the registry
     ... [--skip-vendor]
 """
@@ -63,7 +63,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-# The registry of releases lives next to this file.
+# The registry of the portal is read by releases.py, next to this file.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import releases  # noqa: E402
 import glossary  # noqa: E402
@@ -264,14 +264,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--release",
         action="append",
-        metavar="ID",
-        help="release of versions.toml to prepare (default: every available release)",
+        metavar="PATH",
+        help="site of academy.toml to prepare, such as day2/ussuri (default: every available site)",
     )
     parser.add_argument(
         "--docs-dir",
         action="append",
         metavar="DIR",
-        help="docs directory, relative to the root, to prepare instead of the releases of the registry",
+        help="docs directory, relative to the root, to prepare instead of the sites of the registry",
     )
     parser.add_argument(
         "--skip-vendor",

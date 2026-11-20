@@ -1,0 +1,105 @@
+{#-
+  Root of the portal (/index.html), built from a stub that
+  tools/site/releases.py generates: the learning path of OzarLand Academy.
+  It lists the modules of academy.toml in their order, one step each; a
+  planned module leads to its "coming soon" page. The primary call to action
+  opens the first available module and carries data-portal-start, which
+  tools/site/check_site.py checks. The shared "Part of OzarLand" block closes
+  the page.
+-#}
+{% extends "main.html" %}
+{% set portal = config.extra.portal %}
+{% set root = base_url ~ "/" %}
+{% set img = root ~ "assets/images/ozarland/" %}
+{% set hub = "https://github.com/OzarLand/ozarland" %}
+{% set first = namespace(module=none) %}
+{% for module in portal.modules if module.status == "available" and not first.module %}
+  {% set first.module = module %}
+{% endfor %}
+
+{% block htmltitle %}
+  <title>{{ config.site_name }} · OzarLand</title>
+{% endblock %}
+
+{% block hero %}
+  <section class="portal-hero oz-hero" aria-label="Introduction">
+    <div class="md-grid portal-hero__inner oz-hero__inner">
+      <div class="oz-hero__text">
+        <p class="oz-hero__org">
+          <a href="{{ hub }}"><span aria-hidden="true">←</span> OzarLand home</a>
+          <span class="oz-hero__badge">An OzarLand project</span>
+        </p>
+        <h1 class="portal-hero__title" id="welcome">{{ config.site_name }}</h1>
+        <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
+        <p class="portal-hero__lead">
+          One learning path to run OpenStack, in {{ portal.modules | length }} steps: discover it on a lab, deploy it,
+          operate it, intervene on instances and hypervisors, and take it to production.
+        </p>
+        <p class="portal-hero__actions">
+          {% if first.module %}
+            <a class="portal-cta portal-cta--primary" href="{{ root }}{{ first.module.path }}/" data-portal-start="{{ first.module.id }}">Start with {{ first.module.title }}</a>
+          {% endif %}
+          <a class="portal-cta" href="#path">See the path</a>
+        </p>
+      </div>
+      <figure class="oz-hero__art">
+        <img src="{{ img }}hero.webp" width="1200" height="750" fetchpriority="high" alt="A diverse group of travellers studies a map on a wooden terrace above a bright island city and sea.">
+      </figure>
+    </div>
+  </section>
+{% endblock %}
+
+{#- No sidebars. The primary one stays in the DOM because it is the
+    navigation drawer on small screens. -#}
+{% block site_nav %}
+  {% if nav %}
+    <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner">
+          {% include "partials/nav.html" %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <h2 id="path">The learning path</h2>
+  <p>
+    Each step is a module with its own pages, navigation and search. Follow them in order, or go straight to the one
+    you need.
+  </p>
+  <ol class="oz-steps">
+    {% for module in portal.modules %}
+      <li class="oz-steps__item{% if module.status != 'available' %} oz-steps__item--planned{% endif %}">
+        <p class="oz-steps__step">Step {{ loop.index }} · {{ module.step }}</p>
+        <p class="oz-steps__title">
+          <a href="{{ root }}{{ module.path }}/" data-portal-module="{{ module.id }}">{{ module.title }}</a>
+          {% if module.status != "available" %}<span class="portal-release__soon">coming soon</span>{% endif %}
+        </p>
+        <p>{{ module.summary }}</p>
+      </li>
+    {% endfor %}
+  </ol>
+
+  <section class="oz-land" aria-labelledby="ozarland">
+    <h2 id="ozarland">Part of OzarLand</h2>
+    <p>
+      <strong>OzarLand: a shared land for better OpenStack operations.</strong> It started as a personal initiative by
+      Soufian Zaouam to share practical OpenStack operational knowledge, and it is meant to grow into a space where
+      operators exchange experience, document solutions and help each other run more reliable platforms. It is open
+      to everyone: your knowledge, questions and corrections are welcome.
+    </p>
+    <table>
+      <thead><tr><th></th><th>Repository</th><th>What it holds</th></tr></thead>
+      <tbody>
+        <tr><td></td><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
+        <tr class="oz-land__here"><td>📘</td><td><strong>ozarland-academy</strong> (you are here)</td><td>The learning path: lab, deployment, day-2 operations, runbooks, production</td></tr>
+      </tbody>
+    </table>
+    <p class="oz-land__actions">
+      <a class="portal-cta portal-cta--primary" href="{{ hub }}">Visit OzarLand</a>
+      <a class="portal-cta" href="{{ hub }}/discussions">Ask a question</a>
+    </p>
+  </section>
+{% endblock %}

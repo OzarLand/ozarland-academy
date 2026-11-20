@@ -4,10 +4,11 @@
     python3 tools/site/serve_site.py [site] [--addr HOST:PORT]
 
 The output directory is served under the path of the portal address
-(`site_url` of zensical.base.toml, e.g. http://localhost:8000/kolla-ansible-academy/),
+(releases.portal_root_url: https://<SITE_DOMAIN>/ or `site_url` of zensical.base.toml,
+e.g. http://localhost:8000/ozarland-academy/),
 and an unknown address gets the root 404.html with status 404. That page
-carries the redirection of the addresses published before the portal had
-releases, which `python3 -m http.server` would not show.
+sends an address under a planned module or release to its only page, which
+`python3 -m http.server` would not show.
 
 Standard library only. Not a production server.
 """
