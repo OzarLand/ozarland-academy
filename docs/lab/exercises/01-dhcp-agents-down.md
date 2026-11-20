@@ -1,3 +1,8 @@
+---
+title: "Exercise 1. DHCP agents down: a new instance gets no address"
+description: "See an instance that Nova reports ACTIVE but that never got an IP address, find why, and repair it."
+---
+
 # Exercise 1. DHCP agents down: a new instance gets no address
 
 **Goal:** see an instance that Nova reports `ACTIVE` but that never got an IP address, find why, and repair it.
@@ -6,7 +11,7 @@
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). Check that the DHCP agent is alive:
+Read [before every exercise](index.md#before-every-exercise). Check that the DHCP agent is alive:
 
 ```bash
 openstack network agent list --agent-type dhcp
@@ -76,5 +81,5 @@ Then delete the test instance:
 openstack server delete --wait ex1-test
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

@@ -1,3 +1,8 @@
+---
+title: "Exercise 7. A compute goes down: fence it before you evacuate"
+description: "See a compute reported down while its instances may still be running, make sure it is really off (fence it)."
+---
+
 # Exercise 7. A compute goes down: fence it before you evacuate
 
 > **Multinode variant** only: it needs two computes. Run on a lab on 2026-10-25 (multinode variant, 1 controller +
@@ -10,8 +15,8 @@
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise) and the
-[multinode variant's guide](../variants/openstack-cloud-multinode/README.md). This exercise uses two terminals:
+Read [before every exercise](index.md#before-every-exercise) and the
+[multinode variant's guide](../variants/openstack-cloud-multinode/index.md). This exercise uses two terminals:
 
 - **Lab terminal:** logged in to controller 1, with the lab's admin credentials loaded.
 - **Hosting terminal:** on your own computer, in the directory of the scripts, with the `OS_CLOUD` of your
@@ -40,7 +45,7 @@ openstack server list --name '^<prefix><lab>-'
 ```
 
 To log in to a compute from controller 1, use the lab's key and the compute's address in `NETWORK` (the
-[variant's guide](../variants/openstack-cloud-multinode/README.md#inside-the-lab) says where to find it):
+[variant's guide](../variants/openstack-cloud-multinode/index.md#inside-the-lab) says where to find it):
 
 ```bash
 ssh -i ~/.ssh/quicklab_ed25519 ubuntu@<compute-1-address>
@@ -159,5 +164,5 @@ then `openstack compute service set --enable <compute-1> nova-compute`). Then de
 openstack server delete --wait ex7-test
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing, and this one runs several VMs.

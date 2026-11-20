@@ -1,3 +1,8 @@
+---
+title: "Exercise 10. Lose one controller: what keeps working"
+description: "Make one of the three controllers fail, see that the APIs keep answering through the virtual IP, that keepalived moves the VIP if that controller held it."
+---
+
 # Exercise 10. Lose one controller: what keeps working
 
 > **Multinode variant, 3 controllers** only (`CONTROLLERS="3"`, 5 VMs). Run on a lab on 2026-10-25 (multinode variant,
@@ -12,8 +17,8 @@ then bring the controller back and watch it rejoin.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise) and the
-[multinode variant's guide](../variants/openstack-cloud-multinode/README.md). This exercise uses two terminals:
+Read [before every exercise](index.md#before-every-exercise) and the
+[multinode variant's guide](../variants/openstack-cloud-multinode/index.md). This exercise uses two terminals:
 
 - **Lab terminal:** logged in to **controller 1** (`<prefix><lab>-ctl-1`), with the lab's admin credentials loaded.
   Controller 1 is also the deploy host: this exercise never stops it, so that its tools stay available.
@@ -149,5 +154,5 @@ test instance:
 openstack server delete --wait ex10-test
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing, and this one runs 5 VMs.

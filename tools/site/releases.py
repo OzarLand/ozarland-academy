@@ -623,6 +623,10 @@ def release_project(root: Path, registry: Registry, name: str, site_dir: str = S
         prefix = prefix if not prefix or prefix.endswith("/") else prefix + "/"
         project["edit_uri"] = f"{prefix}{release.docs_dir}/"
     extra = project.setdefault("extra", {})
+    if not release.versioned:
+        # The learning journey of zensical.base.toml lists pages of a release
+        # of the versioned module; a single module has none of them.
+        extra.pop("journey", None)
     extra["portal"] = portal_data(registry, base, release)
     return project
 

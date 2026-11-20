@@ -1,3 +1,8 @@
+---
+title: "Contributing to the lab"
+description: "How to add a variant for another place to run the lab, a new exercise, or a fix, and what each must contain."
+---
+
 # Contributing
 
 This repository follows the OzarLand community rules: the

@@ -1,3 +1,8 @@
+---
+title: "Exercise 9. Live migration between the two computes"
+description: "Move a running instance from one compute to the other while you ping it, and measure what its users would notice."
+---
+
 # Exercise 9. Live migration between the two computes
 
 > **Multinode variant** only: it needs two computes. Run on a lab on 2026-10-25 (multinode variant, 1 controller +
@@ -11,8 +16,8 @@ also covers live migration)
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise) and the
-[multinode variant's guide](../variants/openstack-cloud-multinode/README.md). Work on controller 1, with the lab's
+Read [before every exercise](index.md#before-every-exercise) and the
+[multinode variant's guide](../variants/openstack-cloud-multinode/index.md). Work on controller 1, with the lab's
 admin credentials loaded, in two SSH sessions.
 
 List the two computes and note their names, written `<compute-1>` and `<compute-2>` below:
@@ -97,5 +102,5 @@ openstack server delete --wait ex9-test
 openstack floating ip delete <floating-ip>
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing, and this one runs several VMs.

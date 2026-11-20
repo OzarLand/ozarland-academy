@@ -1,3 +1,8 @@
+---
+title: "Exercise 8. Drain a compute for planned maintenance"
+description: "Take a compute out of service without stopping anyone's instances: stop new instances landing on it, move its instances to the other compute, work on it."
+---
+
 # Exercise 8. Drain a compute for planned maintenance
 
 > **Multinode variant** only: it needs two computes. Run on a lab on 2026-10-25 (multinode variant, 1 controller +
@@ -11,8 +16,8 @@ also covers live migration)
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise) and the
-[multinode variant's guide](../variants/openstack-cloud-multinode/README.md). Work on controller 1, with the lab's
+Read [before every exercise](index.md#before-every-exercise) and the
+[multinode variant's guide](../variants/openstack-cloud-multinode/index.md). Work on controller 1, with the lab's
 admin credentials loaded.
 
 List the two computes and note their names, written `<compute-1>` (the one you will drain) and `<compute-2>` below:
@@ -122,5 +127,5 @@ If you stopped half-way, enable `<compute-1>` again first (the command above). T
 openstack server delete --wait ex8-test-a ex8-test-b ex8-new
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing, and this one runs several VMs.

@@ -1,3 +1,8 @@
+---
+title: "Exercise 4. Restarting nova_libvirt without stopping instances"
+description: "Restart the container that runs libvirt, the way a reconfigure or an upgrade does, and measure that the instances keep running."
+---
+
 # Exercise 4. Restarting nova_libvirt without stopping instances
 
 **Goal:** restart the container that runs libvirt, the way a reconfigure or an upgrade does, and measure that the
@@ -7,7 +12,7 @@ instances keep running.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). You need an instance you can ping from the lab VM:
+Read [before every exercise](index.md#before-every-exercise). You need an instance you can ping from the lab VM:
 create one with a floating IP. The lab's `default` security group, which the instance gets, already allows ping and
 SSH.
 
@@ -75,5 +80,5 @@ openstack server delete --wait ex4-test
 openstack floating ip delete <floating-ip>
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

@@ -1,0 +1,34 @@
+# Settings of the Quick lab site (module `lab` of academy.toml), merged with
+# zensical.base.toml by tools/site/releases.py. The pages are the history of
+# OzarLand/openstack-quick-lab, moved under docs/lab/.
+
+[project]
+site_description = "A complete, disposable OpenStack on cloud VMs in about an hour, exercises to break and repair it, and one command that deletes it all."
+
+nav = [
+  { "Home" = [
+    "index.md",
+  ] },
+  { "Labs" = [
+    "variants/openstack-cloud/index.md",
+    "variants/openstack-cloud-multinode/index.md",
+  ] },
+  { "Exercises" = [
+    "exercises/index.md",
+    "exercises/01-dhcp-agents-down.md",
+    "exercises/02-metadata-agents-down.md",
+    "exercises/03-nova-compute-down.md",
+    "exercises/04-restart-nova-libvirt.md",
+    "exercises/05-restart-ovs-agent.md",
+    "exercises/06-instance-unreachable-from-outside.md",
+    "exercises/07-compute-down-fence-before-evacuate.md",
+    "exercises/08-drain-a-compute-for-maintenance.md",
+    "exercises/09-live-migration-between-computes.md",
+    "exercises/10-lose-one-controller.md",
+    "exercises/11-lose-two-controllers-quorum.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+  ] },
+]

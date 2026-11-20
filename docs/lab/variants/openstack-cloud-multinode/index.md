@@ -1,3 +1,8 @@
+---
+title: "Multinode lab"
+description: "OpenStack on three or five VMs of an OpenStack cloud, for migration, compute and controller failures: requirements, cost, quick start."
+---
+
 # OpenStack on several VMs of an OpenStack cloud (multinode)
 
 A multinode OpenStack (2026.1, deployed with Kolla-Ansible) on 3 or 5 VMs of an OpenStack cloud (tested on one cloud so far), in a little over
@@ -7,6 +12,7 @@ dies, and, with 5 VMs, a controller that dies.
 ## Quick start
 
 ```bash
+git clone https://github.com/OzarLand/ozarland-academy.git && cd ozarland-academy/docs/lab/variants/openstack-cloud-multinode
 cp config.example.env config.env && $EDITOR config.env   # OS_CLOUD, NETWORK, SSH_FROM, the two prices; FLOATING_NETWORK if you use one; CONTROLLERS="3" for 5 VMs
 ./create.sh                                              # shows the cost of all the VMs, asks, creates them (3 to 4 min)
 ./deploy.sh                                              # deploys OpenStack across them (60 to 70 min)
@@ -15,12 +21,12 @@ source ~/kolla-venv/bin/activate; . /etc/kolla/admin-openrc.sh; openstack server
 ./destroy.sh                                             # back on your computer: deletes everything, after asking
 ```
 
-- **`SSH_FROM`** and **a dropped connection**: as in the single-VM [quick start](../openstack-cloud/README.md#quick-start).
+- **`SSH_FROM`** and **a dropped connection**: as in the single-VM [quick start](../openstack-cloud/index.md#quick-start).
 - **Time**: plan about 75 minutes (3 VMs) to 90 minutes (5 VMs) before your first exercise: 63 and 73 minutes
   measured for `create.sh` and `deploy.sh`, plus filling in `config.env` and logging in.
 
 Read [the cost risk](#the-cost-risk) first. It runs 3 to 5 VMs, so it costs 2.5 to 4.5 times the
-[single-VM variant](../openstack-cloud/README.md). The rest of this page is the detail.
+[single-VM variant](../openstack-cloud/index.md). The rest of this page is the detail.
 
 > **Status:** both sizes were run end to end on 2026-10-25, from `create.sh` to `destroy.sh` (figures below);
 > `destroy.sh` left nothing behind either time.
@@ -101,7 +107,7 @@ forgotten overnight costs that much more too.
 
 ### What a lab cost on the reference cloud
 
-Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../README.md#pick-your-lab)). It
+Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../index.md#pick-your-lab)). It
 bills per second. Prices are its pay-as-you-go prices per hour, as listed on 2026-10-23 and checked again on
 2026-10-25. The EUR prices are the page's own, not a conversion of the TND ones. The page says nothing about taxes.
 
@@ -127,7 +133,7 @@ bills per second. Prices are its pay-as-you-go prices per hour, as listed on 202
 
 ## Safety rules
 
-The same as the [single-VM variant](../openstack-cloud/README.md):
+The same as the [single-VM variant](../openstack-cloud/index.md):
 
 - **A cost estimate is required.** `create.sh` refuses to start without `COST_PER_HOUR_CONTROLLER` and
   `COST_PER_HOUR_COMPUTE`, unless you run `./create.sh --no-cost-estimate`.
@@ -145,7 +151,7 @@ The same as the [single-VM variant](../openstack-cloud/README.md):
 
 - An account on an OpenStack cloud, with the quota of the size you choose (above).
 - The same tools, `clouds.yaml`, network and access as the single-VM variant: see its
-  [what you need](../openstack-cloud/README.md#what-you-need).
+  [what you need](../openstack-cloud/index.md#what-you-need).
 - The right to create a network, a subnet and ports with port security disabled in your project: the lab's
   floating IPs live on a network the scripts create.
 - **Nested virtualisation** on the hosting cloud, so that instances on the lab's computes run with KVM. Live migration
@@ -204,7 +210,7 @@ Work on **controller 1**: it is the deploy host, and the OpenStack client and th
   `.state/<prefix><lab>/state.env` on your computer (`ADDR_cmp_1`, `ADDR_cmp_2`, …), and in the Kolla-Ansible
   inventory `~/multinode` on controller 1.
 - **The test resources** are those of the single-VM variant (`cirros`, `m1.tiny`, `demo-net`, `public1`, `mykey`;
-  see its [inside the lab](../openstack-cloud/README.md#inside-the-lab)), with two differences:
+  see its [inside the lab](../openstack-cloud/index.md#inside-the-lab)), with two differences:
   - `demo-net` is `10.98.0.0/24`;
   - there are two test instances, `demo1` and `demo2`, one on each compute. The smoke test then live-migrates
     `demo1`, so both may end on the same compute.
@@ -220,7 +226,7 @@ Work on **controller 1**: it is the deploy host, and the OpenStack client and th
 | **Host maintenance**: disable a compute, drain it by migrating its instances away, work on it, put it back | **VIP failover**: keepalived moves the API's virtual IP to another controller |
 | **A build rescheduled on another compute**: when the first compute chosen fails the build, Nova retries on the other | **Quorum recovery**: bringing a cluster back when too many members were lost at once |
 
-The exercises written for this variant are listed in [`exercises/`](../../exercises/README.md), marked
+The exercises written for this variant are listed in [`exercises/`](../../exercises/index.md), marked
 *multinode variant*.
 
 ## How the lab is built
@@ -280,4 +286,4 @@ Last run on 2026-10-25, both sizes, on the reference cloud: OpenStack 2026.1, Ko
   practise capacity planning.
 
 **Done for the day? Run `./destroy.sh`: every VM costs money every hour it exists.** Then check that nothing is left:
-[delete everything when you are done](../../README.md#delete-everything-when-you-are-done).
+[delete everything when you are done](../../index.md#delete-everything-when-you-are-done).

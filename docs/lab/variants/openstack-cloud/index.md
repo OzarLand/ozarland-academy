@@ -1,3 +1,8 @@
+---
+title: "Single VM lab"
+description: "OpenStack all-in-one on one VM of an OpenStack cloud: requirements, cost, quick start, what you get and how to delete it."
+---
+
 # OpenStack on one VM of an OpenStack cloud
 
 A complete OpenStack (2026.1, deployed with Kolla-Ansible) on a single VM of an OpenStack cloud (tested on one cloud so far, see [Limits](#limits)), in about an hour.
@@ -6,6 +11,7 @@ One command deletes it all.
 ## Quick start
 
 ```bash
+git clone https://github.com/OzarLand/ozarland-academy.git && cd ozarland-academy/docs/lab/variants/openstack-cloud
 cp config.example.env config.env && $EDITOR config.env   # OS_CLOUD, NETWORK, SSH_FROM, COST_PER_HOUR; FLOATING_NETWORK if you use one
 ./create.sh                                              # shows the cost, asks, creates the VM (3 min)
 ./deploy.sh                                              # deploys OpenStack on it (53 min)
@@ -62,7 +68,7 @@ The VM costs money **every hour it exists**, used or not, until you run `./destr
 
 ### What a lab cost on the reference cloud
 
-Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../README.md#pick-your-lab)). It
+Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../index.md#pick-your-lab)). It
 bills per second. Prices are its pay-as-you-go prices per hour, as listed on 2026-10-23 and checked again on
 2026-10-24. Its pricing page shows them in TND, and in EUR when you switch currency. The EUR prices are the page's
 own, not a conversion, so the ratio varies from row to row. The page says nothing about taxes.
@@ -212,4 +218,4 @@ The last full run, from `create.sh` to `destroy.sh`, took 57 minutes:
 - Tested on one cloud so far (see the timings above). Reports from other clouds are welcome.
 
 **Done for the day? Run `./destroy.sh`.** Then check that nothing is left:
-[delete everything when you are done](../../README.md#delete-everything-when-you-are-done).
+[delete everything when you are done](../../index.md#delete-everything-when-you-are-done).

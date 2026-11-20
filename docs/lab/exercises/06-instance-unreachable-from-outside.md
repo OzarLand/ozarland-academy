@@ -1,3 +1,8 @@
+---
+title: "Exercise 6. An instance unreachable from outside"
+description: "Make an instance unreachable from outside in two different ways, and find each cause with the runbook's checks, in order."
+---
+
 # Exercise 6. An instance unreachable from outside
 
 **Goal:** make an instance unreachable from outside in two different ways, and find each cause with the runbook's
@@ -7,7 +12,7 @@ checks, in order.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). Create a security group that allows ping and SSH from
+Read [before every exercise](index.md#before-every-exercise). Create a security group that allows ping and SSH from
 the external network, and an instance that uses it, with a floating IP. `10.99.0.0/24` is the lab's default external
 range; if you changed `LAB_EXT_CIDR` in `config.env`, use your range instead.
 
@@ -81,5 +86,5 @@ openstack floating ip delete <floating-ip>
 openstack security group delete ex6-sg
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

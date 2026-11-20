@@ -1,3 +1,8 @@
+---
+title: "Exercise 11. Lose two controllers: quorum lost, and recovered"
+description: "Make two of the three controllers fail at once, see the Galera cluster lose its quorum and the APIs stop."
+---
+
 # Exercise 11. Lose two controllers: quorum lost, and recovered
 
 > **Multinode variant, 3 controllers** only (`CONTROLLERS="3"`, 5 VMs). Run on a lab on 2026-10-25 (multinode variant,
@@ -73,7 +78,7 @@ step is marked destructive.
 
 On each controller, stop the `mariadb` container with its systemd unit, not with `docker stop`: systemd would start
 it again about a minute later, in the middle of the copy (see
-[why the exercises use `systemctl`](README.md)). Then copy the data volume aside and note the `seqno` of
+[why the exercises use `systemctl`](index.md)). Then copy the data volume aside and note the `seqno` of
 `grastate.dat`, as the page shows:
 
 > ⚠️ **State-changing.** Stops MariaDB on the controller and writes a copy of its data under `/root`.
@@ -147,5 +152,5 @@ Then delete the test instance:
 openstack server delete --wait ex11-test
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing, and this one runs 5 VMs.

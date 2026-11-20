@@ -1,3 +1,8 @@
+---
+title: "Exercise 5. Restarting the Open vSwitch agent without cutting the network"
+description: "Restart the Neutron Open vSwitch agent and see that running instances keep their network, while new instances wait for it."
+---
+
 # Exercise 5. Restarting the Open vSwitch agent without cutting the network
 
 **Goal:** restart the Neutron Open vSwitch agent and see that running instances keep their network, while new
@@ -7,7 +12,7 @@ instances wait for it.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). Create an instance with a floating IP that answers
+Read [before every exercise](index.md#before-every-exercise). Create an instance with a floating IP that answers
 ping, as in [exercise 4](04-restart-nova-libvirt.md#before-you-start), and call it `ex5-test`.
 
 ## 1. Do it
@@ -67,5 +72,5 @@ openstack server delete --wait ex5-test ex5-second
 openstack floating ip delete <floating-ip>
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

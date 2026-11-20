@@ -1,3 +1,8 @@
+---
+title: "Exercises"
+description: "Eleven exercises that break one thing on purpose in the lab and repair it with a runbook, and what to do before each."
+---
+
 # Exercises
 
 Six short exercises on the all-in-one lab, three on the multinode variant and two on its 3-controller size. Each
@@ -21,7 +26,7 @@ after that run.
 ### Multinode variant
 
 These three need two computes: run them on the
-[multinode variant](../variants/openstack-cloud-multinode/README.md), not on the all-in-one lab. They were
+[multinode variant](../variants/openstack-cloud-multinode/index.md), not on the all-in-one lab. They were
 [run on a lab](https://github.com/OzarLand/openstack-quick-lab/pull/10#issuecomment-6397487220) on 2026-10-25 (multinode variant, 1 controller + 2 computes). The runbook of exercises 8 and 9 is now
 `status: lab-verified`.
 
@@ -74,7 +79,7 @@ These two need the 5-VM size of the multinode variant (`CONTROLLERS="3"`). They 
   ```
 
 The lab's scripts run Kolla-Ansible's `init-runonce`, which creates the resources the exercises use (the
-[variant's guide](../variants/openstack-cloud/README.md#inside-the-lab) lists them too):
+[variant's guide](../variants/openstack-cloud/index.md#inside-the-lab) lists them too):
 
 | Resource | Name |
 |---|---|
@@ -107,4 +112,4 @@ on.
 
 ## When you are done
 
-Delete the lab: [delete everything when you are done](../README.md#delete-everything-when-you-are-done).
+Delete the lab: [delete everything when you are done](../index.md#delete-everything-when-you-are-done).

@@ -5,9 +5,12 @@ from the Markdown under `docs/`: one directory and one site per module (`docs/<m
 Kolla-Ansible Academy, one per release (`docs/day2/<release>/`). A change to the content is a change to those files;
 nothing exists only in a template, a script or a stylesheet.
 
-This page is about the day-2 module for now: how to add or change one of its pages, and how to add a release. The
-rules of the other modules arrive with them. Three releases are available today; the paths below are those of
-`ussuri`, and another release has the same layout under its own directory.
+Most of this page is about the day-2 module: how to add or change one of its pages, and how to add a release. Three
+releases are available today; the paths below are those of `ussuri`, and another release has the same layout under
+its own directory. The other modules have their own rules, in the pages of the module (for the Quick lab,
+[docs/lab/CONTRIBUTING.md](docs/lab/CONTRIBUTING.md)); every module follows the rules on links below and the
+checks of [Before a pull request](#before-a-pull-request). How a former repository becomes a module is at the end:
+[Moving a repository into a module](#moving-a-repository-into-a-module).
 
 A link to a page of another module or of another release is not a link to its `.md` file: each site is built on its
 own. Write the address of the page relative to the file, ending with `/`, for example
@@ -400,3 +403,36 @@ quiz, except that `see` is the path of the page that gives the answer, from the 
 repeat the quizzes of the pages. The seal of a stage lights up once its pages are marked as read and its challenge has
 all answers but one right on the first try (`learning.js`, key `kolla-ansible-academy:challenge:<release>`); the seal
 of the journey needs every stage seal.
+
+## Moving a repository into a module
+
+The single modules of [academy.toml](academy.toml) come from former OzarLand repositories, moved here one at a time
+with their history, in the order of the path. One pull request per repository:
+
+1. In a throwaway clone of the former repository, rewrite its history with
+   [git filter-repo](https://github.com/newren/git-filter-repo): leave out the files this repository already has
+   (`LICENSE`, `CODE_OF_CONDUCT.md`, `.gitignore`, `.github/`), rename every `README.md` to `index.md`, and move every
+   path under `docs/<module>/`:
+
+   ```bash
+   git filter-repo --invert-paths --path LICENSE --path CODE_OF_CONDUCT.md --path .gitignore --path .github/
+   git filter-repo --filename-callback '
+   if filename == b"README.md" or filename.endswith(b"/README.md"):
+       filename = filename[:-len(b"README.md")] + b"index.md"
+   return b"docs/<module>/" + filename
+   '
+   ```
+
+2. Here, on a branch: fetch that clone and merge it with `git merge --allow-unrelated-histories --no-ff`. The pages
+   keep their history (`git log --follow docs/<module>/index.md`).
+3. Set `status = "available"` for the module in academy.toml and write `docs/<module>.toml` (`site_description`,
+   `nav`).
+4. Run `python3 tools/site/rewrite_links.py`, read what it would change, then run it with `--apply`. It rewrites the
+   links to `README.md`, to the files left out, and the absolute links to the former repositories whose module is
+   available: in every module, so that a module moved earlier now links to this one. Commands in code blocks, such as
+   `git clone`, are updated by hand.
+5. Give each page a front matter with `title` and `description`, and fit the home page into the portal: no badges, no
+   "OzarLand home" link, no table of the former repositories.
+6. `make docs-check STRICT=1` and `make docs-build STRICT=1`, then the pull request. The former repository is archived
+   after the portal is published, with a README that points to the module.
+

@@ -1,3 +1,8 @@
+---
+title: "Exercise 2. Metadata agents down: a new instance gets no SSH key"
+description: "See an instance that has its address but not its SSH key, find where the key should have come from, and repair it."
+---
+
 # Exercise 2. Metadata agents down: a new instance gets no SSH key
 
 **Goal:** see an instance that has its address but not its SSH key, find where the key should have come from, and
@@ -7,7 +12,7 @@ repair it.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). Check that the metadata agent is alive:
+Read [before every exercise](index.md#before-every-exercise). Check that the metadata agent is alive:
 
 ```bash
 openstack network agent list --agent-type metadata
@@ -91,5 +96,5 @@ openstack server delete --wait ex2-test
 openstack floating ip delete <floating-ip>
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

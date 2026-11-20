@@ -1,3 +1,8 @@
+---
+title: "Security policy of the lab"
+description: "Sensitive data, unsafe scripts or exercises, and delete commands that leave resources behind: what to report and how."
+---
+
 # Security policy
 
 ## What this policy covers
@@ -25,7 +30,7 @@ and the maintainers see the report. If the Security tab does not offer it, messa
 GitHub. OzarLand has no e-mail contact.
 
 Questions, errors and proposals that involve nothing sensitive go in a GitHub issue. Anything about the code of
-conduct or a personal matter follows the [code of conduct](CODE_OF_CONDUCT.md#reporting).
+conduct or a personal matter follows the [code of conduct](https://github.com/OzarLand/ozarland/blob/main/CODE_OF_CONDUCT.md#reporting).
 
 Tell us which file and line, what you found, and what could go wrong. Do not include the sensitive data itself in the
 report beyond what is needed to locate it. **If you published a credential by mistake, revoke or rotate it at your

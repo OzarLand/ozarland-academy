@@ -1,3 +1,8 @@
+---
+title: "Exercise 3. nova-compute down: instances keep running"
+description: "Stop the Nova agent of the compute and see that the instances do not notice, while the control plane does."
+---
+
 # Exercise 3. nova-compute down: instances keep running
 
 **Goal:** stop the Nova agent of the compute and see that the instances do not notice, while the control plane
@@ -7,7 +12,7 @@ does.
 
 ## Before you start
 
-Read [before every exercise](README.md#before-every-exercise). Create a test instance and note where it runs:
+Read [before every exercise](index.md#before-every-exercise). Create a test instance and note where it runs:
 
 ```bash
 openstack server create --image cirros --flavor m1.tiny --network demo-net --key-name mykey --wait ex3-test
@@ -76,5 +81,5 @@ Then delete the test instance:
 openstack server delete --wait ex3-test
 ```
 
-**Done with the lab for today?** [Delete everything](../README.md#delete-everything-when-you-are-done): a running lab
+**Done with the lab for today?** [Delete everything](../index.md#delete-everything-when-you-are-done): a running lab
 keeps costing.

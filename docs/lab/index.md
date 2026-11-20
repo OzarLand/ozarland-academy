@@ -1,31 +1,15 @@
-[← OzarLand home](https://github.com/OzarLand/ozarland)
+---
+title: "Quick lab"
+description: "A complete, disposable OpenStack on cloud VMs in about an hour, exercises to break and repair it, and one command that deletes it all."
+---
 
-<div align="center">
-
-# 🧪 openstack-quick-lab
+# 🧪 Quick lab
 
 **Scripts that build a complete, disposable OpenStack (2026.1) on a cloud VM in about an hour, exercises to break
 and repair it, and one command that deletes it all.**
 
-<p>
-  <img src="https://img.shields.io/badge/OpenStack-2026.1-ED1944.svg" alt="OpenStack 2026.1">
-  <img src="https://img.shields.io/badge/Kolla--Ansible-22.2.0-informational.svg" alt="Kolla-Ansible 22.2.0">
-  <img src="https://img.shields.io/badge/Ubuntu-24.04-E95420.svg" alt="Ubuntu 24.04">
-  <img src="https://img.shields.io/badge/exercises-11-16a34a.svg" alt="11 exercises">
-  <img src="https://img.shields.io/badge/tested%20on-one%20cloud-orange.svg" alt="Tested on one cloud">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-</p>
-
-<p>
-  <a href="#pick-your-lab"><b>Pick a lab</b></a> ·
-  <a href="#-the-three-commands"><b>Commands</b></a> ·
-  <a href="#-exercises"><b>Exercises</b></a> ·
-  <a href="#delete-everything-when-you-are-done"><b>Delete it all</b></a>
-</p>
-
-</div>
-
----
+[Pick a lab](#pick-your-lab) · [Commands](#-the-three-commands) · [Exercises](#-exercises) ·
+[Delete it all](#delete-everything-when-you-are-done)
 
 > [!NOTE]
 > **Status: early, tested on one cloud.** Both variants and all eleven exercises were run end to end between
@@ -37,13 +21,11 @@ and repair it, and one command that deletes it all.**
 > Reports from your cloud are the most useful contribution.
 
 
-Part of [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.*
-
 On a prepaid cloud you cannot spend more than your credit; on any other cloud, set a budget alert first.
 
 ## Pick your lab
 
-| | [Single VM](variants/openstack-cloud/README.md) (`openstack-cloud`) | [Multinode](variants/openstack-cloud-multinode/README.md) (`openstack-cloud-multinode`) |
+| | [Single VM](variants/openstack-cloud/index.md) (`openstack-cloud`) | [Multinode](variants/openstack-cloud-multinode/index.md) (`openstack-cloud-multinode`) |
 |---|---|---|
 | 🎯 **What you can practise** | The core services: DHCP, metadata, Nova, Open vSwitch, security groups and floating IPs (exercises 1 to 6) | 3 VMs: live migration, a failed compute, host maintenance (exercises 7 to 9). 5 VMs: also a failed controller, Galera and RabbitMQ, VIP failover (exercises 10 and 11) |
 | 🖥️ **VMs and quota** | 1 VM: 4 vCPU, 16 GB RAM, 50 GB disk | 3 VMs: 12 vCPU, 32 GB RAM. 5 VMs (`CONTROLLERS="3"`): 20 vCPU, 64 GB RAM |
@@ -89,7 +71,14 @@ fails loudly if anything is left.
 ## 💻 The three commands
 
 You need an OpenStack cloud account, its `clouds.yaml`, `bash`, `ssh`, `python3` and the OpenStack client: the
-guide lists them. In the variant's directory:
+guide lists them. The scripts are in the repository of OzarLand Academy, under `docs/lab/variants/`:
+
+```bash
+git clone https://github.com/OzarLand/ozarland-academy.git
+cd ozarland-academy/docs/lab/variants/openstack-cloud    # or openstack-cloud-multinode
+```
+
+In the variant's directory:
 
 ```bash
 cp config.example.env config.env && $EDITOR config.env   # your cloud, network and price per hour
@@ -118,7 +107,7 @@ costing.
 
 Each exercise breaks one thing on purpose and repairs it with a runbook from
 [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks), or, for 10 and 11, a page of
-[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns). [All the exercises](exercises/README.md).
+[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns). [All the exercises](exercises/index.md).
 
 ```mermaid
 flowchart LR
@@ -176,21 +165,14 @@ flowchart LR
 | 🔒 | This repository never contains credentials (`clouds.yaml` with secrets, `passwords.yml`) or marketing. Keep yours out of any fork or pull request. |
 | 🤝 | New variants, exercises and fixes are welcome: [CONTRIBUTING.md](CONTRIBUTING.md). Any provider can be added as a variant on equal terms; nothing in the exercises depends on the provider. |
 
-## 🌍 Part of OzarLand
+## 🌍 Part of OzarLand Academy
 
-**OzarLand: a shared land for better OpenStack operations.** It started as a personal initiative by Soufian Zaouam
-to share practical OpenStack operational knowledge, and it is meant to grow into a space where operators exchange
-experience, document solutions and help each other run more reliable platforms. It is open to everyone: your
-knowledge, questions and corrections are welcome.
-
-| | Repository | What it holds |
-|:-:|---|---|
-| | [ozarland](https://github.com/OzarLand/ozarland) | Start here: newcomer path, community rules, [Discussions](https://github.com/OzarLand/ozarland/discussions) |
-| 🔧 | [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) | Symptom-driven runbooks for instance problems |
-| 🏗️ | [kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns) | Ways to deploy with Kolla-Ansible, compared |
-| 🧪 | `openstack-quick-lab` **(you are here)** | A disposable OpenStack lab to practise on |
-| 🤖 | [openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills) | Claude skills that apply this knowledge |
+This module is the first stop of [OzarLand Academy](../), the learning path of
+[OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* After the lab, the
+path goes on with deployment patterns, day-2 operations with Kolla-Ansible, VM runbooks and the production guide.
+Questions, corrections and reports from your cloud are welcome in the
+[Discussions](https://github.com/OzarLand/ozarland/discussions).
 
 ## ⚖️ License
 
-[Apache-2.0](LICENSE).
+[Apache-2.0](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE).
