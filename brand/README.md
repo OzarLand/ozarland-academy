@@ -1,5 +1,14 @@
 # OzarLand · Kolla-Ansible Academy graphic charter
 
+> **OzarLand Academy art direction.** [`academy/`](academy/README.md) is the art direction of the whole
+> academy: the island trail (one stop per module), the module accents and icons, the stage seals, the section
+> bands and the state pages. It extends this charter and takes precedence where they differ; in particular,
+> headings use the system font stack and no web font is loaded (Lora was removed). Where its assets live in
+> the site: `overrides/assets/images/ozarland/` (`icons/<module>.svg`, `seals/stage-N.svg`,
+> `bands/<module>.webp`, `hero/path-hero.webp`, `pages/`), styles in section 26 of
+> `overrides/assets/stylesheets/portal.css`. The bands are named after the module id rather than the place
+> (`bands/day2.webp`, not `bands/operate.webp`), so that the templates find them from `academy.toml`.
+
 **A shared land for better OpenStack operations.** This portal helps engineers understand what Kolla-Ansible commands do to a running OpenStack cloud by reading the source. The visual world frames that work as a shared, careful journey: welcoming, curious, and trustworthy.
 
 ## Colour palette and use

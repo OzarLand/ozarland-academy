@@ -1,0 +1,8 @@
+Hand-painted anime fantasy in the established OzarLand island style: bright blue sky, soft white clouds, turquoise sea, sunlit white stone, terracotta roofs, timber terraces, parchment maps, brass details, green vines and restrained navy pennants with a plain white cloud emblem. Use warm sunlight, gentle painterly shadows, luminous edges, airy colour and fine detail. Lumo must remain the same friendly cartographer guide in every image: the established curly auburn hair and head goggles, same face and proportions, cream tunic, navy cape with white cloud emblem, leather satchel with scrolls, small compass and brass lantern. Keep focal subjects away from the edges. Other travellers, when needed, are diverse and friendly. No text, letters, numbers, watermark or known characters.
+
+## Image prompt
+
+Create a single transparent-background character illustration of Lumo. Treat the included OzarLand not-found scene as the fixed character reference: preserve the same face, curly auburn hair, head goggles, body proportions, cream tunic, navy cape with plain white cloud emblem, leather satchel and scrolls, compass, boots and brass lantern. Do not redesign or add costume pieces. Pose: holding the lantern forward while inspecting a small bridge detail and gesturing toward a safe next step; serious but kind; full body. Keep the silhouette centered with generous transparent margin and a subtle soft shadow under the feet. Clean readable silhouette at small UI sizes. No text, letters, numbers, watermark or extra logos.
+
+Output: transparent WebP, 800 × 800 pixels, square 1:1 aspect ratio.
+Target file: overrides/assets/images/ozarland/lumo/lumo-runbooks.webp

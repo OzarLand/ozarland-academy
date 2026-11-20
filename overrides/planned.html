@@ -15,19 +15,46 @@
   <meta name="robots" content="noindex">
 {% endblock %}
 
+{#- The first available module: "the available path stop" of the state panel. -#}
+{% set first = namespace(module=none) %}
+{#- The test is in the body: the condition of a `for … if` is evaluated for
+    every item before the body runs, so it cannot see `first.module`. -#}
+{% for module in portal.modules if module.status == "available" %}
+  {% if not first.module %}{% set first.module = module %}{% endif %}
+{% endfor %}
+
 {% block content %}
-  {% if page.meta.portal_release %}
-    {% for release in portal.releases if release.id == page.meta.portal_release %}
-      <p class="portal-planned__eyebrow">Coming soon</p>
-      <h1>{{ release.title }}</h1>
-      <p>
-        The study of Kolla-Ansible {{ release.kolla_ansible }} (OpenStack {{ release.openstack }}) is not available yet.
-        This release has no page other than this one.
+  {#- State panel (brand/academy/templates.md, "Coming soon"): the image
+      beside a plain heading and one explanatory sentence. -#}
+  <div class="oz-state">
+    <img class="oz-state__art" src="{{ root }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship under construction in a sunny harbour.">
+    <div class="oz-state__text">
+      {% if page.meta.portal_release %}
+        {% for release in portal.releases if release.id == page.meta.portal_release %}
+          <p class="portal-planned__eyebrow">{{ portal.module.title }} · coming soon</p>
+          <h1>{{ release.title }}</h1>
+          <p>
+            The study of Kolla-Ansible {{ release.kolla_ansible }} (OpenStack {{ release.openstack }}) is not available
+            yet. This release has no page other than this one.
+          </p>
+        {% endfor %}
+      {% else %}
+        {% for module in portal.modules if module.id == page.meta.portal_module %}
+          <p class="portal-planned__eyebrow">{{ module.step }} · coming soon</p>
+          <h1>{{ module.title }}</h1>
+          <p>{{ module.summary }}</p>
+          <p>This module of OzarLand Academy is being moved into the portal. It has no page other than this one yet.</p>
+        {% endfor %}
+      {% endif %}
+      <p class="oz-state__actions">
+        {% if first.module %}
+          <a class="portal-cta portal-cta--primary" href="{{ root }}{{ first.module.path }}/">Go to {{ first.module.title }}</a>
+        {% endif %}
+        <a class="portal-cta" href="{{ root }}">Back to the learning path</a>
       </p>
-    {% endfor %}
-    <figure class="oz-section-art">
-      <img src="{{ root }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship in a sunny harbour.">
-    </figure>
+    </div>
+  </div>
+  {% if page.meta.portal_release %}
     <h2 id="available">Available</h2>
     <ul class="portal-releases">
       {% for release in portal.releases if release.status != "planned" %}
@@ -41,16 +68,5 @@
       A study is valid for its own release only: what the available release shows does not describe
       {% for release in portal.releases if release.id == page.meta.portal_release %}{{ release.title }}{% endfor %}.
     </p>
-  {% else %}
-    {% for module in portal.modules if module.id == page.meta.portal_module %}
-      <p class="portal-planned__eyebrow">{{ module.step }} · coming soon</p>
-      <h1>{{ module.title }}</h1>
-      <p>{{ module.summary }}</p>
-      <p>This module of OzarLand Academy is being moved into the portal. It has no page other than this one yet.</p>
-    {% endfor %}
-    <figure class="oz-section-art">
-      <img src="{{ root }}assets/images/ozarland/pages/coming-soon.webp" width="1200" height="600" alt="A guide in a navy cape stands beside a wooden sailing ship in a sunny harbour.">
-    </figure>
-    <p><a href="{{ root }}">Back to the learning path</a></p>
   {% endif %}
 {% endblock %}

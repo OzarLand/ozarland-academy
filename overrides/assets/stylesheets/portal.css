@@ -2643,20 +2643,14 @@ a.portal-cta:focus-visible {
 
 /* ===================================== 18. OzarLand Academy charter
    brand/charter/README.md: the island districts, the palette applied to
-   the whole site (parchment canvas, navy header), Lora for headings, the
-   path stones of numbered steps, the path divider, the skyline footer and
-   the seal states. Sizes are the charter's, in this theme's rem (20 px). */
-
-@font-face {
-  font-family: "Lora";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("../fonts/Lora-Bold.woff2") format("woff2");
-}
+   the whole site (parchment canvas, navy header), the path stones of
+   numbered steps, the path divider, the skyline footer and the seal states.
+   Sizes are the charter's, in this theme's rem (20 px). Headings use the
+   system stack, as the rest of the page: no web font is loaded
+   (brand/academy/typography.md). */
 
 :root {
-  --oz-font-heading: "Lora", Georgia, serif;
+  --oz-font-heading: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 [data-md-color-scheme="default"] {
@@ -2784,7 +2778,7 @@ a.portal-cta:focus-visible {
 .md-tabs__item:nth-child(6) { --oz-tab-icon: url("../images/ozarland/districts/tab-library.svg"); }
 .md-tabs__item:nth-child(7) { --oz-tab-icon: url("../images/ozarland/districts/tab-archives.svg"); }
 
-/* Headings in Lora; H2 opens with the emblem of the page's district. */
+/* Headings; H2 opens with the emblem of the page's district. */
 .md-typeset :is(h1, h2, h3),
 .portal-hero__title {
   font-family: var(--oz-font-heading);
@@ -3450,5 +3444,359 @@ a.portal-cta:focus-visible {
 
   .md-typeset table:not([class])[data-portal-cards]:has(> thead th:nth-child(5)) :is(th, td)[data-col="short"] {
     max-width: 9rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * 26. OzarLand Academy art direction (brand/academy/): the island trail of the
+ * learning path. Tokens of brand/academy/tokens/palette.css that the
+ * sections above do not already define (module accents, focus keyline, risk
+ * states), the learning-path home (overrides/academy.html), the module home
+ * (overrides/landing.html), the state pages (overrides/planned.html,
+ * overrides/404.html). Module accents are fills, borders and icon details
+ * only, never small text (brand/academy/accessibility.md).
+ * ------------------------------------------------------------------------- */
+[data-md-color-scheme="default"] {
+  --oz-surface: #fffdf8;
+  --oz-text: #152a50;
+  --oz-text-muted: #4e5a6d;
+  --oz-focus: #f0b440;
+  --oz-focus-keyline: #152a50;
+  --oz-module-lab: #1e9fb5;
+  --oz-module-deploy: #2f6fd0;
+  --oz-module-day2: #c4904f;
+  --oz-module-runbooks: #2c7a43;
+  --oz-module-production: #b55a3a;
+  --oz-module-book: #6b4220;
+  --oz-risk-readonly-text: #4b3b69;
+  --oz-risk-readonly-bg: #f0ecf7;
+  --oz-risk-state-text: #654100;
+  --oz-risk-state-bg: #fff1cf;
+  --oz-risk-destructive-text: #7a2430;
+  --oz-risk-destructive-bg: #f9e7ea;
+  --oz-radius-control: 0.4rem;
+  --oz-radius-card: 0.7rem;
+  --oz-radius-hero: 1rem;
+  --oz-shadow: 0 0.3rem 1rem rgb(21 42 80 / 12%);
+}
+
+[data-md-color-scheme="slate"] {
+  --oz-surface: #1c2433;
+  --oz-text: #f3e3c3;
+  --oz-text-muted: #b2bdca;
+  --oz-focus: #f0b440;
+  --oz-focus-keyline: #f3e3c3;
+  --oz-module-lab: #4cc3d6;
+  --oz-module-deploy: #8fb0e6;
+  --oz-module-day2: #d9a865;
+  --oz-module-runbooks: #70c78a;
+  --oz-module-production: #e0825f;
+  --oz-module-book: #d9a865;
+  --oz-risk-readonly-text: #d7c9f0;
+  --oz-risk-readonly-bg: #30293d;
+  --oz-risk-state-text: #f2d28a;
+  --oz-risk-state-bg: #3a301e;
+  --oz-risk-destructive-text: #f0b1bb;
+  --oz-risk-destructive-bg: #3d2228;
+  --oz-radius-control: 0.4rem;
+  --oz-radius-card: 0.7rem;
+  --oz-radius-hero: 1rem;
+  --oz-shadow: 0 0.4rem 1.2rem rgb(0 0 0 / 28%);
+}
+
+/* The accent of a module: one custom property, set by a class. */
+.oz-module--lab { --oz-accent: var(--oz-module-lab); }
+.oz-module--deploy { --oz-accent: var(--oz-module-deploy); }
+.oz-module--day2 { --oz-accent: var(--oz-module-day2); }
+.oz-module--runbooks { --oz-accent: var(--oz-module-runbooks); }
+.oz-module--production { --oz-accent: var(--oz-module-production); }
+.oz-module--book { --oz-accent: var(--oz-module-book); }
+
+/* Keyboard focus: a gold inner ring and a keyline (navy on the light
+   canvas, parchment on the dark one): gold alone does not reach 3:1 on the
+   pale canvas. */
+.oz-academy-hero :is(a, button):focus-visible,
+.oz-module-hero :is(a, button):focus-visible,
+.md-typeset :is(.oz-trail, .oz-book, .oz-state, .oz-next) :is(a, button):focus-visible,
+:is(a, button).portal-cta:focus-visible {
+  outline: 0.1rem solid var(--oz-focus);
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem var(--oz-focus-keyline);
+}
+
+/* Hero: heading and lead on a solid plate, never on the painted pixels. */
+.oz-plate {
+  padding: 1.2rem 1.4rem;
+  color: var(--oz-text);
+  background-color: var(--oz-surface);
+  border: 0.05rem solid var(--oz-wood);
+  border-radius: var(--oz-radius-hero);
+  box-shadow: var(--oz-shadow);
+}
+
+.oz-academy-hero .oz-hero__inner {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+}
+
+.oz-academy-hero .oz-hero__art img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--oz-radius-hero);
+}
+
+/* Learning path: five stops joined by a vertical trail. The order and the
+   rail stay the same on every width: no horizontally scrolling journey. */
+.md-typeset ol.oz-trail {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  max-width: 50rem;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  list-style: none;
+}
+
+.md-typeset ol.oz-trail::before {
+  position: absolute;
+  top: 1.6rem;
+  bottom: 1.6rem;
+  left: 1.6rem;
+  content: "";
+  border-left: 0.2rem dashed var(--oz-wood);
+}
+
+[dir] .md-typeset .oz-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0;
+  margin: 0;
+}
+
+.oz-stop__seal {
+  position: relative;
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+.md-typeset .oz-stop__body {
+  padding: 0.6rem 1rem 0.7rem;
+  background-color: var(--oz-surface);
+  border: 0.05rem solid var(--oz-wood);
+  border-top: 0.25rem solid var(--oz-accent, var(--oz-wood));
+  border-radius: var(--oz-radius-card);
+}
+
+.md-typeset .oz-stop__body > p {
+  margin: 0.2rem 0;
+}
+
+.oz-stop__step {
+  margin: 0 0 0.2rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--oz-text-muted);
+  text-transform: uppercase;
+}
+
+.md-typeset .oz-stop__title {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.oz-stop__icon {
+  flex: none;
+  width: 1.6rem;
+  height: 1.6rem;
+  vertical-align: middle;
+}
+
+/* An icon drawn in an <img> cannot take the text colour: its strokes stay
+   navy, so in the dark scheme it sits on a small parchment disc. */
+[data-md-color-scheme="slate"] .oz-stop__icon {
+  padding: 0.12rem;
+  background-color: #f3e3c3;
+  border-radius: 50%;
+}
+
+.md-typeset .oz-stop--planned .oz-stop__body {
+  background-color: transparent;
+  border-style: dashed;
+  border-top-style: solid;
+}
+
+.md-typeset .oz-stop--planned .oz-stop__seal {
+  opacity: 0.55;
+}
+
+/* The book: a separate route, set apart from the trail. */
+.md-typeset .oz-book {
+  max-width: 50rem;
+  margin-top: 2.4rem;
+  overflow: hidden;
+  background-color: var(--oz-surface);
+  border: 0.05rem solid var(--oz-wood);
+  border-left: 0.3rem solid var(--oz-accent);
+  border-radius: var(--oz-radius-card);
+}
+
+.oz-book__band {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 1;
+  object-fit: cover;
+}
+
+.md-typeset .oz-book__text {
+  padding: 0 1.2rem 0.6rem;
+}
+
+.md-typeset .oz-book h2 {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0;
+  margin-top: 1rem;
+  border-top: 0;
+}
+
+/* Module home: breadcrumb, seal, the band of the module. */
+.oz-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.7rem;
+}
+
+.oz-crumbs a {
+  font-weight: 600;
+  color: var(--oz-text);
+  text-decoration: underline;
+}
+
+.oz-module-hero .oz-plate {
+  border-top: 0.3rem solid var(--oz-accent);
+}
+
+.oz-module-hero .oz-hero__inner {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.oz-module-hero__title {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.oz-module-hero__title .oz-stop__icon {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.oz-module-hero__seal {
+  width: 6rem;
+  height: 6rem;
+}
+
+.oz-band {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1rem 0 0;
+  aspect-ratio: 4 / 1;
+  object-fit: cover;
+  border: 0.05rem solid var(--oz-wood);
+  border-radius: var(--oz-radius-card);
+}
+
+@media screen and (max-width: 60em) {
+  .oz-academy-hero .oz-hero__inner,
+  .oz-module-hero .oz-hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oz-module-hero__seal {
+    display: none;
+  }
+}
+
+/* Next stop and the book, at the end of a module home. */
+.md-typeset .oz-next {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.8rem;
+  max-width: 50rem;
+  margin-top: 2rem;
+}
+
+.md-typeset a.oz-next__stop {
+  display: block;
+  padding: 0.7rem 1rem;
+  color: var(--oz-text);
+  text-decoration: none;
+  background-color: var(--oz-surface);
+  border: 0.05rem solid var(--oz-wood);
+  border-left: 0.3rem solid var(--oz-accent);
+  border-radius: var(--oz-radius-card);
+}
+
+.md-typeset a.oz-next__stop .oz-stop__step {
+  display: block;
+}
+
+.md-typeset .oz-next__title {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* State pages (coming soon, page not found): the image beside a plain
+   heading and its explanation; stacked on phones. */
+.md-typeset .oz-state {
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: 1.4rem;
+  align-items: center;
+  max-width: 50rem;
+  margin: 0.4rem 0 1.4rem;
+}
+
+.oz-state__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0.05rem solid var(--oz-wood);
+  border-radius: var(--oz-radius-card);
+}
+
+.md-typeset .oz-state h1 {
+  margin: 0 0 0.6rem;
+}
+
+.md-typeset .oz-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .oz-state {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Controls of the art direction reach 44 x 44 CSS px on touch screens. */
+@media (pointer: coarse) {
+  :is(a, button).portal-cta {
+    min-height: 2.2rem;
   }
 }

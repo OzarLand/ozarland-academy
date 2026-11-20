@@ -305,6 +305,7 @@ class ConfigTest(RepoTest):
             ("release", "ussuri", "day2/ussuri", "../../"),
         )
         self.assertEqual(portal["root_url"], "https://example.org/portal/")
+        self.assertEqual(portal["root_path"], "/portal/")
         self.assertEqual(portal["default"], "day2/ussuri")
         self.assertEqual(portal["module"]["id"], "day2")
         self.assertEqual([r["path"] for r in portal["releases"]], ["day2/ussuri", "day2/2023.1"])
@@ -329,6 +330,7 @@ class ConfigTest(RepoTest):
         project = releases.release_project(self.root, self.registry, "day2/ussuri")
         self.assertEqual(project["site_url"], "https://academy.example.org/day2/ussuri/")
         self.assertEqual(project["extra"]["portal"]["root_url"], "https://academy.example.org/")
+        self.assertEqual(project["extra"]["portal"]["root_path"], "/")
         self.assertEqual(releases.root_project(self.root, self.registry)["site_url"], "https://academy.example.org/")
 
     def test_release_may_override_edit_uri_and_site_name(self) -> None:

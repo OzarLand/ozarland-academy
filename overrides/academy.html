@@ -1,11 +1,16 @@
 {#-
   Root of the portal (/index.html), built from a stub that
-  tools/site/releases.py generates: the learning path of OzarLand Academy.
-  It lists the modules of academy.toml in their order, one step each; a
-  planned module leads to its "coming soon" page. The primary call to action
-  opens the first available module and carries data-portal-start, which
-  tools/site/check_site.py checks. The shared "Part of OzarLand" block closes
-  the page.
+  tools/site/releases.py generates: the learning path of OzarLand Academy,
+  laid out as brand/academy/templates.md ("Learning-path home") describes:
+  a hero, the five stops of the island trail in the order of academy.toml,
+  the book as a separate deeper-reading route, and the shared-learning note.
+
+  Each stop shows the stage seal of its position (seals/stage-N.svg), its
+  icon (icons/<module id>.svg) and its accent (.oz-module--<module id>,
+  portal.css section 19). A planned module leads to its "coming soon" page.
+  The primary call to action opens the first available module and carries
+  data-portal-start; each stop link carries data-portal-module. Both are
+  checked by tools/site/check_site.py.
 -#}
 {% extends "main.html" %}
 {% set portal = config.extra.portal %}
@@ -13,8 +18,10 @@
 {% set img = root ~ "assets/images/ozarland/" %}
 {% set hub = "https://github.com/OzarLand/ozarland" %}
 {% set first = namespace(module=none) %}
-{% for module in portal.modules if module.status == "available" and not first.module %}
-  {% set first.module = module %}
+{#- The test is in the body: the condition of a `for … if` is evaluated for
+    every item before the body runs, so it cannot see `first.module`. -#}
+{% for module in portal.modules if module.status == "available" %}
+  {% if not first.module %}{% set first.module = module %}{% endif %}
 {% endfor %}
 
 {% block htmltitle %}
@@ -22,28 +29,28 @@
 {% endblock %}
 
 {% block hero %}
-  <section class="portal-hero oz-hero" aria-label="Introduction">
+  <section class="portal-hero oz-hero oz-academy-hero" aria-label="Introduction">
     <div class="md-grid portal-hero__inner oz-hero__inner">
-      <div class="oz-hero__text">
+      <div class="oz-hero__text oz-plate">
         <p class="oz-hero__org">
-          <a href="{{ hub }}"><span aria-hidden="true">←</span> OzarLand home</a>
+          <a href="{{ hub }}"><span aria-hidden="true">←</span> OzarLand</a>
           <span class="oz-hero__badge">An OzarLand project</span>
         </p>
         <h1 class="portal-hero__title" id="welcome">{{ config.site_name }}</h1>
         <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
         <p class="portal-hero__lead">
-          One learning path to run OpenStack, in {{ portal.modules | length }} steps: discover it on a lab, deploy it,
+          One learning path to run OpenStack, in {{ portal.modules | length }} stops: discover it on a lab, deploy it,
           operate it, intervene on instances and hypervisors, and take it to production.
         </p>
         <p class="portal-hero__actions">
           {% if first.module %}
-            <a class="portal-cta portal-cta--primary" href="{{ root }}{{ first.module.path }}/" data-portal-start="{{ first.module.id }}">Start with {{ first.module.title }}</a>
+            <a class="portal-cta portal-cta--primary" href="{{ root }}{{ first.module.path }}/" data-portal-start="{{ first.module.id }}">Start with {{ first.module.step }}</a>
           {% endif %}
           <a class="portal-cta" href="#path">See the path</a>
         </p>
       </div>
       <figure class="oz-hero__art">
-        <img src="{{ img }}hero.webp" width="1200" height="750" fetchpriority="high" alt="A diverse group of travellers studies a map on a wooden terrace above a bright island city and sea.">
+        <img src="{{ img }}hero/path-hero.webp" width="1600" height="1000" fetchpriority="high" alt="A group of travellers studies a map on a wooden terrace above an island city, waterfalls and sea.">
       </figure>
     </div>
   </section>
@@ -66,21 +73,40 @@
 {% block content %}
   <h2 id="path">The learning path</h2>
   <p>
-    Each step is a module with its own pages, navigation and search. Follow them in order, or go straight to the one
-    you need.
+    Five stops across one island, from the harbour to the lighthouse. Each stop is a module with its own pages,
+    navigation and search: follow them in order, or go straight to the one you need.
   </p>
-  <ol class="oz-steps">
+  <ol class="oz-trail">
     {% for module in portal.modules %}
-      <li class="oz-steps__item{% if module.status != 'available' %} oz-steps__item--planned{% endif %}">
-        <p class="oz-steps__step">Step {{ loop.index }} · {{ module.step }}</p>
-        <p class="oz-steps__title">
-          <a href="{{ root }}{{ module.path }}/" data-portal-module="{{ module.id }}">{{ module.title }}</a>
-          {% if module.status != "available" %}<span class="portal-release__soon">coming soon</span>{% endif %}
-        </p>
-        <p>{{ module.summary }}</p>
+      {% set planned = module.status != "available" %}
+      <li class="oz-stop oz-module--{{ module.id }}{% if planned %} oz-stop--planned{% endif %}">
+        <img class="oz-stop__seal" src="{{ img }}seals/stage-{{ loop.index }}.svg" width="96" height="96" alt="">
+        <div class="oz-stop__body">
+          <p class="oz-stop__step">Stop {{ loop.index }} · {{ module.step }}</p>
+          <p class="oz-stop__title">
+            <img class="oz-stop__icon" src="{{ img }}icons/{{ module.id }}.svg" width="48" height="48" alt="">
+            <a href="{{ root }}{{ module.path }}/" data-portal-module="{{ module.id }}">{{ module.title }}</a>
+            {% if planned %}<span class="portal-release__soon">coming soon</span>{% endif %}
+          </p>
+          <p class="oz-stop__summary">{{ module.summary }}</p>
+        </div>
       </li>
     {% endfor %}
   </ol>
+
+  <section class="oz-book oz-module--book" aria-labelledby="book">
+    <img class="oz-book__band" src="{{ img }}bands/book.webp" width="1600" height="400" loading="lazy" alt="">
+    <div class="oz-book__text">
+      <h2 id="book">
+        <img class="oz-stop__icon" src="{{ img }}icons/book.svg" width="48" height="48" alt="">
+        Deeper reading: the OzarLand book
+      </h2>
+      <p>
+        The book is the island's archive: a separate route for readers who want more detail, not a sixth stop of the
+        path. It is being moved into OzarLand and will be linked from here once it is published.
+      </p>
+    </div>
+  </section>
 
   <section class="oz-land" aria-labelledby="ozarland">
     <h2 id="ozarland">Part of OzarLand</h2>
@@ -91,10 +117,10 @@
       to everyone: your knowledge, questions and corrections are welcome.
     </p>
     <table>
-      <thead><tr><th></th><th>Repository</th><th>What it holds</th></tr></thead>
+      <thead><tr><th>Repository</th><th>What it holds</th></tr></thead>
       <tbody>
-        <tr><td></td><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
-        <tr class="oz-land__here"><td>📘</td><td><strong>ozarland-academy</strong> (you are here)</td><td>The learning path: lab, deployment, day-2 operations, runbooks, production</td></tr>
+        <tr><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
+        <tr class="oz-land__here"><td><a href="https://github.com/OzarLand/ozarland-academy"><strong>ozarland-academy</strong></a> (you are here)</td><td>The sources of this learning path: lab, deployment, day-2 operations, runbooks, production</td></tr>
       </tbody>
     </table>
     <p class="oz-land__actions">

@@ -51,18 +51,43 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Page not found</h1>
-  {#- Served for any address: the image URL is absolute (site_url). -#}
-  <figure class="oz-section-art">
-    <img src="{{ config.site_url }}assets/images/ozarland/pages/404.webp" width="1200" height="600" alt="A traveller guide holding a lantern at a stone path junction on a bright island.">
-  </figure>
+  {#- State panel (brand/academy/templates.md, "404"): the image, a direct
+      heading, a short explanation, then the recovery links. Served for any
+      address: the image URL starts at the root of the host (portal.root_path:
+      /ozarland-academy/ on github.io, / on a domain), so that it also loads
+      in the local preview of the published portal. -#}
+  {% set site_path = portal.root_path ~ (portal.path ~ "/" if portal.path else "") %}
+  <div class="oz-state">
+    <img class="oz-state__art" src="{{ site_path }}assets/images/ozarland/pages/not-found.webp" width="1200" height="600" alt="A lantern-bearing guide stands at a stone crossroads above the sea.">
+    <div class="oz-state__text">
+      <h1>Page not found</h1>
+      {% if portal.kind == "root" %}
+        <p>This address does not match a page of OzarLand Academy. It may have moved, or the link may be out of date.</p>
+        <p class="oz-state__actions">
+          <a class="portal-cta portal-cta--primary" href="{{ base_url }}/">Academy home</a>
+          <a class="portal-cta" href="#modules">Module index</a>
+        </p>
+      {% else %}
+        <p>This address does not match a page of this site. It may have moved, or the link may be out of date.</p>
+        {#- Only the home page is linked: it is the one page every site has.
+            The tabs of the header lead to the sections of this site. -#}
+        <p class="oz-state__actions">
+          <a class="portal-cta portal-cta--primary" href="{{ '.' | url }}">Home page of this site</a>
+          <button type="button" class="portal-search portal-search--inline" data-portal-search hidden>
+            {% include ".icons/" ~ (config.theme.icon.search or "material/magnify") ~ ".svg" %}
+            <span class="portal-search__label">Search this site</span>
+            <kbd class="portal-search__kbd" aria-hidden="true"></kbd>
+          </button>
+        </p>
+      {% endif %}
+    </div>
+  </div>
   {% if portal.kind == "root" %}
-    <p>This address does not match a page of the portal.</p>
     {#- Shown by the script below when the address is under an available release. -#}
     <p data-portal-not-found-release hidden>
       It is under <a href="#"></a>: its home page and its search are the place to look.
     </p>
-    <h2 id="modules">The learning path</h2>
+    <h2 id="modules">Module index</h2>
     <ul class="portal-releases">
       {% for module in portal.modules %}
         <li>
@@ -85,17 +110,5 @@
         line.hidden = false;
       })();
     </script>
-  {% else %}
-    <p>This address does not match a page of this site.</p>
-    <p>
-      <button type="button" class="portal-search portal-search--inline" data-portal-search hidden>
-        {% include ".icons/" ~ (config.theme.icon.search or "material/magnify") ~ ".svg" %}
-        <span class="portal-search__label">Search the portal</span>
-        <kbd class="portal-search__kbd" aria-hidden="true"></kbd>
-      </button>
-    </p>
-    {#- Only the home page is linked: it is the one page every site has.
-        The tabs of the header lead to the sections of this site. -#}
-    <p><a href="{{ '.' | url }}">Home page of this site</a></p>
   {% endif %}
 {% endblock %}
