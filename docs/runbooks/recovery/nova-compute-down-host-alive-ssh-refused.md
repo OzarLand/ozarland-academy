@@ -261,5 +261,5 @@ monitoring user only; the user running the procedure kept its access.
 *Provenance: written by agent:ozarland-author, from a lab reproduction by @soufian-zaouam on 2026.1.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=recovery/nova-compute-down-host-alive-ssh-refused.md&title=Feedback%3A+recovery/nova-compute-down-host-alive-ssh-refused.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/recovery/nova-compute-down-host-alive-ssh-refused.md&title=Feedback%3A+docs/runbooks/recovery/nova-compute-down-host-alive-ssh-refused.md):
 your release, your deployment method, and what happened.

@@ -436,8 +436,12 @@ with their history, in the order of the path. One pull request per repository:
    `git clone`, are updated by hand.
 5. Give each page a front matter with `title` and `description`, and fit the home page into the portal: no badges, no
    "OzarLand home" link, no table of the former repositories.
-6. If the former repository ran the content checker of the hub, add the module to `MODULES` in
+6. Copy the issue forms of the former repository into `.github/ISSUE_TEMPLATE/` (prefixed with the module when the
+   name is not shared, such as `lab-failed.yml`, and listed in `FORM_RENAMES` of rewrite_links.py when renamed):
+   the former repository is archived, and an archived repository takes no new issue. rewrite_links.py sends the
+   links that open an issue there to this repository.
+7. If the former repository ran the content checker of the hub, add the module to `MODULES` in
    [tools/site/check_content.py](tools/site/check_content.py).
-7. `make docs-check STRICT=1`, `make docs-content` and `make docs-build STRICT=1`, then the pull request. The former repository is archived
+8. `make docs-check STRICT=1`, `make docs-content` and `make docs-build STRICT=1`, then the pull request. The former repository is archived
    after the portal is published, with a README that points to the module.
 

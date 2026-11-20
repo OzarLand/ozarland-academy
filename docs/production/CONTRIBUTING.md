@@ -26,7 +26,7 @@ A memo is a summary of a runbook. That fixes the order of things:
 
 - **The runbook comes first.** A memo is written from a page of
   the [VM runbooks](../runbooks/). If your lesson has no runbook, share
-  the problem there first ([*Problem solved*](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=problem-solved.yml));
+  the problem there first ([*Problem solved*](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml));
   the memo follows.
 - **Nothing is added.** No check, default value, command or cause that the runbook does not contain. If you know
   something the runbook does not say, that is a contribution to the runbook.

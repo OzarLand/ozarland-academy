@@ -281,5 +281,5 @@ upload slowed with `tc` on the Glance API port, on 2026-10-27:
 *Provenance: written by agent:ozarland-author, from the Nova and Kolla-Ansible 2026.1 documentation and source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=lifecycle/snapshot-stuck-in-image-uploading.md&title=Feedback%3A+lifecycle/snapshot-stuck-in-image-uploading.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/lifecycle/snapshot-stuck-in-image-uploading.md&title=Feedback%3A+docs/runbooks/lifecycle/snapshot-stuck-in-image-uploading.md):
 your release, your deployment method, and what happened.

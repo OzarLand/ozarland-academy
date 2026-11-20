@@ -241,5 +241,5 @@ was observed, and it needs SR-IOV capable hardware. Not covered: OVS hardware of
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible, Neutron and Nova 2026.1 documentation and the
 Kolla-Ansible 2026.1 code. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=configuration/sriov-neutron-ports-and-nova-pci-alias.md&title=Feedback%3A+configuration/sriov-neutron-ports-and-nova-pci-alias.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/configuration/sriov-neutron-ports-and-nova-pci-alias.md&title=Feedback%3A+docs/deploy/configuration/sriov-neutron-ports-and-nova-pci-alias.md):
 your release, your topology, and what happened.

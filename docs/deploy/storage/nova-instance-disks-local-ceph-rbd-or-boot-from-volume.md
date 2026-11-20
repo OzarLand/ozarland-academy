@@ -169,5 +169,5 @@ ephemeral disks, images with `hw_disk_bus` or `hw_scsi_model` properties, and im
 source, with two lab records from the runbooks repository.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md&title=Feedback%3A+storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md&title=Feedback%3A+docs/deploy/storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md):
 your release, your topology, and what happened.

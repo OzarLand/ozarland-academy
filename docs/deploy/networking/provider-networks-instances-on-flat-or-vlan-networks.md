@@ -174,5 +174,5 @@ own provider network settings in detail, and RBAC to share a provider network wi
 Kolla-Ansible source.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=networking/provider-networks-instances-on-flat-or-vlan-networks.md&title=Feedback%3A+networking/provider-networks-instances-on-flat-or-vlan-networks.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/networking/provider-networks-instances-on-flat-or-vlan-networks.md&title=Feedback%3A+docs/deploy/networking/provider-networks-instances-on-flat-or-vlan-networks.md):
 your release, your topology, and what happened.

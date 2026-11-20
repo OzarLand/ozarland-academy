@@ -254,5 +254,5 @@ Then the deploy goes past *Waiting for rabbitmq to start* and ends with `failed=
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 code and documentation and the RabbitMQ
 documentation. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md&title=Feedback%3A+deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md&title=Feedback%3A+docs/deploy/deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md):
 your release, your topology, and what happened.

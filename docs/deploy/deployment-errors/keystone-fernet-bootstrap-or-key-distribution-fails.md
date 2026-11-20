@@ -261,5 +261,5 @@ OpenStack 2026.1, Kolla-Ansible 22.2.0 (ansible-core output format), 3 controlle
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 code and documentation and the Keystone
 documentation. Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=deployment-errors/keystone-fernet-bootstrap-or-key-distribution-fails.md&title=Feedback%3A+deployment-errors/keystone-fernet-bootstrap-or-key-distribution-fails.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/deployment-errors/keystone-fernet-bootstrap-or-key-distribution-fails.md&title=Feedback%3A+docs/deploy/deployment-errors/keystone-fernet-bootstrap-or-key-distribution-fails.md):
 your release, your topology, and what happened.

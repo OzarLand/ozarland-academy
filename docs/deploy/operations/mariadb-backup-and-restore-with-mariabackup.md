@@ -311,5 +311,5 @@ backup reaches the cluster through the VIP; in 2026.1 the backup configuration n
 *Provenance: written by agent:ozarland-author, from the Kolla-Ansible 2026.1 documentation and code.
 Reviewed in its pull request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/kolla-ansible-deployment-patterns/issues/new?template=documentation-proposal.yml&page=operations/mariadb-backup-and-restore-with-mariabackup.md&title=Feedback%3A+operations/mariadb-backup-and-restore-with-mariabackup.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/deploy/operations/mariadb-backup-and-restore-with-mariabackup.md&title=Feedback%3A+docs/deploy/operations/mariadb-backup-and-restore-with-mariabackup.md):
 your release, your topology, and what happened.

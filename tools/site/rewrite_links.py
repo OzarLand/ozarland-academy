@@ -26,10 +26,15 @@ repository. This script rewrites, in every page under docs/:
       (rule link-repo-file);
   a link to the repository itself leads to the home page of the module.
 
+A link that opens a new issue in a moved repository (issues/new, with or
+without ?template=) opens it in this repository, whose .github/ISSUE_TEMPLATE/
+has the issue forms of the former repositories: an archived repository takes
+no new issue.
+
 Links inside code (fenced blocks, inline code) are not touched: a command
-such as `git clone` is updated by hand. Links to the issues, pull requests or
-discussions of a moved repository stay: the repository is archived, not
-deleted. A link that cannot be mapped (the file does not exist any more) is
+such as `git clone` is updated by hand. Links to the existing issues, pull
+requests or discussions of a moved repository stay: the repository is
+archived, not deleted. A link that cannot be mapped (the file does not exist any more) is
 listed and left as it is.
 
 Usage:  python3 tools/site/rewrite_links.py            show what would change
@@ -68,7 +73,19 @@ DROPPED = {
     "CODE_OF_CONDUCT.md": f"{HUB}/blob/main/CODE_OF_CONDUCT.md",
 }
 
+#: Issue forms of a former repository that have another name here.
+FORM_RENAMES = {
+    "openstack-quick-lab": {
+        "exercise-problem.yml": "lab-exercise-problem.yml",
+        "variant-or-exercise-proposal.yml": "lab-variant-or-exercise-proposal.yml",
+    },
+}
+
 _SOURCE_NAMES = "|".join(re.escape(name) for name in SOURCES)
+NEW_ISSUE = re.compile(
+    rf"https?://github\.com/{ORG}/(?P<repo>{_SOURCE_NAMES})/issues/new(?:\?(?P<query>[^\s)\"'<>#]*))?",
+    re.IGNORECASE,
+)
 ABSOLUTE = re.compile(
     rf"https?://github\.com/{ORG}/(?P<repo>{_SOURCE_NAMES})"
     r"(?:(?P<kind>/(?:blob|tree)/main)(?P<path>/[^\s)\"'<>#]*)?)?/?(?P<fragment>#[^\s)\"'<>]*)?"
@@ -194,6 +211,28 @@ class Rewriter:
                 return match.group(0)
             return new
 
+        def new_issue(match: re.Match) -> str:
+            if SOURCES[match.group("repo")] not in self.available:
+                return match.group(0)
+            query = match.group("query") or ""
+            renames = FORM_RENAMES.get(match.group("repo"), {})
+            query = re.sub(r"(?<![\w-])template=([\w.-]+)", lambda m: "template=" + renames.get(m.group(1), m.group(1)), query)
+            # A prefilled page path (page=, and the same path in title=) was a
+            # path of the former repository: it becomes a path of this one.
+            module = SOURCES[match.group("repo")]
+
+            def prefix(found: re.Match) -> str:
+                path = found.group(2)
+                if path.lower().startswith(("docs/", "docs%2f")) or path.startswith("<"):
+                    return found.group(0)
+                slash = "%2F" if "%2F" in path.upper() else "/"
+                return f"{found.group(1)}docs{slash}{module}{slash}{path}"
+
+            query = re.sub(r"((?:^|&)page=)([^&]+)", prefix, query)
+            query = re.sub(r"((?:^|&)title=Feedback%3A\+)([^&]+)", prefix, query)
+            return f"{REPOSITORY}/issues/new" + (f"?{query}" if query else "")
+
+        text = NEW_ISSUE.sub(new_issue, text)
         text = ABSOLUTE.sub(absolute, text)
         for pattern in TARGETS:
             def relative(match: re.Match) -> str:

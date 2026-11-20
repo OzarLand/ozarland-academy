@@ -271,5 +271,5 @@ disks, no Cinder, 2026-10-27. All four causes produced on purpose on one compute
 *Provenance: written by agent:ozarland-author, from the Nova 2026.1 documentation and source. Reviewed in its pull
 request (see the page history). Checked by a human operator: not yet.*
 
-**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/openstack-vm-runbooks/issues/new?template=documentation-proposal.yml&page=scheduling/compute-service-disabled-or-forced-down.md&title=Feedback%3A+scheduling/compute-service-disabled-or-forced-down.md):
+**Worked for you, or not?** [Tell us in one line](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml&page=docs/runbooks/scheduling/compute-service-disabled-or-forced-down.md&title=Feedback%3A+docs/runbooks/scheduling/compute-service-disabled-or-forced-down.md):
 your release, your deployment method, and what happened.
