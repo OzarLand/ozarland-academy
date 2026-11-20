@@ -70,6 +70,7 @@ import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+from urllib.parse import urlsplit
 
 if sys.version_info < (3, 11):  # pragma: no cover - depends on the interpreter
     sys.exit("releases: Python 3.11 or newer is required (tomllib)")
@@ -568,7 +569,10 @@ def portal_root_url(base: dict, environ: dict | None = None) -> str:
 def portal_data(registry: Registry, base: dict, current: Release | None, root_page: str = "") -> dict:
     """`extra.portal` of a built configuration: what the templates read.
 
-    `up` is the path from the base of the built site to the portal root.
+    `up` is the path from the base of the built site to the portal root;
+    `root_path` the path of the portal root on its host ("/ozarland-academy/"
+    on github.io, "/" on a domain), for the not-found page, which is served
+    at any depth.
     `releases` are the sites of the current module (the version selector);
     on the root site, those of the versioned module. `sites` are all the
     sites, available or planned (the not-found page reads them).
@@ -578,6 +582,7 @@ def portal_data(registry: Registry, base: dict, current: Release | None, root_pa
     else:
         module = registry.versioned_module
     module_releases = [r for r in registry.releases if module is not None and r.module == module.id]
+    root_url = portal_root_url(base)
     return {
         "kind": "release" if current else "root",
         "current": current.id if current else "",
@@ -585,7 +590,8 @@ def portal_data(registry: Registry, base: dict, current: Release | None, root_pa
         "module": module.as_dict() if module else {},
         "up": current.up if current else "",
         "default": registry.default,
-        "root_url": portal_root_url(base),
+        "root_url": root_url,
+        "root_path": urlsplit(root_url).path or "/",
         "modules": [m.as_dict() for m in registry.modules],
         "releases": [release.as_dict() for release in module_releases],
         "sites": [release.as_dict() for release in registry.releases],

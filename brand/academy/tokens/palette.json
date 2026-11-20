@@ -1,0 +1,391 @@
+{
+  "tokens": {
+    ":root": {
+      "--oz-canvas": "#FBF4E4",
+      "--oz-surface": "#FFFDF8",
+      "--oz-surface-raised": "#F3E3C3",
+      "--oz-text": "#152A50",
+      "--oz-text-secondary": "#1F3A6B",
+      "--oz-text-muted": "#4E5A6D",
+      "--oz-link": "#0F62A6",
+      "--oz-link-visited": "#6B4220",
+      "--oz-primary": "#0F62A6",
+      "--oz-primary-text": "#FFFFFF",
+      "--oz-border": "#C4904F",
+      "--oz-border-strong": "#6B4220",
+      "--oz-focus": "#F0B440",
+      "--oz-focus-keyline": "#152A50",
+      "--oz-navy": "#1F3A6B",
+      "--oz-navy-strong": "#152A50",
+      "--oz-parchment": "#F3E3C3",
+      "--oz-parchment-soft": "#FBF4E4",
+      "--oz-wood": "#C4904F",
+      "--oz-wood-dark": "#6B4220",
+      "--oz-lantern": "#F0B440",
+      "--oz-sea": "#1E9FB5",
+      "--oz-terracotta": "#B55A3A",
+      "--oz-sky": "#2F6FD0",
+      "--oz-green": "#2C7A43",
+      "--oz-module-lab": "#1E9FB5",
+      "--oz-module-deploy": "#2F6FD0",
+      "--oz-module-day2": "#C4904F",
+      "--oz-module-runbooks": "#2C7A43",
+      "--oz-module-production": "#B55A3A",
+      "--oz-module-book": "#6B4220",
+      "--oz-risk-readonly-text": "#4B3B69",
+      "--oz-risk-readonly-bg": "#F0ECF7",
+      "--oz-risk-state-text": "#654100",
+      "--oz-risk-state-bg": "#FFF1CF",
+      "--oz-risk-destructive-text": "#7A2430",
+      "--oz-risk-destructive-bg": "#F9E7EA",
+      "--oz-hero-from": "#2F6FD0",
+      "--oz-hero-to": "#1F3A6B",
+      "--oz-radius-control": "0.5rem",
+      "--oz-radius-card": "0.875rem",
+      "--oz-radius-hero": "1.25rem"
+    },
+    "[data-md-color-scheme=\"slate\"]": {
+      "--oz-canvas": "#11151A",
+      "--oz-surface": "#1C2433",
+      "--oz-surface-raised": "#202B3A",
+      "--oz-text": "#F3E3C3",
+      "--oz-text-secondary": "#D6DFED",
+      "--oz-text-muted": "#B2BDCA",
+      "--oz-link": "#74B7EE",
+      "--oz-link-visited": "#F2A28B",
+      "--oz-primary": "#74B7EE",
+      "--oz-primary-text": "#11151A",
+      "--oz-border": "#8B7355",
+      "--oz-border-strong": "#D9A865",
+      "--oz-focus": "#F0B440",
+      "--oz-focus-keyline": "#F3E3C3",
+      "--oz-navy": "#8FB0E6",
+      "--oz-navy-strong": "#142038",
+      "--oz-parchment": "#F3E3C3",
+      "--oz-parchment-soft": "#1C2433",
+      "--oz-wood": "#D9A865",
+      "--oz-wood-dark": "#D9A865",
+      "--oz-lantern": "#F0B440",
+      "--oz-sea": "#4CC3D6",
+      "--oz-terracotta": "#E0825F",
+      "--oz-sky": "#8FB0E6",
+      "--oz-green": "#70C78A",
+      "--oz-module-lab": "#4CC3D6",
+      "--oz-module-deploy": "#8FB0E6",
+      "--oz-module-day2": "#D9A865",
+      "--oz-module-runbooks": "#70C78A",
+      "--oz-module-production": "#E0825F",
+      "--oz-module-book": "#D9A865",
+      "--oz-risk-readonly-text": "#D7C9F0",
+      "--oz-risk-readonly-bg": "#30293D",
+      "--oz-risk-state-text": "#F2D28A",
+      "--oz-risk-state-bg": "#3A301E",
+      "--oz-risk-destructive-text": "#F0B1BB",
+      "--oz-risk-destructive-bg": "#3D2228",
+      "--oz-hero-from": "#142038",
+      "--oz-hero-to": "#1D3550",
+      "--oz-radius-control": "0.5rem",
+      "--oz-radius-card": "0.875rem",
+      "--oz-radius-hero": "1.25rem"
+    }
+  },
+  "contrast": [
+    {
+      "scheme": "light",
+      "pair": "body text on canvas",
+      "foreground": "#152A50",
+      "background": "#FBF4E4",
+      "ratio": 12.96,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "body text on reading surface",
+      "foreground": "#152A50",
+      "background": "#FFFDF8",
+      "ratio": 13.97,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "secondary text on canvas",
+      "foreground": "#1F3A6B",
+      "background": "#FBF4E4",
+      "ratio": 10.22,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "muted text on canvas",
+      "foreground": "#4E5A6D",
+      "background": "#FBF4E4",
+      "ratio": 6.37,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "link on canvas",
+      "foreground": "#0F62A6",
+      "background": "#FBF4E4",
+      "ratio": 5.78,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "visited link on canvas",
+      "foreground": "#6B4220",
+      "background": "#FBF4E4",
+      "ratio": 7.9,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "primary button label",
+      "foreground": "#FFFFFF",
+      "background": "#0F62A6",
+      "ratio": 6.33,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "read-only risk label",
+      "foreground": "#4B3B69",
+      "background": "#F0ECF7",
+      "ratio": 8.48,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "state-changing risk label",
+      "foreground": "#654100",
+      "background": "#FFF1CF",
+      "ratio": 8.11,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "destructive risk label",
+      "foreground": "#7A2430",
+      "background": "#F9E7EA",
+      "ratio": 8.31,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "focus keyline on canvas",
+      "foreground": "#152A50",
+      "background": "#FBF4E4",
+      "ratio": 12.96,
+      "threshold": 3,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "gold focus ring on canvas",
+      "foreground": "#F0B440",
+      "background": "#FBF4E4",
+      "ratio": 1.69,
+      "threshold": 3,
+      "result": "fail"
+    },
+    {
+      "scheme": "dark",
+      "pair": "body text on canvas",
+      "foreground": "#F3E3C3",
+      "background": "#11151A",
+      "ratio": 14.47,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "body text on reading surface",
+      "foreground": "#F3E3C3",
+      "background": "#1C2433",
+      "ratio": 12.29,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "secondary text on canvas",
+      "foreground": "#D6DFED",
+      "background": "#11151A",
+      "ratio": 13.64,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "muted text on canvas",
+      "foreground": "#B2BDCA",
+      "background": "#11151A",
+      "ratio": 9.62,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "link on canvas",
+      "foreground": "#74B7EE",
+      "background": "#11151A",
+      "ratio": 8.51,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "visited link on canvas",
+      "foreground": "#F2A28B",
+      "background": "#11151A",
+      "ratio": 9.0,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "primary button label",
+      "foreground": "#11151A",
+      "background": "#74B7EE",
+      "ratio": 8.51,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "read-only risk label",
+      "foreground": "#D7C9F0",
+      "background": "#30293D",
+      "ratio": 8.94,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "state-changing risk label",
+      "foreground": "#F2D28A",
+      "background": "#3A301E",
+      "ratio": 8.86,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "destructive risk label",
+      "foreground": "#F0B1BB",
+      "background": "#3D2228",
+      "ratio": 8.03,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "focus keyline on canvas",
+      "foreground": "#F3E3C3",
+      "background": "#11151A",
+      "ratio": 14.47,
+      "threshold": 3,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "gold focus ring on canvas",
+      "foreground": "#F0B440",
+      "background": "#11151A",
+      "ratio": 9.87,
+      "threshold": 3,
+      "result": "pass"
+    },
+    {
+      "scheme": "light",
+      "pair": "decorative --oz-sea on canvas (do not use as small text)",
+      "foreground": "#1E9FB5",
+      "background": "#FBF4E4",
+      "ratio": 2.87,
+      "threshold": 4.5,
+      "result": "fail"
+    },
+    {
+      "scheme": "light",
+      "pair": "decorative --oz-sky on canvas (do not use as small text)",
+      "foreground": "#2F6FD0",
+      "background": "#FBF4E4",
+      "ratio": 4.45,
+      "threshold": 4.5,
+      "result": "fail"
+    },
+    {
+      "scheme": "light",
+      "pair": "decorative --oz-wood on canvas (do not use as small text)",
+      "foreground": "#C4904F",
+      "background": "#FBF4E4",
+      "ratio": 2.57,
+      "threshold": 4.5,
+      "result": "fail"
+    },
+    {
+      "scheme": "light",
+      "pair": "decorative --oz-terracotta on canvas (do not use as small text)",
+      "foreground": "#B55A3A",
+      "background": "#FBF4E4",
+      "ratio": 4.27,
+      "threshold": 4.5,
+      "result": "fail"
+    },
+    {
+      "scheme": "light",
+      "pair": "decorative --oz-lantern on canvas (do not use as small text)",
+      "foreground": "#F0B440",
+      "background": "#FBF4E4",
+      "ratio": 1.69,
+      "threshold": 4.5,
+      "result": "fail"
+    },
+    {
+      "scheme": "dark",
+      "pair": "base --oz-navy on canvas (use bright dark variant for text)",
+      "foreground": "#8FB0E6",
+      "background": "#11151A",
+      "ratio": 8.31,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "base --oz-sky on canvas (use bright dark variant for text)",
+      "foreground": "#8FB0E6",
+      "background": "#11151A",
+      "ratio": 8.31,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "base --oz-wood on canvas (use bright dark variant for text)",
+      "foreground": "#D9A865",
+      "background": "#11151A",
+      "ratio": 8.5,
+      "threshold": 4.5,
+      "result": "pass"
+    },
+    {
+      "scheme": "dark",
+      "pair": "base --oz-terracotta on canvas (use bright dark variant for text)",
+      "foreground": "#E0825F",
+      "background": "#11151A",
+      "ratio": 6.57,
+      "threshold": 4.5,
+      "result": "pass"
+    }
+  ]
+}

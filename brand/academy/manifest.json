@@ -1,0 +1,282 @@
+[
+  {
+    "file": "icons/lab.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/lab.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "A flask outline filled with teal liquid represents the disposable cloud lab.",
+    "module": "lab",
+    "status": "final"
+  },
+  {
+    "file": "icons/deploy.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/deploy.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "Three connected route markers represent deployment patterns.",
+    "module": "deploy",
+    "status": "final"
+  },
+  {
+    "file": "icons/day2.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/day2.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "An open book with a small brass gear represents source-led operations learning.",
+    "module": "day2",
+    "status": "final"
+  },
+  {
+    "file": "icons/runbooks.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/runbooks.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "A bridge and lantern represent careful VM troubleshooting.",
+    "module": "runbooks",
+    "status": "final"
+  },
+  {
+    "file": "icons/production.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/production.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "A lighthouse with gold signal rays represents production guidance.",
+    "module": "production",
+    "status": "final"
+  },
+  {
+    "file": "icons/book.svg",
+    "target_path": "overrides/assets/images/ozarland/icons/book.svg",
+    "format": "svg",
+    "width": 48,
+    "height": 48,
+    "alt_text": "An open book represents the deeper OzarLand reading route.",
+    "module": "book",
+    "status": "final"
+  },
+  {
+    "file": "seals/stage-1.svg",
+    "target_path": "overrides/assets/images/ozarland/seals/stage-1.svg",
+    "format": "svg",
+    "width": 96,
+    "height": 96,
+    "alt_text": "A round parchment seal with a harbour gate emblem and a teal ribbon.",
+    "module": "lab",
+    "status": "final"
+  },
+  {
+    "file": "seals/stage-2.svg",
+    "target_path": "overrides/assets/images/ozarland/seals/stage-2.svg",
+    "format": "svg",
+    "width": 96,
+    "height": 96,
+    "alt_text": "A round parchment seal with three connected route markers and a blue ribbon.",
+    "module": "deploy",
+    "status": "final"
+  },
+  {
+    "file": "seals/stage-3.svg",
+    "target_path": "overrides/assets/images/ozarland/seals/stage-3.svg",
+    "format": "svg",
+    "width": 96,
+    "height": 96,
+    "alt_text": "A round parchment seal with a brass gear emblem and a wood-coloured ribbon.",
+    "module": "day2",
+    "status": "final"
+  },
+  {
+    "file": "seals/stage-4.svg",
+    "target_path": "overrides/assets/images/ozarland/seals/stage-4.svg",
+    "format": "svg",
+    "width": 96,
+    "height": 96,
+    "alt_text": "A round parchment seal with a stone bridge emblem and a green ribbon.",
+    "module": "runbooks",
+    "status": "final"
+  },
+  {
+    "file": "seals/stage-5.svg",
+    "target_path": "overrides/assets/images/ozarland/seals/stage-5.svg",
+    "format": "svg",
+    "width": 96,
+    "height": 96,
+    "alt_text": "A round parchment seal with a lighthouse emblem and a terracotta ribbon.",
+    "module": "production",
+    "status": "final"
+  },
+  {
+    "file": "images/path-hero.webp",
+    "target_path": "overrides/assets/images/ozarland/hero/path-hero.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 1000,
+    "alt_text": "A group of travellers studies a map on a wooden terrace above an island city, waterfalls and sea.",
+    "module": "shared",
+    "status": "final"
+  },
+  {
+    "file": "images/band-discover.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/discover.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "A sunny harbour with a welcome gate, white stone buildings and turquoise water.",
+    "module": "lab",
+    "status": "final"
+  },
+  {
+    "file": "images/band-deploy.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/deploy.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "A timber workshop with tools and a view of the island city and sea.",
+    "module": "deploy",
+    "status": "final"
+  },
+  {
+    "file": "images/band-day2.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/operate.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "A white stone library with open books overlooking the turquoise sea.",
+    "module": "day2",
+    "status": "final"
+  },
+  {
+    "file": "images/band-runbooks.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/intervene.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "A stone bridge crosses a bright sea beside the island city.",
+    "module": "runbooks",
+    "status": "final"
+  },
+  {
+    "file": "images/band-production.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/production.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "A lighthouse stands above the harbour and turquoise water.",
+    "module": "production",
+    "status": "final"
+  },
+  {
+    "file": "images/band-book.webp",
+    "target_path": "overrides/assets/images/ozarland/bands/book.webp",
+    "format": "webp",
+    "width": 1600,
+    "height": 400,
+    "alt_text": "An archive room with shelves of scrolls and a view across the island.",
+    "module": "book",
+    "status": "final"
+  },
+  {
+    "file": "images/coming-soon.webp",
+    "target_path": "overrides/assets/images/ozarland/pages/coming-soon.webp",
+    "format": "webp",
+    "width": 1200,
+    "height": 600,
+    "alt_text": "A guide in a navy cape stands beside a wooden sailing ship under construction in a sunny harbour.",
+    "module": "shared",
+    "status": "final"
+  },
+  {
+    "file": "images/not-found.webp",
+    "target_path": "overrides/assets/images/ozarland/pages/not-found.webp",
+    "format": "webp",
+    "width": 1200,
+    "height": 600,
+    "alt_text": "A lantern-bearing guide stands at a stone crossroads above the sea.",
+    "module": "shared",
+    "status": "final"
+  },
+  {
+    "file": "images/empty-search.webp",
+    "target_path": "overrides/assets/images/ozarland/pages/empty-search.webp",
+    "format": "webp",
+    "width": 1200,
+    "height": 600,
+    "alt_text": "A cartographer guide studies a blank parchment beside a lantern and map shelves.",
+    "module": "shared",
+    "status": "final"
+  },
+  {
+    "file": "images/social-preview.webp",
+    "target_path": "overrides/assets/images/ozarland/social-preview.webp",
+    "format": "webp",
+    "width": 1200,
+    "height": 630,
+    "alt_text": "An island city with white towers and waterfalls overlooks the sea at golden hour, with open space for a title.",
+    "module": "shared",
+    "status": "final"
+  },
+  {
+    "file": "prompts/lumo-discover.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-discover.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo waves while raising a brass lantern.",
+    "module": "lab",
+    "status": "prompt-only"
+  },
+  {
+    "file": "prompts/lumo-deploy.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-deploy.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo points toward two blank route diagrams.",
+    "module": "deploy",
+    "status": "prompt-only"
+  },
+  {
+    "file": "prompts/lumo-day2.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-day2.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo reads an open book beside a small brass server model.",
+    "module": "day2",
+    "status": "prompt-only"
+  },
+  {
+    "file": "prompts/lumo-runbooks.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-runbooks.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo examines a bridge with a lantern and gestures toward the path.",
+    "module": "runbooks",
+    "status": "prompt-only"
+  },
+  {
+    "file": "prompts/lumo-production.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-production.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo stands beside a lighthouse model holding a compass and lantern.",
+    "module": "production",
+    "status": "prompt-only"
+  },
+  {
+    "file": "prompts/lumo-book.md",
+    "target_path": "overrides/assets/images/ozarland/lumo/lumo-book.webp",
+    "format": "webp",
+    "width": 800,
+    "height": 800,
+    "alt_text": "Lumo sits on a crate and reads an open book.",
+    "module": "book",
+    "status": "prompt-only"
+  }
+]

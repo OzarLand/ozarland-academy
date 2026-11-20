@@ -15,6 +15,12 @@
 {% set root = base_url ~ "/" ~ portal.up %}
 {% set start = root ~ portal.default ~ "/" %}
 {% set img = root ~ "assets/images/ozarland/" %}
+{#- Position of the module on the path (its stage seal) and the next stop. -#}
+{% set stop = namespace(index=0, next=none, found=false) %}
+{% for module in portal.modules %}
+  {% if stop.found and not stop.next %}{% set stop.next = module %}{% endif %}
+  {% if module.id == portal.module.id %}{% set stop.index = loop.index %}{% set stop.found = true %}{% endif %}
+{% endfor %}
 {% set default = namespace(title=portal.default) %}
 {% for release in portal.releases if release.path == portal.default %}
   {% set default.title = release.title %}
@@ -24,16 +30,23 @@
   <title>{{ page.title }} · {{ config.site_name }}</title>
 {% endblock %}
 
+{#- Module home (brand/academy/templates.md): breadcrumb, title with the
+    icon and the stage seal of the module, its outcome, then the section
+    band of the module as a 4:1 strip. -#}
 {% block hero %}
-  <section class="portal-hero oz-hero" aria-label="Introduction">
+  <section class="portal-hero oz-hero oz-module-hero oz-module--{{ portal.module.id }}" aria-label="Introduction">
     <div class="md-grid portal-hero__inner oz-hero__inner">
-      <div class="oz-hero__text">
-        <p class="oz-hero__org">
-          <a href="{{ root }}"><span aria-hidden="true">←</span> {{ config.site_name }}</a>
-          <span class="oz-hero__badge">Step: {{ portal.module.step }}</span>
-        </p>
-        <h1 class="portal-hero__title" id="welcome">{{ page.title }}</h1>
-        <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
+      <div class="oz-hero__text oz-plate">
+        <nav class="oz-crumbs" aria-label="Breadcrumb">
+          <a href="{{ root }}">{{ config.site_name }}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ portal.module.title }}</span>
+        </nav>
+        <p class="oz-stop__step">Stop {{ stop.index }} · {{ portal.module.step }}</p>
+        <h1 class="portal-hero__title oz-module-hero__title" id="welcome">
+          <img class="oz-stop__icon" src="{{ img }}icons/{{ portal.module.id }}.svg" width="48" height="48" alt="">
+          {{ page.title }}
+        </h1>
         <p class="portal-hero__lead">
           A learning resource for Kolla-Ansible Day-2 operations. It explains, from the source code of each release,
           what a command really does to a running OpenStack platform, so that you understand it before you run it.
@@ -43,9 +56,10 @@
           <a class="portal-cta" href="#releases">Choose a release</a>
         </p>
       </div>
-      <figure class="oz-hero__art">
-        <img src="{{ img }}hero.webp" width="1200" height="750" fetchpriority="high" alt="A diverse group of travellers studies a map on a wooden terrace above a bright island city and sea.">
-      </figure>
+      <img class="oz-module-hero__seal" src="{{ img }}seals/stage-{{ stop.index }}.svg" width="96" height="96" alt="">
+    </div>
+    <div class="md-grid">
+      <img class="oz-band" src="{{ img }}bands/{{ portal.module.id }}.webp" width="1600" height="400" fetchpriority="high" alt="A white stone library with open books overlooking the turquoise sea.">
     </div>
   </section>
 {% endblock %}
@@ -163,4 +177,17 @@
   {% set release_heading = 3 %}
   {% include "partials/release-lists.html" %}
 
+  {#- Next stop of the path, and the book as a separate route. -#}
+  <nav class="oz-next" aria-label="Learning path">
+    {% if stop.next %}
+      <a class="oz-next__stop oz-module--{{ stop.next.id }}" href="{{ root }}{{ stop.next.path }}/">
+        <span class="oz-stop__step">Next stop · {{ stop.next.step }}</span>
+        <span class="oz-next__title">{{ stop.next.title }}{% if stop.next.status != "available" %} (coming soon){% endif %} <span aria-hidden="true">→</span></span>
+      </a>
+    {% endif %}
+    <a class="oz-next__stop oz-module--book" href="{{ root }}#book">
+      <span class="oz-stop__step">Deeper reading</span>
+      <span class="oz-next__title">The OzarLand book</span>
+    </a>
+  </nav>
 {% endblock %}
