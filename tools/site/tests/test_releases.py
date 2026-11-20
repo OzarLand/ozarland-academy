@@ -111,13 +111,16 @@ def parse(text: str) -> releases.Registry:
 
 
 class NoDomain(unittest.TestCase):
-    """SITE_DOMAIN of the environment that runs the tests is not seen."""
+    """SITE_DOMAIN of the environment that runs the tests is not seen, nor
+    GITHUB_ACTIONS: under GitHub Actions the checks also print annotations,
+    which repeat the findings that the tests count."""
 
     def setUp(self) -> None:
         patcher = mock.patch.dict(os.environ)
         patcher.start()
         self.addCleanup(patcher.stop)
         os.environ.pop(releases.DOMAIN_VARIABLE, None)
+        os.environ.pop("GITHUB_ACTIONS", None)
 
 
 class RegistryTest(NoDomain):
