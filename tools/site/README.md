@@ -72,7 +72,7 @@ directory of its configuration file, and its TOML format has no include.
 ### Addresses
 
 - A page of a site: `<portal address><path>/<page>/`, for example
-  `https://ozarland.github.io/ozarland-academy/day2/ussuri/operations/reconfigure-nova/`. The canonical link, the
+  `https://academy.ozarland.com/day2/ussuri/operations/reconfigure-nova/`. The canonical link, the
   sitemap and "View source" (`blob/main/docs/<path>/<page>.md`) follow.
 - The root address is the learning path. `day2/` is the home of the day-2 module; its main button opens the default
   release.
@@ -83,10 +83,11 @@ directory of its configuration file, and its TOML format has no include.
 
 ### Address of the portal
 
-The address of the portal root comes from one place, `releases.portal_root_url()`:
+The portal is published at **`https://academy.ozarland.com/`**. Its address comes from one place,
+`releases.portal_root_url()`:
 
 - the environment variable `SITE_DOMAIN` empty or unset: `site_url` of `zensical.base.toml`,
-  `https://ozarland.github.io/ozarland-academy/`;
+  `https://ozarland.github.io/ozarland-academy/` (GitHub redirects it to the domain);
 - `SITE_DOMAIN` set to a domain name (no scheme, port or path): `https://<SITE_DOMAIN>/`, and the build writes
   `site/CNAME`.
 
@@ -96,16 +97,21 @@ not-found page and the social preview image; the pages themselves only have rela
 works at any address. `check_docs.py` enforces that (rule `link-site-address`): no page writes an address of the
 portal, and `README.md`, `CONTRIBUTING.md` and this file write only the current one.
 
-To build or check for a domain locally: `make docs-build SITE_DOMAIN=academy.example.org`, or
-`python3 tools/site/releases.py url` to print the address the tools use.
+The Makefile defaults to `SITE_DOMAIN=academy.ozarland.com`, the value of the repository variable, so that a local
+check sees the address that `README.md` writes. To build for another domain: `make docs-build
+SITE_DOMAIN=academy.example.org`; for the github.io address: `make docs-build SITE_DOMAIN=`. `python3
+tools/site/releases.py url` prints the address the tools use (it reads the environment only).
 
 GitHub Pages ignores `CNAME` when the site is deployed by a workflow, as here: the custom domain itself is set in
-**Settings**, **Pages**, **Custom domain**. Switching to a domain is, in this order:
+**Settings**, **Pages**, **Custom domain**. The switch to `academy.ozarland.com` was done in this order; changing the
+domain again is the same, with the default of the Makefile changed in the pull request of step 3:
 
 1. Verify the domain for the organization (organization **Settings**, **Pages**, **Verified domains**), so that no
    other repository can use it.
-2. Create the DNS records: `A` and `AAAA` records of the domain to the addresses of GitHub Pages, and a `CNAME`
-   record `www` to `ozarland.github.io`.
+2. Create the DNS records: for a subdomain such as `academy`, a `CNAME` record to `ozarland.github.io`; for the
+   apex of a domain, `A` and `AAAA` records to the addresses of GitHub Pages, and a `CNAME` record `www` to
+   `ozarland.github.io`. For `ozarland.com` (Hostinger) both exist: `academy` serves this portal, the apex and
+   `www` are kept for the site of the organization.
 3. Open a pull request that writes the new address in `README.md` (the rule `link-site-address` fails until the
    variable and the files agree), set the variable `SITE_DOMAIN`, set the custom domain in **Settings**, **Pages**,
    re-run the checks of the pull request, and merge it.
@@ -372,8 +378,8 @@ For a private repository:
 
 The other way is to make the repository public: Pages is then available with every plan.
 
-The expected address is `https://ozarland.github.io/ozarland-academy/`, the `site_url` of `zensical.base.toml`, as
-long as the repository variable `SITE_DOMAIN` is empty. To publish on a custom domain, follow
+The expected address is `https://academy.ozarland.com/`, the repository variable `SITE_DOMAIN` (the
+`site_url` of `zensical.base.toml`, the github.io address, when the variable is empty). See
 [Address of the portal](#address-of-the-portal).
 
 After the setup, start a deployment: use "Run workflow" on `main` (Actions, "Docs"), or push a change of the site

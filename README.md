@@ -22,7 +22,7 @@ releases of the day-2 module.
 
 ## Portal
 
-**<https://ozarland.github.io/ozarland-academy/>**
+**<https://academy.ozarland.com/>**
 
 The portal is the recommended way to read the academy: its root is the learning path, and every module (and every
 release of the day-2 module) is a site of its own, with its search, its navigation and its "recently updated" list.
