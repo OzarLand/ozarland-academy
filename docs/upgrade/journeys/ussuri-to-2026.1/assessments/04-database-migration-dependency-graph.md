@@ -1,3 +1,8 @@
+---
+title: "04 — Database migration dependency graph (Ussuri → 2026.1)"
+description: "04 — Database migration dependency graph (Ussuri → 2026.1)"
+---
+
 # 04 — Database migration dependency graph (Ussuri → 2026.1)
 
 > **Architect correction (2026-10-31):** the Keystone bridge window is Zed to 2023.1, not Yoga to 2023.1. See

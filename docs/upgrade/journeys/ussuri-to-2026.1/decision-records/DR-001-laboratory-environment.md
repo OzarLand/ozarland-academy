@@ -1,3 +1,8 @@
+---
+title: "DR-001 — Laboratory environment for the first experiments"
+description: "The mission asks for a Kolla-Ansible Ussuri laboratory built with openstack-quick-lab."
+---
+
 # DR-001 — Laboratory environment for the first experiments
 
 | Field | Value |

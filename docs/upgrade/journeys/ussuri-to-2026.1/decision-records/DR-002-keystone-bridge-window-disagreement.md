@@ -1,3 +1,8 @@
+---
+title: "DR-002 — Keystone legacy-to-Alembic bridge window (disagreement between Agents 2 and 4)"
+description: "Agent 4 (assessments/04-database-migration-dependency-graph.md) placed the Keystone bridge window at Yoga to 2023.1."
+---
+
 # DR-002 — Keystone legacy-to-Alembic bridge window (disagreement between Agents 2 and 4)
 
 | Field | Value |

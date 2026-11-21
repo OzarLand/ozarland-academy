@@ -1,3 +1,8 @@
+---
+title: "Runbook (lab): offline database fast-forward Ussuri → 2026.1, then one 2026.1 deployment (proposal P2)"
+description: "Runbook (lab): offline database fast-forward Ussuri → 2026.1, then one 2026.1 deployment (proposal P2)"
+---
+
 # Runbook (lab): offline database fast-forward Ussuri → 2026.1, then one 2026.1 deployment (proposal P2)
 
 > [!CAUTION]

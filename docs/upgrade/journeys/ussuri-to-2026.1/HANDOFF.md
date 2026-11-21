@@ -1,3 +1,8 @@
+---
+title: "Handoff — how to resume this journey"
+description: "Handoff — how to resume this journey"
+---
+
 # Handoff — how to resume this journey
 
 Last updated: 2026-10-31 (end of session 1), by Agent 8b (documentation, Fable). Previous update 16:35 UTC by the
@@ -52,8 +57,8 @@ Red Team follow-ups (RT-N-29, RT-N-32..35); (5) the skills decision.
 ```bash
 # If the Docker daemon is down (container restart):
 dockerd > /tmp/dockerd.log 2>&1 &
-cd lab/ussuri-db-lab
-cat README.md            # ufj.sh subcommands: build, up, populate, capture, restore, verify, ff ..., destroy
+cd docs/upgrade/lab/ussuri-db-lab   # from the root of ozarland-academy
+cat index.md             # ufj.sh subcommands: build, up, populate, capture, restore, verify, ff ..., destroy
 (cd backups-v4/latest && sha256sum -c MANIFEST.sha256)
 ```
 

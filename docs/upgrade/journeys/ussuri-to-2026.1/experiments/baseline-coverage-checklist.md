@@ -1,3 +1,8 @@
+---
+title: "Baseline coverage checklist (pass criterion of EXP-DB-00)"
+description: "The differential test (EXP-DB-01 vs 02 vs 03) and the API read-back (EXP-SVC-01) are only as strong as the data they see."
+---
+
 # Baseline coverage checklist (pass criterion of EXP-DB-00)
 
 | Metadata | |

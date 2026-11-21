@@ -1,3 +1,8 @@
+---
+title: "04 — Messaging compatibility: RabbitMQ and Memcached (Ussuri → 2026.1)"
+description: "04 — Messaging compatibility: RabbitMQ and Memcached (Ussuri → 2026.1)"
+---
+
 # 04 — Messaging compatibility: RabbitMQ and Memcached (Ussuri → 2026.1)
 
 | Metadata | |

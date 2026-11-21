@@ -1,4 +1,9 @@
-[← openstack-upgrade-journeys](../../README.md) · [← OzarLand home](https://github.com/OzarLand/ozarland)
+---
+title: "Journey: Kolla-Ansible Ussuri → OpenStack 2026.1"
+description: "Journey: Kolla-Ansible Ussuri → OpenStack 2026.1"
+---
+
+[← openstack-upgrade-journeys](../../index.md) · [← OzarLand home](https://github.com/OzarLand/ozarland)
 
 # Journey: Kolla-Ansible Ussuri → OpenStack 2026.1
 
@@ -50,15 +55,15 @@ Documents are written by the agents of Stage 1. A link may not resolve until the
 |---|---|
 | [`compatibility-matrix.md`](compatibility-matrix.md) | Release by release: what is supported, possible but unsupported, or incompatible, with sources |
 | [`dependency-graph.md`](dependency-graph.md) | What must change before what: databases, message queue, host OS, container images, Ansible, Python |
-| [`assessments/`](assessments/) | Specialist reports, one per topic. [`00-mission-brief.md`](assessments/00-mission-brief.md) is the shared brief; [`08-repository-organization.md`](assessments/08-repository-organization.md) explains this repository's structure and conventions. Other files are `assessments/0N-*.md`, named by their authors. |
-| [`decision-records/`](decision-records/) | `DR-NNN`: each decision, its alternatives, evidence, risks and dissent ([template](../../docs/templates/decision-record.md)) |
-| [`experiments/`](experiments/) | `EXP-NNN`: hypothesis, initial state, steps, evidence, conclusion ([template](../../docs/templates/experiment-record.md)) |
-| [`validation/`](validation/) | `VAL-NNN.yaml`: the structured result of one execution ([template](../../docs/templates/validation-record.yaml)) |
-| [`evidence/`](evidence/) | Redacted outputs that experiments and validations cite |
-| [`runbooks/`](runbooks/) | Steps to follow. Only written from knowledge that has an honest status next to every step |
-| [`rollback/`](rollback/) | What can be undone, from which point, and what cannot |
-| [`troubleshooting/`](troubleshooting/) | Symptoms met along the journey, and what to check |
-| [`lessons-learned.md`](lessons-learned.md) | What the work taught, including what failed |
+| [`assessments/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/assessments) | Specialist reports, one per topic. [`00-mission-brief.md`](assessments/00-mission-brief.md) is the shared brief; [`08-repository-organization.md`](assessments/08-repository-organization.md) explains this repository's structure and conventions. Other files are `assessments/0N-*.md`, named by their authors. |
+| [`decision-records/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/decision-records) | `DR-NNN`: each decision, its alternatives, evidence, risks and dissent ([template](../../docs/templates/decision-record.md)) |
+| [`experiments/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/experiments) | `EXP-NNN`: hypothesis, initial state, steps, evidence, conclusion ([template](../../docs/templates/experiment-record.md)) |
+| [`validation/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/validation) | `VAL-NNN.yaml`: the structured result of one execution ([template](../../docs/templates/validation-record.yaml)) |
+| [`evidence/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/evidence) | Redacted outputs that experiments and validations cite |
+| [`runbooks/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/runbooks) | Steps to follow. Only written from knowledge that has an honest status next to every step |
+| `rollback/` (not written yet) | What can be undone, from which point, and what cannot |
+| [`troubleshooting/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/journeys/ussuri-to-2026.1/troubleshooting) | Symptoms met along the journey, and what to check |
+| `lessons-learned.md` (not written yet) | What the work taught, including what failed |
 
 How statuses are used: [validation status](../../docs/validation-status.md). How to contribute evidence:
 [CONTRIBUTING](../../CONTRIBUTING.md).

@@ -1,3 +1,8 @@
+---
+title: "Ussuri control-plane lab (container \"baseline\" for the Ussuri to 2026.1 journey)"
+description: "A reproducible OpenStack Ussuri control plane in Docker containers, built from the upstream Ussuri code on PyPI under the ussuri-eol upper constraints."
+---
+
 # Ussuri control-plane lab (container "baseline" for the Ussuri to 2026.1 journey)
 
 A reproducible **OpenStack Ussuri control plane in Docker containers**, built from the upstream Ussuri code on PyPI under

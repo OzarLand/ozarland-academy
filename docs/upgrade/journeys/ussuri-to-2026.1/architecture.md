@@ -1,3 +1,8 @@
+---
+title: "Migration architecture — Ussuri → 2026.1 (Stage 2 proposals)"
+description: "All findings below come from reading upstream source and documentation, so they are DOCUMENTED-UNVERIFIED."
+---
+
 # Migration architecture — Ussuri → 2026.1 (Stage 2 proposals)
 
 | Metadata | |

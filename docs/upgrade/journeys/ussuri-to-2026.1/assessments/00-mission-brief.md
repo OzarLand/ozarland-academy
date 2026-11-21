@@ -1,3 +1,8 @@
+---
+title: "Mission brief for agents (Stage 1)"
+description: "Shared context for every agent of the Ussuri → 2026.1 journey. Read it fully before starting."
+---
+
 # Mission brief for agents (Stage 1)
 
 Shared context for every agent of the Ussuri → 2026.1 journey. Read it fully before starting.

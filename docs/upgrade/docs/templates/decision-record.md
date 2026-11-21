@@ -1,3 +1,8 @@
+---
+title: "DR-NNN:"
+description: "What forces this decision: the question, the constraints (data safety, supportability, time, lab limits), what is known and unknown."
+---
+
 # DR-NNN: <the decision, as a short statement or question>
 
 <!-- Copy to journeys/<journey>/decision-records/DR-NNN-short-topic.md. Numbers are never reused. One decision per

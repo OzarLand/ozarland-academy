@@ -1,40 +1,23 @@
-[← OzarLand home](https://github.com/OzarLand/ozarland)
-
-<div align="center">
-
-# 🧭 openstack-upgrade-journeys
-
-### Bringing legacy OpenStack clouds back to a modern release, safely and with evidence
-
-**Many production clouds still run OpenStack releases that went out of maintenance years ago. This project builds
-open, evidence-based paths to bring them back to a current release without losing a single VM, volume, network or
-user. The first journey takes a Kolla-Ansible Ussuri cloud (2020) to OpenStack 2026.1.**
-
-<p>
-  <img src="https://img.shields.io/badge/journey-Ussuri%20%E2%86%92%202026.1-ED1944.svg" alt="Journey: Ussuri to 2026.1">
-  <img src="https://img.shields.io/badge/status-lab%20experiments-orange.svg" alt="Status: lab experiments">
-  <img src="https://img.shields.io/badge/lab--verified-database%20fast--forward-yellowgreen.svg" alt="Lab-verified: database fast-forward">
-  <img src="https://img.shields.io/badge/production--validated-0-lightgrey.svg" alt="0 production-validated procedures">
-  <img src="https://img.shields.io/badge/deployment-Kolla--Ansible-informational.svg" alt="Deployment: Kolla-Ansible">
-  <img src="https://img.shields.io/badge/written%20with-AI%20agents-8A2BE2.svg" alt="Written with AI agents">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-</p>
-
-<p>
-  <a href="#-the-gap"><b>The gap</b></a> ·
-  <a href="#-how-a-journey-works"><b>Method</b></a> ·
-  <a href="#-ussuri--20261-what-the-lab-showed"><b>Results</b></a> ·
-  <a href="#️-journeys"><b>Journeys</b></a> ·
-  <a href="docs/validation-status.md"><b>Validation rules</b></a> ·
-  <a href="#-contributing"><b>Contribute</b></a>
-</p>
-
-</div>
-
+---
+title: "Upgrade journeys"
+description: "Evidence-based paths to bring a legacy OpenStack cloud back to a current release, starting with Kolla-Ansible Ussuri to 2026.1."
 ---
 
-Part of [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.*
-Led by Soufian Zaouam.
+# 🧭 Upgrade journeys
+
+**Bringing legacy OpenStack clouds back to a modern release, safely and with evidence.**
+
+[The gap](#-the-gap) · [Method](#-how-a-journey-works) · [Results](#-ussuri--20261-what-the-lab-showed) ·
+[Journeys](#-journeys) · [Validation rules](docs/validation-status.md) · [Contribute](#-contributing)
+
+Many production clouds still run OpenStack releases that went out of maintenance years ago. This module builds open,
+evidence-based paths to bring them back to a current release without losing a single VM, volume, network or user.
+The first journey takes a Kolla-Ansible Ussuri cloud (2020) to OpenStack 2026.1.
+
+> [!NOTE]
+> **Status: lab experiments.** The database fast-forward is lab-verified; nothing is production-validated yet.
+> The investigation was written with AI agents, under the direction of the OzarLand owner (see
+> [Contributing](#-contributing)).
 
 ## 🚀 The gap
 
@@ -111,7 +94,7 @@ flowchart LR
 | Kolla-Ansible 2026.1 changes data when deployed on existing databases; ten mandatory steps identified | Lab-verified for the commands; Kolla itself not run |
 
 Not yet done: rollback rehearsal, a real Kolla-Ansible lab with real VMs, a run on a production copy. Details:
-[journey page](journeys/ussuri-to-2026.1/README.md) ·
+[journey page](journeys/ussuri-to-2026.1/index.md) ·
 [final report](journeys/ussuri-to-2026.1/reports/2026-10-31-final-report-session-1.md) ·
 [draft runbook](journeys/ussuri-to-2026.1/runbooks/ussuri-to-2026.1-database-fast-forward-lab-runbook.md).
 
@@ -150,7 +133,7 @@ experimentally validated, not validated, incompatible. Rules and mapping to the 
 
 | Journey | Question | Stage |
 |---|---|---|
-| [Ussuri → 2026.1](journeys/ussuri-to-2026.1/README.md) | Can a Kolla-Ansible Ussuri cloud reach 2026.1 in one journey, and what is the safest path with the fewest intermediate deployments? | Lab experiments; draft runbook; nothing production-validated |
+| [Ussuri → 2026.1](journeys/ussuri-to-2026.1/index.md) | Can a Kolla-Ansible Ussuri cloud reach 2026.1 in one journey, and what is the safest path with the fewest intermediate deployments? | Lab experiments; draft runbook; nothing production-validated |
 
 Another starting release or deployment method? Propose it in an
 [*Ideas* discussion](https://github.com/OzarLand/ozarland/discussions/new?category=ideas).
@@ -173,15 +156,15 @@ flowchart TD
     class RB go
 ```
 
-Laboratory scripts live in [`lab/`](lab/), templates in [`docs/templates/`](docs/templates/).
+Laboratory scripts live in [`lab/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/lab), templates in [`docs/templates/`](https://github.com/OzarLand/ozarland-academy/tree/main/docs/upgrade/docs/templates).
 
 ## 🤝 Contributing
 
 The most valuable contribution is **evidence**: you ran a step on a lab or a real platform and it worked, failed or
 worked partly. Then: a wrong or unsafe step, or your own starting point for a next journey.
 
-- [Report a run](https://github.com/OzarLand/openstack-upgrade-journeys/issues/new?template=experiment-report.yml) ·
-  [Report a wrong or unsafe procedure](https://github.com/OzarLand/openstack-upgrade-journeys/issues/new?template=unsafe-or-wrong-procedure.yml) ·
+- [Report a run](https://github.com/OzarLand/ozarland-academy/issues/new?template=upgrade-experiment-report.yml) ·
+  [Report a wrong or unsafe procedure](https://github.com/OzarLand/ozarland-academy/issues/new?template=upgrade-unsafe-or-wrong-procedure.yml) ·
   [CONTRIBUTING.md](CONTRIBUTING.md)
 - Never publish credentials, real hostnames, database dumps or unredacted logs
   ([sensitive data](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/sensitive-data.md)).
@@ -193,26 +176,14 @@ worked partly. Then: a wrong or unsafe step, or your own starting point for a ne
 > the direction of the OzarLand owner. No human operator has confirmed a result on a real platform yet; that is the
 > contribution we are looking for.
 
-## 🌍 Part of OzarLand
+## 🌍 Part of OzarLand Academy
 
-**OzarLand: a shared land for better OpenStack operations.** It started as a personal initiative by Soufian Zaouam
-to share practical OpenStack operational knowledge, and it is meant to grow into a space where operators exchange
-experience, document solutions and help each other run more reliable platforms. It is open to everyone: your
-knowledge, questions and corrections are welcome.
-
-| | Repository | What it holds |
-|:-:|---|---|
-| | [ozarland](https://github.com/OzarLand/ozarland) | Start here: newcomer path, community rules, [Discussions](https://github.com/OzarLand/ozarland/discussions) |
-| 🔧 | [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) | Symptom-driven runbooks for instance problems |
-| 🏗️ | [kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns) | Ways to deploy with Kolla-Ansible, compared |
-| 🧪 | [openstack-quick-lab](https://github.com/OzarLand/openstack-quick-lab) | A disposable OpenStack lab to practise on |
-| 🤖 | [openstack-operator-skills](https://github.com/OzarLand/openstack-operator-skills) | Claude skills that apply this knowledge |
-| 🧭 | `openstack-upgrade-journeys` **(you are here)** | Investigations of hard upgrade paths, with their evidence |
-
-<!-- The last row is proposed. Adding a repository to this block is an owner decision and must be applied to every
-     OzarLand repository in the same round of pull requests (docs/conventions/readme-identity.md). -->
+This module is a stop of [OzarLand Academy](../), the learning path of
+[OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* It builds on the
+[day-2 operations with Kolla-Ansible](../day2/), whose Ussuri study describes the starting point of the first
+journey, and on the [Production guide](../production/).
 
 ## ⚖️ License
 
-[Apache-2.0](LICENSE). OzarLand is not affiliated with the OpenStack Foundation, the OpenInfra Foundation or any
+[Apache-2.0](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE). OzarLand is not affiliated with the OpenStack Foundation, the OpenInfra Foundation or any
 vendor; OpenStack and Kolla-Ansible are the work of their upstream communities.

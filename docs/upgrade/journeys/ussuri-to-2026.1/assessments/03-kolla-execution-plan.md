@@ -1,3 +1,8 @@
+---
+title: "Draft Kolla-Ansible execution plan, Ussuri to 2026.1"
+description: "Draft Kolla-Ansible execution plan, Ussuri to 2026.1"
+---
+
 # Draft Kolla-Ansible execution plan, Ussuri to 2026.1
 
 | Field | Value |

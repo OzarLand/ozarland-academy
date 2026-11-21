@@ -1,3 +1,8 @@
+---
+title: "EXP-DB-N1: 2026.1 code run directly against the Ussuri database (negative)"
+description: "EXP-DB-N1: 2026.1 code run directly against the Ussuri database (negative)"
+---
+
 # EXP-DB-N1: 2026.1 code run directly against the Ussuri database (negative)
 
 | | |
@@ -66,7 +71,7 @@ Disposable copy on volume `ufj-ff-n1-data`; the backups were only read (checksum
 
 Exit codes: `nova-api_db_sync` 255, `nova-db_sync-cell0` 255, `nova-db_sync-cell1` 255, `keystone-db_sync` 1, `cinder-db_sync` 1. Verbatim (first error lines, see `errors-verbatim.txt`):
 
-```
+```text
 nova api_db sync : pymysql.err.OperationalError: (1050, "Table 'cell_mappings' already exists")
 nova db sync     : pymysql.err.OperationalError: (1050, "Table 'instances' already exists")   (cell0 and cell1)
 keystone db_sync : CRITICAL keystone [-] Unhandled error: sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1050, "Table 'application_credential' already exists")

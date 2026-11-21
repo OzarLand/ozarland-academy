@@ -1,3 +1,8 @@
+---
+title: "EXP-KD-01: Kolla-Ansible deploy-time behaviour on the migrated (H4r) databases"
+description: "EXP-KD-01: Kolla-Ansible deploy-time behaviour on the migrated (H4r) databases"
+---
+
 # EXP-KD-01: Kolla-Ansible deploy-time behaviour on the migrated (H4r) databases
 
 | | |

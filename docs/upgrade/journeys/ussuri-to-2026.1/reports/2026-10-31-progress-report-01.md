@@ -1,3 +1,8 @@
+---
+title: "Consolidated progress report 01 — Ussuri → 2026.1"
+description: "Consolidated progress report 01 — Ussuri → 2026.1"
+---
+
 # Consolidated progress report 01 — Ussuri → 2026.1
 
 | Metadata | |

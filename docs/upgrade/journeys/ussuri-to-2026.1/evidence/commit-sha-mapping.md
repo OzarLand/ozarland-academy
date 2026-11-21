@@ -1,3 +1,8 @@
+---
+title: "Commit SHA mapping after the history rewrite of 2026-10-31"
+description: "Commit SHA mapping after the history rewrite of 2026-10-31"
+---
+
 # Commit SHA mapping after the history rewrite of 2026-10-31
 
 On the owner's request, the commit messages of branch `claude/epic-pascal-2kqc98` were normalised to the OzarLand

@@ -1,3 +1,8 @@
+---
+title: "Contributing"
+description: "This repository follows the OzarLand community rules: the code of conduct, the review and merge policy, the knowledge lifecycle and the content conventions."
+---
+
 # Contributing
 
 This repository follows the OzarLand community rules: the
@@ -27,7 +32,7 @@ a long page nobody ran.
 
 You ran something from an experiment, a runbook step or your own attempt, on a lab.
 
-1. Open an [experiment report or validation evidence](https://github.com/OzarLand/openstack-upgrade-journeys/issues/new?template=experiment-report.yml)
+1. Open an [experiment report or validation evidence](https://github.com/OzarLand/ozarland-academy/issues/new?template=upgrade-experiment-report.yml)
    issue if you only want to report. Or go straight to a pull request.
 2. In a pull request, add:
    - an experiment record from [`docs/templates/experiment-record.md`](docs/templates/experiment-record.md) under
@@ -58,7 +63,7 @@ community to know what happened.
 ## Correct or challenge something
 
 - A procedure that is wrong, unsafe or missing a warning: use the
-  [wrong or unsafe procedure](https://github.com/OzarLand/openstack-upgrade-journeys/issues/new?template=unsafe-or-wrong-procedure.yml)
+  [wrong or unsafe procedure](https://github.com/OzarLand/ozarland-academy/issues/new?template=upgrade-unsafe-or-wrong-procedure.yml)
   form. If following it could cause damage before it is fixed, or you found a secret, use the
   [security policy](SECURITY.md) instead of a public issue.
 - A decision you disagree with: add your argument to the decision record's dissent section in a pull request, or open
@@ -69,9 +74,9 @@ community to know what happened.
 
 Journey-specific work stays here. General knowledge goes where OzarLand already keeps it, and is linked from here:
 a symptom of a single instance goes to
-[openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks); how Kolla-Ansible behaves or a
+[openstack-vm-runbooks](../runbooks/); how Kolla-Ansible behaves or a
 release-to-release note goes to
-[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns). The
+[kolla-ansible-deployment-patterns](../deploy/). The
 [repository assessment](journeys/ussuri-to-2026.1/assessments/08-repository-organization.md) explains the split.
 
 ## Rules for runbooks

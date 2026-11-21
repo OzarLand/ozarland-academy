@@ -1,3 +1,8 @@
+---
+title: "07 — Red team initial assessment (independent, pre-registered)"
+description: "07 — Red team initial assessment (independent, pre-registered)"
+---
+
 # 07 — Red team initial assessment (independent, pre-registered)
 
 | Field | Value |

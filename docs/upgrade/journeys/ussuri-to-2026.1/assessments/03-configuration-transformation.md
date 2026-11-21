@@ -1,3 +1,8 @@
+---
+title: "Kolla-Ansible configuration transformation strategy, Ussuri (10.x) to 2026.1 (22.x)"
+description: "Kolla-Ansible configuration transformation strategy, Ussuri (10.x) to 2026.1 (22.x)"
+---
+
 # Kolla-Ansible configuration transformation strategy, Ussuri (10.x) to 2026.1 (22.x)
 
 | Field | Value |

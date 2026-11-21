@@ -1,3 +1,8 @@
+---
+title: "Fast-forward checks: pre-checks, config parity and named stop conditions"
+description: "Every check here is read-only unless marked otherwise. A failed check is a named stop condition. The run (or production change) does not proceed."
+---
+
 # Fast-forward checks: pre-checks, config parity and named stop conditions
 
 | Metadata | |

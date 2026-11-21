@@ -1,3 +1,8 @@
+---
+title: "Repository inventory"
+description: "Repository inventory"
+---
+
 # Repository inventory
 
 - author: inventory assistant

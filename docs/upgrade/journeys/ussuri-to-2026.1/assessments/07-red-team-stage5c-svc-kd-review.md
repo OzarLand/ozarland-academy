@@ -1,3 +1,8 @@
+---
+title: "07 — Red team Stage 5c review: EXP-SVC-01 (services on H4r) and EXP-KD-01 (Kolla deploy-time commands)"
+description: "07 — Red team Stage 5c review: EXP-SVC-01 (services on H4r) and EXP-KD-01 (Kolla deploy-time commands)"
+---
+
 # 07 — Red team Stage 5c review: EXP-SVC-01 (services on H4r) and EXP-KD-01 (Kolla deploy-time commands)
 
 | Field | Value |

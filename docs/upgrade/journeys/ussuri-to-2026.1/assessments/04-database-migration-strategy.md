@@ -1,3 +1,8 @@
+---
+title: "04 — Database migration strategy and \"database fast-forward\" experiment design"
+description: "04 — Database migration strategy and \"database fast-forward\" experiment design"
+---
+
 # 04 — Database migration strategy and "database fast-forward" experiment design
 
 | Metadata | |

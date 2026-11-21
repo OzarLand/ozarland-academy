@@ -1,3 +1,8 @@
+---
+title: "Runbook step template"
+description: "Runbook step template"
+---
+
 # Runbook step template
 
 <!-- One step of a runbook, rollback or troubleshooting page. Repeat the block for every step. The runbook page itself

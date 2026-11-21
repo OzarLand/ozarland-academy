@@ -1,3 +1,8 @@
+---
+title: "07 — Red team Stage 3 review: challenge of the architecture proposals"
+description: "07 — Red team Stage 3 review: challenge of the architecture proposals"
+---
+
 # 07 — Red team Stage 3 review: challenge of the architecture proposals
 
 | Field | Value |

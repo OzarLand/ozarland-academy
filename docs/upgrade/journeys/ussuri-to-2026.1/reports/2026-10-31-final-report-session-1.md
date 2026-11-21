@@ -1,3 +1,8 @@
+---
+title: "Final report, session 1 — Ussuri → 2026.1"
+description: "Can a Kolla-Ansible Ussuri cloud reach OpenStack 2026.1 without deploying every intermediate release?"
+---
+
 # Final report, session 1 — Ussuri → 2026.1
 
 | Metadata | |

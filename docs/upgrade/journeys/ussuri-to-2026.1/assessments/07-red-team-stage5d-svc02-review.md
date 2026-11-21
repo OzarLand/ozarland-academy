@@ -1,3 +1,8 @@
+---
+title: "07 — Red team Stage 5d review: EXP-SVC-02 (operations on Ussuri-created resources under 2026.1)"
+description: "07 — Red team Stage 5d review: EXP-SVC-02 (operations on Ussuri-created resources under 2026.1)"
+---
+
 # 07 — Red team Stage 5d review: EXP-SVC-02 (operations on Ussuri-created resources under 2026.1)
 
 | Field | Value |

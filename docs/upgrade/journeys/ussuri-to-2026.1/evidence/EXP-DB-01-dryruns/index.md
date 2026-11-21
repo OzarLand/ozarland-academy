@@ -1,3 +1,8 @@
+---
+title: "Dry runs of the revised harness (not experiments, not strict runs)"
+description: "Dry runs of the revised harness (not experiments, not strict runs)"
+---
+
 # Dry runs of the revised harness (not experiments, not strict runs)
 
 Baseline v4 (`lab/ussuri-db-lab/backups-v4/`), observe mode, uncommitted harness. Purpose: show that the implemented checks work

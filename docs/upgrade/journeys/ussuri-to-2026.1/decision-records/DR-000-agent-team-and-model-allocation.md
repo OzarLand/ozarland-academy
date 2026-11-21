@@ -1,3 +1,8 @@
+---
+title: "DR-000 — Agent team and model allocation"
+description: "DR-000 — Agent team and model allocation"
+---
+
 # DR-000 — Agent team and model allocation
 
 | Field | Value |

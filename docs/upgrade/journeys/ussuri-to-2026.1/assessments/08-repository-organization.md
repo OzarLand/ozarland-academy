@@ -1,3 +1,8 @@
+---
+title: "08. Repository organization and OzarLand conventions"
+description: "08. Repository organization and OzarLand conventions"
+---
+
 # 08. Repository organization and OzarLand conventions
 
 | | |

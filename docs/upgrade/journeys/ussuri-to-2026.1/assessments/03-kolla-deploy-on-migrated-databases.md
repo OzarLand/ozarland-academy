@@ -1,3 +1,8 @@
+---
+title: "Kolla-Ansible 22.x deploying a 2026.1 control plane on pre-existing, migrated databases"
+description: "Kolla-Ansible 22.x deploying a 2026.1 control plane on pre-existing, migrated databases"
+---
+
 # Kolla-Ansible 22.x deploying a 2026.1 control plane on pre-existing, migrated databases
 
 | Field | Value |

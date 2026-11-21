@@ -1,3 +1,8 @@
+---
+title: "Validation status"
+description: "Validation status"
+---
+
 # Validation status
 
 How this repository says how well a procedure, an experiment or a claim has been tested, and how those words relate to

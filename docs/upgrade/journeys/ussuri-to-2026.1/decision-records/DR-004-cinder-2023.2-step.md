@@ -1,3 +1,8 @@
+---
+title: "DR-004 — Add a Cinder-only 2023.2 step (cinder 23.5.0) to the fast-forward path"
+description: "The strict EXP-DB-01 run stopped at H2: cinder 2024.1 9ab1b092a404 failed with MariaDB error 1265 (ALTER … use_quota NOT NULL)."
+---
+
 # DR-004 — Add a Cinder-only 2023.2 step (cinder 23.5.0) to the fast-forward path
 
 | Field | Value |

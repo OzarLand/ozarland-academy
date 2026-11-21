@@ -1,3 +1,8 @@
+---
+title: "EXP-NNN:"
+description: "One or two sentences, falsifiable. \"From state A, doing B results in C.\" What would refute it."
+---
+
 # EXP-NNN: <short title: what is tested>
 
 <!-- Copy to journeys/<journey>/experiments/EXP-NNN-short-topic.md. Numbers are never reused. Write `unknown` for

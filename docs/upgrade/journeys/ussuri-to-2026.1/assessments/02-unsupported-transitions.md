@@ -1,3 +1,8 @@
+---
+title: "02 — Unsupported transitions report"
+description: "No OpenStack project supports upgrading a Ussuri deployment directly to 2026.1."
+---
+
 # 02 — Unsupported transitions report
 
 | Field | Value |

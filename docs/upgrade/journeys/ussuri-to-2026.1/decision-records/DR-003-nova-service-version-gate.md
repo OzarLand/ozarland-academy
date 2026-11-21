@@ -1,3 +1,8 @@
+---
+title: "DR-003 — Crossing Nova's service-version gate after a database fast-forward"
+description: "Nova 2026.1 sets OLDEST_SUPPORTED_SERVICE_VERSION = 'Epoxy' (nova@origin/stable/2026.1:nova/objects/service.py)."
+---
+
 # DR-003 — Crossing Nova's service-version gate after a database fast-forward
 
 | Field | Value |

@@ -1,3 +1,8 @@
+---
+title: "04 — Backup, recovery and consistency requirements (Ussuri → 2026.1)"
+description: "Backups contain secrets and personal data (password hashes, cell_mappings URLs with DB passwords, encrypted credentials)."
+---
+
 # 04 — Backup, recovery and consistency requirements (Ussuri → 2026.1)
 
 | Metadata | |

@@ -1,3 +1,8 @@
+---
+title: "07 — Red team Stage 5 review: challenge of the first experimental results"
+description: "07 — Red team Stage 5 review: challenge of the first experimental results"
+---
+
 # 07 — Red team Stage 5 review: challenge of the first experimental results
 
 | Field | Value |

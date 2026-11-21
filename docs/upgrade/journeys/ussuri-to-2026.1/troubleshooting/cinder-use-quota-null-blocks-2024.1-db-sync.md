@@ -1,3 +1,8 @@
+---
+title: "Cinder db sync fails at 2024.1: use_quota NULL on soft-deleted volumes or snapshots"
+description: "Cinder db sync fails at 2024.1: use_quota NULL on soft-deleted volumes or snapshots"
+---
+
 # Cinder `db sync` fails at 2024.1: `use_quota` NULL on soft-deleted volumes or snapshots
 
 | Metadata | |

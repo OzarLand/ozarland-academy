@@ -1,3 +1,8 @@
+---
+title: "INTEGRITY NOTE - R1c comparator edits (RT-B-06)"
+description: "INTEGRITY NOTE - R1c comparator edits (RT-B-06)"
+---
+
 # INTEGRITY NOTE - R1c comparator edits (RT-B-06)
 
 Author: agent:Agent 5. Date written: 2026-10-31. Nothing in `evidence/EXP-DB-01/r1c/` was deleted or overwritten by this note;

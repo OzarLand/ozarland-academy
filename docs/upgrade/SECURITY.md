@@ -1,3 +1,8 @@
+---
+title: "Security policy"
+description: "This repository holds research notes, experiment records and, later, runbooks for upgrading OpenStack across many releases."
+---
+
 # Security policy
 
 ## What this policy covers
@@ -25,8 +30,8 @@ and the maintainers see the report. If the Security tab does not offer it, messa
 OzarLand has no e-mail contact.
 
 A wrong or incomplete procedure that cannot cause harm before it is fixed goes in a public issue with the
-[wrong or unsafe procedure](https://github.com/OzarLand/openstack-upgrade-journeys/issues/new?template=unsafe-or-wrong-procedure.yml)
-form. Anything about the code of conduct follows the [code of conduct](CODE_OF_CONDUCT.md#reporting).
+[wrong or unsafe procedure](https://github.com/OzarLand/ozarland-academy/issues/new?template=upgrade-unsafe-or-wrong-procedure.yml)
+form. Anything about the code of conduct follows the [code of conduct](https://github.com/OzarLand/ozarland/blob/main/CODE_OF_CONDUCT.md#reporting).
 
 Say which file and step, what you found and what could go wrong. Do not include the sensitive data itself beyond what
 is needed to locate it. **If you published a credential, revoke or rotate it first**, then report it.
