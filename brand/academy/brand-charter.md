@@ -1,6 +1,6 @@
 # OzarLand Academy — brand charter
 
-OzarLand Academy brings nine open learning modules together under the OzarLand promise: **A shared land for better OpenStack operations.** The Academy is one island trail: a prelude, stop 0 (Begin, LUMO's village), then eight named stops—Discover, Deploy, Operate, Intervene, Go to production, Compare, Upgrade and Equip. The separate book is the same island's quiet archive for deeper reading.
+OzarLand Academy brings eight open learning modules together under the OzarLand promise: **A shared land for better OpenStack operations.** The Academy is one island trail: a prelude, stop 0 (Begin, LUMO's village), then seven named stops—Discover, Deploy, Operate, Intervene, Go to production, Compare and Equip. The separate book is the same island's quiet archive for deeper reading.
 
 **Voice.** Serious, honest and kind. Write for beginners and experts without talking down to either. Explain what is known, what the source proves, what remains uncertain, and what a safe next step looks like.
 

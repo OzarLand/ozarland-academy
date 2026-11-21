@@ -1,3 +1,0 @@
-ufj-compute3 True
-ufj-compute1 True
-ufj-compute2 True

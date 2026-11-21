@@ -1,6 +1,0 @@
-admin cinder@Default service@Default
-admin neutron@Default service@Default
-admin nova@Default service@Default
-service cinder@Default service@Default
-service neutron@Default service@Default
-service nova@Default service@Default

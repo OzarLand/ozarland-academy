@@ -175,14 +175,6 @@ kind = "single"
 status = "available"
 
 [[module]]
-id = "upgrade"
-step = "Upgrade"
-title = "Upgrade journeys"
-summary = "Evidence-based paths to bring a legacy OpenStack cloud back to a current release, starting with Ussuri to 2026.1."
-kind = "single"
-status = "available"
-
-[[module]]
 id = "skills"
 step = "Equip"
 title = "Operator skills"

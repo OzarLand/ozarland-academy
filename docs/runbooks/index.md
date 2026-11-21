@@ -43,7 +43,7 @@ Everything an operator does when an instance misbehaves, from the first symptom 
 | ✅ In scope | ❌ Out of scope |
 |---|---|
 | Instances stuck in an unexpected state (`BUILD`, `deleting`, `resizing`, `migrating`, `ERROR`, `SHUTOFF` when it should run, task states that never clear) | Deploying OpenStack: see [kolla-ansible-deployment-patterns](../deploy/) |
-| Boot and scheduling failures: `No valid host`, Placement allocation problems, image or flavor issues, boot from volume failures, console not available | Upgrade campaigns: see the [Upgrade journeys](../upgrade/) |
+| Boot and scheduling failures: `No valid host`, Placement allocation problems, image or flavor issues, boot from volume failures, console not available | Upgrade campaigns |
 | Create, delete and migration errors: live and cold migration, resize, evacuation. Shelve and unshelve: no page yet, [wanted](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) | Storage-backend-only problems |
 | Instance networking: no DHCP lease, no metadata, no floating IP connectivity, security group surprises, MTU symptoms as seen from the instance, port binding failures | Control-plane failures (database, message queue, load balancer, Keystone), except where they affect instances: see `recovery/` and `logs/` |
 | Volumes: attach and detach failures, stale attachments, volumes stuck `attaching`/`detaching`/`in-use`, boot volume problems. Multi-attach: no page yet, [wanted](https://github.com/OzarLand/ozarland-academy/issues/new?template=problem-solved.yml) | |

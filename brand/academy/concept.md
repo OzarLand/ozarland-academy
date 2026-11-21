@@ -22,8 +22,7 @@ This metaphor fits the actual learning order without implying that every operato
 | Intervene — VM Runbooks | Bridge watch above a calm sea | Green, #2C7A43 | runbooks.svg | stage-4.svg, bridge | Inspecting a clue with the lantern and showing the next safe check |
 | Go to production — Production Guide | Lighthouse and harbour mouth | Terracotta, #B55A3A | production.svg | stage-5.svg, lighthouse | Pausing with compass and lantern before the production-bound route |
 | Compare — OKD OpenStack lab | Citadel of automatons, where brass mechanisms move identical crates | Navy, #1F3A6B | okd.svg | stage-6.svg, stacked crates and a loop | Watching the mechanisms, comparing them with the deployment workshop |
-| Upgrade — Upgrade journeys | Old quarter under scaffolding, joined by a new bridge to a new quarter | Amber, #9A6A12 | upgrade.svg | stage-7.svg, steps and a rising arrow | Leading the way across the bridge, step by step |
-| Equip — Operator skills | Companions' hall open to the sea, where lanterns, maps and tools are made ready | Violet, #6E5A9E | skills.svg | stage-8.svg, a satchel | Packing a satchel for the road |
+| Equip — Operator skills | Companions' hall open to the sea, where lanterns, maps and tools are made ready | Violet, #6E5A9E | skills.svg | stage-7.svg, a satchel | Packing a satchel for the road |
 | Book — deeper reading | Quiet archive library overlooking the island | Wood-dark, #6B4220 | book.svg | Separate bookplate; not a sixth stage seal | Sitting on a crate and reading |
 
 The module accent is a navigation and illustration cue only. Readable labels use the shared text and link tokens. Risk states use their separate semantic colors.

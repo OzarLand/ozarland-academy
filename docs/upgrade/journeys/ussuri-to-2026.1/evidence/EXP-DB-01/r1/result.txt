@@ -1,1 +1,0 @@
-RESULT strict-stop pre-checks

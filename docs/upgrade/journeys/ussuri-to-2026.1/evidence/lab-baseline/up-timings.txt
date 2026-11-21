@@ -1,6 +1,0 @@
-10-infra	10 s
-20-config	2 s
-30-dbsync-keystone	11 s
-35-client-keystone	88 s
-40-dbsync-services	39 s
-50-services	11 s
