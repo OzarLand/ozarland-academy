@@ -6,11 +6,11 @@ The global shell remains a familiar Zensical documentation site: branded header,
 
 1. Header: cloud mark, OzarLand Academy, search, theme control.
 2. Hero: H1 and one-sentence purpose on a solid parchment plate; path-hero illustration alongside or below; primary action “Start with Discover”.
-3. Path: five numbered, visibly connected stop cards in order. Each card has its stage seal, literal module name, one-line outcome and time/skill cue where known.
+3. Path: numbered, visibly connected stop cards in the order of `academy.toml`, from stop 0 (the prelude) to the last stop. Each card has its stage seal, literal module name, one-line outcome and time/skill cue where known.
 4. Book panel: clearly separate deeper-reading route; do not label it a sixth step.
 5. Shared-learning note: community contribution invitation and source/maintainer links.
 
-On phones, stack hero then five stop cards; retain the ordering and connective path in a vertical rail. Avoid a horizontally scrolling journey.
+On phones, stack hero then the stop cards; retain the ordering and connective path in a vertical rail. Avoid a horizontally scrolling journey.
 
 ## Module home
 

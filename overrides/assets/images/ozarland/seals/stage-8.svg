@@ -3,5 +3,5 @@
   <path d="M26 64 18 88l18-8 12 12 5-25M70 64l8 24-18-8-12 12-5-25" fill="#6E5A9E" stroke="#1F3A6B" stroke-width="3" stroke-linejoin="round"/>
   <circle cx="48" cy="43" r="31" fill="#FBF4E4" stroke="#1F3A6B" stroke-width="3"/>
   <circle cx="48" cy="43" r="25" fill="none" stroke="#6E5A9E" stroke-width="2"/>
-  <g fill="none" stroke="#1F3A6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M48 36v22M48 36c-5-4-11-5-16-4v22c5-1 11 0 16 4M48 36c5-4 11-5 16-4v22c-5-1-11 0-16 4M48 22v6M41 25l3 4M55 25l-3 4"/></g>
+  <g fill="none" stroke="#1F3A6B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M34 41h28v15a2 2 0 0 1-2 2H36a2 2 0 0 1-2-2zM34 41l3-7h22l3 7M43 34v-3a5 5 0 0 1 10 0v3M45 46h6v5h-6z"/></g>
 </svg>
