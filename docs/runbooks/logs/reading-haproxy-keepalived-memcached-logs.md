@@ -188,7 +188,7 @@ does not mean ProxySQL is down.
 | `(<instance>) Entering MASTER STATE` | This node now holds the virtual IP(s). Exactly one node should log this per failover. |
 | `(<instance>) Entering BACKUP STATE` (`(init)` at start) | This node does not hold the VIP. |
 | `(<instance>) Entering FAULT STATE` (`(init)` at start) | A tracked script or interface failed: this node cannot take the VIP. With Kolla-Ansible, usually `check_alive` failing because HAProxy or ProxySQL does not answer (run the checks above). |
-| `Script \`check_alive\` now returning <n>` | The track script's result changed (0 = every check in `/checks` passed, non-zero = at least one failed). Read the next state change. |
+| ``Script `check_alive` now returning <n>`` | The track script's result changed (0 = every check in `/checks` passed, non-zero = at least one failed). Read the next state change. |
 | `VRRP_Script(check_alive) failed (exited with status <n>)` / `VRRP_Script(check_alive) succeeded` | Logged when the result crosses `fall` (2 failures) or `rise` (10 successes): this is when keepalived acts on it. |
 | `(<instance>) Receive advertisement timeout` | A backup node stopped hearing the master's adverts and will take over. Logged only with keepalived's detail logging (`-D`, `vrrp_scheduler.c`): Kolla-Ansible runs `keepalived -nld` without it, so on Kolla-Ansible the backup logs only `Entering MASTER STATE`. |
 | `(<instance>) Received advert from <address> with lower priority <n>, ours <n>` | Another node advertises for the same VRID with a lower priority. |

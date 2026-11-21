@@ -330,8 +330,8 @@ that commit, or redo the edit by hand if the page has moved.
 >
 > The troubleshooting page still lists services with
 > `oc get openstackansibleee`. That resource was replaced by Jobs in
-> #972, so the command now answers `error: the server doesn't have a
-> resource type "openstackansibleee"`, and the Job name used in the
+> #972, so the command now answers
+> `error: the server doesn't have a resource type "openstackansibleee"`, and the Job name used in the
 > `oc logs` example no longer exists (Jobs are named
 > `<service>-<deployment>-<nodeset>`).
 >
