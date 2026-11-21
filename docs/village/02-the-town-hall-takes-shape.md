@@ -7,6 +7,8 @@ description: "A crew sets up the services of the town hall on the hosts. LUMO le
 
 *The central deployment yard.*
 
+<img src="assets/images/S02-open.webp" width="1536" height="1024" alt="In the paved yard of the town hall, a crew slides identical white crates onto racks inside a stone archway while LUMO, Neri and a crew member with a clipboard watch.">
+
 The next morning a crew arrives with crates: all the same size, all labelled the same way, all packed the same way.
 Jo, the crew leader, opens one. Inside is everything one service of the town hall needs to work, ready to be set down
 on a host.
@@ -15,9 +17,13 @@ on a host.
 configured. Then the crew follows the list, the same way every time." LUMO watches the crates go into the hall, one
 service after the other: the register, the workshop desk, the network office, the library.
 
+<img src="assets/images/S02-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO checks a list on a clipboard while a crew member in glasses slides an identical wooden crate onto a shelf.">
+
 Before the first crate is opened, Jo checks the ground: are the hosts reachable, is there enough room, are the
 addresses right? Only then does the crew unpack. When it is done, LUMO walks through the empty offices with the
 lantern. Nobody lives in the village yet, but every desk is ready.
+
+<img src="assets/images/S02-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO stands on a stone path between the town hall, whose offices are lined with installed crates, and terraces of equipment cabinets in the fields by the sea.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** Kolla-Ansible deploys the services of the cloud. It does not create Neri's machine:
@@ -36,6 +42,8 @@ uses Ansible to put those containers on the hosts listed in an **inventory**, wi
 
 Kolla-Ansible is one deployment tool among several. The [OKD OpenStack lab](../okd/) shows another one, where
 Kubernetes operators do this job.
+
+<img src="assets/images/S02-bridge-kolla-ansible.webp" width="1600" height="1000" loading="lazy" alt="On the left, LUMO watches a crane lower a service crate in front of the town hall; on the right, a drawing shows configuration files driving a deployment tool, which places service containers on two hosts, before a user calls the deployed services.">
 
 ## From the village to OpenStack
 

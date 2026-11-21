@@ -24,6 +24,8 @@ to keep the fields where the work is done. Two different jobs."
 
 The small lantern gives its first, uncertain light.
 
+<img src="assets/images/S01-v2.webp" width="1024" height="1024" loading="lazy" alt="On a wooden table above the sea lie three rough foundation stones, a folded blank parchment and a small brass lantern, with the white island town in the distance.">
+
 > [!IMPORTANT]
 > **Where the picture stops.** A cloud is not one village in one place. Its services and its resources can be spread
 > over many machines and many networks, in one room or in several data centres. The town hall and the fields are two
