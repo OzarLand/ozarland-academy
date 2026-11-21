@@ -12,12 +12,16 @@ a machine runs, how it is reached, where its data lives, and what keeps the whol
 [The scenes](#the-sixteen-scenes) · [The people of the village](#the-people-of-the-village) ·
 [How to read a scene](#how-to-read-a-scene) · [After the village](#after-the-village)
 
+<img src="assets/images/S00-cover.webp" width="1536" height="1024" alt="LUMO, an apprentice builder in a navy cape, holds a small brass lantern on a wooden terrace above a white island town and a turquoise sea.">
+
 > [!NOTE]
 > **For complete beginners.** No OpenStack, Linux or networking experience is needed. Each scene takes about ten
 > minutes. The commands are there to show what the real thing looks like; you will run them yourself in the
 > [Quick lab](../lab/), the next stop.
 
 ## The story
+
+<img src="assets/images/S00-before-after.webp" width="1600" height="534" loading="lazy" alt="Two views of the same place: on the left, LUMO and Neri stand by an empty plateau with the first foundation stones; on the right, the same plateau has become a village with workshops, a stone path and a harbour.">
 
 Neri has a small service to run and nowhere to run it. LUMO, who carries a small brass lantern and a lot of questions,
 decides to build a village for Neri and for everyone who comes after. The village is a picture of an OpenStack cloud:
@@ -29,6 +33,8 @@ called **Where the picture stops** says what the village gets wrong, and the res
 OpenStack object, a diagram and the command that shows it.
 
 ## The sixteen scenes
+
+<img src="assets/images/S00-map.webp" width="1600" height="1066" loading="lazy" alt="An illustrated map of LUMO's village on its island: a path of golden markers winds from an empty meadow past the town hall, workshops, a library, storerooms and a sea gate, to the harbour and the islands beyond.">
 
 | | Scene | What LUMO learns |
 |:-:|---|---|
@@ -52,6 +58,8 @@ OpenStack object, a diagram and the command that shows it.
 Read them in order the first time: each scene uses what the previous ones built.
 
 ## The people of the village
+
+<img src="assets/images/S00-guild-cast.webp" width="1600" height="1066" loading="lazy" alt="A parchment board shows eighteen adults of the village, each with a tool of their trade: a lantern, a map, a sextant, rope, books, a hammer, a ship's wheel, a telescope.">
 
 The keepers of the village are teaching characters, not official faces of OpenStack. Each one looks after one
 service, and says in one sentence what that service does and does not do.
@@ -78,6 +86,8 @@ service, and says in one sentence what that service does and does not do.
 **Neri** is the first inhabitant: a beginner with a small service to run, who is never ashamed to ask a question.
 
 ## How to read a scene
+
+<img src="assets/images/S00-lumo-model.webp" width="1600" height="1066" loading="lazy" alt="A model sheet of LUMO: six faces, from curious to proud, and six poses: listening, carrying a plank, comparing two cards, laying a stone, shielding the lantern, pointing the way.">
 
 Each scene has the same parts:
 
