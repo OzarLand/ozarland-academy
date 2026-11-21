@@ -1,3 +1,8 @@
+---
+title: "Galera and RabbitMQ"
+description: "Galera and RabbitMQ"
+---
+
 # Galera and RabbitMQ
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command, the unclean stop and the clean restart of Galera, the restart of RabbitMQ and the reset of a RabbitMQ volume (executed on `rabbitmq-cell1`); the stuck-recovery and damaged-data cases of both tables were not provoked, because they would risk an unrecoverable lab

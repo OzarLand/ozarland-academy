@@ -1,3 +1,8 @@
+---
+title: "OKD OpenStack Lab"
+description: "A reproducible lab to learn how OpenStack is deployed, operated and maintained when Kubernetes operators manage its lifecycle on OKD."
+---
+
 # OKD OpenStack Lab
 
 A reproducible laboratory for learning how OpenStack is deployed, operated
@@ -22,7 +27,12 @@ like, and where to look when something is stuck.
 > page carries a status line, and [docs/versions.md](docs/versions.md)
 > states precisely what has been tested and what has not.
 
-**New here?** Start with the [reading guide](docs/README.md): it gives a
+> [!NOTE]
+> The lab lives in `docs/okd/` of
+> ozarland-academy, with its scripts, manifests and Terraform. Clone the repository and run every command of
+> these pages from that folder: `git clone https://github.com/OzarLand/ozarland-academy && cd ozarland-academy/docs/okd`.
+
+**New here?** Start with the [reading guide](docs/index.md): it gives a
 map of the documentation and three reading paths (one hour, one day, one
 week).
 
@@ -98,32 +108,32 @@ tests/smoke-test.sh --functional
 ```
 
 Each command is explained — what it deploys, why, how to verify it, what to
-check when it fails — in the [installation guide](docs/installation/README.md).
+check when it fails — in the [installation guide](docs/installation/index.md).
 
 ## Documentation
 
 | Section | Content |
 |---|---|
-| [Reading guide](docs/README.md) | Map of the documentation, reading paths, where to find what |
+| [Reading guide](docs/index.md) | Map of the documentation, reading paths, where to find what |
 | [Architecture](docs/architecture.md) | Design, sizing, networks, nested-cloud constraints, alternatives |
 | [Prerequisites](docs/prerequisites.md) | Quota, features and pre-flight checks |
 | [Versions and status](docs/versions.md) | Selected versions, compatibility reasoning, what is tested, limitations |
-| [Installation](docs/installation/README.md) | Seven explained steps from empty project to running cloud |
-| [Concepts](docs/concepts/README.md) | Kubernetes, OKD and operators explained to OpenStack operators |
-| [Operations](docs/operations/README.md) | Day-2 guide: status, logs, restarts, configuration changes |
-| [Troubleshooting](docs/troubleshooting/README.md) | Runbooks by symptom, with fault reproduction |
-| [Lifecycle](docs/lifecycle/README.md) | Updates, operator upgrades, backup and restore, OKD maintenance |
-| [Knowledge base](docs/knowledge-base/README.md) | Tested answers to day-to-day OpenStack and OKD administration questions, cheat sheet, open questions |
-| [Upstream contributions](contributions/README.md) | Method, candidate subjects with evidence and journal for contributing back to the operators and OKD |
+| [Installation](docs/installation/index.md) | Seven explained steps from empty project to running cloud |
+| [Concepts](docs/concepts/index.md) | Kubernetes, OKD and operators explained to OpenStack operators |
+| [Operations](docs/operations/index.md) | Day-2 guide: status, logs, restarts, configuration changes |
+| [Troubleshooting](docs/troubleshooting/index.md) | Runbooks by symptom, with fault reproduction |
+| [Lifecycle](docs/lifecycle/index.md) | Updates, operator upgrades, backup and restore, OKD maintenance |
+| [Knowledge base](docs/knowledge-base/index.md) | Tested answers to day-to-day OpenStack and OKD administration questions, cheat sheet, open questions |
+| [Upstream contributions](contributions/index.md) | Method, candidate subjects with evidence and journal for contributing back to the operators and OKD |
 | [Publication readiness](docs/publication-readiness.md) | Review of secrets, history, licensing and open points before a public release |
 
 ## Learning roadmap
 
 | Phase | Goal | Material |
 |---|---|---|
-| 1. Understand the architecture | How OKD hosts OpenStack; operators, CRDs, reconciliation | [Architecture](docs/architecture.md), [Concepts](docs/concepts/README.md), installation steps 3–6 |
-| 2. Operate OpenStack | Inspect, read logs, restart, reconfigure, troubleshoot | [Operations](docs/operations/README.md), [Troubleshooting](docs/troubleshooting/README.md) |
-| 3. Manage the lifecycle | Updates, operator upgrades, backup, rollback limits | [Lifecycle](docs/lifecycle/README.md) |
+| 1. Understand the architecture | How OKD hosts OpenStack; operators, CRDs, reconciliation | [Architecture](docs/architecture.md), [Concepts](docs/concepts/index.md), installation steps 3–6 |
+| 2. Operate OpenStack | Inspect, read logs, restart, reconfigure, troubleshoot | [Operations](docs/operations/index.md), [Troubleshooting](docs/troubleshooting/index.md) |
+| 3. Manage the lifecycle | Updates, operator upgrades, backup, rollback limits | [Lifecycle](docs/lifecycle/index.md) |
 | 4. Deepen OKD skills | Cluster networking, storage, scheduling, upgrades | [OKD in brief](docs/concepts/07-okd-in-brief.md), [OKD upgrade](docs/lifecycle/07-okd-upgrade.md), [node and OKD runbook](docs/troubleshooting/node-and-okd.md) |
 
 The order is deliberate: the lab keeps the OKD layer minimal so that the
@@ -174,4 +184,4 @@ projects (Apache License 2.0). Each derived file names its source.
 
 ## License
 
-[Apache License 2.0](LICENSE).
+[Apache License 2.0](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE).

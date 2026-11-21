@@ -1,0 +1,82 @@
+# Checks of the OKD OpenStack lab (module okd, docs/okd/): the scripts,
+# manifests and Terraform that moved with the pages from
+# OzarLand/okd-openstack-lab, which ran these checks in its own CI. The pages
+# themselves are also checked by docs.yml with the rest of the portal.
+name: OKD lab
+
+on:
+  pull_request:
+    paths:
+      - "docs/okd/**"
+      - ".github/workflows/okd-lab.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/okd/**"
+      - ".github/workflows/okd-lab.yml"
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: docs/okd
+
+# Only GitHub-owned actions are used, pinned by commit.
+jobs:
+  scripts-and-manifests:
+    name: Scripts and manifests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Install linters
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q shellcheck gettext-base
+          pipx install yamllint==1.38.0
+          pipx install ruff==0.16.9
+      - name: ShellCheck
+        run: make lint-shell
+      - name: yamllint
+        run: make lint-yaml
+      - name: Python
+        run: make lint-python
+      - name: Render and validate manifest templates
+        run: make lint-templates
+
+  terraform:
+    name: Terraform
+    runs-on: ubuntu-24.04
+    env:
+      TERRAFORM_VERSION: 1.9.8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: Install Terraform
+        run: |
+          base="https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}"
+          archive="terraform_${TERRAFORM_VERSION}_linux_amd64.zip"
+          curl -fsSLO "${base}/${archive}"
+          curl -fsSL "${base}/terraform_${TERRAFORM_VERSION}_SHA256SUMS" | grep " ${archive}\$" | sha256sum -c -
+          sudo unzip -q -o "${archive}" terraform -d /usr/local/bin
+          terraform version
+      - name: Validate
+        run: |
+          mkdir -p .work
+          # terraform validate reads the key file referenced by the module.
+          echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExampleKeyOnly ci" > .work/dataplane-ssh-key.pub
+          make lint-terraform
+
+  markdown:
+    name: Markdown
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - name: markdownlint
+        run: npx --yes markdownlint-cli2@0.24.0 "**/*.md"

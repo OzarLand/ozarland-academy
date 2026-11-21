@@ -1,3 +1,8 @@
+---
+title: "Findings examined and not kept"
+description: "Each finding below looked like a contribution subject and was dropped after checking upstream. They are kept here so that nobody spends the same hour twice."
+---
+
 # Findings examined and not kept
 
 Each finding below looked like a contribution subject and was dropped

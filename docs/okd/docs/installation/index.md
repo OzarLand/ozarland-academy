@@ -1,3 +1,8 @@
+---
+title: "Installation guide"
+description: "Start here to build the lab from nothing."
+---
+
 # Installation guide
 
 **Start here** to build the lab from nothing. The installation is a

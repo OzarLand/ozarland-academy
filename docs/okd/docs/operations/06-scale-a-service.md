@@ -1,3 +1,8 @@
+---
+title: "Scale a service"
+description: "In Kolla-Ansible the number of API instances is the number of hosts in an inventory group. Here it is a replicas field."
+---
+
 # Scale a service
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -127,4 +132,4 @@ two pods was deleted and replaced.
 
 ---
 
-**Previous:** [Enable a service](05-enable-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Passwords and secrets](07-passwords-and-secrets.md)
+**Previous:** [Enable a service](05-enable-a-service.md) · **Up:** [Operations guide](index.md) · **Next:** [Passwords and secrets](07-passwords-and-secrets.md)

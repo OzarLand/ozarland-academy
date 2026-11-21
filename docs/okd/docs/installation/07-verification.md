@@ -1,3 +1,8 @@
+---
+title: "Step 7 — Verification"
+description: "Run the smoke test and the functional test from the bastion: every layer healthy, then an instance booted on the compute node."
+---
+
 # Step 7 — Verification
 
 **Where:** bastion.
@@ -66,13 +71,13 @@ and are reachable from the bastion and from the lab networks only.
 
 ## Where to go next
 
-1. [../concepts/](../concepts/README.md) — if you skipped it.
-2. [../operations/](../operations/README.md) — the Day-2 guide; start with
+1. [../concepts/](../concepts/index.md) — if you skipped it.
+2. [../operations/](../operations/index.md) — the Day-2 guide; start with
    `01-inspect-service-status.md`.
-3. [../troubleshooting/](../troubleshooting/README.md) — runbooks, several
+3. [../troubleshooting/](../troubleshooting/index.md) — runbooks, several
    with a "reproduce it in the lab" section.
-4. [../lifecycle/](../lifecycle/README.md) — updates, upgrades, backup.
+4. [../lifecycle/](../lifecycle/index.md) — updates, upgrades, backup.
 
 ---
 
-**Previous:** [Step 6 — OpenStack data plane](06-openstack-data-plane.md) · **Up:** [Installation guide](README.md) · **Next:** [Operating OpenStack on OKD (Day 2)](../operations/README.md)
+**Previous:** [Step 6 — OpenStack data plane](06-openstack-data-plane.md) · **Up:** [Installation guide](index.md) · **Next:** [Operating OpenStack on OKD (Day 2)](../operations/index.md)

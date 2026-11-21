@@ -1,3 +1,8 @@
+---
+title: "From Kolla-Ansible to operators"
+description: "You already know what an OpenStack control plane is made of. This document maps what you do today with Kolla-Ansible onto the operator model."
+---
+
 # From Kolla-Ansible to operators
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
@@ -61,7 +66,7 @@ API; see
 | HAProxy + keepalived VIP | Kubernetes `Service` (load balancing to pods), OKD `Route` (public HTTPS entry), MetalLB (the internal VIP on the internalapi network) | No HAProxy container to manage |
 | MariaDB container + `mariadb_recovery` | `Galera` CR managed by `mariadb-operator` | Bootstrap after a full stop is automated by the operator |
 | `kolla_toolbox`, admin `openrc` | The `openstackclient` pod | `oc rsh -n openstack openstackclient` |
-| `kolla-ansible upgrade` | `OpenStackVersion` CR (`spec.targetVersion`) | Operator upgrade and service image update are two separate steps; see [lifecycle](../lifecycle/README.md) |
+| `kolla-ansible upgrade` | `OpenStackVersion` CR (`spec.targetVersion`) | Operator upgrade and service image update are two separate steps; see [lifecycle](../lifecycle/index.md) |
 | `kolla-ansible pull` / `openstack_release` + registry | Image references held by the `OpenStackVersion` CR | Individual images can be overridden with `customContainerImages` |
 | `kolla-ansible deploy --limit compute01` | `OpenStackDataPlaneDeployment` CR (optionally with `ansibleLimit` or `servicesOverride`) | This part of the model is still Ansible over SSH; see [data plane changes](../operations/08-dataplane-changes.md) |
 | `/var/log/kolla/<service>/` | Container standard output, read with `oc logs` | On compute nodes: journald and podman; see [Logs](../operations/02-logs.md) |
@@ -214,4 +219,4 @@ oc rsh -n openstack openstackclient openstack compute service list
 
 ---
 
-**Previous:** [Concepts index](README.md) · **Next:** [Kubernetes building blocks](02-kubernetes-building-blocks.md)
+**Previous:** [Concepts index](index.md) · **Next:** [Kubernetes building blocks](02-kubernetes-building-blocks.md)

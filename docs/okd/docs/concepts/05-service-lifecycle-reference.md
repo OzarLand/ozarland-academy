@@ -1,3 +1,8 @@
+---
+title: "Service lifecycle reference"
+description: "All services follow the same pattern. Learn it once on Keystone and the others differ only in details."
+---
+
 # Service lifecycle reference
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides

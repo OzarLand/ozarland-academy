@@ -1,3 +1,8 @@
+---
+title: "Pod Pending, CrashLoopBackOff or ImagePullBackOff"
+description: "A pod status is the Kubernetes view of a container, where a Kolla operator would look at docker ps. Three statuses cover most failures."
+---
+
 # Pod Pending, CrashLoopBackOff or ImagePullBackOff
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) except the `nodeSelector` removal (the lab declares none), enabling `telemetry` and the image override (not executed: the pull errors were reproduced with throwaway pods instead)

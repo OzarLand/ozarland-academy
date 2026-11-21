@@ -1,3 +1,8 @@
+---
+title: "Logs"
+description: "With Kolla-Ansible, service logs are files under /var/log/kolla/<service>/ on each host."
+---
+
 # Logs
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -278,4 +283,4 @@ oc get pod <pod> -o jsonpath='{.status.startTime}{"\n"}'
 
 ---
 
-**Previous:** [Inspect service status](01-inspect-service-status.md) · **Up:** [Operations guide](README.md) · **Next:** [Restart a service](03-restart-a-service.md)
+**Previous:** [Inspect service status](01-inspect-service-status.md) · **Up:** [Operations guide](index.md) · **Next:** [Restart a service](03-restart-a-service.md)

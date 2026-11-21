@@ -1,3 +1,8 @@
+---
+title: "Impact of OKD maintenance on OpenStack"
+description: "In a Kolla-Ansible deployment, rebooting a controller is an OpenStack operation: you know which containers run there and HAProxy fails over."
+---
+
 # Impact of OKD maintenance on OpenStack
 
 > Status: partially validated on the lab — the read-only commands, a planned node reboot (2026-11-11), a graceful shutdown and restart of the whole lab and a compute node reboot (2026-11-12) and a MachineConfig change applied then removed (2026-11-12, two rolls) were executed on OKD 4.22.0-okd-scos.10 with operators 18-stable; a start of the whole lab after a power-off that was not initiated from inside the nodes was observed with read-only commands on 2026-11-14, not provoked; not executed: a deliberate unclean stop, and a restart after a power-off long enough to need certificate approval
@@ -405,4 +410,4 @@ the control plane is `Ready`, see
 
 ---
 
-**Previous:** [Backup and restore](05-backup-and-restore.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Upgrading OKD](07-okd-upgrade.md)
+**Previous:** [Backup and restore](05-backup-and-restore.md) · **Up:** [Lifecycle management](index.md) · **Next:** [Upgrading OKD](07-okd-upgrade.md)

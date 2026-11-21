@@ -1,3 +1,8 @@
+---
+title: "Operators, CRDs and reconciliation"
+description: "The previous document covered the standard Kubernetes objects. None of them knows what Keystone is."
+---
+
 # Operators, CRDs and reconciliation
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides

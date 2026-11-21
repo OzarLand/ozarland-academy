@@ -1,3 +1,8 @@
+---
+title: "Passwords and secrets"
+description: "passwords.yml becomes a Kubernetes Secret named osp-secret."
+---
+
 # Passwords and secrets
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) except the rotation of database passwords (`DbRootPassword`, `DatabasePassword`, `MariaDBAccount`), not executed because a failure would leave the lab unrecoverable
@@ -229,4 +234,4 @@ service whose password you changed.
 
 ---
 
-**Previous:** [Scale a service](06-scale-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Data plane changes](08-dataplane-changes.md)
+**Previous:** [Scale a service](06-scale-a-service.md) · **Up:** [Operations guide](index.md) · **Next:** [Data plane changes](08-dataplane-changes.md)

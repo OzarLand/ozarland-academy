@@ -1,3 +1,8 @@
+---
+title: "The OKD node and OpenStack"
+description: "In a Kolla deployment the controllers are the control plane: if a controller is down, its containers are down. Here the same is true one level removed."
+---
+
 # The OKD node and OpenStack
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion and on the node, and for the planned reboot of scenario B (executed and measured, and measured twice more on 2026-11-12 during MachineConfig rolls), `cordon` and a server-side dry run of `drain` (2026-11-12); not executed: the host cloud commands, a hard stop of the VM, a real `drain`, the approval of certificate requests (none was pending), the restart of `crio` and `kubelet`, and any degraded cluster operator (none occurred)

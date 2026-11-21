@@ -1,3 +1,8 @@
+---
+title: "Configuration, secrets and persistent data"
+description: "Where does keystone.conf come from? Where are the passwords? What survives a pod restart? This document answers those questions for the operator model."
+---
+
 # Configuration, secrets and persistent data
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides

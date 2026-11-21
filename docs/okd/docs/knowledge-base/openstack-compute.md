@@ -1,3 +1,8 @@
+---
+title: "OpenStack compute operations"
+description: "The Nova control services are pods; nova_compute is a podman container on the compute node and libvirt runs on that host as systemd services."
+---
+
 # OpenStack compute operations
 
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,

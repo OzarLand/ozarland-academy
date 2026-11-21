@@ -2,7 +2,7 @@
   Root of the portal (/index.html), built from a stub that
   tools/site/releases.py generates: the learning path of OzarLand Academy,
   laid out as brand/academy/templates.md ("Learning-path home") describes:
-  a hero, the five stops of the island trail in the order of academy.toml,
+  a hero, the stops of the island trail in the order of academy.toml,
   the book as a separate deeper-reading route, and the shared-learning note.
 
   Each stop shows the stage seal of its position (seals/stage-N.svg), its
@@ -40,7 +40,7 @@
         <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
         <p class="portal-hero__lead">
           One learning path to run OpenStack, in {{ portal.modules | length }} stops: discover it on a lab, deploy it,
-          operate it, intervene on instances and hypervisors, and take it to production.
+          operate it, intervene on instances and hypervisors, take it to production, then go further.
         </p>
         <p class="portal-hero__actions">
           {% if first.module %}
@@ -73,7 +73,7 @@
 {% block content %}
   <h2 id="path">The learning path</h2>
   <p>
-    Five stops across one island, from the harbour to the lighthouse. Each stop is a module with its own pages,
+    {{ portal.modules | length }} stops across one island, from the harbour to the lighthouse and beyond. Each stop is a module with its own pages,
     navigation and search: follow them in order, or go straight to the one you need.
   </p>
   <ol class="oz-trail">
@@ -120,7 +120,7 @@
       <thead><tr><th>Repository</th><th>What it holds</th></tr></thead>
       <tbody>
         <tr><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
-        <tr class="oz-land__here"><td><a href="https://github.com/OzarLand/ozarland-academy"><strong>ozarland-academy</strong></a> (you are here)</td><td>The sources of this learning path: lab, deployment, day-2 operations, runbooks, production</td></tr>
+        <tr class="oz-land__here"><td><a href="https://github.com/OzarLand/ozarland-academy"><strong>ozarland-academy</strong></a> (you are here)</td><td>The sources of this learning path: lab, deployment, day-2 operations, runbooks, production, OKD lab</td></tr>
       </tbody>
     </table>
     <p class="oz-land__actions">

@@ -1,3 +1,8 @@
+---
+title: "01 — GaleraBackup retention never deletes a backup file"
+description: "GaleraBackup.spec.retention is documented as \"delete backup files older than this duration\"."
+---
+
 # 01 — GaleraBackup `retention` never deletes a backup file
 
 - **Target:** `openstack-k8s-operators/mariadb-operator`, branch `main`

@@ -1,3 +1,8 @@
+---
+title: "OKD node maintenance: MachineConfig rolls, drain and recovery"
+description: "OKD node maintenance: MachineConfig rolls, drain and recovery"
+---
+
 # OKD node maintenance: MachineConfig rolls, drain and recovery
 
 > Status: every command was run on the lab (single-node OKD 4.22,

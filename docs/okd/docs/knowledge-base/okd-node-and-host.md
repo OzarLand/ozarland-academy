@@ -1,3 +1,8 @@
+---
+title: "OKD node and host operating system"
+description: "The whole control plane, every OpenStack pod and every volume live on one virtual machine, okd-0."
+---
+
 # OKD node and host operating system
 
 > Status: every command was run on the lab (single-node OKD 4.22,

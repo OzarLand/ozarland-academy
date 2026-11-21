@@ -1,3 +1,8 @@
+---
+title: "Capacity and observability"
+description: "The lab does not deploy the telemetry operator."
+---
+
 # Capacity and observability
 
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,

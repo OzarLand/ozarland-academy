@@ -1,3 +1,8 @@
+---
+title: "Pull request preparation checklist"
+description: "Go through this list for every change sent upstream, and keep the ticked copy in the topic page."
+---
+
 # Pull request preparation checklist
 
 Go through this list for every change sent upstream, and keep the ticked

@@ -1,3 +1,8 @@
+---
+title: "Backup and restore"
+description: "A Kolla-Ansible backup is usually \"mariadb_backup plus /etc/kolla plus the Glance store\"."
+---
+
 # Backup and restore
 
 > Status: validated on the lab — the inventory and every backup procedure (5.1 to 5.4) were executed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), and the `GaleraRestore` of 5.5 was executed the same day on both database instances with markers proving the result; the manual import of a logical dump was validated on a scratch server only; the etcd restore was executed once on 2026-11-13, on a snapshot one minute old; the volume snapshot rollback was deliberately not run on the only lab
@@ -500,4 +505,4 @@ assumption: this one has been restored once, on an idle lab.
 
 ---
 
-**Previous:** [Rollback: what can and cannot be undone](04-rollback-limitations.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md)
+**Previous:** [Rollback: what can and cannot be undone](04-rollback-limitations.md) · **Up:** [Lifecycle management](index.md) · **Next:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md)

@@ -1,3 +1,8 @@
+---
+title: "Architecture"
+description: "Architecture"
+---
+
 # Architecture
 
 This document describes what the lab is made of, why it is shaped this way,
@@ -215,7 +220,7 @@ transfers hang); see [troubleshooting/network.md](troubleshooting/network.md).
 - Lab VMs reach the internet (container registries, package repositories)
   through the router, or through an HTTP proxy when the cloud offers no
   direct outbound access (see
-  [Running behind a proxy](installation/README.md#running-behind-a-proxy)).
+  [Running behind a proxy](installation/index.md#running-behind-a-proxy)).
 
 ## Software layers
 

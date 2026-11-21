@@ -1,3 +1,8 @@
+---
+title: "Step 3 — Platform services"
+description: "Step 3 — Platform services"
+---
+
 # Step 3 — Platform services
 
 **Where:** bastion. **Command:** `scripts/bastion/04-platform-services.sh`

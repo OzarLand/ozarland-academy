@@ -1,3 +1,8 @@
+---
+title: "08 — The annotation required to delete a running data plane deployment is not documented"
+description: "08 — The annotation required to delete a running data plane deployment is not documented"
+---
+
 # 08 — The annotation required to delete a running data plane deployment is not documented
 
 - **Target:** `openstack-k8s-operators/openstack-operator`, branch `main`

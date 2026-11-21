@@ -1,3 +1,8 @@
+---
+title: "12 — The OKD=true path of install_yamls dates from 2023; a report from OKD 4.22 on what still works"
+description: "12 — The OKD=true path of install_yamls dates from 2023; a report from OKD 4.22 on what still works"
+---
+
 # 12 — The `OKD=true` path of install_yamls dates from 2023; a report from OKD 4.22 on what still works
 
 - **Target:** `openstack-k8s-operators/install_yamls`, branch `main`

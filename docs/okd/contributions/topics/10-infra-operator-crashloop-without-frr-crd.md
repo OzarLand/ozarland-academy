@@ -1,3 +1,8 @@
+---
+title: "10 — infra-operator crash-loops when the FRRConfiguration resource type is not installed"
+description: "The infra-operator contains a controller for BGP (BGPConfiguration) that watches FRRConfiguration objects of the frr-k8s project."
+---
+
 # 10 — infra-operator crash-loops when the `FRRConfiguration` resource type is not installed
 
 - **Target:** `openstack-k8s-operators/infra-operator`, branch `main`

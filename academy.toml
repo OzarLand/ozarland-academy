@@ -153,3 +153,11 @@ title = "Production guide"
 summary = "Visual memos for production: one operational lesson per page."
 kind = "single"
 status = "available"
+
+[[module]]
+id = "okd"
+step = "Compare"
+title = "OKD OpenStack lab"
+summary = "OpenStack run by Kubernetes operators on OKD: a reproducible lab for operators who know Kolla-Ansible."
+kind = "single"
+status = "available"

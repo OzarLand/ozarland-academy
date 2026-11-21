@@ -1,3 +1,8 @@
+---
+title: "Kubernetes building blocks, seen through OpenStack"
+description: "Every command block on this page is [READ-ONLY]."
+---
+
 # Kubernetes building blocks, seen through OpenStack
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides

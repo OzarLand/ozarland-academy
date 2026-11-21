@@ -1,3 +1,8 @@
+---
+title: "Restart a service"
+description: "The Kolla reflex is docker restart nova_api on each controller."
+---
+
 # Restart a service
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -196,4 +201,4 @@ oc rsh openstackclient openstack compute service list
 
 ---
 
-**Previous:** [Logs](02-logs.md) · **Up:** [Operations guide](README.md) · **Next:** [Change service configuration](04-change-service-configuration.md)
+**Previous:** [Logs](02-logs.md) · **Up:** [Operations guide](index.md) · **Next:** [Change service configuration](04-change-service-configuration.md)

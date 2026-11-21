@@ -1,3 +1,8 @@
+---
+title: "OKD cluster health and etcd"
+description: "OKD cluster health and etcd"
+---
+
 # OKD cluster health and etcd
 
 > Status: every command was run on the lab (single-node OKD 4.22,

@@ -1,3 +1,8 @@
+---
+title: "OKD in brief"
+description: "This document contains the minimum you need to know about OKD in order to operate OpenStack on it (phases 1 to 3 of the learning roadmap)."
+---
+
 # OKD in brief
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
@@ -290,4 +295,4 @@ data: review before sharing. See [Logs](../operations/02-logs.md).
 
 ---
 
-**Previous:** [Control plane and data plane](06-control-plane-and-data-plane.md) · **Up:** [Concepts index](README.md) · **Next:** [Operations guide](../operations/README.md)
+**Previous:** [Control plane and data plane](06-control-plane-and-data-plane.md) · **Up:** [Concepts index](index.md) · **Next:** [Operations guide](../operations/index.md)

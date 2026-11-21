@@ -1,3 +1,8 @@
+---
+title: "06 — Data plane agent health checks: the metadata check can pass while the agent is cut off, and nothing acts on \"unhealthy\""
+description: "06 — Data plane agent health checks: the metadata check can pass while the agent is cut off, and nothing acts on \"unhealthy\""
+---
+
 # 06 — Data plane agent health checks: the metadata check can pass while the agent is cut off, and nothing acts on "unhealthy"
 
 - **Target:** `openstack-k8s-operators/edpm-ansible`, branch `main`

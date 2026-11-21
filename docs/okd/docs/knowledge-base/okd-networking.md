@@ -1,3 +1,8 @@
+---
+title: "OKD cluster networking"
+description: "OKD cluster networking"
+---
+
 # OKD cluster networking
 
 > Status: every command was run on the lab (single-node OKD 4.22,

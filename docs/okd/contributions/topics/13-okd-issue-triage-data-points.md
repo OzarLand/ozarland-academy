@@ -1,3 +1,8 @@
+---
+title: "13 — OKD 4.22 open issues: data points from a healthy single-node cluster"
+description: "The OKD tracker has reports against the exact build the lab runs (4.22.0-okd-scos.10) and its predecessors."
+---
+
 # 13 — OKD 4.22 open issues: data points from a healthy single-node cluster
 
 - **Target:** `okd-project/okd` (GitHub issues), branch not applicable

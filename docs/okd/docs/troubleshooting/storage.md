@@ -1,3 +1,8 @@
+---
+title: "Storage problems"
+description: "The lab uses the simplest possible storage: a fixed number of directories on the OKD node, each published as a PersistentVolume (PV) of class local-storage."
+---
+
 # Storage problems
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for scenarios A and B (Pending claim reproduced with a throwaway claim; a `Released` volume produced, recovered and recycled for real); scenario C was validated read-only: the disk was not filled, and `crictl rmi --prune`, the image deletion and the clean-up of failed pods were not executed

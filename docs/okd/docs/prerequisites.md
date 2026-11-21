@@ -1,3 +1,8 @@
+---
+title: "Prerequisites"
+description: "What you need before starting, and how to check each item."
+---
+
 # Prerequisites
 
 What you need before starting, and how to check each item. Everything here
@@ -92,7 +97,7 @@ disconnected installation is out of scope.
 
 Access through an HTTP proxy is supported as long as the proxy accepts HTTPS
 (`CONNECT`) requests from the lab VMs: see
-[Running behind a proxy](installation/README.md#running-behind-a-proxy).
+[Running behind a proxy](installation/index.md#running-behind-a-proxy).
 
 The lab also needs an NTP server; when none is reachable, the bastion can
 serve its own clock (`BASTION_NTP_SERVER` in `lab.env`).
@@ -176,4 +181,4 @@ terraform version
 
 The guides assume you operate OpenStack already (services, configuration
 files, RabbitMQ, Galera, Neutron/OVN basics). No Kubernetes experience is
-assumed; start with [concepts/](concepts/README.md).
+assumed; start with [concepts/](concepts/index.md).

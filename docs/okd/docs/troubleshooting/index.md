@@ -1,3 +1,8 @@
+---
+title: "Troubleshooting runbooks"
+description: "These runbooks cover faults that really occur on an operator-managed OpenStack: none of them is contrived."
+---
+
 # Troubleshooting runbooks
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -7,7 +12,7 @@ OpenStack: none of them is contrived. Each one follows the same seven
 sections (initial symptoms, read-only investigation, expected observations,
 root cause, resolution, verification, risks and precautions) and labels
 every command block **[READ-ONLY]**, **[CHANGE]** or **[DESTRUCTIVE]** as
-defined in the [operations guide](../operations/README.md#conventions).
+defined in the [operations guide](../operations/index.md#conventions).
 Where useful, a "Reproduce it in the lab" section shows how to create the
 fault on purpose.
 
@@ -25,7 +30,7 @@ namespace is given (`oc project openstack`).
 - **Before any fix**: read
   [before you change anything](#before-you-change-anything).
 - **You want to understand normal behaviour first**: the
-  [operations knowledge base](../knowledge-base/README.md) records what a
+  [operations knowledge base](../knowledge-base/index.md) records what a
   healthy lab answers, task by task.
 
 ## Runbooks

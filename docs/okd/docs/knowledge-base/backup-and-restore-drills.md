@@ -1,3 +1,8 @@
+---
+title: "Backup and restore drills"
+description: "Backup and restore drills"
+---
+
 # Backup and restore drills
 
 ## In short
@@ -22,7 +27,7 @@ that the result can be proven. The procedure itself is in
 records what happened, how long it took and what had to be repaired
 afterwards. The last entry is the etcd restore executed on 2026-11-13.
 
-Conventions and helpers are those of the [README](README.md). Two more
+Conventions and helpers are those of the [README](index.md). Two more
 helpers are used here:
 
 ```bash

@@ -1,3 +1,8 @@
+---
+title: "Issue report template"
+description: "A skeleton for a bug report or a documentation gap report sent to an upstream project."
+---
+
 # Issue report template
 
 A skeleton for a bug report or a documentation gap report sent to an

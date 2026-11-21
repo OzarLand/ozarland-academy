@@ -1,3 +1,8 @@
+---
+title: "Manual changes reverted, deleted objects coming back"
+description: "Sooner or later an operator from the Kolla world edits a Deployment or a ConfigMap directly, as one would hot-fix a file under /etc/kolla/."
+---
+
 # Manual changes reverted, deleted objects coming back
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11

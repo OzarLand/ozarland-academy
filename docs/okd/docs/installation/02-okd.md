@@ -1,3 +1,8 @@
+---
+title: "Step 2 — OKD cluster"
+description: "Turn one VM into a complete single-node OKD cluster with the agent-based installer, built on the bastion and booted from the workstation."
+---
+
 # Step 2 — OKD cluster
 
 **Where:** bastion, with one command on the workstation.

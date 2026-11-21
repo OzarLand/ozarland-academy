@@ -1,3 +1,8 @@
+---
+title: "Reconciliation not progressing"
+description: "You declared a state and the platform does not reach it: the control plane or a service resource stays False."
+---
+
 # Reconciliation not progressing
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for the investigation, the missing NetworkAttachmentDefinition (5b) and the operator restart (5d); the missing `osp-secret` key (5a) was not executed (a wrong value desynchronises a service from Keystone), and of the condition table only the `NetworkAttachmentsReady` and `DeploymentReady` rows were observed

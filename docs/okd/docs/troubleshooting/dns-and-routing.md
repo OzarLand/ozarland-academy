@@ -1,3 +1,8 @@
+---
+title: "DNS and routing problems"
+description: "Three different DNS services exist in the lab. Mixing them up is the usual source of confusion."
+---
+
 # DNS and routing problems
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command and the dnsmasq stop/start reproduction; `scripts/bastion/01-setup-bastion.sh` was not re-run, and the failure patterns of scenarios B, C and D other than a stopped lab DNS were not provoked

@@ -1,3 +1,8 @@
+---
+title: "Safe change checklist"
+description: "Operators make changes easy to apply. They do not make them safe: a wrong value is rolled out as diligently as a right one."
+---
+
 # Safe change checklist
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -206,4 +211,4 @@ last.
 
 ---
 
-**Previous:** [Data plane changes](08-dataplane-changes.md) · **Up:** [Operations guide](README.md) · **Next:** [Lifecycle management](../lifecycle/README.md)
+**Previous:** [Data plane changes](08-dataplane-changes.md) · **Up:** [Operations guide](index.md) · **Next:** [Lifecycle management](../lifecycle/index.md)

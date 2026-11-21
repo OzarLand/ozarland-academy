@@ -1,3 +1,8 @@
+---
+title: "Data plane scale-out, migration and scale-in"
+description: "A second compute node was added to the lab on 2026-11-12, used for scheduling, migration, evacuation and gateway tests, then removed again."
+---
+
 # Data plane scale-out, migration and scale-in
 
 ## In short
@@ -26,7 +31,7 @@ The procedure pages are
 [Data plane changes](../operations/08-dataplane-changes.md); this file
 records what happened and what had to be fixed.
 
-Conventions and helpers are those of the [README](README.md). More
+Conventions and helpers are those of the [README](index.md). More
 helpers are used here:
 
 ```bash

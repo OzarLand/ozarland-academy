@@ -1,3 +1,8 @@
+---
+title: "Cheat sheet"
+description: "One-liners taken from the entries of this knowledge base, all run on the lab on 2026-11-12."
+---
+
 # Cheat sheet
 
 One-liners taken from the entries of this knowledge base, all run on the

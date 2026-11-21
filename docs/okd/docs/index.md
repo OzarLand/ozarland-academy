@@ -1,3 +1,8 @@
+---
+title: "Reading guide"
+description: "This page is the map of the documentation. It tells you what each part is for, in which order to read, and where to go when you have a precise question."
+---
+
 # Reading guide
 
 This page is the map of the documentation. It tells you what each part
@@ -43,22 +48,22 @@ flowchart LR
 | Part | Question it answers | Form | Size |
 |---|---|---|---|
 | [Architecture](architecture.md) | What is the lab made of, and why this shape? | One page | 20 min |
-| [Concepts](concepts/README.md) | How does the operator model work, in OpenStack terms? | 7 pages, read in order | 2 to 3 h |
+| [Concepts](concepts/index.md) | How does the operator model work, in OpenStack terms? | 7 pages, read in order | 2 to 3 h |
 | [Prerequisites](prerequisites.md) | What does the host cloud project need? | Checklist | 15 min |
-| [Installation](installation/README.md) | How is each layer deployed and verified? | 7 steps, one per script | Half a day with the lab |
-| [Operations](operations/README.md) | How do I inspect, restart, reconfigure, scale? | 9 task pages | 1 day with the lab |
-| [Troubleshooting](troubleshooting/README.md) | Something is broken: where do I look? | Runbooks by symptom | On demand |
-| [Lifecycle](lifecycle/README.md) | How do updates, backups, restores and maintenance work? | 7 pages | 1 day with the lab |
-| [Knowledge base](knowledge-base/README.md) | How exactly did the lab behave when we did X? | Tested question-and-answer entries | On demand |
+| [Installation](installation/index.md) | How is each layer deployed and verified? | 7 steps, one per script | Half a day with the lab |
+| [Operations](operations/index.md) | How do I inspect, restart, reconfigure, scale? | 9 task pages | 1 day with the lab |
+| [Troubleshooting](troubleshooting/index.md) | Something is broken: where do I look? | Runbooks by symptom | On demand |
+| [Lifecycle](lifecycle/index.md) | How do updates, backups, restores and maintenance work? | 7 pages | 1 day with the lab |
+| [Knowledge base](knowledge-base/index.md) | How exactly did the lab behave when we did X? | Tested question-and-answer entries | On demand |
 | [Versions and status](versions.md) | Which versions, what is tested, what is not? | Tables | 10 min |
-| [Upstream contributions](../contributions/README.md) | What could be sent back upstream, and how? | Method and candidate topics | 1 h |
+| [Upstream contributions](../contributions/index.md) | What could be sent back upstream, and how? | Method and candidate topics | 1 h |
 | [Publication readiness](publication-readiness.md) | Is the repository fit to be made public? | Review report | 10 min |
 
 ## Three reading paths
 
 ### One hour: the idea
 
-1. [README](../README.md), down to "Architecture at a glance".
+1. [README](../index.md), down to "Architecture at a glance".
 2. [From Kolla-Ansible to operators](concepts/01-from-kolla-to-operators.md):
    the translation table between the two operating models.
 3. [Operators, CRDs and reconciliation](concepts/03-operators-crds-and-reconciliation.md):
@@ -68,7 +73,7 @@ flowchart LR
 ### One day: operate the lab
 
 1. [Architecture](architecture.md), then concepts 1 to 3.
-2. [Operations](operations/README.md), pages 1 to 4: status, logs,
+2. [Operations](operations/index.md), pages 1 to 4: status, logs,
    restart, configuration change.
 3. [Control plane and data plane](concepts/06-control-plane-and-data-plane.md),
    then [data plane changes](operations/08-dataplane-changes.md).
@@ -102,7 +107,7 @@ flowchart LR
 | Reboot or patch the OKD node | [Maintenance impact](lifecycle/06-okd-maintenance-impact.md), [node maintenance drills](knowledge-base/okd-node-maintenance.md) |
 | See what is still unexplained | [Open questions](knowledge-base/open-questions.md) |
 | Know the current state of the lab | [Lab state](knowledge-base/lab-state.md) |
-| Prepare a contribution upstream | [Contribution workspace](../contributions/README.md) |
+| Prepare a contribution upstream | [Contribution workspace](../contributions/index.md) |
 
 ## Conventions used everywhere
 

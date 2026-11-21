@@ -1,3 +1,8 @@
+---
+title: "OKD workloads and resources"
+description: "One node carries the platform, the operators and the OpenStack control plane."
+---
+
 # OKD workloads and resources
 
 > Status: every command was run on the lab (single-node OKD 4.22,

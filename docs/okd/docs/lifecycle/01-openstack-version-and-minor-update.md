@@ -1,3 +1,8 @@
+---
+title: "OpenStackVersion and the minor update of OpenStack services"
+description: "OpenStackVersion and the minor update of OpenStack services"
+---
+
 # OpenStackVersion and the minor update of OpenStack services
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-12, with a simulated newer version: the update mechanics ran for real, but no newer OpenStack code was available to install
@@ -441,4 +446,4 @@ is `Ready`.
 
 ---
 
-**Up:** [Lifecycle management](README.md) · **Next:** [Upgrading the OpenStack operators](02-operator-upgrade.md)
+**Up:** [Lifecycle management](index.md) · **Next:** [Upgrading the OpenStack operators](02-operator-upgrade.md)

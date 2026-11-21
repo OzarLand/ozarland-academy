@@ -1,3 +1,8 @@
+---
+title: "Control plane and data plane"
+description: "Knowing which half a component belongs to tells you which tools apply to it."
+---
+
 # Control plane and data plane
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides

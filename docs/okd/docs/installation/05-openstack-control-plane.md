@@ -1,3 +1,8 @@
+---
+title: "Step 5 — OpenStack control plane"
+description: "Step 5 — OpenStack control plane"
+---
+
 # Step 5 — OpenStack control plane
 
 **Where:** bastion. **Command:** `scripts/bastion/06-openstack-controlplane.sh`

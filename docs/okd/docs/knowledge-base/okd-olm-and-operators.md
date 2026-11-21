@@ -1,3 +1,8 @@
+---
+title: "OLM and the OpenStack operators"
+description: "The OpenStack operators are installed and kept in place by the Operator Lifecycle Manager (OLM) of OKD."
+---
+
 # OLM and the OpenStack operators
 
 > Status: every command was run on the lab (single-node OKD 4.22,

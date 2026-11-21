@@ -1,3 +1,8 @@
+---
+title: "Network connectivity problems"
+description: "Four networks matter to OpenStack in the lab. Knowing which one a flow uses is half of the diagnosis."
+---
+
 # Network connectivity problems
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for every read-only command run on the bastion, the OKD node and the compute node, the MetalLB allocation failures (reproduced with throwaway Services) and the missing NAD; not executed: the host cloud checks and `terraform` commands of scenario C (outside the lab perimeter of this validation), a real port-security or interface-rename fault, whereabouts exhaustion, and any MTU change

@@ -1,3 +1,8 @@
+---
+title: "03 — Certificates of a removed data plane node are not cleaned up when the NodeSet returns to an earlier spec"
+description: "Since February 2026 the operator deletes the Certificate objects and Secrets of a node that was removed from an OpenStackDataPlaneNodeSet."
+---
+
 # 03 — Certificates of a removed data plane node are not cleaned up when the NodeSet returns to an earlier spec
 
 - **Target:** `openstack-k8s-operators/openstack-operator`, branch `main`

@@ -1,3 +1,8 @@
+---
+title: "Contributing"
+description: "Contributions are welcome: corrections, results from other host clouds, additional scenarios, newer versions."
+---
+
 # Contributing
 
 Contributions are welcome: corrections, results from other host clouds,
@@ -20,12 +25,15 @@ additional scenarios, newer versions.
 
 ## Before opening a pull request
 
+From the root of ozarland-academy:
+
 ```bash
-make lint
+make -C docs/okd lint
 ```
 
 This runs ShellCheck, yamllint, ruff, the offline template rendering test
-and `terraform fmt`/`validate`. The same checks run in CI.
+and `terraform fmt`/`validate`. The same checks, and markdownlint on these pages, run in CI
+(`.github/workflows/okd-lab.yml`) for every change under `docs/okd/`.
 
 ## Conventions
 
@@ -35,7 +43,7 @@ and `terraform fmt`/`validate`. The same checks run in CI.
   only, with a comment explaining the purpose of each resource.
 - Documentation: Markdown, English. Label command blocks `[READ-ONLY]`,
   `[CHANGE]` or `[DESTRUCTIVE]`. Scenarios follow the seven-section
-  structure described in [docs/operations/README.md](docs/operations/README.md).
+  structure described in [docs/operations/README.md](docs/operations/index.md).
 - Commits: [Conventional Commits](https://www.conventionalcommits.org/)
   (`feat:`, `fix:`, `docs:`, `chore:`, `test:`).
 

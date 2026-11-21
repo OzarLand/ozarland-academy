@@ -1,3 +1,8 @@
+---
+title: "Step 4 — OpenStack operators"
+description: "Step 4 — OpenStack operators"
+---
+
 # Step 4 — OpenStack operators
 
 **Where:** bastion. **Command:** `scripts/bastion/05-openstack-operators.sh`

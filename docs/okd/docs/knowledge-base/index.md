@@ -1,3 +1,8 @@
+---
+title: "Operations knowledge base"
+description: "Short, tested answers to the questions an OpenStack administrator asks on a cloud managed by operators on OKD, and about OKD itself."
+---
+
 # Operations knowledge base
 
 Short, tested answers to the questions an OpenStack administrator asks on
@@ -19,7 +24,7 @@ listed in [open questions](open-questions.md), not guessed.
   the [index](#index) of all 149 entries with their one-line answers.
 - **You only need the command**: open the [cheat sheet](cheat-sheet.md).
 - **Something is broken**: go to the
-  [troubleshooting runbooks](../troubleshooting/README.md); this
+  [troubleshooting runbooks](../troubleshooting/index.md); this
   knowledge base explains normal operation, the runbooks start from a
   symptom.
 - **You are new to the lab**: follow the

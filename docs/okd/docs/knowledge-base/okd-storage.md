@@ -1,3 +1,8 @@
+---
+title: "OKD storage"
+description: "OKD storage"
+---
+
 # OKD storage
 
 > Status: every command was run on the lab (single-node OKD 4.22,

@@ -1,3 +1,8 @@
+---
+title: "Inspect service status"
+description: "With Kolla-Ansible you check health by looking at containers on each controller (docker ps, HAProxy stats) and at the OpenStack APIs."
+---
+
 # Inspect service status
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -28,7 +33,7 @@ conditions first saves most of the digging.
 ## 2. Read-only investigation
 
 Go top-down through five levels. Stop at the first level that is not healthy
-and switch to the matching [runbook](../troubleshooting/README.md).
+and switch to the matching [runbook](../troubleshooting/index.md).
 
 The order of the investigation; each level explains the one above it.
 
@@ -265,4 +270,4 @@ oc get openstackcontrolplane openstack
 
 ---
 
-**Up:** [Operations guide](README.md) · **Next:** [Logs](02-logs.md)
+**Up:** [Operations guide](index.md) · **Next:** [Logs](02-logs.md)

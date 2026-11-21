@@ -1,3 +1,8 @@
+---
+title: "OpenStack identity and tenants"
+description: "Day-1 tenant work on an operator-managed cloud: where the admin client lives, how to reach the API as a normal user, and what to create for a new team."
+---
+
 # OpenStack identity and tenants
 
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,

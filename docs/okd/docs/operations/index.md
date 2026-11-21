@@ -1,3 +1,8 @@
+---
+title: "Operating OpenStack on OKD (Day 2)"
+description: "Start here once the lab is deployed and the smoke test passes."
+---
+
 # Operating OpenStack on OKD (Day 2)
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -12,7 +17,7 @@ them. The other pages can be read in any order; page 9 is the checklist to
 keep open during any change.
 
 When something is broken rather than merely to be changed, go to the
-[troubleshooting runbooks](../troubleshooting/README.md).
+[troubleshooting runbooks](../troubleshooting/index.md).
 
 ## In short
 
@@ -33,7 +38,7 @@ When something is broken rather than merely to be changed, go to the
 |---|---|
 | The lab is deployed and `tests/smoke-test.sh` passes | [Installation, step 7](../installation/07-verification.md) |
 | A shell on the bastion, in the repository directory, with `oc project openstack` done | [Conventions](#conventions) |
-| The vocabulary: operator, custom resource, condition, reconciliation | [Concepts guide](../concepts/README.md) |
+| The vocabulary: operator, custom resource, condition, reconciliation | [Concepts guide](../concepts/index.md) |
 
 ## Pages
 
@@ -188,4 +193,4 @@ oc get pods -l app=galera
 
 ---
 
-**Previous:** [Installation guide](../installation/README.md) · **Next:** [Inspect service status](01-inspect-service-status.md) · **See also:** [Lifecycle management](../lifecycle/README.md)
+**Previous:** [Installation guide](../installation/index.md) · **Next:** [Inspect service status](01-inspect-service-status.md) · **See also:** [Lifecycle management](../lifecycle/index.md)

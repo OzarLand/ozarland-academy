@@ -1,3 +1,8 @@
+---
+title: "Open questions"
+description: "Open questions"
+---
+
 # Open questions
 
 ## In short

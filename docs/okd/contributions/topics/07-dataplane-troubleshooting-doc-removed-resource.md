@@ -1,3 +1,8 @@
+---
+title: "07 — The data plane troubleshooting page still uses a resource that was removed in 2024"
+description: "07 — The data plane troubleshooting page still uses a resource that was removed in 2024"
+---
+
 # 07 — The data plane troubleshooting page still uses a resource that was removed in 2024
 
 - **Target:** `openstack-k8s-operators/openstack-operator`, branch `main`

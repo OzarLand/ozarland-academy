@@ -1,3 +1,8 @@
+---
+title: "Contribution journal"
+description: "One entry per action taken towards upstream, newest first. The journal is the memory of the contribution effort: what was sent, where, and what came back."
+---
+
 # Contribution journal
 
 One entry per action taken towards upstream, newest first. The journal is
@@ -27,7 +32,7 @@ Rules:
 - A lab run is an action. Record what was run, on which versions, and what
   was observed, before any claim is made upstream.
 - When an entry changes the state of a topic, update the status board in
-  [README.md](README.md) in the same commit.
+  [README.md](index.md) in the same commit.
 - No addresses, host names or credentials of the host environment, here as
   everywhere else in the repository.
 

@@ -1,3 +1,8 @@
+---
+title: "OKD monitoring and alerting"
+description: "OKD ships a complete monitoring stack (Prometheus, Alertmanager, node and Kubernetes exporters) that watches the platform from the first minute."
+---
+
 # OKD monitoring and alerting
 
 > Status: every command was run on the lab (single-node OKD 4.22,
@@ -450,7 +455,7 @@ VIP through a jump host.
   page; it shows nothing OpenStack-specific.
 
 **See also**: [Access and security](okd-access-and-security.md),
-[Workstation prerequisites](../installation/README.md)
+[Workstation prerequisites](../installation/index.md)
 
 ### What is monitored for OpenStack without the telemetry operator?
 

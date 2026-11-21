@@ -1,3 +1,8 @@
+---
+title: "Enable a service"
+description: "The lab starts with a minimal set of services."
+---
+
 # Enable a service
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -161,4 +166,4 @@ Secrets described above; delete them by hand if you want a clean namespace.
 
 ---
 
-**Previous:** [Change service configuration](04-change-service-configuration.md) · **Up:** [Operations guide](README.md) · **Next:** [Scale a service](06-scale-a-service.md)
+**Previous:** [Change service configuration](04-change-service-configuration.md) · **Up:** [Operations guide](index.md) · **Next:** [Scale a service](06-scale-a-service.md)

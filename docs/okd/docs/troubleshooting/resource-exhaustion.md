@@ -1,3 +1,8 @@
+---
+title: "Resource exhaustion"
+description: "The lab runs OKD and the whole OpenStack control plane on one 32 GB node. That is enough, without much margin."
+---
+
 # Resource exhaustion
 
 > Status: partially validated on the lab — every read-only command was run on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) and the figures below were measured; memory pressure, evictions and OOM kills were not provoked, because exhausting the only node risks etcd and the databases

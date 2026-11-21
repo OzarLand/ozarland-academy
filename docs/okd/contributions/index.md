@@ -1,3 +1,8 @@
+---
+title: "Upstream contributions workspace"
+description: "This folder prepares contributions from the lab to the projects it is built on: the OpenStack operators (openstack-k8s-operators) and OKD."
+---
+
 # Upstream contributions workspace
 
 This folder prepares contributions from the lab to the projects it is
@@ -52,7 +57,7 @@ stateDiagram-v2
 | Path | Content |
 | --- | --- |
 | [methodology.md](methodology.md) | The lab method applied to upstream work; what each project requires (guides, sign-off, tests, review flow, branches, channels, review latency); how trust is built and lost |
-| [topics/](topics/) | One file per candidate, same ten sections in each |
+| [topics/](#status-board) | One file per candidate, same ten sections in each |
 | [topics/rejected.md](topics/rejected.md) | Findings examined and not kept, with the reason |
 | [templates/issue-report.md](templates/issue-report.md) | Skeleton of an upstream issue |
 | [templates/pr-checklist.md](templates/pr-checklist.md) | Checklist to fill before a pull request |

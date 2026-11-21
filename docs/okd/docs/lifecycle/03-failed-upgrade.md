@@ -1,3 +1,8 @@
+---
+title: "Investigating a failed or stalled upgrade"
+description: "Investigating a failed or stalled upgrade"
+---
+
 # Investigating a failed or stalled upgrade
 
 > Status: partially validated on the lab — every read-only command was run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable), at rest and during a staged minor update, and the webhook refusals were checked with `--dry-run=server`; no update was deliberately broken, so the failure rows of section 3 and the resolutions of section 5 were not exercised
@@ -287,4 +292,4 @@ Both should print nothing.
 
 ---
 
-**Previous:** [Upgrading the OpenStack operators](02-operator-upgrade.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Rollback: what can and cannot be undone](04-rollback-limitations.md)
+**Previous:** [Upgrading the OpenStack operators](02-operator-upgrade.md) · **Up:** [Lifecycle management](index.md) · **Next:** [Rollback: what can and cannot be undone](04-rollback-limitations.md)

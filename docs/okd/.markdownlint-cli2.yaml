@@ -4,6 +4,9 @@ config:
   MD013: false
   MD033: false
   MD060: false
+  # The front matter `title` of a page (used by the portal) repeats its H1.
+  MD025:
+    front_matter_title: ""
   # Scenario pages repeat the same seven section titles on purpose.
   MD024:
     siblings_only: true

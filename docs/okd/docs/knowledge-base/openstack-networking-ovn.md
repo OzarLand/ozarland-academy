@@ -1,3 +1,8 @@
+---
+title: "OpenStack networking with OVN"
+description: "Neutron uses the ML2/OVN driver. The OVN databases and ovn-northd are pods; ovn-controller, the metadata agent and Open vSwitch run on the compute node."
+---
+
 # OpenStack networking with OVN
 
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,

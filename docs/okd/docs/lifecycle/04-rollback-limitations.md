@@ -1,3 +1,8 @@
+---
+title: "Rollback: what can and cannot be undone"
+description: "With Kolla-Ansible a common reflex after a bad upgrade is \"redeploy the previous tag\"."
+---
+
 # Rollback: what can and cannot be undone
 
 > Status: partially validated on the lab — read-only commands, the reversal of an image override and a return to a previous `targetVersion` between two image sets with identical software were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); no snapshot restore, rebuild or real downgrade was executed, and the other rows of section 4 are not exercised
@@ -21,7 +26,7 @@ With Kolla-Ansible a common reflex after a bad upgrade is "redeploy the
 previous tag". It works more often than it should, because the deployment
 tool is stateless and containers are replaced wholesale. In an
 operator-managed platform, three of the four version axes
-([README](README.md)) have **no downgrade path**. Knowing this before a
+([README](index.md)) have **no downgrade path**. Knowing this before a
 change is what makes the change safe.
 
 ## 2. Read-only investigation
@@ -167,9 +172,9 @@ recreated.
   control plane resource and a real service downgrade are derived from
   upstream source and documentation, not exercised.
 - Configuration reversal and the effect of disabling a service are covered
-  by the [operations](../operations/README.md) pages, with their own status
+  by the [operations](../operations/index.md) pages, with their own status
   lines.
 
 ---
 
-**Previous:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Backup and restore](05-backup-and-restore.md)
+**Previous:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md) · **Up:** [Lifecycle management](index.md) · **Next:** [Backup and restore](05-backup-and-restore.md)

@@ -1,3 +1,8 @@
+---
+title: "OKD access, users and security"
+description: "OKD access, users and security"
+---
+
 # OKD access, users and security
 
 > Status: every command was run on the lab (single-node OKD 4.22,

@@ -1,3 +1,8 @@
+---
+title: "Contribution methodology"
+description: "How a finding from this lab becomes an upstream contribution that a maintainer can accept quickly. The first part carries over the working rules of the lab."
+---
+
 # Contribution methodology
 
 How a finding from this lab becomes an upstream contribution that a
@@ -13,8 +18,8 @@ Nothing in this folder has been sent upstream. The journal
 
 The lab already works with rules that upstream reviewers value. They are
 kept as they are (sources: [CONTRIBUTING.md](../CONTRIBUTING.md), the
-[knowledge base conventions](../docs/knowledge-base/README.md), the
-[operations conventions](../docs/operations/README.md)).
+[knowledge base conventions](../docs/knowledge-base/index.md), the
+[operations conventions](../docs/operations/index.md)).
 
 | Lab rule | What it becomes upstream |
 | --- | --- |

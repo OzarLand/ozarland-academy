@@ -1,3 +1,8 @@
+---
+title: "Concepts"
+description: "This guide explains how OpenStack is deployed and operated when Kubernetes operators manage its lifecycle."
+---
+
 # Concepts
 
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
@@ -35,7 +40,7 @@ read everywhere.**
   [architecture](../architecture.md#software-layers)).
 - `oc` runs on the bastion.
 - Object names shown in examples are the ones observed on the deployed lab;
-  the pages of the [operations guide](../operations/README.md) are the
+  the pages of the [operations guide](../operations/index.md) are the
   validated reference when a detail matters.
 
 ## Reading order

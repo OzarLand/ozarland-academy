@@ -1,3 +1,8 @@
+---
+title: "Step 1 — Infrastructure"
+description: "Create the networks, the router, the bastion and the compute VM with Terraform from the workstation, ready for the OKD node."
+---
+
 # Step 1 — Infrastructure
 
 **Where:** workstation.
@@ -136,4 +141,4 @@ Expected: the bastion answers, has an address on the machine network, and
 
 ---
 
-**Previous:** [Installation guide](README.md) · **Next:** [Step 2 — OKD cluster](02-okd.md)
+**Previous:** [Installation guide](index.md) · **Next:** [Step 2 — OKD cluster](02-okd.md)

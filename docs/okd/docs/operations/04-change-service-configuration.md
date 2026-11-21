@@ -1,3 +1,8 @@
+---
+title: "Change service configuration"
+description: "In Kolla-Ansible you drop an override in /etc/kolla/config/<service>/ and run kolla-ansible reconfigure."
+---
+
 # Change service configuration
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -234,4 +239,4 @@ oc get openstackcontrolplane openstack
 
 ---
 
-**Previous:** [Restart a service](03-restart-a-service.md) · **Up:** [Operations guide](README.md) · **Next:** [Enable a service](05-enable-a-service.md)
+**Previous:** [Restart a service](03-restart-a-service.md) · **Up:** [Operations guide](index.md) · **Next:** [Enable a service](05-enable-a-service.md)

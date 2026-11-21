@@ -1,3 +1,8 @@
+---
+title: "Lifecycle management"
+description: "Start here before changing a version, taking a backup or rebooting the OKD node."
+---
+
 # Lifecycle management
 
 > Status: partially validated on the lab — the pages of this directory were run against the lab on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); each page states in its status line what was not executed (an operator upgrade through OLM, a rollback to volume snapshots, provoked failures, the OKD upgrade). The database restores (2026-11-12) and one etcd restore (2026-11-13) were executed: see [05](05-backup-and-restore.md)
@@ -96,7 +101,7 @@ Ordering rules that follow from this:
 
 | Kolla-Ansible | Operator-managed lab | Notes |
 |---|---|---|
-| Edit `globals.yml` / config overrides, `kolla-ansible reconfigure` | Edit the `OpenStackControlPlane` CR; reconciliation applies it | No command to run; see [operations](../operations/README.md) |
+| Edit `globals.yml` / config overrides, `kolla-ansible reconfigure` | Edit the `OpenStackControlPlane` CR; reconciliation applies it | No command to run; see [operations](../operations/index.md) |
 | Bump `openstack_release`, `kolla-ansible pull` + `upgrade` | Operator upgrade (new images become *available*), then `targetVersion` (images are *applied*) | Two separate decisions |
 | `kolla-ansible upgrade --limit compute01` | `OpenStackDataPlaneDeployment` with `servicesOverride` and optionally `ansibleLimit` | Each run is a new resource |
 | Upgrade the deployment tool itself (`pip install kolla-ansible==...`) | Operator upgrade through OLM | The "tool" runs permanently inside the cluster |
@@ -158,4 +163,4 @@ executed is described from upstream source and documentation and says so.
 
 ---
 
-**Previous:** [Operating OpenStack on OKD (Day 2)](../operations/README.md) · **Next:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md)
+**Previous:** [Operating OpenStack on OKD (Day 2)](../operations/index.md) · **Next:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md)

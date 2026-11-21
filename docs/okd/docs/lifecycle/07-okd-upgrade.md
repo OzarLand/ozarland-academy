@@ -1,3 +1,8 @@
+---
+title: "Upgrading OKD"
+description: "This is Phase 4 material: it concerns the platform under OpenStack."
+---
+
 # Upgrading OKD
 
 > Status: partially validated on the lab — only the read-only parts were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable): current state, channel, offered updates, health gates and API deprecation queries. The upgrade itself was deliberately not executed and remains an exercise; no upgrade edge was offered to the lab at that date
@@ -38,7 +43,7 @@ installed release, which was not the case when this page was validated
 (section 3).
 
 What the OKD upgrade does **not** touch: the OpenStack operators and the
-OpenStack service images ([README](README.md)). They are restarted, not
+OpenStack service images ([README](index.md)). They are restarted, not
 upgraded.
 
 ## 2. Read-only investigation
@@ -308,4 +313,4 @@ it survived a node reboot and a full restart of the lab.
 
 ---
 
-**Previous:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md) · **Up:** [Lifecycle management](README.md)
+**Previous:** [Impact of OKD maintenance on OpenStack](06-okd-maintenance-impact.md) · **Up:** [Lifecycle management](index.md)

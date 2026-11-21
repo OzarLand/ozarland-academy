@@ -1,3 +1,8 @@
+---
+title: "Data plane problems"
+description: "The data plane is where the lab feels most like Kolla-Ansible: an Ansible run over SSH configures a host, and services run as containers under systemd."
+---
+
 # Data plane problems
 
 > Status: partially validated on the lab — validated on 2026-11-11 (OKD 4.22.0-okd-scos.10, operators 18-stable) for scenario A (two provoked failures, partial runs, a full second run), the read-only parts of scenario B and scenario C (service stopped and started); a key mismatch (scenario B) was not provoked and the emulation path of scenario D was not executed, because the lab compute node has KVM

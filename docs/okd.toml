@@ -1,0 +1,126 @@
+# Settings of the OKD OpenStack lab site (module `okd` of academy.toml), merged
+# with zensical.base.toml by tools/site/releases.py. The pages are the history
+# of OzarLand/okd-openstack-lab, moved under docs/okd/. The lab itself
+# (Makefile, config/, deployment/, scripts/, tests/) moved with them and keeps
+# its layout: run its targets with `make -C docs/okd <target>`. Those files are
+# not pages of the site.
+
+[project]
+exclude_docs = """
+/config/
+/deployment/
+/scripts/
+/tests/
+/Makefile
+"""
+site_description = "OpenStack deployed and operated by Kubernetes operators on OKD, in a reproducible lab: concepts, installation, operations, troubleshooting and lifecycle."
+
+nav = [
+  { "Home" = [
+    "index.md",
+    "docs/index.md",
+    "docs/architecture.md",
+    "docs/prerequisites.md",
+    "docs/versions.md",
+  ] },
+  { "Concepts" = [
+    "docs/concepts/index.md",
+    "docs/concepts/01-from-kolla-to-operators.md",
+    "docs/concepts/02-kubernetes-building-blocks.md",
+    "docs/concepts/03-operators-crds-and-reconciliation.md",
+    "docs/concepts/04-configuration-secrets-and-data.md",
+    "docs/concepts/05-service-lifecycle-reference.md",
+    "docs/concepts/06-control-plane-and-data-plane.md",
+    "docs/concepts/07-okd-in-brief.md",
+  ] },
+  { "Installation" = [
+    "docs/installation/index.md",
+    "docs/installation/01-infrastructure.md",
+    "docs/installation/02-okd.md",
+    "docs/installation/03-platform-services.md",
+    "docs/installation/04-openstack-operators.md",
+    "docs/installation/05-openstack-control-plane.md",
+    "docs/installation/06-openstack-data-plane.md",
+    "docs/installation/07-verification.md",
+  ] },
+  { "Operations" = [
+    "docs/operations/index.md",
+    "docs/operations/01-inspect-service-status.md",
+    "docs/operations/02-logs.md",
+    "docs/operations/03-restart-a-service.md",
+    "docs/operations/04-change-service-configuration.md",
+    "docs/operations/05-enable-a-service.md",
+    "docs/operations/06-scale-a-service.md",
+    "docs/operations/07-passwords-and-secrets.md",
+    "docs/operations/08-dataplane-changes.md",
+    "docs/operations/09-safe-change-checklist.md",
+  ] },
+  { "Troubleshooting" = [
+    "docs/troubleshooting/index.md",
+    "docs/troubleshooting/reconciliation-not-progressing.md",
+    "docs/troubleshooting/pod-pending-or-crashloop.md",
+    "docs/troubleshooting/manual-changes-reverted.md",
+    "docs/troubleshooting/galera-and-rabbitmq.md",
+    "docs/troubleshooting/network.md",
+    "docs/troubleshooting/dns-and-routing.md",
+    "docs/troubleshooting/storage.md",
+    "docs/troubleshooting/dataplane.md",
+    "docs/troubleshooting/node-and-okd.md",
+    "docs/troubleshooting/resource-exhaustion.md",
+  ] },
+  { "Lifecycle" = [
+    "docs/lifecycle/index.md",
+    "docs/lifecycle/01-openstack-version-and-minor-update.md",
+    "docs/lifecycle/02-operator-upgrade.md",
+    "docs/lifecycle/03-failed-upgrade.md",
+    "docs/lifecycle/04-rollback-limitations.md",
+    "docs/lifecycle/05-backup-and-restore.md",
+    "docs/lifecycle/06-okd-maintenance-impact.md",
+    "docs/lifecycle/07-okd-upgrade.md",
+  ] },
+  { "Knowledge base" = [
+    "docs/knowledge-base/index.md",
+    "docs/knowledge-base/cheat-sheet.md",
+    "docs/knowledge-base/lab-state.md",
+    "docs/knowledge-base/okd-access-and-security.md",
+    "docs/knowledge-base/okd-cluster-health-and-etcd.md",
+    "docs/knowledge-base/okd-monitoring-and-alerting.md",
+    "docs/knowledge-base/okd-networking.md",
+    "docs/knowledge-base/okd-node-and-host.md",
+    "docs/knowledge-base/okd-node-maintenance.md",
+    "docs/knowledge-base/okd-olm-and-operators.md",
+    "docs/knowledge-base/okd-storage.md",
+    "docs/knowledge-base/okd-workloads-and-resources.md",
+    "docs/knowledge-base/openstack-capacity-and-observability.md",
+    "docs/knowledge-base/openstack-compute.md",
+    "docs/knowledge-base/openstack-identity-and-tenants.md",
+    "docs/knowledge-base/openstack-networking-ovn.md",
+    "docs/knowledge-base/openstack-service-administration.md",
+    "docs/knowledge-base/backup-and-restore-drills.md",
+    "docs/knowledge-base/dataplane-scale-out-and-migration.md",
+    "docs/knowledge-base/open-questions.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "docs/publication-readiness.md",
+    "contributions/index.md",
+    "contributions/methodology.md",
+    "contributions/log.md",
+    "contributions/topics/01-galerabackup-retention-deletes-nothing.md",
+    "contributions/topics/02-galera-backup-restore-scripts-lose-errexit.md",
+    "contributions/topics/03-nodeset-stale-certificates-after-scale-in.md",
+    "contributions/topics/04-edpm-bootstrap-masked-package-failure-backport.md",
+    "contributions/topics/05-ovn-agents-stuck-after-dns-outage.md",
+    "contributions/topics/06-edpm-agent-healthchecks-not-acted-on.md",
+    "contributions/topics/07-dataplane-troubleshooting-doc-removed-resource.md",
+    "contributions/topics/08-dataplane-confirm-delete-annotation-undocumented.md",
+    "contributions/topics/09-dataplane-scale-in-doc-gaps.md",
+    "contributions/topics/10-infra-operator-crashloop-without-frr-crd.md",
+    "contributions/topics/11-okd-update-service-docs.md",
+    "contributions/topics/12-install-yamls-okd-path-outdated.md",
+    "contributions/topics/13-okd-issue-triage-data-points.md",
+    "contributions/topics/rejected.md",
+    "contributions/templates/issue-report.md",
+    "contributions/templates/pr-checklist.md",
+  ] },
+]

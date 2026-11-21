@@ -1,3 +1,8 @@
+---
+title: "OpenStack service administration through operators"
+description: "Every control-plane service is described by the OpenStackControlPlane resource openstack (short name oscp) in the namespace openstack."
+---
+
 # OpenStack service administration through operators
 
 > Status: every command was run on the lab (OKD 4.22, operators 18-stable,

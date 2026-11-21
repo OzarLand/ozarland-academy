@@ -1,3 +1,8 @@
+---
+title: "Step 6 — OpenStack data plane"
+description: "Step 6 — OpenStack data plane"
+---
+
 # Step 6 — OpenStack data plane
 
 **Where:** bastion. **Command:** `scripts/bastion/07-openstack-dataplane.sh`

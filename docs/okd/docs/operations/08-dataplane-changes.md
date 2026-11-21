@@ -1,3 +1,8 @@
+---
+title: "Data plane changes"
+description: "The control plane reconciles continuously."
+---
+
 # Data plane changes
 
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
@@ -315,4 +320,4 @@ alphabetical order, so a name starting with `25-` overrides them.
 
 ---
 
-**Previous:** [Passwords and secrets](07-passwords-and-secrets.md) · **Up:** [Operations guide](README.md) · **Next:** [Safe change checklist](09-safe-change-checklist.md)
+**Previous:** [Passwords and secrets](07-passwords-and-secrets.md) · **Up:** [Operations guide](index.md) · **Next:** [Safe change checklist](09-safe-change-checklist.md)

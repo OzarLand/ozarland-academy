@@ -1,3 +1,8 @@
+---
+title: "State of the lab after the knowledge base campaigns"
+description: "State of the lab after the knowledge base campaigns"
+---
+
 # State of the lab after the knowledge base campaigns
 
 > Status: inventory taken on the lab (single-node OKD 4.22, operators
@@ -23,7 +28,7 @@ entries) and some are permanent. This file lists every one of them with
 the command that shows it and the command that removes it, so that the
 next person knows what is baseline and what is residue. Commands run on
 the bastion with the `openstack` namespace selected, with the helpers of
-the [README](README.md).
+the [README](index.md).
 
 ## Entries
 

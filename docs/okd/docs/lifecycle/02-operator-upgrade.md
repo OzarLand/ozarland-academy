@@ -1,3 +1,8 @@
+---
+title: "Upgrading the OpenStack operators"
+description: "You want newer operators: bug fixes in the controllers, new fields in the custom resources, or a newer set of service images to become available."
+---
+
 # Upgrading the OpenStack operators
 
 > Status: partially validated on the lab — read-only commands and the catalog refresh were run on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); the catalog offered no newer bundle, so no InstallPlan could be approved and the replacement of the operators by OLM (section 5, steps 2 to 4) was not executed
@@ -291,4 +296,4 @@ shows which service pods were restarted by the new controllers. Then run
 
 ---
 
-**Previous:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md) · **Up:** [Lifecycle management](README.md) · **Next:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md)
+**Previous:** [OpenStackVersion and the minor update](01-openstack-version-and-minor-update.md) · **Up:** [Lifecycle management](index.md) · **Next:** [Investigating a failed or stalled upgrade](03-failed-upgrade.md)

@@ -1,3 +1,8 @@
+---
+title: "Publication readiness report"
+description: "Publication readiness report"
+---
+
 # Publication readiness report
 
 Review performed on 2026-11-12 on the working branch; scans of the tree and
