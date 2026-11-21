@@ -1,0 +1,91 @@
+# Host-level settings for the agent-based installer: which machine becomes
+# the node, and its complete static network configuration (NMState syntax).
+# Rendered by scripts/bastion/02-create-agent-iso.sh.
+apiVersion: v1beta1
+kind: AgentConfig
+metadata:
+  name: ${CLUSTER_NAME}
+rendezvousIP: ${OKD_IP}
+# The installer refuses to start while the node clock is not synchronised.
+additionalNTPSources:
+  - ${NTP_SERVER}
+hosts:
+  - hostname: ${OKD_NODE_NAME}
+    role: master
+    # Logical names (nic0..nic3) are mapped to real devices by MAC address.
+    interfaces:
+      - name: nic0
+        macAddress: ${OKD_MAC}
+      - name: nic1
+        macAddress: ${CTLPLANE_OKD_MAC}
+      - name: nic2
+        macAddress: ${INTERNALAPI_OKD_MAC}
+      - name: nic3
+        macAddress: ${TENANT_OKD_MAC}
+    networkConfig:
+      interfaces:
+        # Machine network: Kubernetes API, pod network underlay, default route.
+        - name: nic0
+          type: ethernet
+          state: up
+          mac-address: ${OKD_MAC}
+          mtu: ${MACHINE_MTU}
+          ipv4:
+            enabled: true
+            dhcp: false
+            address:
+              - ip: ${OKD_IP}
+                prefix-length: ${MACHINE_PREFIX}
+          ipv6:
+            enabled: false
+        # OpenStack networks: the node needs an address on each of them so
+        # that MetalLB can announce service IPs there.
+        - name: nic1
+          type: ethernet
+          state: up
+          mac-address: ${CTLPLANE_OKD_MAC}
+          mtu: ${CTLPLANE_MTU}
+          ipv4:
+            enabled: true
+            dhcp: false
+            address:
+              - ip: ${CTLPLANE_OKD_IP}
+                prefix-length: ${CTLPLANE_PREFIX}
+          ipv6:
+            enabled: false
+        - name: nic2
+          type: ethernet
+          state: up
+          mac-address: ${INTERNALAPI_OKD_MAC}
+          mtu: ${INTERNALAPI_MTU}
+          ipv4:
+            enabled: true
+            dhcp: false
+            address:
+              - ip: ${INTERNALAPI_OKD_IP}
+                prefix-length: ${INTERNALAPI_PREFIX}
+          ipv6:
+            enabled: false
+        - name: nic3
+          type: ethernet
+          state: up
+          mac-address: ${TENANT_OKD_MAC}
+          mtu: ${TENANT_MTU}
+          ipv4:
+            enabled: true
+            dhcp: false
+            address:
+              - ip: ${TENANT_OKD_IP}
+                prefix-length: ${TENANT_PREFIX}
+          ipv6:
+            enabled: false
+      dns-resolver:
+        config:
+          server:
+            - ${BASTION_IP}
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: ${MACHINE_GATEWAY}
+            next-hop-interface: nic0
+            table-id: 254

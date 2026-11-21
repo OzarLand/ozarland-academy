@@ -1,0 +1,31 @@
+# Cluster-wide installation settings for a single-node OKD cluster.
+# Rendered by scripts/bastion/02-create-agent-iso.sh.
+apiVersion: v1
+baseDomain: ${BASE_DOMAIN}
+metadata:
+  name: ${CLUSTER_NAME}
+controlPlane:
+  name: master
+  architecture: amd64
+  replicas: 1
+compute:
+  - name: worker
+    architecture: amd64
+    replicas: 0
+networking:
+  networkType: OVNKubernetes
+  machineNetwork:
+    - cidr: ${MACHINE_CIDR}
+  clusterNetwork:
+    - cidr: 10.128.0.0/14
+      hostPrefix: 23
+  serviceNetwork:
+    - 172.30.0.0/16
+# "none" means no cloud integration: OKD treats the VM as a plain machine and
+# does not talk to the host cloud API. DNS and addresses are provided by us.
+platform:
+  none: {}
+# OKD does not need a Red Hat pull secret. The installer only requires the
+# field to be syntactically valid.
+pullSecret: '{"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}'
+sshKey: '${OKD_SSH_PUBLIC_KEY}'

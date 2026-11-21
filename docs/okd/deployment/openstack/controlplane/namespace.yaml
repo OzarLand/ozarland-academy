@@ -1,0 +1,14 @@
+# Namespace of the OpenStack control plane.
+#
+# OpenStack service pods need more than the "restricted" pod security level
+# that OKD would otherwise enforce here (some run as root or use host paths;
+# their Security Context Constraints are granted by the operators). As in the
+# upstream development setup, pod security admission is therefore set to
+# "privileged" and OKD is told not to manage the label.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openstack
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+    security.openshift.io/scc.podSecurityLabelSync: "false"

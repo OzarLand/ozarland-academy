@@ -7,6 +7,7 @@ Each module of the academy, except day2, was a repository of its own:
     deploy      OzarLand/kolla-ansible-deployment-patterns
     runbooks    OzarLand/openstack-vm-runbooks
     production  OzarLand/production-guide
+    okd         OzarLand/okd-openstack-lab
 
 Its history is imported under docs/<module>/ by git filter-repo, with every
 README.md renamed index.md and the files the academy already has (LICENSE,
@@ -64,6 +65,7 @@ SOURCES = {
     "kolla-ansible-deployment-patterns": "deploy",
     "openstack-vm-runbooks": "runbooks",
     "production-guide": "production",
+    "okd-openstack-lab": "okd",
 }
 
 #: Files of a moved repository that were left out of the import, and where a

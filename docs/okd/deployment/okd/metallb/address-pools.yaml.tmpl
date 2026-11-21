@@ -1,0 +1,69 @@
+# MetalLB gives "LoadBalancer" Services an IP address on a real network and
+# answers ARP for it from the OKD node (layer 2 mode). This is how OpenStack
+# services running in pods become reachable from compute nodes: it plays the
+# role keepalived VIPs play in a Kolla-Ansible deployment.
+#
+# One pool per OpenStack network; each pool is announced only on the node
+# interface connected to that network.
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ctlplane
+  namespace: metallb-system
+spec:
+  addresses:
+    - ${CTLPLANE_LB_START}-${CTLPLANE_LB_END}
+  autoAssign: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: internalapi
+  namespace: metallb-system
+spec:
+  addresses:
+    - ${INTERNALAPI_LB_START}-${INTERNALAPI_LB_END}
+  autoAssign: false
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: tenant
+  namespace: metallb-system
+spec:
+  addresses:
+    - ${TENANT_LB_START}-${TENANT_LB_END}
+  autoAssign: false
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: ctlplane
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - ctlplane
+  interfaces:
+    - ${CTLPLANE_IFACE}
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: internalapi
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - internalapi
+  interfaces:
+    - ${INTERNALAPI_IFACE}
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: tenant
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - tenant
+  interfaces:
+    - ${TENANT_IFACE}

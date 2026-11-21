@@ -3,7 +3,7 @@
 **Learn to run OpenStack, step by step.** Part of [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for
 better OpenStack operations.*
 
-OzarLand Academy is one learning path in five steps. Each step is a module, with its own pages under `docs/<module>/`
+OzarLand Academy is one learning path, in steps. Each step is a module, with its own pages under `docs/<module>/`
 and its own site in the portal:
 
 | Step | Module | What it gives you | Sources | Status |
@@ -13,6 +13,7 @@ and its own site in the portal:
 | Operate | Kolla-Ansible Academy | Kolla-Ansible Day-2 operations learned from the source code, one study per OpenStack release | [docs/day2/](docs/day2/2024.1/index.md) | available |
 | Intervene | VM runbooks | Symptom-driven runbooks for instance and hypervisor problems | [docs/runbooks/](docs/runbooks/index.md) | available |
 | Go to production | Production guide | Visual memos for production: one operational lesson per page | [docs/production/](docs/production/index.md) | available |
+| Compare | OKD OpenStack lab | OpenStack run by Kubernetes operators on OKD: a reproducible lab for operators who know Kolla-Ansible | [docs/okd/](docs/okd/index.md) | available |
 
 The modules come from separate OzarLand repositories, moved here one at a time with their history: their pages keep
 the history of the former repository (`git log --follow docs/<module>/index.md`).

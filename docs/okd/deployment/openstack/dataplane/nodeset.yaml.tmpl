@@ -1,0 +1,96 @@
+# A NodeSet is a group of data plane nodes configured the same way: the
+# equivalent of an inventory group plus its group_vars. It only describes
+# the nodes; nothing runs until an OpenStackDataPlaneDeployment references it.
+#
+# Derived from config/samples/dataplane_v1beta1_openstackdataplanenodeset.yaml
+# (openstack-operator, branch 18-stable).
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: openstack-edpm
+  namespace: openstack
+spec:
+  # The nodes already run an OS (plain CentOS Stream VMs); the operator only
+  # needs SSH access. The alternative is bare metal provisioning by Metal3.
+  preProvisioned: true
+  tlsEnabled: true
+  # The Ansible runner pods get an interface on ctlplane to reach the nodes.
+  networkAttachments:
+    - ctlplane
+  env:
+    - name: ANSIBLE_FORCE_COLOR
+      value: "True"
+  # Ordered list of services = ordered list of Ansible plays.
+  services:
+    - repo-setup
+    - bootstrap
+    - download-cache
+    - configure-network
+    - validate-network
+    - install-os
+    - configure-os
+    - ssh-known-hosts
+    - run-os
+    - reboot-os
+    - install-certs
+    - ovn
+    - neutron-metadata
+    - libvirt
+    - nova
+  nodes:
+${DATAPLANE_NODES}
+  nodeTemplate:
+    ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret
+    ansible:
+      ansibleUser: ${DATAPLANE_USER}
+      ansiblePort: 22
+      ansibleVars:
+        timesync_ntp_servers:
+          - hostname: ${NTP_SERVER}
+        # Environment variables of every Ansible play: empty, or the proxy
+        # settings when HTTP_PROXY_URL is set in lab.env.
+        edpm_playbook_environment: ${EDPM_PLAYBOOK_ENVIRONMENT}
+        edpm_sshd_allowed_ranges:
+          - ${CTLPLANE_CIDR}
+          - ${MACHINE_CIDR}
+        edpm_nodes_validation_validate_controllers_icmp: false
+        edpm_nodes_validation_validate_gateway_icmp: false
+        gather_facts: false
+        # Provider network bridge. As in the upstream development setup, the
+        # first NIC (ctlplane) is enslaved to br-ex, so the lab "datacentre"
+        # physical network is the ctlplane network.
+        neutron_physical_bridge_name: br-ex
+        neutron_public_interface_name: eth0
+        # Let OVN schedule router gateways on compute nodes: the lab has no
+        # dedicated network node.
+        edpm_enable_chassis_gw: true
+        # Host network layout: one NIC per network, no VLANs, because the
+        # host cloud does not carry tagged traffic between instances.
+        edpm_network_config_hide_sensitive_logs: false
+        edpm_network_config_template: |
+          ---
+          network_config:
+          - type: ovs_bridge
+            name: {{ neutron_physical_bridge_name }}
+            mtu: {{ ctlplane_mtu }}
+            use_dhcp: false
+            dns_servers: {{ ctlplane_dns_nameservers }}
+            domain: {{ dns_search_domains }}
+            addresses:
+            - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+            routes: {{ ctlplane_host_routes }}
+            members:
+            - type: interface
+              name: nic1
+              mtu: {{ ctlplane_mtu }}
+              primary: true
+          {% for network in nodeset_networks %}
+          - type: interface
+            name: nic{{ loop.index + 1 }}
+            mtu: {{ lookup('vars', networks_lower[network] ~ '_mtu') }}
+            use_dhcp: false
+            addresses:
+            - ip_netmask:
+                {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}
+            routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}
+          {% endfor %}

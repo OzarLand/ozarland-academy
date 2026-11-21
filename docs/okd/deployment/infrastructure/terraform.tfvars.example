@@ -1,0 +1,43 @@
+# Copy to terraform.tfvars and adapt. terraform.tfvars is ignored by Git.
+
+external_network    = "public"
+ssh_public_key_file = "~/.ssh/id_ed25519.pub"
+admin_cidrs         = ["203.0.113.10/32"]
+
+# Fastest volume type offered by the host cloud (etcd is fsync-sensitive).
+volume_type = "ssd"
+
+bastion_flavor = "2vcpu-4gb"
+okd_flavor     = "16vcpu-32gb"
+compute_flavor = "8vcpu-16gb"
+
+# Set to 0 for a control-plane-only lab.
+compute_count = 1
+
+# Image names differ between clouds: check `openstack image list`. Both must
+# be CentOS Stream 9 (the compute node OS must match the data plane images).
+bastion_image = "CentOS Stream 9"
+compute_image = "CentOS Stream 9"
+
+# Optional: prefix of every resource name, and the lab networks if the
+# defaults collide with networks you must reach (the three OpenStack
+# networks must be /24).
+# name_prefix      = "okdlab"
+# machine_cidr     = "192.168.130.0/24"
+# ctlplane_cidr    = "192.168.122.0/24"
+# internalapi_cidr = "172.17.0.0/24"
+# tenant_cidr      = "172.19.0.0/24"
+
+# Resolvers reachable from the lab networks (default: public resolvers).
+# upstream_dns = ["192.0.2.53"]
+
+# External network with several subnets: choose the one floating IPs come from.
+# floating_ip_subnet_id = "00000000-0000-0000-0000-000000000000"
+
+# Clouds where only instances holding a floating IP have outbound access:
+# okd_floating_ip     = true
+# compute_floating_ip = true
+
+# Workstation inside the same cloud project and no floating IP available:
+# bastion_floating_ip    = false
+# bastion_access_network = "existing-network-name"
