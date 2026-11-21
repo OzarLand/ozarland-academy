@@ -215,7 +215,7 @@ loses the lines.
 instances survive that restart on a package install depends on the distribution's unit configuration and was not
 checked here.
 
-## The instance log: /var/log/libvirt/qemu/\<instance-name\>.log
+## The instance log: `/var/log/libvirt/qemu/<instance-name>.log`
 
 ### Where it is
 
