@@ -1,0 +1,9 @@
+# A StorageClass without a provisioner: volumes are not created on demand,
+# they are pre-created PersistentVolumes (see persistentvolume.yaml.tmpl).
+# WaitForFirstConsumer delays binding until a pod actually needs the claim.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer

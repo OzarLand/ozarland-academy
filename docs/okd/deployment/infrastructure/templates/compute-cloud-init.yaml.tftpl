@@ -1,0 +1,12 @@
+#cloud-config
+# The data plane operator expects a "pre-provisioned" node: a running OS, a
+# user with passwordless sudo and an authorised SSH key. Nothing else.
+users:
+  - default
+  - name: ${dataplane_user}
+    gecos: OpenStack data plane Ansible user
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${dataplane_public_key}
+      - ${admin_public_key}

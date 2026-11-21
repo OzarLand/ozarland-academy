@@ -1,0 +1,53 @@
+# Custom data plane service: enable the package repositories that match the
+# container images, before anything is installed on the node.
+#
+# An OpenStackDataPlaneService is "a named Ansible play". The stock services
+# (bootstrap, configure-network, ovn, nova, ...) ship with the operator; this
+# one shows that adding your own is just a resource with a playbook.
+# Adapted from install_yamls (devsetup/edpm/services).
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneService
+metadata:
+  name: repo-setup
+  namespace: openstack
+spec:
+  playbookContents: |
+    - hosts: all
+      strategy: linear
+      # Same convention as the stock playbooks (proxy settings, if any).
+      environment: "{{ edpm_playbook_environment | default({}) }}"
+      tasks:
+        - name: Install the repo-setup tool
+          become: true
+          ansible.builtin.shell: |
+            set -euxo pipefail
+            cd /var/tmp
+            curl -fsSL https://github.com/openstack-k8s-operators/repo-setup/archive/5e8dd0835564a0e791edc43b0626e600a90dd8c7.tar.gz | tar -xz
+            mv repo-setup-5e8dd0835564a0e791edc43b0626e600a90dd8c7 repo-setup-main
+            cd repo-setup-main
+            python3 -m venv ./venv
+            PBR_VERSION=0.0.0 ./venv/bin/pip install ./
+          args:
+            creates: /var/tmp/repo-setup-main/venv/bin/repo-setup
+
+        - name: Enable the Antelope repositories for CentOS Stream 9
+          become: true
+          ansible.builtin.command: /var/tmp/repo-setup-main/venv/bin/repo-setup current-podified -b antelope
+          changed_when: true
+
+        # repo-setup writes some repositories with plain HTTP. The mirror also
+        # serves HTTPS, which works everywhere, including behind a proxy that
+        # only relays HTTPS. A repository that cannot be read makes the later
+        # package installation fail without a clear message.
+        - name: Use HTTPS for the CentOS mirror
+          become: true
+          ansible.builtin.shell: >-
+            sed -i 's|http://mirror.stream.centos.org/|https://mirror.stream.centos.org/|'
+            /etc/yum.repos.d/*.repo
+          changed_when: true
+
+        - name: Remove the repo-setup sources
+          become: true
+          ansible.builtin.file:
+            path: /var/tmp/repo-setup-main
+            state: absent

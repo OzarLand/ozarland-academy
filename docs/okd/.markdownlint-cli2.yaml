@@ -1,0 +1,9 @@
+# Documentation lint rules. Long lines, tables and command output are
+# common in runbooks, so the purely stylistic width rule is disabled.
+config:
+  MD013: false
+  MD033: false
+  MD060: false
+  # Scenario pages repeat the same seven section titles on purpose.
+  MD024:
+    siblings_only: true

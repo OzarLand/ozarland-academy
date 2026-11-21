@@ -1,0 +1,12 @@
+# A Deployment is one execution of the NodeSet services against its nodes:
+# the equivalent of running `kolla-ansible deploy` once. It is not edited
+# afterwards; to run again (after a change or a failure) create a new one
+# with a new name.
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneDeployment
+metadata:
+  name: ${DATAPLANE_DEPLOYMENT_NAME}
+  namespace: openstack
+spec:
+  nodeSets:
+    - openstack-edpm

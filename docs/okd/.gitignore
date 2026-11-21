@@ -1,0 +1,37 @@
+# Environment-specific configuration and secrets: never commit.
+/lab.env
+*.env
+!*.env.example
+!tests/fixtures/*.env
+*.tfvars
+!*.tfvars.example
+clouds.yaml
+secure.yaml
+*-openrc.sh
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+pull-secret*
+kubeconfig
+kubeadmin-password
+
+# Generated working directory (installer assets, rendered manifests, state).
+/.work/
+*.tfstate
+*.tfstate.*
+.terraform/
+*.retry
+*.iso
+*.qcow2
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+__pycache__/
+.venv/
+
+# Generated Terraform variable file holding the installer ISO image ID.
+*.auto.tfvars

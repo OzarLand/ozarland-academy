@@ -1,0 +1,10 @@
+# The "OpenStack" initialization resource. Creating it asks the
+# openstack-operator to deploy every service operator (keystone-operator,
+# nova-operator, mariadb-operator, ...) and their CRDs and webhooks.
+# It deploys operators only - no OpenStack service runs yet.
+apiVersion: operator.openstack.org/v1beta1
+kind: OpenStack
+metadata:
+  name: openstack
+  namespace: openstack-operators
+spec: {}

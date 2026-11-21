@@ -1,0 +1,21 @@
+# Extra nova.conf snippet for nova-compute on the data plane nodes. The stock
+# "nova" data plane service picks up a ConfigMap with exactly this name.
+# Used by the lab for two things:
+# - software emulation when the compute VM has no hardware virtualization
+#   (no nested virtualization);
+# - live migration between compute nodes: the nodes keep the host name they
+#   were provisioned with, which the other nodes cannot resolve, so the
+#   destination announces its Nova service host name instead (an FQDN on the
+#   control plane network, served by the data plane DNS and present in the
+#   libvirt certificate). "$host" is expanded by Nova, not by this template.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nova-extra-config
+  namespace: openstack
+data:
+  25-nova-extra.conf: |
+    [libvirt]
+    virt_type = ${NOVA_VIRT_TYPE}
+    cpu_mode = ${NOVA_CPU_MODE}
+    live_migration_inbound_addr = $host

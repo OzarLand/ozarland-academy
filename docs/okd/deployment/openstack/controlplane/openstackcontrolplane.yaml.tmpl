@@ -1,0 +1,269 @@
+# The OpenStack control plane, as one custom resource.
+#
+# This file plays the role globals.yml and /etc/kolla/config play in a
+# Kolla-Ansible deployment: it is the single place where you declare which
+# services run and how they are configured. The openstack-operator turns each
+# section into a service-specific custom resource (KeystoneAPI, Galera,
+# Nova, ...) which the matching service operator turns into pods.
+#
+# Derived from the upstream sample
+# config/samples/core_v1beta1_openstackcontrolplane_galera_network_isolation.yaml
+# (openstack-operator, branch 18-stable), reduced to a minimal IaaS core:
+# no storage network, no Swift/Cinder/Barbican/Telemetry.
+apiVersion: core.openstack.org/v1beta1
+kind: OpenStackControlPlane
+metadata:
+  name: openstack
+  namespace: openstack
+spec:
+  # Secret holding every service and database password (see osp-secret).
+  secret: osp-secret
+  # StorageClass used by all persistent volume claims of the control plane.
+  storageClass: local-storage
+
+  # --- Infrastructure services --------------------------------------------
+  dns:
+    template:
+      replicas: 1
+      # dnsmasq serving the names of control plane and data plane hosts to
+      # compute nodes. Unknown names are forwarded to the lab DNS.
+      options:
+        - key: server
+          values:
+            - ${BASTION_IP}
+      override:
+        service:
+          metadata:
+            annotations:
+              metallb.universe.tf/address-pool: ctlplane
+              metallb.universe.tf/allow-shared-ip: ctlplane
+              metallb.universe.tf/loadBalancerIPs: ${DNS_VIP}
+          spec:
+            type: LoadBalancer
+  galera:
+    templates:
+      # Two database servers: API-level databases, and the cell1 databases.
+      openstack:
+        storageRequest: 5Gi
+        secret: osp-secret
+        replicas: 1
+      openstack-cell1:
+        storageRequest: 5Gi
+        secret: osp-secret
+        replicas: 1
+  rabbitmq:
+    templates:
+      # RabbitMQ is exposed on the internalapi network because nova-compute
+      # and the OVN agents on compute nodes connect to it from outside OKD.
+      rabbitmq:
+        override:
+          service:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${RABBITMQ_VIP}
+            spec:
+              type: LoadBalancer
+      rabbitmq-cell1:
+        override:
+          service:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${RABBITMQ_CELL1_VIP}
+            spec:
+              type: LoadBalancer
+  memcached:
+    templates:
+      memcached:
+        replicas: 1
+
+  # --- Core OpenStack services --------------------------------------------
+  # Pattern repeated below:
+  #   apiOverride.route      public endpoint = an OKD Route (*.apps domain)
+  #   override.service.internal  internal endpoint = MetalLB IP on internalapi
+  # All internal endpoints share one IP (allow-shared-ip) and differ by port.
+  keystone:
+    apiOverride:
+      route: {}
+    template:
+      databaseInstance: openstack
+      secret: osp-secret
+      override:
+        service:
+          internal:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/allow-shared-ip: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+            spec:
+              type: LoadBalancer
+  placement:
+    apiOverride:
+      route: {}
+    template:
+      databaseInstance: openstack
+      secret: osp-secret
+      override:
+        service:
+          internal:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/allow-shared-ip: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+            spec:
+              type: LoadBalancer
+  glance:
+    apiOverrides:
+      default:
+        route: {}
+    template:
+      databaseInstance: openstack
+      secret: osp-secret
+      keystoneEndpoint: default
+      # customServiceConfig is appended to the generated glance-api.conf:
+      # the equivalent of a /etc/kolla/config/glance/glance-api.conf override.
+      # Images are stored on a persistent volume (file store).
+      customServiceConfig: |
+        [DEFAULT]
+        enabled_backends = default_backend:file
+        [glance_store]
+        default_backend = default_backend
+        [default_backend]
+        filesystem_store_datadir = /var/lib/glance/images
+      storage:
+        storageRequest: 10Gi
+      glanceAPIs:
+        default:
+          # One pod serving both the public and the internal endpoint: the
+          # only layout the operator accepts with a file store (the default,
+          # "split", needs a store that several pods can share).
+          type: single
+          replicas: 1
+          override:
+            service:
+              internal:
+                metadata:
+                  annotations:
+                    metallb.universe.tf/address-pool: internalapi
+                    metallb.universe.tf/allow-shared-ip: internalapi
+                    metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+                spec:
+                  type: LoadBalancer
+  neutron:
+    apiOverride:
+      route: {}
+    template:
+      databaseInstance: openstack
+      secret: osp-secret
+      # The lab runs inside an overlay of the host cloud, so the usable MTU
+      # is below 1500. Neutron must know it to compute tenant network MTUs.
+      customServiceConfig: |
+        [DEFAULT]
+        global_physnet_mtu = ${TENANT_MTU}
+        [ml2]
+        path_mtu = ${TENANT_MTU}
+      networkAttachments:
+        - internalapi
+      override:
+        service:
+          internal:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/allow-shared-ip: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+            spec:
+              type: LoadBalancer
+  ovn:
+    template:
+      ovnDBCluster:
+        # The OVN databases get a pod interface on internalapi: ovn-controller
+        # on compute nodes connects to the southbound DB there.
+        ovndbcluster-nb:
+          dbType: NB
+          storageRequest: 5Gi
+          networkAttachment: internalapi
+        ovndbcluster-sb:
+          dbType: SB
+          storageRequest: 5Gi
+          networkAttachment: internalapi
+      # No ovn-controller runs on the OKD node in this lab: the operator only
+      # deploys it there when NIC mappings are declared (a control plane
+      # acting as OVN gateway). The setting below takes effect only in that
+      # case; in the lab, ovn-controller runs on the compute nodes.
+      ovnController:
+        networkAttachment: tenant
+  nova:
+    apiOverride:
+      route: {}
+    template:
+      secret: osp-secret
+      apiServiceTemplate:
+        override:
+          service:
+            internal:
+              metadata:
+                annotations:
+                  metallb.universe.tf/address-pool: internalapi
+                  metallb.universe.tf/allow-shared-ip: internalapi
+                  metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+              spec:
+                type: LoadBalancer
+      metadataServiceTemplate:
+        override:
+          service:
+            metadata:
+              annotations:
+                metallb.universe.tf/address-pool: internalapi
+                metallb.universe.tf/allow-shared-ip: internalapi
+                metallb.universe.tf/loadBalancerIPs: ${INTERNALAPI_VIP}
+            spec:
+              type: LoadBalancer
+      cellTemplates:
+        cell0:
+          cellDatabaseAccount: nova-cell0
+          cellDatabaseInstance: openstack
+          messagingBus:
+            cluster: rabbitmq
+          conductorServiceTemplate:
+            replicas: 1
+          hasAPIAccess: true
+        cell1:
+          cellDatabaseAccount: nova-cell1
+          cellDatabaseInstance: openstack-cell1
+          messagingBus:
+            cluster: rabbitmq-cell1
+          conductorServiceTemplate:
+            replicas: 1
+          hasAPIAccess: true
+
+  # --- Services left out of the minimal lab -------------------------------
+  # Enabling one of them later is a good exercise
+  # (see docs/operations/05-enable-a-service.md).
+  horizon:
+    enabled: false
+  cinder:
+    enabled: false
+  swift:
+    enabled: false
+  barbican:
+    enabled: false
+  # Telemetry would pull an image from a registry that requires a Red Hat
+  # account, which an OKD cluster does not have.
+  telemetry:
+    enabled: false
+  heat:
+    enabled: false
+  manila:
+    enabled: false
+  ironic:
+    enabled: false
+  octavia:
+    enabled: false
+  designate:
+    enabled: false
+  redis:
+    enabled: false
