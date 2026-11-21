@@ -27,14 +27,14 @@ like, and where to look when something is stuck.
 > page carries a status line, and [docs/versions.md](docs/versions.md)
 > states precisely what has been tested and what has not.
 
+**New here?** Start with the [reading guide](docs/index.md): it gives a
+map of the documentation and three reading paths (one hour, one day, one
+week).
+
 > [!NOTE]
 > The lab lives in `docs/okd/` of
 > ozarland-academy, with its scripts, manifests and Terraform. Clone the repository and run every command of
 > these pages from that folder: `git clone https://github.com/OzarLand/ozarland-academy && cd ozarland-academy/docs/okd`.
-
-**New here?** Start with the [reading guide](docs/index.md): it gives a
-map of the documentation and three reading paths (one hour, one day, one
-week).
 
 ## What you get
 
