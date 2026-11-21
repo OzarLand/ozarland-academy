@@ -1,3 +1,8 @@
+---
+title: "Evaluation report — v0.1.0 and v0.2.0"
+description: "Sections 1 to 12 cover v0.1.0 (seven skills, 30 scenarios), run on 2026-10-25 (section 9 added after issues #1–#6, section 10 after the repeated runs)."
+---
+
 # Evaluation report — v0.1.0 and v0.2.0
 
 Sections 1 to 12 cover v0.1.0 (seven skills, 30 scenarios), run on 2026-10-25
@@ -48,7 +53,7 @@ times and the spread is small. All grading is by a model.
 `python3 tools/validate_skills.py` (also run in CI) — see `evals/README.md` for
 the list of checks. Output at release:
 
-```
+```text
 7 skills checked: 0 errors, 0 warnings
 ```
 

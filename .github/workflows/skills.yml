@@ -1,0 +1,69 @@
+# Checks of the Operator skills (module skills, docs/skills/): the Agent
+# Skills that .claude-plugin/marketplace.json publishes as a Claude Code
+# plugin, their shared references and their validation inventory. These are
+# the checks of OzarLand/openstack-operator-skills, which ran them in its own
+# CI. The pages of the module are also checked by docs.yml.
+name: Operator skills
+
+on:
+  pull_request:
+    paths:
+      - "docs/skills/**"
+      - ".claude-plugin/**"
+      - ".github/workflows/skills.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/skills/**"
+      - ".claude-plugin/**"
+      - ".github/workflows/skills.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  structure:
+    name: Skills structure and knowledge inventory
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: docs/skills
+    steps:
+      # OzarLand requires actions pinned to a full commit SHA.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml ruff==0.16.9
+      - name: Lint
+        run: ruff check .
+      - name: Shared references are in sync
+        run: python3 tools/sync_shared.py --check
+      - name: Structural validation
+        run: python3 tools/validate_skills.py
+      - name: Weighted model script reproduces the book's example and rejects bad input
+        run: python3 tools/test_weighted_score.py
+      # Bookkeeping only: tags match the inventory, evidence fields present, coverage
+      # figures current. It never shows that an OpenStack procedure works.
+      - name: Knowledge validation inventory is consistent
+        run: python3 tools/validate_knowledge.py
+      - name: Knowledge validator catches injected faults
+        run: python3 tools/test_validate_knowledge.py
+      - name: The plugin marketplace points at the skills
+        working-directory: .
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, sys
+          market = json.loads(pathlib.Path(".claude-plugin/marketplace.json").read_text())
+          errors = []
+          for plugin in market["plugins"]:
+              root = pathlib.Path(plugin["source"])
+              for skill in plugin.get("skills", []):
+                  if not (root / skill / "SKILL.md").is_file():
+                      errors.append(f"{plugin['name']}: {root / skill}/SKILL.md is missing")
+          print("\n".join(errors) or "marketplace: every skill of every plugin has its SKILL.md")
+          sys.exit(1 if errors else 0)
+          PY

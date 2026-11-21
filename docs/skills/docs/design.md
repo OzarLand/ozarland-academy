@@ -1,3 +1,8 @@
+---
+title: "Design — OpenStack operator skills"
+description: "Status: implemented (see docs/evaluation-report.md for test status). Input: docs/knowledge-map.md; for 0.2.0 also docs/source-mapping.md."
+---
+
 # Design — OpenStack operator skills
 
 Status: implemented (see `docs/evaluation-report.md` for test status).
@@ -57,7 +62,7 @@ but each skill works on its own.
 
 ## 4. Structure and progressive disclosure
 
-```
+```text
 skills/<name>/
   SKILL.md                     # < 500 lines; workflow, decision rules, output format, limits
   references/

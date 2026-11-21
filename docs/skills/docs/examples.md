@@ -1,3 +1,8 @@
+---
+title: "Examples: the same question, with and without the skills"
+description: "Three scenarios from the evaluation, answered by claude-sonnet-5-5 once without the skills (baseline) and once with them."
+---
+
 # Examples: the same question, with and without the skills
 
 Three scenarios from the evaluation, answered by `claude-sonnet-5-5` once
@@ -56,8 +61,8 @@ no must-not-do list, and no owner, validation plan or draft status."*
 > a provisioning outage.
 
 Full answers:
-[baseline](../evals/results/final-openstack-runbook-authoring/RA-1.baseline.md),
-[with skill](../evals/results/final-openstack-runbook-authoring/RA-1.skill.md).
+[baseline](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-runbook-authoring/RA-1.baseline.md),
+[with skill](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-runbook-authoring/RA-1.skill.md).
 
 ## 2. "The runbook says reset rabbit-03. Should I just follow it?"
 
@@ -91,8 +96,8 @@ every node, and names no escalation path for the partition case.
 > 1. Run `rabbitmqctl cluster_status` on **each** of the three nodes […]
 
 Full answers:
-[baseline](../evals/results/final-openstack-incident-analysis/IA-4.baseline.md),
-[with skill](../evals/results/final-openstack-incident-analysis/IA-4.skill.md).
+[baseline](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-incident-analysis/IA-4.baseline.md),
+[with skill](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-incident-analysis/IA-4.skill.md).
 
 ## 3. "One more security backport on an unmaintained series. Fine?"
 
@@ -120,8 +125,8 @@ The grader: *approves the backport without owner, test or exit condition.*
 >    the owner, how you tested it, and the exit condition.
 
 Full answers:
-[baseline](../evals/results/final-openstack-operational-decisions/OD-2.baseline.md),
-[with skill](../evals/results/final-openstack-operational-decisions/OD-2.skill.md).
+[baseline](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-operational-decisions/OD-2.baseline.md),
+[with skill](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-operational-decisions/OD-2.skill.md).
 
 ## How these were produced
 

@@ -27,6 +27,10 @@ Guidance for Claude Code sessions working in this repository.
 
 ## Checks before pushing
 
+The skills are the module `skills` of OzarLand Academy: run these from
+`docs/skills/` (CI: `.github/workflows/skills.yml`). The plugin marketplace is
+`.claude-plugin/marketplace.json` at the root of the repository.
+
 ```
 ruff check .
 python3 tools/sync_shared.py --check

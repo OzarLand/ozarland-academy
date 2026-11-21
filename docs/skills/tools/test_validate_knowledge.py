@@ -16,7 +16,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-COPY = ["skills", "validation", "docs", "tools", "README.md", "CONTRIBUTING.md"]
+COPY = ["skills", "validation", "docs", "tools", "index.md", "CONTRIBUTING.md"]
 
 
 def run(root):
@@ -68,12 +68,12 @@ def case_missing_evidence(root):
 
 
 def case_stale_coverage(root):
-    sub(root / "README.md", "items in scope", "items in scope (edited by hand)")
+    sub(root / "index.md", "items in scope", "items in scope (edited by hand)")
     return "coverage is stale"
 
 
 def case_no_undergoing(root):
-    sub(root / "README.md", "undergoing validation", "being worked on")
+    sub(root / "index.md", "undergoing validation", "being worked on")
     return "undergoing validation"
 
 

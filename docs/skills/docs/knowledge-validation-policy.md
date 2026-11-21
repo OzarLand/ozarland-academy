@@ -1,3 +1,8 @@
+---
+title: "Knowledge validation policy"
+description: "This repository gives operational advice for production OpenStack. A procedure can read well, pass every linter, and still fail on a real platform."
+---
+
 # Knowledge validation policy
 
 This repository gives operational advice for production OpenStack. A procedure
@@ -7,7 +12,7 @@ evidence, and how unverified knowledge is kept visible as unverified.
 
 The current state of validation is in
 [validation-coverage.md](validation-coverage.md) (generated from
-[`validation/inventory.yaml`](../validation/inventory.yaml)).
+[`validation/inventory.yaml`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/validation/inventory.yaml)).
 
 ## Contents
 
@@ -236,7 +241,7 @@ that are missing (moved or deleted) and `LAB-VALIDATED` items whose source
 page is `draft` without that being disclosed next to the tag (section 4). It
 only reports; a maintainer decides what changes:
 
-```
+```text
 python3 tools/check_sources.py --repo openstack-vm-runbooks=<path> \
     --repo kolla-ansible-deployment-patterns=<path> --ref origin/main
 ```

@@ -2,7 +2,7 @@
 """Structural validation of the skills and evaluation scenarios.
 
 Checks only what can be checked without running a model. Behavioural quality
-is evaluated separately (see evals/README.md).
+is evaluated separately (see evals/index.md).
 
     python3 tools/validate_skills.py
 """
@@ -21,11 +21,13 @@ except ImportError:  # pragma: no cover
     sys.exit(2)
 
 ROOT = Path(__file__).resolve().parent.parent
+# The skills are the module `skills` of OzarLand Academy, under docs/skills/.
+ACADEMY_DOCS = ROOT.parent
 SKILLS = ROOT / "skills"
 SHARED = ROOT / "shared"
 SCENARIOS = ROOT / "evals" / "scenarios"
 # Top-level documentation whose relative links must keep resolving.
-REPO_DOCS = ["README.md", "CONTRIBUTING.md", "CHANGELOG.md", "evals/README.md", "docs/*.md"]
+REPO_DOCS = ["index.md", "CONTRIBUTING.md", "CHANGELOG.md", "evals/index.md", "docs/*.md"]
 
 # Keys accepted by claude.ai and the Skills API (Claude Code accepts more, but
 # using only these keeps every skill portable across surfaces).
@@ -230,6 +232,16 @@ def check_repo_docs(report):
                 try:
                     target_path.relative_to(ROOT)
                 except ValueError:
+                    # A page of another module of OzarLand Academy (docs/<module>/),
+                    # linked as the portal serves it: allowed when that module exists.
+                    if target_path == ACADEMY_DOCS:  # the root of the portal
+                        continue
+                    try:
+                        module = target_path.relative_to(ACADEMY_DOCS).parts[0]
+                    except (ValueError, IndexError):
+                        module = None
+                    if module and (ACADEMY_DOCS / module).is_dir():
+                        continue
                     report.error(rel(path), f"link '{target}' points outside the repository")
                     continue
                 if not target_path.exists():

@@ -1,3 +1,8 @@
+---
+title: "Procedure block template (for a skill's reference file)"
+description: "Use this shape for each symptom or procedure added to a references/ file. Keep it short: the skill must reason from it, not read a manual."
+---
+
 # Procedure block template (for a skill's reference file)
 
 Use this shape for each symptom or procedure added to a `references/` file.

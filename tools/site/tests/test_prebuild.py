@@ -110,6 +110,11 @@ class PrebuildTest(unittest.TestCase):
             ],
         )
 
+    def test_excluded_docs_are_not_pages(self) -> None:
+        write(self.repo, "docs.toml", '[project]\nexclude_docs = """\n/operations/\n!/operations/index.md\n"""\n')
+        paths = [p["path"] for p in run(self.repo)["pages"]]
+        self.assertEqual(paths, ["index.md", "operations/index.md"])
+
     def test_same_commit_gives_the_same_file(self) -> None:
         first = run(self.repo)
         output = self.repo / "docs/assets/data/updates.json"

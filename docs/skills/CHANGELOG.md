@@ -1,3 +1,8 @@
+---
+title: "Changelog"
+description: "Operational knowledge with a validation status on every procedure, and the move to OzarLand."
+---
+
 # Changelog
 
 ## [Unreleased]

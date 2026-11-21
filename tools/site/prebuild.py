@@ -206,6 +206,22 @@ def first_heading(text: str) -> str | None:
     return None
 
 
+def excluded_docs(root: Path, docs_dir: str):
+    """`exclude_docs` of the site whose pages are in docs_dir (docs/<path>.toml).
+
+    Those files are not pages of the site, so they are not in updates.json
+    either. Without a settings file nothing is excluded.
+    """
+    import check_docs  # noqa: PLC0415 (imports releases, as this module does)
+
+    settings = root / f"{docs_dir}.toml"
+    if not settings.is_file():
+        return check_docs.PatternSet()
+    project = releases.load_project(settings)
+    value = project.get("exclude_docs")
+    return check_docs.PatternSet(value if isinstance(value, str) else "")
+
+
 def collect(root: Path, docs_dir: str) -> dict:
     docs = root / docs_dir
     head = git(root, "log", "-1", "--format=%cI")
@@ -217,11 +233,12 @@ def collect(root: Path, docs_dir: str) -> dict:
         print("prebuild: no Git history available; pages get no date", file=sys.stderr)
     dates = last_commit_dates(root, docs_dir) if head else {}
 
+    excluded = excluded_docs(root, docs_dir)
     pages = []
     missing = 0
     for path in sorted(docs.rglob("*.md")):
         rel = path.relative_to(docs)
-        if rel.parts[0] in SKIPPED_TOP_DIRS:
+        if rel.parts[0] in SKIPPED_TOP_DIRS or excluded.match(rel.as_posix()):
             continue
         text = path.read_text(encoding="utf-8")
         updated = dates.get(f"{docs_dir}/{rel.as_posix()}")

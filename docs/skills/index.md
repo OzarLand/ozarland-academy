@@ -1,30 +1,14 @@
-[← OzarLand home](https://github.com/OzarLand/ozarland)
+---
+title: "Operator skills"
+description: "Nine Agent Skills that make Claude reason like a senior OpenStack operator during incidents, changes, maintenance and troubleshooting."
+---
 
-<div align="center">
+# 🤖 Operator skills
 
 <img src="assets/banner.svg" alt="OpenStack Operator Skills: senior-operator judgement for Claude" width="100%">
 
-<p>
-  <a href="https://github.com/OzarLand/openstack-operator-skills/actions/workflows/validate.yml"><img src="https://github.com/OzarLand/openstack-operator-skills/actions/workflows/validate.yml/badge.svg" alt="Validate"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License: Apache-2.0"></a>
-  <a href="CHANGELOG.md"><img src="https://img.shields.io/badge/version-0.2.0-informational.svg" alt="Version 0.2.0"></a>
-  <a href="#-pick-a-skill"><img src="https://img.shields.io/badge/Agent%20Skills-9-8A2BE2.svg" alt="9 Agent Skills"></a>
-  <a href="#-install-in-one-minute"><img src="https://img.shields.io/badge/Claude%20Code-plugin-D97757.svg" alt="Claude Code plugin"></a>
-  <a href="https://github.com/OzarLand/openstack-operator-skills/stargazers"><img src="https://img.shields.io/github/stars/OzarLand/openstack-operator-skills?style=flat&color=yellow" alt="GitHub stars"></a>
-</p>
-
-<p>
-  <a href="#-install-in-one-minute"><b>Install</b></a> ·
-  <a href="#-pick-a-skill"><b>Skills</b></a> ·
-  <a href="#-validation-status"><b>Validation</b></a> ·
-  <a href="docs/examples.md"><b>Examples</b></a> ·
-  <a href="#-does-it-help"><b>Results</b></a> ·
-  <a href="CONTRIBUTING.md"><b>Contribute</b></a>
-</p>
-
-</div>
-
----
+[Install](#-install-in-one-minute) · [Skills](#-pick-a-skill) · [Validation](#-validation-status) ·
+[Examples](docs/examples.md) · [Results](#-does-it-help) · [Contribute](CONTRIBUTING.md)
 
 **Nine [Agent Skills](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/overview)
 that make Claude reason like a senior OpenStack operator** during incidents,
@@ -44,7 +28,7 @@ Soufian Zaouam's book and the OzarLand pages, and reviewed by him.
 <div align="center">
   <img src="assets/demo.svg" alt="Claude Code session: asked whether to evacuate a host reported down, Claude loads openstack-incident-analysis and answers: fence the host first" width="820">
   <br>
-  <sub>A real answer from the evaluation (scenario IA-2), shortened. <a href="evals/results/final-openstack-incident-analysis/IA-2.skill.md">Full answer</a>.</sub>
+  <sub>A real answer from the evaluation (scenario IA-2), shortened. <a href="https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/evals/results/final-openstack-incident-analysis/IA-2.skill.md">Full answer</a>.</sub>
 </div>
 
 ## 🔄 How it works
@@ -71,7 +55,7 @@ instead of guessing it, and it never runs anything on your platform.
 In Claude Code:
 
 ```text
-/plugin marketplace add OzarLand/openstack-operator-skills
+/plugin marketplace add OzarLand/ozarland-academy
 /plugin install openstack-operations@openstack-operator-skills
 ```
 
@@ -86,9 +70,9 @@ for permission to read them: allow it.
 **Copy into Claude Code** (personal or per project):
 
 ```bash
-git clone https://github.com/OzarLand/openstack-operator-skills
-cp -r openstack-operator-skills/skills/* ~/.claude/skills/        # all projects
-# or: mkdir -p .claude/skills && cp -r openstack-operator-skills/skills/* .claude/skills/
+git clone https://github.com/OzarLand/ozarland-academy
+cp -r ozarland-academy/docs/skills/skills/* ~/.claude/skills/        # all projects
+# or: mkdir -p .claude/skills && cp -r ozarland-academy/docs/skills/skills/* .claude/skills/
 ```
 
 **claude.ai:** `python3 tools/package_skills.py`, then upload each
@@ -112,15 +96,15 @@ You don't have to pick: Claude chooses. This table is for knowing what's there.
 
 | | Skill | Ask it when you need to… |
 |:-:|---|---|
-| 🚨 | [**incident-analysis**](skills/openstack-incident-analysis/SKILL.md) | work a live or recent incident: VMs stuck in BUILD, RabbitMQ or Galera trouble, a host down, whether to evacuate, root cause |
-| 🔍 | [**change-review**](skills/openstack-change-review/SKILL.md) | decide whether a change is ready: upgrade step, key or certificate rotation, config, network or database work |
-| 🛠️ | [**maintenance-planning**](skills/openstack-maintenance-planning/SKILL.md) | patch or repair hosts within real capacity and business criticality: live or cold migration, restart, sequencing |
-| ⚖️ | [**operational-decisions**](skills/openstack-operational-decisions/SKILL.md) | choose between options: upgrade now or later, backport or upgrade, keep or remove a workaround, repair or rebuild |
-| 🧭 | [**control-assessment**](skills/openstack-control-assessment/SKILL.md) | find out how much control you really have over a platform, after a team change, or when control has been lost |
-| 🤖 | [**automation-review**](skills/openstack-automation-review/SKILL.md) | review playbooks, scripts or auto-remediation for delegated judgement, blast radius and safeguards |
-| 📖 | [**runbook-authoring**](skills/openstack-runbook-authoring/SKILL.md) | write or review a runbook with decision points, stop conditions and validation by someone other than its author |
-| 🖥️ | [**vm-troubleshooting**](skills/openstack-vm-troubleshooting/SKILL.md) | diagnose one instance, volume or port: stuck states, No valid host, no IP or metadata, port binding, volumes stuck attaching or deleting, OOM, host events |
-| 🐳 | [**kolla-ansible-operations**](skills/openstack-kolla-ansible-operations/SKILL.md) | run, narrow and check `kolla-ansible` commands, read a failed run, add or replace hosts, MariaDB backup and recovery, secrets, design trade-offs (Kolla-Ansible only) |
+| 🚨 | [**incident-analysis**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-incident-analysis/SKILL.md) | work a live or recent incident: VMs stuck in BUILD, RabbitMQ or Galera trouble, a host down, whether to evacuate, root cause |
+| 🔍 | [**change-review**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-change-review/SKILL.md) | decide whether a change is ready: upgrade step, key or certificate rotation, config, network or database work |
+| 🛠️ | [**maintenance-planning**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-maintenance-planning/SKILL.md) | patch or repair hosts within real capacity and business criticality: live or cold migration, restart, sequencing |
+| ⚖️ | [**operational-decisions**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-operational-decisions/SKILL.md) | choose between options: upgrade now or later, backport or upgrade, keep or remove a workaround, repair or rebuild |
+| 🧭 | [**control-assessment**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-control-assessment/SKILL.md) | find out how much control you really have over a platform, after a team change, or when control has been lost |
+| 🤖 | [**automation-review**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-automation-review/SKILL.md) | review playbooks, scripts or auto-remediation for delegated judgement, blast radius and safeguards |
+| 📖 | [**runbook-authoring**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-runbook-authoring/SKILL.md) | write or review a runbook with decision points, stop conditions and validation by someone other than its author |
+| 🖥️ | [**vm-troubleshooting**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-vm-troubleshooting/SKILL.md) | diagnose one instance, volume or port: stuck states, No valid host, no IP or metadata, port binding, volumes stuck attaching or deleting, OOM, host events |
+| 🐳 | [**kolla-ansible-operations**](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/skills/openstack-kolla-ansible-operations/SKILL.md) | run, narrow and check `kolla-ansible` commands, read a failed run, add or replace hosts, MariaDB backup and recovery, secrets, design trade-offs (Kolla-Ansible only) |
 
 All names start with `openstack-`. Each works alone and hands off to another
 when a task crosses its boundary:
@@ -228,14 +212,10 @@ flowchart LR
 **Where things stand.** The knowledge base is undergoing validation: it is
 not fully validated, and no repository-wide claim will be made until every
 item in scope is. Generated from
-[`validation/inventory.yaml`](validation/inventory.yaml):
+[`validation/inventory.yaml`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/validation/inventory.yaml):
 
 <!-- validation-coverage:start -->
-<p align="center">
-  <img src="https://img.shields.io/badge/production--validated-0%20of%20352-2563eb.svg" alt="production-validated: 0 of 352">
-  <img src="https://img.shields.io/badge/lab--validated-163%20of%20352-16a34a.svg" alt="lab-validated: 163 of 352">
-  <img src="https://img.shields.io/badge/not%20validated%20yet-189%20of%20352-9ca3af.svg" alt="not validated yet: 189 of 352">
-</p>
+**Production-validated:** 0 of 352 · **Lab-validated:** 163 of 352 · **Not validated yet:** 189 of 352
 
 163 of 352 items in scope (46 %) have a recorded execution: 0 in production, 163 in a lab (lab-verified in OzarLand's page statuses). 189 have none yet.
 
@@ -395,10 +375,6 @@ The most valuable contribution is operational experience. No code needed:
 Something that could cause harm before it is fixed, or a secret you found,
 goes privately through the [security policy](SECURITY.md).
 
-<a href="https://github.com/OzarLand/openstack-operator-skills/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=OzarLand/openstack-operator-skills" alt="Contributors">
-</a>
-
 <details>
 <summary><b>Repository layout</b></summary>
 
@@ -426,28 +402,21 @@ assets/                         images used in this README
 
 </details>
 
-## 🌍 Part of OzarLand
+## 🌍 Part of OzarLand Academy
 
-**OzarLand: a shared land for better OpenStack operations.** It started as a personal initiative by Soufian Zaouam
-to share practical OpenStack operational knowledge, and it is meant to grow into a space where operators exchange
-experience, document solutions and help each other run more reliable platforms. It is open to everyone: your
-knowledge, questions and corrections are welcome.
-
-| | Repository | What it holds |
-|:-:|---|---|
-| | [ozarland](https://github.com/OzarLand/ozarland) | Start here: newcomer path, community rules, [Discussions](https://github.com/OzarLand/ozarland/discussions) |
-| 🔧 | [openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) | Symptom-driven runbooks for instance problems |
-| 🏗️ | [kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns) | Ways to deploy with Kolla-Ansible, compared |
-| 🧪 | [openstack-quick-lab](https://github.com/OzarLand/openstack-quick-lab) | A disposable OpenStack lab to practise on |
-| 🤖 | `openstack-operator-skills` **(you are here)** | Claude skills that apply this knowledge |
+This module is a stop of [OzarLand Academy](../), the learning path of
+[OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* The skills apply
+what the other stops teach: the [VM runbooks](../runbooks/), the [Deployment patterns](../deploy/) and the
+[Production guide](../production/), and the method of the book
+[*OpenStack, the Day After Tomorrow*](https://book.ozarland.com/).
 
 ## 📚 The book, licence and citation
 
 The skills paraphrase and restructure the method of
 [*OpenStack, the Day After Tomorrow*](https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow);
 they do not reproduce its text. The book stays under CC BY-NC-ND 4.0 in its
-own repository. This repository is Apache-2.0 ([LICENSE](LICENSE),
-[NOTICE](NOTICE)).
+own repository. This repository is Apache-2.0 ([LICENSE](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE),
+[NOTICE](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/NOTICE)).
 
 ```text
 Zaouam, S. (2026). OpenStack, the Day After Tomorrow: Operating
@@ -455,17 +424,11 @@ Mission-Critical OpenStack Platforms (v1.2).
 https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow
 ```
 
-## ⭐ Star history
-
-<a href="https://star-history.com/#OzarLand/openstack-operator-skills&Date">
-  <img src="https://api.star-history.com/svg?repos=OzarLand/openstack-operator-skills&type=Date" alt="Star history" width="600">
-</a>
-
 ---
 
 <div align="center">
 
-<p><sub>If these skills saved you from a bad night on call, a ⭐ helps other operators find them.</sub></p>
+<p><sub>If these skills saved you from a bad night on call, a ⭐ on <a href="https://github.com/OzarLand/ozarland-academy">ozarland-academy</a> helps other operators find them.</sub></p>
 <p><sub>OpenStack is a registered trademark of the OpenInfra Foundation.</sub></p>
 <p><sub>Independent project, not endorsed by the OpenInfra Foundation or Anthropic.</sub></p>
 

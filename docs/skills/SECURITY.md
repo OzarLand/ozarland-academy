@@ -1,3 +1,8 @@
+---
+title: "Security policy"
+description: "This repository holds Agent Skills that give operational advice for production OpenStack, their reference files and evaluation records."
+---
+
 # Security policy
 
 ## What this policy covers

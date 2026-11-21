@@ -1,3 +1,8 @@
+---
+title: "Grading instructions"
+description: "You are grading one response produced by an AI assistant for an OpenStack production-operations scenario. You did not write the response."
+---
+
 # Grading instructions
 
 You are grading one response produced by an AI assistant for an OpenStack

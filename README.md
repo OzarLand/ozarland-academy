@@ -15,12 +15,25 @@ and its own site in the portal:
 | Go to production | Production guide | Visual memos for production: one operational lesson per page | [docs/production/](docs/production/index.md) | available |
 | Compare | OKD OpenStack lab | OpenStack run by Kubernetes operators on OKD: a reproducible lab for operators who know Kolla-Ansible | [docs/okd/](docs/okd/index.md) | available |
 | Upgrade | Upgrade journeys | Evidence-based paths to bring a legacy OpenStack cloud back to a current release, starting with Ussuri to 2026.1 | [docs/upgrade/](docs/upgrade/index.md) | available |
+| Equip | Operator skills | Nine Agent Skills that make Claude reason like a senior OpenStack operator, with a validation status for every procedure | [docs/skills/](docs/skills/index.md) | available |
 
 The modules come from separate OzarLand repositories, moved here one at a time with their history: their pages keep
 the history of the former repository (`git log --follow docs/<module>/index.md`).
 
 [academy.toml](academy.toml) is the registry that every tool reads: the modules in the order of the path, and the
 releases of the day-2 module.
+
+## Claude Code plugin
+
+The [Operator skills](docs/skills/index.md) are also a Claude Code plugin, published by the marketplace of this
+repository ([.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)). In Claude Code:
+
+```text
+/plugin marketplace add OzarLand/ozarland-academy
+/plugin install openstack-operations@openstack-operator-skills
+```
+
+The marketplace keeps the name it had in its former repository, so the plugin name does not change.
 
 ## Portal
 

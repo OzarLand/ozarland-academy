@@ -1,3 +1,8 @@
+---
+title: "Knowledge map — OpenStack, the Day After Tomorrow (v1.2)"
+description: "This map records what the book actually contains, so that every skill in this repository can be traced back to it."
+---
+
 # Knowledge map — *OpenStack, the Day After Tomorrow* (v1.2)
 
 This map records what the book actually contains, so that every skill in this

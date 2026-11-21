@@ -1,0 +1,52 @@
+# Settings of the Operator skills site (module `skills` of academy.toml),
+# merged with zensical.base.toml by tools/site/releases.py. The pages are the
+# history of OzarLand/openstack-operator-skills, moved under docs/skills/.
+#
+# The skills themselves (skills/, and shared/ from which their common
+# references are copied) are the Claude Code plugin that
+# .claude-plugin/marketplace.json, at the root of this repository, publishes;
+# with the evaluation data (evals/results/, evals/scenarios/), the tools and
+# CLAUDE.md, they are not pages of the site: the pages link to them on GitHub.
+# The inventory (validation/inventory.yaml) is published as a file, for the
+# coverage page that links to it. Their checks run in
+# .github/workflows/skills.yml.
+
+[project]
+exclude_docs = """
+/skills/
+/shared/
+/evals/results/
+/evals/scenarios/
+/tools/
+/CLAUDE.md
+/ruff.toml
+"""
+site_description = "Nine Agent Skills that make Claude reason like a senior OpenStack operator during incidents, changes, maintenance and troubleshooting, with a validation status for every procedure."
+
+nav = [
+  { "Home" = [
+    "index.md",
+    "docs/installation.md",
+    "docs/examples.md",
+  ] },
+  { "How it works" = [
+    "docs/design.md",
+    "docs/knowledge-map.md",
+    "docs/source-mapping.md",
+  ] },
+  { "Validation" = [
+    "docs/knowledge-validation-policy.md",
+    "docs/validation-coverage.md",
+    "docs/templates/procedure-block.md",
+  ] },
+  { "Evaluation" = [
+    "docs/evaluation-report.md",
+    "evals/index.md",
+    "evals/grader-prompt.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md",
+  ] },
+]

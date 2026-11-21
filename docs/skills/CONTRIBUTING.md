@@ -1,3 +1,8 @@
+---
+title: "Contributing"
+description: "Contributions from people who operate OpenStack are welcome. The most useful ones come from production experience."
+---
+
 # Contributing
 
 Contributions from people who operate OpenStack are welcome. The most useful
@@ -11,7 +16,7 @@ No code needed.
 
 Advice that could cause harm before it is fixed, or a secret found in the
 repository, goes privately through the [security policy](SECURITY.md).
-Everyone taking part follows the OzarLand [code of conduct](CODE_OF_CONDUCT.md).
+Everyone taking part follows the OzarLand [code of conduct](https://github.com/OzarLand/ozarland/blob/main/CODE_OF_CONDUCT.md).
 
 ## Good contributions
 
@@ -34,8 +39,8 @@ Everyone taking part follows the OzarLand [code of conduct](CODE_OF_CONDUCT.md).
 Operational knowledge (a symptom, its checks and fix, a recovery, a command's
 behaviour, and any correction to them) goes first to the OzarLand page it
 comes from, in
-[openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks) or
-[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns),
+[openstack-vm-runbooks](../runbooks/) or
+[kolla-ansible-deployment-patterns](../deploy/),
 where it is reviewed and lab-checked. The skill reference follows: it carries
 the distilled checks and decisions, links the source page in
 `validation/inventory.yaml`, and keeps that page's validation status. Open the

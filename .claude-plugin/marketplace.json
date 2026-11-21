@@ -11,7 +11,7 @@
     {
       "name": "openstack-operations",
       "description": "Incident analysis, VM troubleshooting, Kolla-Ansible operations, change review, maintenance planning, operational decisions, control assessment, automation review and runbook authoring for production OpenStack platforms",
-      "source": "./",
+      "source": "./docs/skills",
       "strict": false,
       "skills": [
         "./skills/openstack-incident-analysis",

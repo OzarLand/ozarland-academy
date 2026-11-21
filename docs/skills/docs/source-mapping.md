@@ -1,10 +1,15 @@
+---
+title: "Source mapping: OzarLand repositories to skills"
+description: "Source mapping: OzarLand repositories to skills"
+---
+
 # Source mapping: OzarLand repositories to skills
 
 This document records the assessment made for version 0.2.0: what the
 existing skills, the OzarLand
-[openstack-vm-runbooks](https://github.com/OzarLand/openstack-vm-runbooks)
+[openstack-vm-runbooks](../../runbooks/)
 (commit `babdd8c07971`) and
-[kolla-ansible-deployment-patterns](https://github.com/OzarLand/kolla-ansible-deployment-patterns)
+[kolla-ansible-deployment-patterns](../../deploy/)
 (commit `dee2c60b9db4`) contain, why the architecture changed, and where each
 piece of operational knowledge went. Validation statuses per item are in
 [validation-coverage.md](validation-coverage.md); the rules in

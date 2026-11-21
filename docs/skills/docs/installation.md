@@ -1,3 +1,8 @@
+---
+title: "Installation"
+description: "Custom skills do not sync between surfaces: install them separately in each place you use Claude. Source: Anthropic, Agent Skills overview (Oct 2026)."
+---
+
 # Installation
 
 Custom skills do not sync between surfaces: install them separately in each
@@ -8,12 +13,12 @@ place you use Claude. Source: Anthropic, *Agent Skills overview* (Oct 2026).
 ### Option A — plugin marketplace
 
 ```text
-/plugin marketplace add OzarLand/openstack-operator-skills
+/plugin marketplace add OzarLand/ozarland-academy
 /plugin install openstack-operations@openstack-operator-skills
 ```
 
 Plugin skills are namespaced, e.g. `/openstack-operations:openstack-incident-analysis`.
-The manifest (`.claude-plugin/marketplace.json`) passes
+The manifest (`.claude-plugin/marketplace.json`, at the root of ozarland-academy) passes
 `claude plugin validate --strict`, and the install above was tested end to end
 from GitHub in 0.1.0 (all seven skills of that version installed; the incident skill triggered on a
 test prompt).
@@ -29,11 +34,11 @@ reads in advance, e.g. `claude -p --allowedTools Read "..."`. Copied skills
 ### Option B — copy the skills
 
 ```bash
-git clone https://github.com/OzarLand/openstack-operator-skills
+git clone https://github.com/OzarLand/ozarland-academy
 # personal, all projects:
-cp -r openstack-operator-skills/skills/* ~/.claude/skills/
+cp -r ozarland-academy/docs/skills/skills/* ~/.claude/skills/
 # or for one repository (commit them to share with the team):
-mkdir -p .claude/skills && cp -r openstack-operator-skills/skills/* .claude/skills/
+mkdir -p .claude/skills && cp -r ozarland-academy/docs/skills/skills/* .claude/skills/
 ```
 
 Install all nine if you can: they hand off to each other. Each one also works
