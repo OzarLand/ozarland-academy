@@ -194,6 +194,14 @@ class RegistryTest(NoDomain):
         )
         self.assert_problem(REGISTRY + day3, "only one module can be versioned")
 
+    def test_prelude_is_stop_zero(self) -> None:
+        registry = parse(REGISTRY)
+        self.assertFalse(registry.modules[0].prelude)
+        prelude = parse(REGISTRY.replace('id = "lab"', 'id = "lab"\nprelude = true', 1))
+        self.assertTrue(prelude.modules[0].prelude)
+        self.assert_problem(REGISTRY.replace('id = "runbooks"', 'id = "runbooks"\nprelude = true'), "only the first module")
+        self.assert_problem(REGISTRY.replace('id = "lab"', 'id = "lab"\nprelude = "yes"', 1), "must be true or false")
+
     def test_every_problem_is_listed_at_once(self) -> None:
         text = REGISTRY.replace('tag = "ussuri-eol"', "").replace('status = "planned"\nopenstack', 'status = "soon"\nopenstack')
         with self.assertRaises(releases.RegistryError) as caught:

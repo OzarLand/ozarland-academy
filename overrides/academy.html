@@ -39,8 +39,8 @@
         <h1 class="portal-hero__title" id="welcome">{{ config.site_name }}</h1>
         <p class="oz-hero__tagline">A shared land for better OpenStack operations.</p>
         <p class="portal-hero__lead">
-          One learning path to run OpenStack, in {{ portal.modules | length }} stops: discover it on a lab, deploy it,
-          operate it, intervene on instances and hypervisors, take it to production, then go further.
+          One learning path to run OpenStack, in {{ portal.modules | length }} stops: start with a story, discover it on
+          a lab, deploy it, operate it, intervene on instances and hypervisors, take it to production, then go further.
         </p>
         <p class="portal-hero__actions">
           {% if first.module %}
@@ -80,9 +80,9 @@
     {% for module in portal.modules %}
       {% set planned = module.status != "available" %}
       <li class="oz-stop oz-module--{{ module.id }}{% if planned %} oz-stop--planned{% endif %}">
-        <img class="oz-stop__seal" src="{{ img }}seals/stage-{{ loop.index }}.svg" width="96" height="96" alt="">
+        <img class="oz-stop__seal" src="{{ img }}seals/stage-{{ module.stop }}.svg" width="96" height="96" alt="">
         <div class="oz-stop__body">
-          <p class="oz-stop__step">Stop {{ loop.index }} · {{ module.step }}</p>
+          <p class="oz-stop__step">Stop {{ module.stop }} · {{ module.step }}</p>
           <p class="oz-stop__title">
             <img class="oz-stop__icon" src="{{ img }}icons/{{ module.id }}.svg" width="48" height="48" alt="">
             <a href="{{ root }}{{ module.path }}/" data-portal-module="{{ module.id }}">{{ module.title }}</a>
@@ -124,7 +124,7 @@
       <thead><tr><th>Repository</th><th>What it holds</th></tr></thead>
       <tbody>
         <tr><td><a href="{{ hub }}">ozarland</a></td><td>Start here: newcomer path, community rules, <a href="{{ hub }}/discussions">Discussions</a></td></tr>
-        <tr class="oz-land__here"><td><a href="https://github.com/OzarLand/ozarland-academy"><strong>ozarland-academy</strong></a> (you are here)</td><td>The sources of this learning path: lab, deployment, day-2 operations, runbooks, production, OKD lab, upgrade journeys, operator skills (also a Claude Code plugin)</td></tr>
+        <tr class="oz-land__here"><td><a href="https://github.com/OzarLand/ozarland-academy"><strong>ozarland-academy</strong></a> (you are here)</td><td>The sources of this learning path: LUMO's village, lab, deployment, day-2 operations, runbooks, production, OKD lab, upgrade journeys, operator skills (also a Claude Code plugin)</td></tr>
       </tbody>
     </table>
     <p class="oz-land__actions">

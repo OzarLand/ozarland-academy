@@ -1,0 +1,56 @@
+---
+title: "8. The network and its attachments"
+description: "In Linh's network workshop LUMO creates a network, gives it a range of addresses, and finds the port that will attach the future machine to it."
+---
+
+# 8. The network and its attachments
+
+*The network workshop.*
+
+Linh's workshop smells of fresh rope and brass. On the bench lies a thin line that will become Neri's road: a private
+network, just for Neri's project. Linh gives it a range of addresses, like house numbers along a street that does not
+exist yet.
+
+"And how does the house get onto the road?" LUMO asks. Linh holds up a small wooden and brass connector. "With one of
+these. Each house that joins the network gets its own connector, with its own number from the range. Take the
+connector away, and the house is off the road."
+
+LUMO notices that nothing here is dug into the ground. The road is drawn on paper, and the workshops will carry it for
+real wherever the houses happen to be.
+
+> [!IMPORTANT]
+> **Where the picture stops.** These objects are logical. A subnet is not a plot of land; a port is an interface
+> attached to a resource, not a physical socket. The same network can span many hosts.
+
+## What it is in OpenStack
+
+**Neutron** is the networking service. Its three basic objects:
+
+- A **network** is an isolated layer-2 segment, usually private to a project (built over VXLAN or Geneve tunnels, or
+  over a VLAN, depending on the cloud).
+- A **subnet** is a range of IP addresses on that network (a CIDR such as `192.168.10.0/24`), with a gateway, DNS
+  servers and DHCP settings.
+- A **port** is a connection point on a network: it has a MAC address and one or more **fixed IPs** from a subnet. An
+  instance gets one port per network it is attached to.
+
+## From the village to OpenStack
+
+```mermaid
+flowchart LR
+    N["Network: neri-net"] --> S["Subnet: neri-subnet<br/>192.168.10.0/24"]
+    S --> P["Port<br/>fixed IP 192.168.10.5"]
+    P -.->|"attached to"| VM["Neri's future instance"]
+```
+
+## See it for real
+
+```bash
+openstack network create <NET>
+openstack subnet create --network <NET> --subnet-range <CIDR> <SUBNET>
+openstack port list
+```
+
+**The lantern:** the beam follows a thin link between the workshop and the house that will be built.
+
+**Next:** the road is ready. LUMO can now ask for the house.
+[9. Neri's first house →](09-neris-first-house.md)

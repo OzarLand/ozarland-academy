@@ -1,0 +1,36 @@
+# Settings of LUMO's village (module `village` of academy.toml), stop 0 of the
+# path: the basic concepts of OpenStack, told as a story, before the Quick lab.
+# The art direction, the story and the image manifest are in brand/village/.
+
+[project]
+site_description = "The basic concepts of OpenStack, told as a story: LUMO builds a village and learns why each piece of a cloud exists."
+
+nav = [
+  { "The village" = [
+    "index.md",
+  ] },
+  { "The town hall" = [
+    "01-why-build-a-village.md",
+    "02-the-town-hall-takes-shape.md",
+    "03-the-register-and-the-passes.md",
+    "04-neris-file.md",
+  ] },
+  { "The first house" = [
+    "05-the-shared-fields.md",
+    "06-the-resource-register.md",
+    "07-an-image-and-a-flavor.md",
+    "08-the-network-and-its-attachments.md",
+    "09-neris-first-house.md",
+  ] },
+  { "Reaching and keeping" = [
+    "10-the-bridge-to-the-outside.md",
+    "11-the-rules-at-the-doors.md",
+    "12-the-attached-disk-and-the-archive.md",
+  ] },
+  { "Behind the scenes" = [
+    "13-three-windows.md",
+    "14-behind-the-town-hall.md",
+    "15-the-specialised-workshops.md",
+    "16-the-village-runs.md",
+  ] },
+]

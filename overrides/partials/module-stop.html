@@ -7,5 +7,5 @@
 {% set stop = namespace(index=0, next=none, found=false) %}
 {% for module in portal.modules %}
   {% if stop.found and not stop.next %}{% set stop.next = module %}{% endif %}
-  {% if module.id == portal.module.id %}{% set stop.index = loop.index %}{% set stop.found = true %}{% endif %}
+  {% if module.id == portal.module.id %}{% set stop.index = module.stop %}{% set stop.found = true %}{% endif %}
 {% endfor %}

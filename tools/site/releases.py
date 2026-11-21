@@ -198,6 +198,8 @@ class Module:
     status: str
     default: str = ""
     releases: tuple[Release, ...] = ()
+    #: The module comes before the path, as its stop 0 (only the first module).
+    prelude: bool = False
 
     @property
     def versioned(self) -> bool:
@@ -226,6 +228,7 @@ class Module:
             "kind": self.kind,
             "status": AVAILABLE if self.available else PLANNED,
             "default": self.default,
+            "prelude": self.prelude,
         }
 
 
@@ -372,7 +375,7 @@ def parse_registry(data: object) -> Registry:
     for key in sorted(set(data) - {"module"}):
         problems.append(f"unknown key `{key}`")
 
-    known = {"id", "step", "title", "summary", "kind", "status", "default", "release"}
+    known = {"id", "step", "title", "summary", "kind", "status", "default", "release", "prelude"}
     modules: list[Module] = []
     seen: set[str] = set()
     for number, block in enumerate(blocks, 1):
@@ -395,6 +398,12 @@ def parse_registry(data: object) -> Registry:
         for key in ("step", "title", "summary"):
             if not values[key]:
                 problems.append(f"{where}: `{key}` is missing")
+        prelude = block.get("prelude", False)
+        if not isinstance(prelude, bool):
+            problems.append(f"{where}: `prelude` must be true or false")
+            prelude = False
+        elif prelude and number != 1:
+            problems.append(f"{where}: only the first module can be the prelude (stop 0) of the path")
         kind = values["kind"]
         releases: list[Release] = []
         if kind == SINGLE:
@@ -425,6 +434,7 @@ def parse_registry(data: object) -> Registry:
                 status=values["status"] if kind == SINGLE else "",
                 default=values["default"] if kind == VERSIONED else "",
                 releases=tuple(releases),
+                prelude=prelude,
             )
         )
     if sum(1 for m in modules if m.versioned) > 1:
@@ -593,7 +603,12 @@ def portal_data(registry: Registry, base: dict, current: Release | None, root_pa
         "default": registry.default,
         "root_url": root_url,
         "root_path": urlsplit(root_url).path or "/",
-        "modules": [m.as_dict() for m in registry.modules],
+        # `stop`: the number of the module on the path, from 0 when the first
+        # module is a prelude, from 1 otherwise (its seal is seals/stage-<stop>.svg).
+        "modules": [
+            dict(m.as_dict(), stop=number)
+            for number, m in enumerate(registry.modules, 0 if registry.modules[0].prelude else 1)
+        ],
         "releases": [release.as_dict() for release in module_releases],
         "sites": [release.as_dict() for release in registry.releases],
     }
