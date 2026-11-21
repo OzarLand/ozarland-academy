@@ -1,7 +1,7 @@
 # Operating principles
 
 Source: Soufian Zaouam, *OpenStack, the Day After Tomorrow* (v1.2, 2026),
-https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow. These are
+https://book.ozarland.com/. These are
 the author's recommendations from one operator's experience, not universal
 rules; a different platform or organization may weigh them differently.
 

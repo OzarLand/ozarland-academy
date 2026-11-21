@@ -132,11 +132,11 @@ the book to run them.
 
 ## 8. Licensing note
 
-The book is CC BY-NC-ND 4.0, which does not allow distributing adaptations.
-The author holds the copyright and can license these skills differently; the
-skills paraphrase and restructure the method rather than reproduce the text.
-The licence chosen for this repository is a decision for the author and is
-flagged in the final report before anything is published.
+When the skills were written, the book was under CC BY-NC-ND 4.0, which does
+not allow distributing adaptations; the author holds the copyright and licensed
+the skills under the Apache License 2.0. The book itself has since moved to
+the Apache License 2.0 as well. The skills still paraphrase and restructure the
+method rather than reproduce the text.
 
 ## 9. Version 0.2.0: operational knowledge and validation status
 
