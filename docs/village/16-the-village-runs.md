@@ -17,7 +17,7 @@ below, the workshops are grouped in quarters, each with its own water supply and
 the quarters were really built that way. A name on a sign doesn't tell you. You have to look at how they were built,
 and test it."
 
-<img src="assets/images/S16-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO and a companion look out over the archipelago, where translucent outlines group the islands into separate areas.">
+<img src="assets/images/S16-v1.webp" width="1024" height="1024" loading="lazy" alt="From the lookout, Neri and LUMO look out over the island: the town hall and the quarters of the village below, separated by paths and gardens, and further out other islands, each with its own town hall.">
 
 The sky darkens over the sea: a storm is announced for tomorrow. Nothing is broken, but Neri is worried. LUMO opens
 the notebook. "Then let's practise. Not here, on the real houses. In a small village of our own, where we can break
@@ -25,7 +25,7 @@ things on purpose and learn to repair them."
 
 The lantern is small, but steady. It lights the road down to the harbour.
 
-<img src="assets/images/S16-v2.webp" width="1024" height="1024" loading="lazy" alt="At dusk, LUMO and a companion go through a checklist at a small table by the lantern, preparing a careful exercise.">
+<img src="assets/images/S16-v2.webp" width="1024" height="1024" loading="lazy" alt="At dusk, LUMO and Neri sit at a small table by the lantern and go through a blank checklist, with storm clouds far out over the sea.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** The name of a region or an availability zone is not enough to know its topology or its
@@ -74,7 +74,7 @@ In Horizon, the region selector is at the top of the page when the cloud has sev
 
 ## The road goes on
 
-<img src="assets/images/S17-archipelago-exit.webp" width="1536" height="1024" loading="lazy" alt="On the quay, LUMO points out to sea where a sailing ship heads for the islands of the archipelago, a companion at LUMO's side.">
+<img src="assets/images/S17-archipelago-exit.webp" width="1536" height="1024" loading="lazy" alt="On the harbour quay, LUMO points out to sea with an open hand while Neri, bedroll on the back, watches a sailing ship leave for the islands of the archipelago.">
 
 The village answers its inhabitants. Now the question is: how do you break it and repair it safely? That is the next
 stop: the [Quick lab](../lab/), a real, disposable OpenStack in about an hour, with exercises to break and repair it.

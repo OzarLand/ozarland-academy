@@ -17,6 +17,8 @@ and unengraved.
 decide what you may do." LUMO turns the token over. "And how do I find the other offices?" Maë unrolls a long sheet:
 the catalog. Every office of the town hall is on it, with the address where it answers.
 
+<img src="assets/images/S03-v1.webp" width="1024" height="1024" loading="lazy" alt="At the counter of the register, Maë unrolls a long parchment catalog where each office of the town hall is drawn as a small door, while LUMO, the brass token in hand, follows one of the doors with a finger.">
+
 LUMO notices something: Maë does not walk anyone to the other offices, and does not build anything. The register says
 who you are, what you may do, and where to go. The rest is up to you and to the other offices.
 
