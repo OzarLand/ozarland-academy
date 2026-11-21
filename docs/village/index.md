@@ -59,7 +59,7 @@ Read them in order the first time: each scene uses what the previous ones built.
 
 ## The people of the village
 
-<img src="assets/images/S00-guild-cast.webp" width="1600" height="1066" loading="lazy" alt="A parchment board shows eighteen adults of the village, each with a tool of their trade: a lantern, a map, a sextant, rope, books, a hammer, a ship's wheel, a telescope.">
+<img src="assets/images/S00-guild-cast.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Neri stand in the middle of the sixteen keepers of the village on the harbour square, each holding the object of their trade: a brass token, a crate, a measuring gauge, a tray of tokens, an inventory frame (Noor, in a wheelchair), a blank disk tile, a connector, a metal plate, a box of objects, a blank panel (Imani, with a cane), message capsules, a closed register, linked tiles, a switch with several tracks, a sealed box and brass rings.">
 
 The keepers of the village are teaching characters, not official faces of OpenStack. Each one looks after one
 service, and says in one sentence what that service does and does not do.
