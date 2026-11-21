@@ -1,6 +1,33 @@
 ---
 title: "4. Neri's file"
 description: "LUMO opens a file for Neri at the town hall. A project is the scope that owns resources; a quota is a limit on what the project may use, not a reservation."
+remember:
+- "A <strong>project</strong> owns resources and is the scope in which users get roles."
+- "A <strong>quota</strong> is a ceiling on what a project may use, per resource type."
+- "A quota is not a reservation: a project can have room in its quota while the cloud itself is full."
+scenarios:
+- title: "Planning capacity from the quotas"
+  situation: "Each of 20 projects has a quota of 100 vCPUs. A colleague concludes that the cloud is sized for 2,000 vCPUs \"because that is what the quotas allow\"."
+  ask: "What would you do?"
+  choices:
+  - text: "Compare the quotas with the real capacity of the hypervisors and with actual usage, and say that quotas are ceilings, not reservations."
+    verdict: "best"
+    why: "Quotas limit each project; they do not reserve capacity. The sum of quotas often exceeds what the hosts can run, on purpose."
+  - text: "Lower every quota so that their sum matches the capacity."
+    verdict: "risky"
+    why: "It can make sense on some clouds, but it wastes capacity when projects do not all use their full quota; it is a policy choice, not a fix."
+  - text: "Accept the conclusion: the quotas describe the size of the cloud."
+    verdict: "avoid"
+    why: "A quota is not a reservation and says nothing about how many vCPUs the hosts really provide."
+  see: "what-it-is-in-openstack"
+quiz:
+- q: "Neri's project has a quota of 10 instances and uses 2. Is a 3rd instance guaranteed?"
+  options:
+  - "Yes, the quota reserves room for it"
+  - "No: the quota allows it, but the cloud must also have free capacity"
+  answer: 1
+  explain: "The quota only says what the project may ask for. Whether a request succeeds also depends on the free capacity of the cloud."
+  see: "what-it-is-in-openstack"
 ---
 
 # 4. Neri's file

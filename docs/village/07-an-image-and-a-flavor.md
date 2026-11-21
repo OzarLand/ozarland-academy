@@ -1,6 +1,26 @@
 ---
 title: "7. An image and a flavor"
 description: "In the library LUMO chooses the content of the starting disk; at the profile table, the size of the machine. An image and a flavor are two separate things."
+remember:
+- "An <strong>image</strong> (Glance) is the content of a starting disk, not a running machine."
+- "A <strong>flavor</strong> (Nova) is the size of an instance: vCPUs, RAM, disks, extra specs."
+- "Creating an instance needs both: the image says what it starts with, the flavor how much it gets."
+quiz:
+- q: "Which object describes how many vCPUs and how much RAM an instance gets?"
+  options:
+  - "The image"
+  - "The flavor"
+  - "The project"
+  answer: 1
+  explain: "The flavor is the size; the image is the content of the starting disk."
+  see: "what-it-is-in-openstack"
+- q: "Does uploading an image to Glance start a machine?"
+  options:
+  - "Yes"
+  - "No, an image is only a starting disk content"
+  answer: 1
+  explain: "An image is a file with properties; nothing runs until Nova creates an instance from it."
+  see: "what-it-is-in-openstack"
 ---
 
 # 7. An image and a flavor

@@ -1,6 +1,25 @@
 ---
 title: "16. The village runs. What now?"
 description: "From the lookout LUMO sees regions and availability zones, prepares a careful exercise with Neri as a storm is announced, and takes the road to the Quick lab."
+remember:
+- "A <strong>region</strong> is a separate deployment with its own endpoints, often in another place; Keystone is usually shared."
+- "An <strong>availability zone</strong> is a group of hosts inside a region, defined by the operators."
+- "A name does not prove resilience: look at the real architecture and test it, starting in a lab."
+quiz:
+- q: "Two availability zones named <code>north</code> and <code>south</code>: do they fail independently?"
+  options:
+  - "Yes, that is what an AZ guarantees"
+  - "Only if their power, network and storage were built independently"
+  answer: 1
+  explain: "An AZ is a grouping chosen by the operators; independence comes from the design, not from the label."
+  see: "what-it-is-in-openstack"
+- q: "Where can you see the regions of a cloud?"
+  options:
+  - "<code>openstack region list</code> and the endpoints of the catalog"
+  - "<code>openstack flavor list</code>"
+  answer: 0
+  explain: "Each region has its own set of endpoints in the catalog."
+  see: "see-it-for-real"
 ---
 
 # 16. The village runs. What now?

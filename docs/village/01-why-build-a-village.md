@@ -1,6 +1,26 @@
 ---
 title: "1. Why build a village?"
 description: "Neri needs a place to run a small service. LUMO discovers what a cloud is: resources shared through services and APIs, with a control plane and a data plane."
+remember:
+- "OpenStack turns servers, networks and disks into a cloud: people ask for resources through services and their APIs, without touching the hardware."
+- "The <strong>control plane</strong> receives requests, decides and keeps records; the <strong>data plane</strong> is where the virtual machines run and their traffic flows."
+- "Control plane and data plane are roles, not buildings: one server can play both in a lab, and production usually separates them."
+quiz:
+- q: "Where do the virtual machines of the users actually run?"
+  options:
+  - "In the control plane"
+  - "In the data plane, on the hypervisors"
+  - "Inside Keystone"
+  answer: 1
+  explain: "The data plane is where resources run: hypervisors run the VMs, the virtual network carries their traffic, the storage holds their disks."
+  see: "what-it-is-in-openstack"
+- q: "Can one server belong to both the control plane and the data plane?"
+  options:
+  - "Yes, they are roles; a small lab often does it"
+  - "No, they must be separate machines"
+  answer: 0
+  explain: "They are functions. Production usually separates them so that a busy or broken host does not stop the services that take requests."
+  see: "what-it-is-in-openstack"
 ---
 
 # 1. Why build a village?

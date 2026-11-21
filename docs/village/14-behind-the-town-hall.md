@@ -1,6 +1,26 @@
 ---
 title: "14. Behind the town hall"
 description: "Behind the offices, Pax carries messages between services and Talia keeps their records: the message queue and the databases of the control plane."
+remember:
+- "RabbitMQ carries messages between the parts of the services (RPC and notifications), not the traffic of the VMs."
+- "Each service keeps its state in its own SQL database, usually MariaDB with Galera in production."
+- "When the message queue or the databases are in trouble, the whole control plane is."
+quiz:
+- q: "Which component carries the messages from the Nova conductor to <code>nova-compute</code>?"
+  options:
+  - "RabbitMQ"
+  - "MariaDB"
+  - "Neutron"
+  answer: 0
+  explain: "RPC messages between service components go through the message queue."
+  see: "what-it-is-in-openstack"
+- q: "Do the disks of the virtual machines live in the MariaDB databases?"
+  options:
+  - "Yes"
+  - "No, the databases hold the state of the services"
+  answer: 1
+  explain: "The databases describe instances, networks, volumes…; the disks live on the hosts or on the storage back end."
+  see: "what-it-is-in-openstack"
 ---
 
 # 14. Behind the town hall

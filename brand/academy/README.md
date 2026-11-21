@@ -1,13 +1,13 @@
 # OzarLand Academy art direction handoff
 
-This archive packages the Academy's chosen visual direction for an engineer integrating it into the Zensical site. It contains the reusable style anchor, approved path metaphor, module system, one-page charter, accessibility guidance, typography, palette tokens, six hand-written module/book icons, five stage seals, existing OzarLand raster artwork, and image prompts for the new Lumo pose variants.
+This archive packages the Academy's chosen visual direction for an engineer integrating it into the Zensical site. It contains the reusable style anchor, approved path metaphor, module system, one-page charter, accessibility guidance, typography, palette tokens, the module/book icons and the stage seals, existing OzarLand raster artwork, and image prompts for the new Lumo pose variants.
 
 ## What's final
 
 - The island-trail concept and module-to-place mapping.
 - The style anchor and written brand rules.
 - The CSS and JSON palette tokens, including measured WCAG contrast pairs.
-- The six SVG icons and five SVG stage seals.
+- The SVG icons (one per module, and the book) and the SVG stage seals (`stage-0.svg` to `stage-8.svg`). The first set covered five stops; the icons and seals of stops 0, 6, 7 and 8 were drawn later in the same style, and their bands were painted to match the series.
 - Existing OzarLand Academy / Day 2 illustrations reused for the path hero, section bands, state pages and social preview. These retain their original compositions and are packaged as WebP.
 
 ## What's still a draft

@@ -1,6 +1,41 @@
 ---
 title: "10. The bridge to the outside"
 description: "LUMO links Neri's network to the outside through a router and gives the house a floating IP: a public address mapped to its private one."
+remember:
+- "A Neutron <strong>router</strong> connects subnets and, through its external gateway, an external network."
+- "A <strong>floating IP</strong> comes from the external network and is associated with a port; the router translates it to the fixed IP."
+- "A floating IP alone does not give access: routes and security group rules must allow the traffic."
+scenarios:
+- title: "The floating IP does not answer"
+  situation: "Neri associated a floating IP with the instance, but nothing answers on port 443 from outside."
+  ask: "What would you do?"
+  choices:
+  - text: "Check that the router has an external gateway and that a security group rule allows TCP 443 in."
+    verdict: "best"
+    why: "Association alone is not enough: the router must reach the external network and the security group must allow the traffic."
+  - text: "Allocate a second floating IP and try again."
+    verdict: "risky"
+    why: "It changes nothing if the gateway or the rules are the problem, and it consumes a public address."
+  - text: "Open all ports to 0.0.0.0/0 to rule out the security group."
+    verdict: "avoid"
+    why: "It exposes every service of the instance to the Internet; open only what the service needs."
+  see: "what-it-is-in-openstack"
+quiz:
+- q: "Inside the instance, which address does the operating system see on its interface?"
+  options:
+  - "The floating IP"
+  - "The fixed IP of its port"
+  answer: 1
+  explain: "The router translates between the floating IP and the fixed IP; the guest only knows its fixed IP."
+  see: "what-it-is-in-openstack"
+- q: "Where does a floating IP come from?"
+  options:
+  - "From the external network"
+  - "From the project's private subnet"
+  - "From Keystone"
+  answer: 0
+  explain: "Floating IPs are allocated from an external network and associated with a port."
+  see: "what-it-is-in-openstack"
 ---
 
 # 10. The bridge to the outside
