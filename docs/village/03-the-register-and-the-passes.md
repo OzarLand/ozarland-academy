@@ -27,7 +27,7 @@ quiz:
 
 *The register office of the town hall.*
 
-<img src="assets/images/S03-open.webp" width="1536" height="1024" alt="At the counter of the register, Maë, with short silver hair and a clipboard, hands LUMO a plain brass token under the arches of the town hall.">
+<img src="assets/images/S03-open.webp" width="1024" height="1024" alt="At the counter of the register, under the arches of the town hall, Maë, with short silver hair and a brown waistcoat, smiles at LUMO, who has just been handed the plain brass token now lying on the counter.">
 
 The first office past the door belongs to Maë, who keeps the register. Nobody gets further without going through
 it. LUMO gives a name and a password; Maë checks them against the register and hands over a small brass token, plain
