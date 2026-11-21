@@ -413,15 +413,15 @@ what the other stops teach: the [VM runbooks](../runbooks/), the [Deployment pat
 ## 📚 The book, licence and citation
 
 The skills paraphrase and restructure the method of
-[*OpenStack, the Day After Tomorrow*](https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow);
-they do not reproduce its text. The book stays under CC BY-NC-ND 4.0 in its
-own repository. This repository is Apache-2.0 ([LICENSE](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE),
+[*OpenStack, the Day After Tomorrow*](https://book.ozarland.com/);
+they do not reproduce its text. The book is also under the Apache License 2.0, in its
+own repository ([OzarLand/openstack-the-day-after-tomorrow](https://github.com/OzarLand/openstack-the-day-after-tomorrow)). This repository is Apache-2.0 ([LICENSE](https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE),
 [NOTICE](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/NOTICE)).
 
 ```text
 Zaouam, S. (2026). OpenStack, the Day After Tomorrow: Operating
 Mission-Critical OpenStack Platforms (v1.2).
-https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow
+https://book.ozarland.com/
 ```
 
 ---

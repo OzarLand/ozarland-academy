@@ -9,7 +9,7 @@ This map records what the book actually contains, so that every skill in this
 repository can be traced back to it. It was produced by reading the full English
 edition (front matter, Introduction, Chapters 1–20, Conclusion, Appendices A–F,
 References) at commit `09b5dea` of
-[soufian-zaouam/openstack-the-day-after-tomorrow](https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow).
+[OzarLand/openstack-the-day-after-tomorrow](https://github.com/OzarLand/openstack-the-day-after-tomorrow) (formerly `soufian-zaouam/openstack-the-day-after-tomorrow`).
 The French edition mirrors the English one chapter for chapter and was not used
 as a separate source.
 
@@ -284,7 +284,7 @@ The skills follow upstream, say so where the point appears, and list the
 point here as a candidate erratum for the book.
 
 The SR-IOV point below was corrected in the book's repository
-([pull request #4](https://github.com/soufian-zaouam/openstack-the-day-after-tomorrow/pull/4),
+([pull request #4](https://github.com/OzarLand/openstack-the-day-after-tomorrow/pull/4),
 for v1.3); the skills follow the same wording.
 
 | Book statement | Upstream behaviour | Where handled |
