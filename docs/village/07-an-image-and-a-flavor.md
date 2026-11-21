@@ -7,6 +7,8 @@ description: "In the library LUMO chooses the content of the starting disk; at t
 
 *The image library and the profile table.*
 
+<img src="assets/images/S07-open.webp" width="1536" height="1024" alt="In the library, an elderly keeper holds a card showing a stack of disks while another keeper holds a card of different sizes, with LUMO between them.">
+
 Jae's library is full of disk tiles, each one the starting content of a house: the floor, the walls, the furniture
 already in place. "Pick one," Jae says, "and I will give the workshop a copy. I never hand out a house that is
 already lived in. Just the content to start from."
@@ -15,7 +17,11 @@ Across the room, on a long table, lie the profiles: small, medium, large. Each s
 memory and how much disk a house will get. LUMO picks up a tile with one hand and a profile with the other, and is
 careful not to mix them up. "What is in it" and "how big it is" are two different questions.
 
+<img src="assets/images/S07-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO crouches before a round, blank stone tile set into a library shelf.">
+
 Neri chooses a small, plain tile and a small profile. It will do for a first service.
+
+<img src="assets/images/S07-v2.webp" width="1024" height="1024" loading="lazy" alt="Neri and LUMO lean over a table where a turquoise shape links several small disks, like a road connecting houses.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** An image is not a running instance. A flavor is neither an operating system image nor a

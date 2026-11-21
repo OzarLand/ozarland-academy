@@ -7,6 +7,8 @@ description: "Four more workshops build whole quarters, share visitors, keep the
 
 *The gallery of additional services.*
 
+<img src="assets/images/S15-open.webp" width="1536" height="1024" alt="LUMO presents four small workshops side by side: linked tiles, a balance, a locked chest and a set of rings.">
+
 At the end of the main street, four smaller workshops stand side by side. Not every village has all of them; this
 one does.
 
@@ -16,7 +18,11 @@ tracks: "When one house is not enough, I send each visitor to one of several hou
 that doesn't answer." Taro keeps a sealed box: certificates and passwords that services need but nobody should leave
 lying around. Ina hangs name rings on posts: visitors can ask for `shop.neri.example` instead of a number.
 
+<img src="assets/images/S15-v1.webp" width="1024" height="1024" loading="lazy" alt="On a parchment lie four objects: linked tiles, a forked track, a small locked chest and nested rings.">
+
 LUMO looks at each in turn and does not mix them up: four tools, four jobs.
+
+<img src="assets/images/S15-v2.webp" width="1024" height="1024" loading="lazy" alt="A brass dome with a cloud sends three golden arrows to three identical servers on a map.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** These services are optional. Whether a cloud offers them, and how they behave, depends

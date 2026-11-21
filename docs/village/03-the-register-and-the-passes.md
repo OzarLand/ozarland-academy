@@ -7,6 +7,8 @@ description: "Maë keeps the register of the town hall. LUMO learns what Keyston
 
 *The register office of the town hall.*
 
+<img src="assets/images/S03-open.webp" width="1536" height="1024" alt="At the counter of the register, Maë, with short silver hair and a clipboard, hands LUMO a plain brass token under the arches of the town hall.">
+
 The first office past the door belongs to Maë, who keeps the register. Nobody gets further without going through
 it. LUMO gives a name and a password; Maë checks them against the register and hands over a small brass token, plain
 and unengraved.
@@ -17,6 +19,8 @@ the catalog. Every office of the town hall is on it, with the address where it a
 
 LUMO notices something: Maë does not walk anyone to the other offices, and does not build anything. The register says
 who you are, what you may do, and where to go. The rest is up to you and to the other offices.
+
+<img src="assets/images/S03-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO points at a large stone board with a small door for each office of the town hall, each marked with a simple symbol, while Maë watches.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** The catalog says where to reach a service; Keystone does not build the machine and

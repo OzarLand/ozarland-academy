@@ -7,6 +7,8 @@ description: "Behind the offices, Pax carries messages between services and Tali
 
 *The service corridor.*
 
+<img src="assets/images/S14-open.webp" width="1536" height="1024" alt="LUMO walks the service corridor behind the town hall, where keepers sort sealed capsules and closed registers.">
+
 Behind the offices runs a narrow corridor that visitors never see. Pax hurries along it with sealed capsules:
 messages from one office to another. "Build this house." "That house is ready." "This workshop is still alive." Pax
 does not read them and never carries the visitors themselves. Pax carries the town hall's own mail.
@@ -14,6 +16,10 @@ does not read them and never carries the visitors themselves. Pax carries the to
 At the end of the corridor Talia keeps the closed registers of every office: which houses exist, on which roads,
 with which connectors, in whose file. "If these were lost, the houses would still stand," Talia says, "but the town
 hall would no longer know they are there." The operators check on Pax and Talia every morning, before anything else.
+
+<img src="assets/images/S14-v1.webp" width="1024" height="1024" loading="lazy" alt="Outside a small door of the town hall, LUMO watches two symbols, one for messages and one for stacked records, travel back and forth along curved arrows.">
+
+<img src="assets/images/S14-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO leans over a map of the village where small capsules move along the paths between the town hall and the other buildings.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** These components do not hold the disks of the virtual machines or their traffic. They

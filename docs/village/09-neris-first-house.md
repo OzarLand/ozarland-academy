@@ -7,6 +7,8 @@ description: "With an image, a flavor and a network, LUMO asks for Neri's first 
 
 *A compute workshop.*
 
+<img src="assets/images/S09-open.webp" width="1536" height="1024" alt="Neri and LUMO watch a keeper kneel at the door of a small new stone house, joined to a path of stones and fine golden lines.">
+
 Everything is ready: the tile from the library, the small profile, the connector on Neri's road. LUMO hands the three
 to Rami at the workshop desk and signs the request with Maë's token. Rami checks the request, Sacha picks a workshop,
 Noor writes down the tools it will use, and in the chosen workshop the foreman starts the build.
@@ -15,7 +17,11 @@ A few minutes later a small house stands in the workshop, connected to Neri's ro
 to *active*. Neri claps. LUMO keeps the lantern steady. "Active means the house is standing and powered. It doesn't
 tell us yet that your service inside is running. Let's look."
 
+<img src="assets/images/S09-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO and a keeper look at a small brass panel where a grey light has turned green.">
+
 Neri opens the console of the house: the system inside is still starting. Two minutes later it is up.
+
+<img src="assets/images/S09-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO stands before a glowing machine at the centre of four cards: a disk, a blank tile, a stack of layers and a network cable.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** `ACTIVE` does not guarantee that the guest operating system or the application works:

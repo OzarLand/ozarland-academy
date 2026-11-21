@@ -7,6 +7,8 @@ description: "Noor keeps the inventory of every workshop and Sacha chooses where
 
 *The inventory room next to the workshops.*
 
+<img src="assets/images/S06-open.webp" width="1536" height="1024" alt="In the inventory room, LUMO watches Noor and another keeper sort small tokens on a round board, next to a brass frame of drawers and a map.">
+
 Next to the workshops, Noor keeps a large register in a brass frame. For each workshop it says how many tools it has,
 how many are already in use, and what is special about it: a fast disk here, a particular processor there. "I count,"
 Noor says. "I don't choose."
@@ -16,7 +18,11 @@ rest: this house must not share a workshop with that one, this one needs the fas
 northern quarter. Sacha weighs the candidates, keeps one, and Noor writes down what is now taken, so that nobody else
 gets the same tools.
 
+<img src="assets/images/S06-v1.webp" width="1024" height="1024" loading="lazy" alt="Neri and LUMO look at a blank board with three empty rows, a map of the island spread on the table in front of them.">
+
 LUMO had imagined the village simply picking the emptiest workshop. It is more careful than that.
+
+<img src="assets/images/S06-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO and a keeper study a tray with three paintings of workshops above three different shapes, a circle, a triangle and a square.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** It is not "find the emptiest field". Constraints, policies and capacity all count, and

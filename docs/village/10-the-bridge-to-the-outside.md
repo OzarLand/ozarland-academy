@@ -7,6 +7,8 @@ description: "LUMO links Neri's network to the outside through a router and give
 
 *The gateway on the sea side.*
 
+<img src="assets/images/S10-open.webp" width="1536" height="1024" alt="LUMO leans over a map of the village where a small round bridge links a blue marker on the private side to a red marker on the public quay.">
+
 Neri's house stands on a private road that no ship can see. Down by the sea, Linh shows LUMO a small bridge: a router.
 One side joins Neri's road, the other the big public quay where visitors arrive.
 
@@ -14,8 +16,12 @@ One side joins Neri's road, the other the big public quay where visitors arrive.
 and you tie it to the connector of the house." LUMO ties a public number to Neri's house. From the quay, the house now
 has an address; on the private road it keeps its own.
 
+<img src="assets/images/S10-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO crouches between two stone posts linked by a golden arc, like a bridge from one side to the other.">
+
 Neri asks if visitors can come in now. LUMO looks at the doors of the house. "There's a way in. Whether the doors
 let them through is another matter."
+
+<img src="assets/images/S10-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO points at a map where a glowing bridge joins two islands of houses.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** The floating IP is different from the fixed internal IP: the instance itself only
