@@ -34,3 +34,4 @@ All target_path values are under overrides/assets/images/ozarland/. SVG files us
 - icons/ and seals/ — flat scalable vectors.
 - images/ — existing WebP artwork included in the handoff.
 - prompts/ — full prompts for six Lumo pose images not yet generated.
+- characters/ — reference sheets of LUMO (evolution from stop 0 to stop 7, expressions, turnaround) and of the recurring characters, for the art direction of stops 1 to 7.
