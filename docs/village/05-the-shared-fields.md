@@ -1,6 +1,26 @@
 ---
 title: "5. The shared fields"
 description: "LUMO visits the workshops where the machines will run. Compute hosts run a hypervisor that shares their processors and memory between many virtual machines."
+remember:
+- "A compute host is a physical server whose hypervisor (usually KVM through libvirt) runs virtual machines."
+- "<code>nova-compute</code> on each host receives instructions from the control plane and drives the hypervisor."
+- "Hosts are shared: instances of many projects can run on the same host, and a project does not own a host."
+quiz:
+- q: "What runs on a compute host to drive the hypervisor for OpenStack?"
+  options:
+  - "<code>nova-compute</code>"
+  - "Keystone"
+  - "Horizon"
+  answer: 0
+  explain: "<code>nova-compute</code> receives instructions from the control plane and creates, stops and deletes VMs through the hypervisor."
+  see: "what-it-is-in-openstack"
+- q: "Do Neri's instances always land on the same host?"
+  options:
+  - "Yes, each project has its own host"
+  - "No, the scheduler places each instance where it fits"
+  answer: 1
+  explain: "Hosts are shared between projects; each request is scheduled on a host that fits."
+  see: "what-it-is-in-openstack"
 ---
 
 # 5. The shared fields

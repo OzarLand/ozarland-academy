@@ -1,6 +1,26 @@
 ---
 title: "2. The town hall takes shape"
 description: "A crew sets up the services of the town hall on the hosts. LUMO learns how Kolla-Ansible deploys and configures OpenStack services in containers."
+remember:
+- "Kolla-Ansible deploys the OpenStack services as containers on the hosts listed in an inventory, with the settings of <code>globals.yml</code>."
+- "<code>bootstrap-servers</code> prepares the hosts, <code>prechecks</code> verifies them, <code>deploy</code> starts the services."
+- "Kolla-Ansible builds the cloud; it does not create the users' machines. Users ask the deployed services."
+quiz:
+- q: "Neri wants a new virtual machine. Who handles that request?"
+  options:
+  - "Kolla-Ansible"
+  - "The deployed OpenStack services (Nova, Neutron, Glance…)"
+  answer: 1
+  explain: "Kolla-Ansible deploys and changes the platform; once the services run, users talk to them through their APIs."
+  see: "what-it-is-in-openstack"
+- q: "Which command checks the hosts before anything is deployed?"
+  options:
+  - "<code>kolla-ansible prechecks</code>"
+  - "<code>kolla-ansible deploy</code>"
+  - "<code>openstack server create</code>"
+  answer: 0
+  explain: "<code>prechecks</code> verifies the hosts and the configuration; <code>deploy</code> then starts the services."
+  see: "see-it-for-real"
 ---
 
 # 2. The town hall takes shape

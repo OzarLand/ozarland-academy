@@ -1,6 +1,41 @@
 ---
 title: "9. Neri's first house"
 description: "With an image, a flavor and a network, LUMO asks for Neri's first instance. Nova builds it on a chosen host; ACTIVE does not mean the service works."
+remember:
+- "An instance is created by Nova from an image (or a bootable volume), a flavor and one or more networks."
+- "<code>ACTIVE</code> means Nova runs the VM; it does not prove that the guest system or the application works."
+- "A disk created from the image on the host is deleted with the instance; a volume can outlive it."
+scenarios:
+- title: "Deleting an instance to save space"
+  situation: "Neri's instance booted from its image. Neri wants to delete it to free capacity and assumes the data on its root disk \"will be kept somewhere\"."
+  ask: "What would you do?"
+  choices:
+  - text: "Explain that a disk created from the image is deleted with the instance, and copy the data to a volume or an object store first."
+    verdict: "best"
+    why: "Only data on a volume (or copied elsewhere) survives the deletion of an instance that booted from an image."
+  - text: "Take a snapshot of the instance, then delete it."
+    verdict: "risky"
+    why: "A snapshot keeps an image of the disk, which can work, but nobody checked that the snapshot is complete or restorable before deleting."
+  - text: "Delete it: OpenStack keeps the root disk anyway."
+    verdict: "avoid"
+    why: "The local root disk is deleted with the instance."
+  see: "what-it-is-in-openstack"
+quiz:
+- q: "<code>openstack server show</code> says <code>ACTIVE</code>. Is Neri's service up?"
+  options:
+  - "Yes, ACTIVE means the application answers"
+  - "Not necessarily: check the console log and the service itself"
+  answer: 1
+  explain: "ACTIVE is Nova's view of the VM. The guest may still be booting, or the application may have failed."
+  see: "what-it-is-in-openstack"
+- q: "Which three things does <code>server create</code> need in the simplest case?"
+  options:
+  - "An image, a flavor and a network"
+  - "A token, a quota and a router"
+  - "A volume, a floating IP and a security group"
+  answer: 0
+  explain: "Image (what it starts with), flavor (how much it gets) and a network (where it is connected); the rest is optional."
+  see: "see-it-for-real"
 ---
 
 # 9. Neri's first house

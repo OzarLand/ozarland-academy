@@ -1,6 +1,27 @@
 ---
 title: "6. The resource register and the choice of a host"
 description: "Noor keeps the inventory of every workshop and Sacha chooses where a new house goes. LUMO learns how Placement and the Nova scheduler work together."
+remember:
+- "Placement tracks resource providers, their inventories, traits and allocations; it counts, it does not choose alone."
+- "The Nova scheduler asks Placement for candidates, then applies filters and weighers to choose a host, and claims the resources."
+- "When no host passes, the build fails with <code>No valid host was found</code>."
+quiz:
+- q: "Which component chooses the host of a new instance?"
+  options:
+  - "Placement, by itself"
+  - "The Nova scheduler, using candidates from Placement and its filters and weighers"
+  - "Keystone"
+  answer: 1
+  explain: "Placement returns allocation candidates; the scheduler filters, weighs, chooses and claims."
+  see: "what-it-is-in-openstack"
+- q: "A build fails with <code>No valid host was found</code>. What does it mean?"
+  options:
+  - "No host passed the resource checks and filters for this request"
+  - "Keystone rejected the token"
+  - "The image is missing in Glance"
+  answer: 0
+  explain: "It is the scheduler's answer when no candidate host fits the request."
+  see: "what-it-is-in-openstack"
 ---
 
 # 6. The resource register and the choice of a host

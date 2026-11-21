@@ -1,6 +1,41 @@
 ---
 title: "11. The rules at the doors"
 description: "LUMO reads the rules applied at the doors of Neri's house and allows only what the service needs. Security groups filter traffic at each port."
+remember:
+- "A security group is a set of rules applied to ports; anything not allowed is dropped."
+- "Rules are stateful: replies to an allowed connection go back without an extra rule."
+- "Open only what the service needs, from the narrowest source possible."
+scenarios:
+- title: "Remote login for Neri"
+  situation: "Neri needs SSH to the instance. A quick fix would be a rule allowing TCP 22 from 0.0.0.0/0."
+  ask: "What would you do?"
+  choices:
+  - text: "Allow TCP 22 only from Neri's own address, and write down why."
+    verdict: "best"
+    why: "It gives Neri access without exposing SSH to the whole Internet."
+  - text: "Allow TCP 22 from 0.0.0.0/0 for a day, then remove it."
+    verdict: "risky"
+    why: "Temporary rules are often forgotten, and exposed SSH is scanned within minutes."
+  - text: "Allow all TCP ports from 0.0.0.0/0 so Neri never has to ask again."
+    verdict: "avoid"
+    why: "Every open port is a door someone else can use."
+  see: "what-it-is-in-openstack"
+quiz:
+- q: "Incoming HTTPS is allowed by a rule. Do the replies need an egress rule?"
+  options:
+  - "Yes, every direction needs its rule"
+  - "No, security groups are stateful"
+  answer: 1
+  explain: "Replies to an allowed connection are allowed automatically."
+  see: "what-it-is-in-openstack"
+- q: "Where are security group rules applied?"
+  options:
+  - "On each port"
+  - "On the router only"
+  - "On the physical switch"
+  answer: 0
+  explain: "They apply to the ports of the instances, wherever those run."
+  see: "what-it-is-in-openstack"
 ---
 
 # 11. The rules at the doors

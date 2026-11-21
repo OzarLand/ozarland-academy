@@ -1,6 +1,26 @@
 ---
 title: "8. The network and its attachments"
 description: "In Linh's network workshop LUMO creates a network, gives it a range of addresses, and finds the port that will attach the future machine to it."
+remember:
+- "A Neutron <strong>network</strong> is an isolated layer-2 segment, usually private to a project."
+- "A <strong>subnet</strong> is a range of IP addresses on that network, with a gateway and DHCP settings."
+- "A <strong>port</strong> connects one interface to a network and carries its MAC address and fixed IPs."
+quiz:
+- q: "Which Neutron object holds the fixed IP of an instance's interface?"
+  options:
+  - "The network"
+  - "The port"
+  - "The router"
+  answer: 1
+  explain: "Each port has a MAC address and one or more fixed IPs from a subnet."
+  see: "what-it-is-in-openstack"
+- q: "Is a subnet a physical part of the data centre?"
+  options:
+  - "Yes, a set of cables"
+  - "No, it is a logical range of addresses on a network"
+  answer: 1
+  explain: "Networks, subnets and ports are logical objects; the virtual network carries them wherever the instances run."
+  see: "what-it-is-in-openstack"
 ---
 
 # 8. The network and its attachments

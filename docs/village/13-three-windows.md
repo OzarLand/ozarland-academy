@@ -1,6 +1,26 @@
 ---
 title: "13. Three windows on the same services"
 description: "At the front desk and at the command-line table, LUMO sees the same list of instances. Horizon and the CLI are clients of the same APIs."
+remember:
+- "Every OpenStack service exposes a REST API; it is the only way to talk to it."
+- "Horizon, the <code>openstack</code> CLI, SDKs and tools such as Terraform are all clients of those APIs."
+- "Changing the client does not change what you are allowed to do: roles and policies decide."
+quiz:
+- q: "An action is refused in Horizon. Will the CLI allow it?"
+  options:
+  - "Yes, the CLI has more rights"
+  - "No, both call the same API with the same token and policy"
+  answer: 1
+  explain: "All clients send the same API calls; the answer depends on roles and policies, not on the client."
+  see: "what-it-is-in-openstack"
+- q: "Which option shows the API requests the CLI sends?"
+  options:
+  - "<code>--debug</code>"
+  - "<code>--verbose-api</code>"
+  - "<code>--trace-http</code>"
+  answer: 0
+  explain: "<code>openstack … --debug</code> prints the requests, the endpoints and the answers."
+  see: "see-it-for-real"
 ---
 
 # 13. Three windows on the same services

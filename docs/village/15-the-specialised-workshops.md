@@ -1,6 +1,26 @@
 ---
 title: "15. The specialised workshops"
 description: "Four more workshops build whole quarters, share visitors, keep the keys and name the streets: Heat, Octavia, Barbican and Designate."
+remember:
+- "Heat creates and deletes a set of linked resources (a stack) from a template."
+- "Octavia spreads connections over the members of a pool and takes failing members out."
+- "Barbican stores secrets; Designate manages DNS zones and records. All four are optional, depending on the cloud."
+quiz:
+- q: "Which service would you use to describe two VMs, a network and a load balancer as one unit?"
+  options:
+  - "Heat"
+  - "Barbican"
+  - "Designate"
+  answer: 0
+  explain: "A Heat template describes a stack of linked resources, created in dependency order."
+  see: "what-it-is-in-openstack"
+- q: "Is every one of these services available on every OpenStack cloud?"
+  options:
+  - "Yes, they are part of every deployment"
+  - "No, operators choose which to enable"
+  answer: 1
+  explain: "They are optional; check the catalog of your cloud."
+  see: "what-it-is-in-openstack"
 ---
 
 # 15. The specialised workshops

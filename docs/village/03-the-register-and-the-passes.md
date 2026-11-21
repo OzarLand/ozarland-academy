@@ -1,6 +1,26 @@
 ---
 title: "3. The register and the passes"
 description: "Maë keeps the register of the town hall. LUMO learns what Keystone does: identity, roles and tokens, and the catalog that lists where each service answers."
+remember:
+- "Keystone authenticates users and issues <strong>tokens</strong>; every request to a service carries one."
+- "A <strong>role</strong> says what a user may do, always in a <strong>scope</strong>: a project or a domain."
+- "The <strong>service catalog</strong> lists the endpoints where each service answers. Keystone neither builds resources nor routes requests."
+quiz:
+- q: "What does the service catalog give a client?"
+  options:
+  - "The URLs (endpoints) where each service's API answers"
+  - "A copy of every resource of the project"
+  - "A route through which Keystone forwards the requests"
+  answer: 0
+  explain: "Clients read the catalog to know where to send each request; they then call the service directly with their token."
+  see: "what-it-is-in-openstack"
+- q: "A user has a valid token. Can they do anything they want in the cloud?"
+  options:
+  - "Yes, a token opens every door"
+  - "No: what is allowed depends on their roles in the token's scope and on each service's policy"
+  answer: 1
+  explain: "The token proves identity and scope; the role in that scope and the policy of each service decide what is allowed."
+  see: "what-it-is-in-openstack"
 ---
 
 # 3. The register and the passes

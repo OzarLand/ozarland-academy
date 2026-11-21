@@ -1,6 +1,26 @@
 ---
 title: "12. The attached disk and the object archive"
 description: "Two storerooms: Safa's volumes, attached to a machine like a disk, and Eren's archive, where objects are stored and fetched through an API."
+remember:
+- "Cinder provides <strong>volumes</strong>: block devices attached to an instance and seen as a disk."
+- "A volume lives on its own: it can be detached, attached elsewhere, snapshotted, and deleted separately."
+- "Swift stores <strong>objects</strong> in containers, read and written through an HTTP API; an object is not a mounted disk."
+quiz:
+- q: "Neri wants a disk that survives when the instance is rebuilt. What fits?"
+  options:
+  - "A Cinder volume"
+  - "A Swift object"
+  - "A larger flavor"
+  answer: 0
+  explain: "A volume exists independently of the instance and can be attached to the new one."
+  see: "what-it-is-in-openstack"
+- q: "How does an application read a Swift object?"
+  options:
+  - "Through the HTTP API of Swift"
+  - "By mounting it as /dev/vdb"
+  answer: 0
+  explain: "Objects are read and written whole through an API; they are not block devices."
+  see: "what-it-is-in-openstack"
 ---
 
 # 12. The attached disk and the object archive
