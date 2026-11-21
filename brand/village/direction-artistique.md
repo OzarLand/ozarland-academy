@@ -7,7 +7,7 @@
 
 **Promesse au lecteur.** En suivant LUMO, le lecteur bâtit mentalement un cloud avant d’en voir la mécanique réelle. Chaque scène associe une image mémorisable, une limite explicite de la métaphore et un repère OpenStack consultable. Le village donne un fil de lecture ; les schémas et les commandes donnent le modèle exact.
 
-Le Stop 0 précède le parcours Academy et ses huit étapes. Il se termine au port, sans prétendre remplacer le Lab : le village de LUMO est une première carte mentale, puis le lecteur part pratiquer dans un environnement contrôlé. Le livre « OpenStack, après-demain » appartient au même archipel visuel : même horizon, mer, ville de pierre, bois, parchemin, laiton et voilier. Stop 0 montre LUMO bâtisseur-apprenti ; sa transformation en cartographe appartient à la suite du parcours.
+Le Stop 0 précède le parcours Academy et ses sept étapes. Il se termine au port, sans prétendre remplacer le Lab : le village de LUMO est une première carte mentale, puis le lecteur part pratiquer dans un environnement contrôlé. Le livre « OpenStack, après-demain » appartient au même archipel visuel : même horizon, mer, ville de pierre, bois, parchemin, laiton et voilier. Stop 0 montre LUMO bâtisseur-apprenti ; sa transformation en cartographe appartient à la suite du parcours.
 
 ### Trois pistes visuelles
 

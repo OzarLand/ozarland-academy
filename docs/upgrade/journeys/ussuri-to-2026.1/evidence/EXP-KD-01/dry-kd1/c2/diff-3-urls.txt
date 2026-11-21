@@ -1,2 +1,0 @@
-UNDECLARED	-	rows changed in keystone.endpoint: 3
-SUMMARY declared=0 undeclared=1

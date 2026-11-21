@@ -1,1 +1,0 @@
-RESULT hard-stop checks after hop 1

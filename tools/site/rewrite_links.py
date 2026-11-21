@@ -8,7 +8,6 @@ Each module of the academy, except day2, was a repository of its own:
     runbooks    OzarLand/openstack-vm-runbooks
     production  OzarLand/production-guide
     okd         OzarLand/okd-openstack-lab
-    upgrade     OzarLand/openstack-upgrade-journeys
     skills      OzarLand/openstack-operator-skills
 
 Its history is imported under docs/<module>/ by git filter-repo, with every
@@ -68,7 +67,6 @@ SOURCES = {
     "openstack-vm-runbooks": "runbooks",
     "production-guide": "production",
     "okd-openstack-lab": "okd",
-    "openstack-upgrade-journeys": "upgrade",
     "openstack-operator-skills": "skills",
 }
 
@@ -84,10 +82,6 @@ FORM_RENAMES = {
     "openstack-quick-lab": {
         "exercise-problem.yml": "lab-exercise-problem.yml",
         "variant-or-exercise-proposal.yml": "lab-variant-or-exercise-proposal.yml",
-    },
-    "openstack-upgrade-journeys": {
-        "experiment-report.yml": "upgrade-experiment-report.yml",
-        "unsafe-or-wrong-procedure.yml": "upgrade-unsafe-or-wrong-procedure.yml",
     },
     "openstack-operator-skills": {
         "improvement.yml": "skills-improvement.yml",

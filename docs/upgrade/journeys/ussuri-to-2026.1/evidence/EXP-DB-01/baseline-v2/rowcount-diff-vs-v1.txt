@@ -1,4 +1,0 @@
-261c261
-< neutron	segmenthostmappings	9
----
-> neutron	segmenthostmappings	6
