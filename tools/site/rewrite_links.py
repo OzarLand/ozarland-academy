@@ -9,6 +9,7 @@ Each module of the academy, except day2, was a repository of its own:
     production  OzarLand/production-guide
     okd         OzarLand/okd-openstack-lab
     upgrade     OzarLand/openstack-upgrade-journeys
+    skills      OzarLand/openstack-operator-skills
 
 Its history is imported under docs/<module>/ by git filter-repo, with every
 README.md renamed index.md and the files the academy already has (LICENSE,
@@ -68,6 +69,7 @@ SOURCES = {
     "production-guide": "production",
     "okd-openstack-lab": "okd",
     "openstack-upgrade-journeys": "upgrade",
+    "openstack-operator-skills": "skills",
 }
 
 #: Files of a moved repository that were left out of the import, and where a
@@ -86,6 +88,11 @@ FORM_RENAMES = {
     "openstack-upgrade-journeys": {
         "experiment-report.yml": "upgrade-experiment-report.yml",
         "unsafe-or-wrong-procedure.yml": "upgrade-unsafe-or-wrong-procedure.yml",
+    },
+    "openstack-operator-skills": {
+        "improvement.yml": "skills-improvement.yml",
+        "unsafe-or-wrong-advice.yml": "skills-unsafe-or-wrong-advice.yml",
+        "validation-evidence.yml": "skills-validation-evidence.yml",
     },
 }
 
