@@ -7,6 +7,8 @@ description: "LUMO visits the workshops where the machines will run. Compute hos
 
 *The terraces of the compute workshops.*
 
+<img src="assets/images/S05-open.webp" width="1536" height="1024" alt="LUMO and Neri stand above terraces where people work at shared workshops spread across the village.">
+
 Below the town hall, on wide terraces, stand the workshops. Each one is a solid building full of tools: processors,
 memory, local disk. LUMO walks from one to the next. In each, several small houses are being built at the same time,
 side by side, sharing the same tools.
@@ -14,8 +16,12 @@ side by side, sharing the same tools.
 "Which workshop is mine?" asks Neri. "None of them, and all of them," LUMO says. "Your houses will go wherever there is
 room, like everyone else's. When a workshop is busy, the next house goes elsewhere."
 
+<img src="assets/images/S05-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO, chin in hand, studies a metal cabinet of servers on a workbench in one of the workshops.">
+
 Rami, who runs the workshops, adds one thing: inside each workshop a foreman keeps the houses apart, so that what
 happens in one does not spill into its neighbour.
+
+<img src="assets/images/S05-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO raises the lantern over a square where several small houses are being built side by side in the same workshop yard.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** A project does not own a host. Its instances land wherever the scheduler finds a fit,

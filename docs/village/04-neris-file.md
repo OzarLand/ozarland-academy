@@ -7,6 +7,8 @@ description: "LUMO opens a file for Neri at the town hall. A project is the scop
 
 *The administration office.*
 
+<img src="assets/images/S04-open.webp" width="1536" height="1024" alt="Neri and LUMO sit at a desk of the administration office and open a new file with a leather notebook, a compass and a quill beside them.">
+
 To let Neri ask for anything, LUMO opens a file in Neri's name at the administration office. Everything Neri asks for
 will be recorded in that file: the machines, the networks, the disks. Neri may invite friends to work in the same
 file later.
@@ -15,8 +17,12 @@ On the first page of the file LUMO writes limits: so many machines, so many proc
 "Is that what I get?" asks Neri. LUMO shakes the lantern gently. "No. That is the most you may ask for. Whether it is
 there when you ask depends on what the village has left."
 
+<img src="assets/images/S04-v1.webp" width="1024" height="1024" loading="lazy" alt="On a desk lie a closed folder tied with a cord and a leather-bound register, with a compass, a lantern and Neri's rolled bedroll.">
+
 Neri looks out of the window at the fields. "So there is no fence around a corner of land with my name on it?"
 "No fence," LUMO says. "Just a file, and a limit."
+
+<img src="assets/images/S04-v2.webp" width="1024" height="1024" loading="lazy" alt="From a balcony, Neri and LUMO look over the village, where small coloured pennants mark the files of different people without any fences between them.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** A project does not reserve a physical plot or a guaranteed share of the capacity. A

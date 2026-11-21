@@ -7,6 +7,8 @@ description: "In Linh's network workshop LUMO creates a network, gives it a rang
 
 *The network workshop.*
 
+<img src="assets/images/S08-open.webp" width="1536" height="1024" alt="In Linh's workshop, LUMO and Neri lay out two turquoise boards with small connectors, linked by lines, on the workbench.">
+
 Linh's workshop smells of fresh rope and brass. On the bench lies a thin line that will become Neri's road: a private
 network, just for Neri's project. Linh gives it a range of addresses, like house numbers along a street that does not
 exist yet.
@@ -15,8 +17,12 @@ exist yet.
 these. Each house that joins the network gets its own connector, with its own number from the range. Take the
 connector away, and the house is off the road."
 
+<img src="assets/images/S08-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO holds up a card with simple symbols for a processor, memory and a disk above a small brass cabinet.">
+
 LUMO notices that nothing here is dug into the ground. The road is drawn on paper, and the workshops will carry it for
 real wherever the houses happen to be.
+
+<img src="assets/images/S08-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO points along a glowing line on a map that joins a small server to a single connector, lantern raised.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** These objects are logical. A subnet is not a plot of land; a port is an interface

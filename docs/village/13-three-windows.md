@@ -7,14 +7,20 @@ description: "At the front desk and at the command-line table, LUMO sees the sam
 
 *The Horizon front desk and the command-line table.*
 
+<img src="assets/images/S13-open.webp" width="1536" height="1024" alt="In a bright hall, LUMO stands between a large board on one side and a small terminal on the other, with a long corridor of counters behind.">
+
 At the front desk of the town hall, Imani shows Neri a large, clear board: the list of Neri's houses, their status,
 their addresses, a button to build another. Neri likes it at once.
 
 At the back of the room LUMO sits at a plain table and types a short line. The same list appears, as text. Behind
 both, a third window that nobody looks at directly: the town hall's own counters, where every request really goes.
 
+<img src="assets/images/S13-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO opens both arms over two screens showing the same symbol, one light and one dark.">
+
 "Which one is the real one?" Neri asks. "All three ask the same counters," Imani says. "I just make it easier to
 fill in the form."
+
+<img src="assets/images/S13-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO and Imani, a keeper with a book, look at rows of identical bound registers on the shelves behind the front desk.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** Changing the client does not change the service being asked. The rights and the

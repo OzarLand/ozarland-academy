@@ -7,6 +7,8 @@ description: "Two storerooms: Safa's volumes, attached to a machine like a disk,
 
 *Two separate storerooms.*
 
+<img src="assets/images/S12-open.webp" width="1536" height="1024" alt="LUMO stands between two storerooms: on one side, a cabinet and a disk on a table; on the other, a large open crate of labelled objects.">
+
 Neri's service will keep data, and LUMO does not want it to live only inside the house. In the first storeroom Safa
 hands over a removable plate: a volume. LUMO fixes it to Neri's house, where it appears as an extra disk. "If the house
 is rebuilt, you detach the plate and fix it to the new one," Safa says. "And if you delete the plate, it is gone, so
@@ -16,7 +18,11 @@ In the second storeroom, Eren keeps an archive of labelled boxes. Neri drops a f
 writes down its name and hands back nothing more than the promise to return it when asked by name. "You don't mount
 this in your house," Eren says. "You ask me for an object, and I give it to you, from anywhere."
 
+<img src="assets/images/S12-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO fits a round metal plate onto a small brass machine on the workbench.">
+
 Two halos, two kinds of storage. LUMO is careful to keep them apart.
+
+<img src="assets/images/S12-v2.webp" width="1024" height="1024" loading="lazy" alt="LUMO kneels by an open wooden chest holding labelled objects: a lantern, a globe, rolled papers and a book.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** A volume can be deleted on its own, and it does not automatically survive every kind

@@ -7,6 +7,8 @@ description: "From the lookout LUMO sees regions and availability zones, prepare
 
 *The lookout above the archipelago.*
 
+<img src="assets/images/S16-open.webp" width="1536" height="1024" alt="Neri and LUMO stand at the lookout above the harbour, with clouds gathering far out at sea.">
+
 From the lookout the whole village is visible: the town hall, the workshops on their terraces, the roads, the bridge,
 the storerooms. Far across the water, another village with its own town hall serves the next island. On the terraces
 below, the workshops are grouped in quarters, each with its own water supply and its own path down to the quay.
@@ -15,11 +17,15 @@ below, the workshops are grouped in quarters, each with its own water supply and
 the quarters were really built that way. A name on a sign doesn't tell you. You have to look at how they were built,
 and test it."
 
+<img src="assets/images/S16-v1.webp" width="1024" height="1024" loading="lazy" alt="LUMO and a companion look out over the archipelago, where translucent outlines group the islands into separate areas.">
+
 The sky darkens over the sea: a storm is announced for tomorrow. Nothing is broken, but Neri is worried. LUMO opens
 the notebook. "Then let's practise. Not here, on the real houses. In a small village of our own, where we can break
 things on purpose and learn to repair them."
 
 The lantern is small, but steady. It lights the road down to the harbour.
+
+<img src="assets/images/S16-v2.webp" width="1024" height="1024" loading="lazy" alt="At dusk, LUMO and a companion go through a checklist at a small table by the lantern, preparing a careful exercise.">
 
 > [!IMPORTANT]
 > **Where the picture stops.** The name of a region or an availability zone is not enough to know its topology or its
@@ -67,6 +73,8 @@ In Horizon, the region selector is at the top of the page when the cloud has sev
 **The lantern:** small but steady, it lights the road to the lab and to the archipelago.
 
 ## The road goes on
+
+<img src="assets/images/S17-archipelago-exit.webp" width="1536" height="1024" loading="lazy" alt="On the quay, LUMO points out to sea where a sailing ship heads for the islands of the archipelago, a companion at LUMO's side.">
 
 The village answers its inhabitants. Now the question is: how do you break it and repair it safely? That is the next
 stop: the [Quick lab](../lab/), a real, disposable OpenStack in about an hour, with exercises to break and repair it.
