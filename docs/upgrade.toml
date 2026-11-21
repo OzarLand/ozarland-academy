@@ -1,0 +1,90 @@
+# Settings of the Upgrade journeys site (module `upgrade` of academy.toml),
+# merged with zensical.base.toml by tools/site/releases.py. The pages are the
+# history of OzarLand/openstack-upgrade-journeys, moved under docs/upgrade/.
+# The evidence of the experiments (redacted outputs, checksums, archives) and
+# the laboratory scripts moved with them; only their Markdown pages are part
+# of the site, the other files are linked on GitHub.
+
+[project]
+exclude_docs = """
+/journeys/*/evidence/**
+!/journeys/*/evidence/**/*.md
+/lab/**
+!/lab/*/README.md
+!/lab/*/index.md
+"""
+site_description = "Evidence-based paths to bring a legacy OpenStack cloud back to a current release: assessments, experiments, decisions and lab runbooks, starting with Ussuri to 2026.1."
+
+nav = [
+  { "Home" = [
+    "index.md",
+    "docs/validation-status.md",
+  ] },
+  { "Ussuri → 2026.1" = [
+    "journeys/ussuri-to-2026.1/index.md",
+    "journeys/ussuri-to-2026.1/HANDOFF.md",
+    "journeys/ussuri-to-2026.1/architecture.md",
+    "journeys/ussuri-to-2026.1/compatibility-matrix.md",
+    "journeys/ussuri-to-2026.1/dependency-graph.md",
+    "journeys/ussuri-to-2026.1/reports/2026-10-31-final-report-session-1.md",
+    "journeys/ussuri-to-2026.1/reports/2026-10-31-progress-report-01.md",
+  ] },
+  { "Experiments" = [
+    "journeys/ussuri-to-2026.1/experiments/EXP-DB-00-baseline.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-DB-01-root-cause-analysis.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-DB-01-s2c-r1.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-DB-N1-direct-2026.1.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-DB-R0-schema-calibration.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-KD-01-kolla-deploy-time-on-h4r.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-SVC-01-2026.1-services-on-h4r.md",
+    "journeys/ussuri-to-2026.1/experiments/EXP-SVC-02-operations-on-old-resources.md",
+    "journeys/ussuri-to-2026.1/experiments/baseline-coverage-checklist.md",
+    "journeys/ussuri-to-2026.1/experiments/declared-differences.md",
+    "journeys/ussuri-to-2026.1/experiments/fast-forward-checks.md",
+    "journeys/ussuri-to-2026.1/evidence/commit-sha-mapping.md",
+    "journeys/ussuri-to-2026.1/evidence/EXP-DB-01-dryruns/index.md",
+    "journeys/ussuri-to-2026.1/evidence/EXP-DB-01/r1c/INTEGRITY-NOTE.md",
+  ] },
+  { "Assessments" = [
+    "journeys/ussuri-to-2026.1/assessments/00-mission-brief.md",
+    "journeys/ussuri-to-2026.1/assessments/01-repository-inventory.md",
+    "journeys/ussuri-to-2026.1/assessments/02-unsupported-transitions.md",
+    "journeys/ussuri-to-2026.1/assessments/03-configuration-transformation.md",
+    "journeys/ussuri-to-2026.1/assessments/03-kolla-ansible-assessment.md",
+    "journeys/ussuri-to-2026.1/assessments/03-kolla-deploy-on-migrated-databases.md",
+    "journeys/ussuri-to-2026.1/assessments/03-kolla-execution-plan.md",
+    "journeys/ussuri-to-2026.1/assessments/04-database-migration-dependency-graph.md",
+    "journeys/ussuri-to-2026.1/assessments/04-database-migration-strategy.md",
+    "journeys/ussuri-to-2026.1/assessments/04-messaging-compatibility.md",
+    "journeys/ussuri-to-2026.1/assessments/04-recovery-consistency-requirements.md",
+    "journeys/ussuri-to-2026.1/assessments/05-lab-feasibility-and-baseline.md",
+    "journeys/ussuri-to-2026.1/assessments/06-operational-risk-assessment.md",
+    "journeys/ussuri-to-2026.1/assessments/06-recovery-and-rollback-plan.md",
+    "journeys/ussuri-to-2026.1/assessments/06-workload-preservation-strategy.md",
+    "journeys/ussuri-to-2026.1/assessments/07-red-team-initial-assessment.md",
+    "journeys/ussuri-to-2026.1/assessments/07-red-team-stage3-review.md",
+    "journeys/ussuri-to-2026.1/assessments/07-red-team-stage5-results-review.md",
+    "journeys/ussuri-to-2026.1/assessments/07-red-team-stage5c-svc-kd-review.md",
+    "journeys/ussuri-to-2026.1/assessments/07-red-team-stage5d-svc02-review.md",
+    "journeys/ussuri-to-2026.1/assessments/08-repository-organization.md",
+  ] },
+  { "Decisions" = [
+    "journeys/ussuri-to-2026.1/decision-records/DR-000-agent-team-and-model-allocation.md",
+    "journeys/ussuri-to-2026.1/decision-records/DR-001-laboratory-environment.md",
+    "journeys/ussuri-to-2026.1/decision-records/DR-002-keystone-bridge-window-disagreement.md",
+    "journeys/ussuri-to-2026.1/decision-records/DR-003-nova-service-version-gate.md",
+    "journeys/ussuri-to-2026.1/decision-records/DR-004-cinder-2023.2-step.md",
+  ] },
+  { "Runbooks and lab" = [
+    "journeys/ussuri-to-2026.1/runbooks/ussuri-to-2026.1-database-fast-forward-lab-runbook.md",
+    "journeys/ussuri-to-2026.1/troubleshooting/cinder-use-quota-null-blocks-2024.1-db-sync.md",
+    "lab/ussuri-db-lab/index.md",
+  ] },
+  { "Contributing" = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "docs/templates/experiment-record.md",
+    "docs/templates/decision-record.md",
+    "docs/templates/runbook-step.md",
+  ] },
+]

@@ -3469,6 +3469,7 @@ a.portal-cta:focus-visible {
   --oz-module-runbooks: #2c7a43;
   --oz-module-production: #b55a3a;
   --oz-module-okd: #1f3a6b;
+  --oz-module-upgrade: #9a6a12;
   --oz-module-book: #6b4220;
   --oz-risk-readonly-text: #4b3b69;
   --oz-risk-readonly-bg: #f0ecf7;
@@ -3494,6 +3495,7 @@ a.portal-cta:focus-visible {
   --oz-module-runbooks: #70c78a;
   --oz-module-production: #e0825f;
   --oz-module-okd: #a9bde6;
+  --oz-module-upgrade: #f0b440;
   --oz-module-book: #d9a865;
   --oz-risk-readonly-text: #d7c9f0;
   --oz-risk-readonly-bg: #30293d;
@@ -3514,6 +3516,7 @@ a.portal-cta:focus-visible {
 .oz-module--runbooks { --oz-accent: var(--oz-module-runbooks); }
 .oz-module--production { --oz-accent: var(--oz-module-production); }
 .oz-module--okd { --oz-accent: var(--oz-module-okd); }
+.oz-module--upgrade { --oz-accent: var(--oz-module-upgrade); }
 .oz-module--book { --oz-accent: var(--oz-module-book); }
 
 /* Keyboard focus: a gold inner ring and a keyline (navy on the light

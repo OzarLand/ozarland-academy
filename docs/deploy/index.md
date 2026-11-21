@@ -28,7 +28,7 @@ deployment can compare approaches and learn from others' experience.
 | ✅ In scope | ❌ Out of scope |
 |---|---|
 | Reference topologies and node roles, from all-in-one labs to multi-controller, multi-network-node production | Running instances: see [openstack-vm-runbooks](../runbooks/) |
-| Lab, pre-production and production environments: how they differ and how they are kept comparable | Upgrade campaigns beyond release notes: planned for a future `openstack-upgrade-playbooks` repository; until it exists, release notes and upgrade reports live in `version-notes/` |
+| Lab, pre-production and production environments: how they differ and how they are kept comparable | Upgrade campaigns beyond release notes: see the [Upgrade journeys](../upgrade/); release notes and upgrade reports live in `version-notes/` |
 | Network design: interfaces, management/API/tunnel/external/storage networks, OVN versus OVS, provider networks, MTU, bonding | Other deployment tools: welcome as separate pattern repositories when their operators show up |
 | Storage choices: Ceph, LVM, NFS and others for Glance, Cinder and Nova; what is shared and what is local | Copies of the upstream documentation. A page may synthesise the upstream documentation and source code, but it says so in *Validity and limits*, adds the operational context (what fails, what it costs, what to check), and stays `draft` until someone other than its author has run it |
 | Inventories, `globals.yml`, group and host variables, configuration overrides: how they are organised and versioned across environments | |
