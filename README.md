@@ -8,6 +8,7 @@ and its own site in the portal:
 
 | Step | Module | What it gives you | Sources | Status |
 |---|---|---|---|---|
+| Begin (stop 0) | LUMO's village | The basic concepts of OpenStack, told as a story: LUMO builds a village and learns why each piece of a cloud exists | [docs/village/](docs/village/index.md) | available |
 | Discover | Quick lab | A disposable OpenStack lab on cloud VMs in about an hour, with break-and-repair exercises | [docs/lab/](docs/lab/index.md) | available |
 | Deploy | Deployment patterns | Ways to deploy OpenStack with Kolla-Ansible, compared rather than prescribed | [docs/deploy/](docs/deploy/index.md) | available |
 | Operate | Kolla-Ansible Academy | Kolla-Ansible Day-2 operations learned from the source code, one study per OpenStack release | [docs/day2/](docs/day2/2024.1/index.md) | available |

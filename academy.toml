@@ -22,6 +22,8 @@
 #             content, the portal publishes one "coming soon" page at /<id>/
 #   default   versioned modules only: the release its home page leads to. It
 #             must be available.
+#   prelude   optional, first module only: true makes it stop 0 of the path, a
+#             prelude before the steps (their numbers start at 1 after it)
 #
 # One [[module.release]] block per release of a versioned module, in the
 # order of the version selector:
@@ -39,6 +41,16 @@
 #   title          display title; default "<openstack> · Kolla-Ansible <kolla_ansible>"
 #
 # How to add a module or a release: CONTRIBUTING.md.
+
+[[module]]
+id = "village"
+step = "Begin"
+title = "LUMO's village"
+summary = "The basic concepts of OpenStack, told as a story: LUMO builds a village and learns why each piece of a cloud exists."
+kind = "single"
+status = "available"
+# Stop 0: the prelude of the path, before the Quick lab.
+prelude = true
 
 [[module]]
 id = "lab"

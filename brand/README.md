@@ -9,6 +9,10 @@
 > `overrides/assets/stylesheets/portal.css`. The bands are named after the module id rather than the place
 > (`bands/day2.webp`, not `bands/operate.webp`), so that the templates find them from `academy.toml`.
 
+> **Stop 0, LUMO's village.** [`village/`](village/README.md) is the art direction of the prelude of the path
+> (module `village`): the story, the cast, the map, the visual rules and the manifest of its 86 images (54
+> illustrations to generate; the 32 bridge diagrams are drawn as Mermaid diagrams in the pages).
+
 **A shared land for better OpenStack operations.** This portal helps engineers understand what Kolla-Ansible commands do to a running OpenStack cloud by reading the source. The visual world frames that work as a shared, careful journey: welcoming, curious, and trustworthy.
 
 ## Colour palette and use

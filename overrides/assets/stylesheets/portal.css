@@ -3463,6 +3463,7 @@ a.portal-cta:focus-visible {
   --oz-text-muted: #4e5a6d;
   --oz-focus: #f0b440;
   --oz-focus-keyline: #152a50;
+  --oz-module-village: #5b7f2a;
   --oz-module-lab: #1e9fb5;
   --oz-module-deploy: #2f6fd0;
   --oz-module-day2: #c4904f;
@@ -3490,6 +3491,7 @@ a.portal-cta:focus-visible {
   --oz-text-muted: #b2bdca;
   --oz-focus: #f0b440;
   --oz-focus-keyline: #f3e3c3;
+  --oz-module-village: #a6c96a;
   --oz-module-lab: #4cc3d6;
   --oz-module-deploy: #8fb0e6;
   --oz-module-day2: #d9a865;
@@ -3512,6 +3514,7 @@ a.portal-cta:focus-visible {
 }
 
 /* The accent of a module: one custom property, set by a class. */
+.oz-module--village { --oz-accent: var(--oz-module-village); }
 .oz-module--lab { --oz-accent: var(--oz-module-lab); }
 .oz-module--deploy { --oz-accent: var(--oz-module-deploy); }
 .oz-module--day2 { --oz-accent: var(--oz-module-day2); }
