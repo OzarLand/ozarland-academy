@@ -34,6 +34,8 @@ issued and that the service checks.
 - The **service catalog** lists each service and its **endpoints**: the URLs where its API answers. Clients read it
   to know where to send each request.
 
+<img src="assets/images/S03-bridge-keystone.webp" width="1600" height="1000" loading="lazy" alt="On the left, the keeper of the register hands LUMO a plain brass token across the counter of the town hall; on the right, a drawing shows an identity card and a role combining into one token, and a catalog that points to the doors of three services.">
+
 ## From the village to OpenStack
 
 ```mermaid
