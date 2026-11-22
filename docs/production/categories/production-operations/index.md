@@ -9,6 +9,8 @@ description: "The production memos of the category Production operations: one op
 
 # Production operations
 
+<img src="../../illustrations/S5-production-operations.webp" width="1536" height="1024" alt="In the lighthouse workshop, LUMO points at four empty circles on a sheet while Davi checks a brass lens, the tools still set down.">
+
 - **PG-18** [Restarting an agent on a compute?](before-restarting-an-agent.md): Before a restart, know which process carries the workload, and what keeps it alive.
 - **PG-19** [A build failed. Which service?](trace-one-request.md): The last service that logged the request id is where it stopped. Start there.
 - **PG-20** [Cleaning up stale records?](cleaning-up-stale-records.md): Project tools first, the database last. And first of all: is this record true?

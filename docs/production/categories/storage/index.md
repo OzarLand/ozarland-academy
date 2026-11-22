@@ -9,6 +9,8 @@ description: "The production memos of the category Storage: one operational less
 
 # Storage
 
+<img src="../../illustrations/S5-storage.webp" width="1536" height="1024" alt="In an orderly warehouse, LUMO checks a crate on a trolley in front of racks of crates on wheeled stands.">
+
 - **PG-13** [Volume stuck attaching or detaching?](volume-stuck-attaching-or-detaching.md): The hypervisor tells the truth about the instance. Trust it over both databases.
 - **PG-14** [In-use by a VM that is gone?](volume-in-use-by-a-missing-instance.md): A record is stale only when the hypervisor agrees. Check the host before you change the database.
 - **PG-39** [Extended, same size inside?](extended-but-same-size-inside.md): Find the last stage that happened before you repeat the first.

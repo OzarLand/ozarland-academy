@@ -9,6 +9,8 @@ description: "The production memos of the category Control plane: one operationa
 
 # Control plane
 
+<img src="../../illustrations/S5-control-plane.webp" width="1536" height="1024" alt="In a calm signal room under the lighthouse, LUMO studies a wall clock without numbers, bells, signal lamps and a lever.">
+
 - **PG-15** [Control plane down: what runs?](control-plane-down.md): A control-plane outage is not a workload outage. Protect what runs, then repair.
 - **PG-16** [MessagingTimeout everywhere?](rpc-timeouts-everywhere.md): Computes reported down are a symptom here. Read every RabbitMQ node before you reset anything.
 - **PG-17** [APIs fail on database errors?](galera-lost-quorum.md): The data is at risk only during the recovery. Know the most advanced node before you bootstrap.

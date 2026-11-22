@@ -9,6 +9,8 @@ description: "The production memos of the category VM lifecycle: one operational
 
 # VM lifecycle
 
+<img src="../../illustrations/S5-vm-lifecycle.webp" width="1536" height="1024" alt="LUMO, holding a full-size brass lantern, watches small boats and crates waiting in line at the departure quay.">
+
 - **PG-01** [VM stuck in BUILD?](vm-stuck-in-build.md): A networking problem wearing a compute symptom.
 - **PG-02** [No valid host, with free capacity?](no-valid-host.md): Three places a build can stop before any compute. Read the exact message first.
 - **PG-03** [Exceeded maximum number of retries?](max-retries-exceeded.md): The fault is a summary. The cause is in the log of each compute that tried.
