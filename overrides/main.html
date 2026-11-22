@@ -252,7 +252,7 @@
   {% set next_stop = portal.kind == "release" and (page.url in ("", "./", "index.html") or not page.next_page) %}
   {% if next_stop %}
     {% include "partials/module-stop.html" %}
-    {% set root = base_url ~ "/" ~ portal.up %}
+    {% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
   {% endif %}
   {% if module_home %}
     {% set img = 'assets/images/ozarland/' | url %}

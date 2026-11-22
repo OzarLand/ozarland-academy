@@ -17,6 +17,7 @@ nav = [
     "index.md",
   ] },
   { "Lifecycle" = [
+    "lifecycle/index.md",
     "lifecycle/compute-disk-full-instance-paused.md",
     "lifecycle/console-not-available-or-disconnects.md",
     "lifecycle/instance-shut-off-by-host-oom-killer.md",
@@ -29,6 +30,7 @@ nav = [
     "lifecycle/stale-records-stuck-instances-orphan-ports-attachments.md",
   ] },
   { "Scheduling" = [
+    "scheduling/index.md",
     "scheduling/build-fails-exceeded-maximum-number-of-retries.md",
     "scheduling/compute-renamed-or-re-registered-resource-provider-conflict.md",
     "scheduling/compute-service-disabled-or-forced-down.md",
@@ -38,11 +40,13 @@ nav = [
     "scheduling/placement-allocations-out-of-sync-audit-and-heal.md",
   ] },
   { "Migration" = [
+    "migration/index.md",
     "migration/cpu-steal-on-pinned-instances.md",
     "migration/live-migration-never-completes-or-times-out.md",
     "migration/moving-instances-off-a-host-for-maintenance.md",
   ] },
   { "Networking" = [
+    "networking/index.md",
     "networking/instance-unreachable-from-outside.md",
     "networking/new-instance-boots-without-metadata.md",
     "networking/new-instance-gets-no-ip-dhcp-agents-down.md",
@@ -54,6 +58,7 @@ nav = [
     "networking/tunnel-mtu-mismatch-large-packets-dropped.md",
   ] },
   { "Volumes" = [
+    "volumes/index.md",
     "volumes/extend-in-use-volume-guest-sees-old-size.md",
     "volumes/stale-volume-attachment-after-instance-deleted-or-evacuated.md",
     "volumes/volume-stuck-in-attaching-or-detaching.md",
@@ -61,6 +66,7 @@ nav = [
     "volumes/volume-stuck-in-deleting-or-error-deleting.md",
   ] },
   { "Diagnostics" = [
+    "diagnostics/index.md",
     "diagnostics/compute-clock-skew.md",
     "diagnostics/control-plane-down-what-still-works-for-instances.md",
     "diagnostics/expired-certificates-and-fernet-keys-break-every-api-call.md",
@@ -93,6 +99,7 @@ nav = [
     "logs/where-openstack-logs-are-and-how-to-read-a-line.md",
   ] },
   { "Recovery" = [
+    "recovery/index.md",
     "recovery/after-a-compute-reboot-instances-shutoff-or-without-network.md",
     "recovery/api-returns-503-haproxy-backend-down-or-vip-flapping.md",
     "recovery/compute-host-failure-fence-before-evacuate.md",

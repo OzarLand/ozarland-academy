@@ -12,6 +12,7 @@ Nothing here holds content.
 | [build.py](build.py) | Runs the whole build: `prebuild.py`, Zensical for each available site, Zensical for the root, then the assembly. Also starts the live preview of one site. |
 | [check_docs.py](check_docs.py) | Checks on the registry and on the Markdown sources of every available site. No build needed, standard library only. |
 | [check_learning.py](check_learning.py) | Checks the learning blocks of the front matter (`remember`, `scenarios`, `quiz`, `challenges`): shape, answers, one "best" choice, allowed inline HTML, `see` targets. Needs PyYAML, a pinned dependency. |
+| [runbook_categories.py](runbook_categories.py) | Writes the index page of each category of the VM runbooks (`docs/runbooks/<category>/index.md`) from the catalogue of `docs/runbooks/index.md`, so the tab and the breadcrumb of a category open a list of its runbooks. `--check` fails when a page is stale. |
 | [check_site.py](check_site.py) | Checks on the built portal. Standard library only. |
 | [prebuild.py](prebuild.py) | Writes `docs/<path>/assets/data/updates.json` for each available site (date of the last change of each page) and makes sure the vendored Mermaid bundle is in place. |
 | [fetch_vendor.py](fetch_vendor.py) | Downloads the pinned Mermaid bundle to `overrides/assets/vendor/mermaid/mermaid.min.js` and verifies its checksums. The file is not committed. |
@@ -174,7 +175,7 @@ forces another interpreter.
 | Target | What it runs |
 |---|---|
 | `docs-deps` | `pip install -r requirements-docs.txt`, then `fetch_vendor.py`. |
-| `docs-check` | `check_docs.py`: the registry and every available site; then `check_learning.py`: the learning blocks of the front matter. |
+| `docs-check` | `check_docs.py`: the registry and every available site; then `check_learning.py`: the learning blocks of the front matter; then `runbook_categories.py --check`: the category pages of the runbooks. |
 | `docs-build` | The unit tests of `tests/`, then `build.py --strict` (`prebuild.py`; `zensical build --clean --strict` for each available site into `site/<path>/`; the same for the root site; the assembly of the root into `site/`), then `check_site.py site`. |
 | `docs-test` | The unit tests of `tests/` only (`python3 -m unittest discover -s tools/site/tests`). |
 | `docs-serve` | `build.py --serve`: `prebuild.py`, then `zensical serve` for one site (rebuilds on change). The preview holds that site only: links to other sites do not work there. `DEV_ADDR=127.0.0.1:8001` moves it. |

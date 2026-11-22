@@ -1,0 +1,46 @@
+{#-
+  Main navigation (the left sidebar, and the drawer on small screens). Copy
+  of the theme's partials/nav.html (Zensical 0.1.2) with two changes;
+  compare it with the theme's file when Zensical is upgraded.
+
+  1. The logo leads to the home of OzarLand Academy, as in the header, and
+     the site name to the home of this site.
+  2. Under the site name, a way out of this site: the whole learning path
+     (the portal root) and ozarland.com. On small screens the drawer is the
+     only menu, so it must lead home as well; on a wide screen the sidebar
+     hides these links, which the header and the footer already give.
+-#}
+{% import "partials/nav-item.html" as item with context %}
+{% set class = "md-nav md-nav--primary" %}
+{% if "navigation.tabs" in features %}
+  {% set class = class ~ " md-nav--lifted" %}
+{% endif %}
+{% if "toc.integrate" in features %}
+  {% set class = class ~ " md-nav--integrated" %}
+{% endif %}
+{% set oz_root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ (config.extra.portal.up if config.extra.portal else "") %}
+<nav class="{{ class }}" aria-label="{{ lang.t('nav') }}" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="{{ oz_root }}" title="OzarLand Academy home" class="md-nav__button md-logo" aria-label="OzarLand Academy home" data-md-component="logo">
+      {% include "partials/logo.html" %}
+    </a>
+    <a class="oz-site-home" href="{{ '.' | url }}">{{ config.site_name }}</a>
+  </label>
+  {% if config.extra.portal and config.extra.portal.kind == "release" %}
+    <ul class="oz-nav-out" aria-label="OzarLand">
+      <li><a href="{{ oz_root }}"><span aria-hidden="true">←</span> OzarLand Academy home</a></li>
+      <li><a href="https://ozarland.com/">ozarland.com</a></li>
+    </ul>
+  {% endif %}
+  {% if config.repo_url %}
+    <div class="md-nav__source">
+      {% include "partials/source.html" %}
+    </div>
+  {% endif %}
+  <ul class="md-nav__list" data-md-scrollfix>
+    {% for nav_item in nav.items %}
+      {% set path = "__nav_" ~ loop.index %}
+      {{ item.render(nav_item, path, 1) }}
+    {% endfor %}
+  </ul>
+</nav>

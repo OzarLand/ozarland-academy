@@ -14,6 +14,8 @@
 -#}
 {% extends "main.html" %}
 {% set portal = config.extra.portal %}
+{#- base_url is "/" on the not-found page of the root site: no "//" prefix. -#}
+{% set oz_base = (base_url if base_url[-1:] == "/" else base_url ~ "/") %}
 
 {% block htmltitle %}
   <title>Page not found - {{ config.site_name }}</title>
@@ -64,7 +66,7 @@
       {% if portal.kind == "root" %}
         <p>This address does not match a page of OzarLand Academy. It may have moved, or the link may be out of date.</p>
         <p class="oz-state__actions">
-          <a class="portal-cta portal-cta--primary" href="{{ base_url }}/">Academy home</a>
+          <a class="portal-cta portal-cta--primary" href="{{ oz_base }}">Academy home</a>
           <a class="portal-cta" href="#modules">Module index</a>
         </p>
       {% else %}
@@ -91,7 +93,7 @@
     <ul class="portal-releases">
       {% for module in portal.modules %}
         <li>
-          <a href="{{ base_url }}/{{ module.path }}/">{{ module.title }}</a>
+          <a href="{{ oz_base }}{{ module.path }}/">{{ module.title }}</a>
           <span class="portal-releases__note">{{ module.step }}{% if module.status != "available" %} · coming soon{% endif %}</span>
         </li>
       {% endfor %}
@@ -106,7 +108,7 @@
         if (!release || release.status !== "available" || !line) return;
         var link = line.querySelector("a");
         link.textContent = release.title;
-        link.href = "{{ base_url }}/" + release.path + "/";
+        link.href = "{{ oz_base }}" + release.path + "/";
         line.hidden = false;
       })();
     </script>

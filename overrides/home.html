@@ -94,7 +94,7 @@
   {% set portal = config.extra.portal %}
   {% if portal.kind == "release" %}
     {% include "partials/module-stop.html" %}
-    {% set root = base_url ~ "/" ~ portal.up %}
+    {% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
     <nav class="oz-next" aria-label="Learning path">
       {% if stop.next %}
         <a class="oz-next__stop oz-module--{{ stop.next.id }}" href="{{ root }}{{ stop.next.path }}/">
