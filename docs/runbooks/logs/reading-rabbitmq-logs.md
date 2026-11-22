@@ -28,6 +28,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the RabbitMQ logs, and the oslo.messaging lines that go with them."
+seo_title: "Reading the RabbitMQ logs"
 ---
 
 # Reading the RabbitMQ logs, and the oslo.messaging lines that go with them

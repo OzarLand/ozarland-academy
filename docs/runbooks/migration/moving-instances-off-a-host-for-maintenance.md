@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-25
 description: "Moving instances off a compute host for planned maintenance (patching, reboot, hardware)."
+seo_title: "Moving instances off a host for maintenance"
 ---
 
 # Moving instances off a compute host for planned maintenance

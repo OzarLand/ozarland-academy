@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "kolla-ansible prechecks stops at \"Checking Ansible version\": an unsupported or wrong Ansible on the deploy host."
+seo_title: "kolla-ansible prechecks: wrong Ansible version"
 ---
 
 # kolla-ansible prechecks fails with "Ansible version should be between ...": the wrong Ansible or collections on the deploy host

@@ -1,6 +1,7 @@
 ---
 title: "11 — OKD: a 4.22 cluster says \"No updates available\" while a path to 5.0 exists; the project FAQ still describes the old update source"
 description: "Since September 2026 OKD has its own update service (updates.okd.io, channels stable-5.0 and candidate-5.0)."
+seo_title: "11 — OKD 4.22 says no updates while 5.0 exists"
 ---
 
 # 11 — OKD: a 4.22 cluster says "No updates available" while a path to 5.0 exists; the project FAQ still describes the old update source

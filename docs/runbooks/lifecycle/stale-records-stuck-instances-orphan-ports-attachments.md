@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "A long-lived platform accumulates records that describe nothing real: every host failure, interrupted operation and recovery adds some."
+seo_title: "Stale records: stuck instances, orphan ports"
 ---
 
 # Stale records. Instances stuck in BUILD, ERROR or deleting, orphan ports and attachments, phantom allocations

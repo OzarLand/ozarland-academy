@@ -1,6 +1,7 @@
 ---
 title: "09 — Scale-in documentation: the follow-up deployment, the second agent and the leftovers are missing"
 description: "The upstream procedure to remove a compute node from a NodeSet stops at the patch that removes the node from the spec."
+seo_title: "09 — Gaps in the scale-in documentation"
 ---
 
 # 09 — Scale-in documentation: the follow-up deployment, the second agent and the leftovers are missing

@@ -25,6 +25,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Every API call goes through a virtual IP held by keepalived, to HAProxy, to one API backend; Keystone and the keystonemiddleware of every service use memcached."
+seo_title: "Reading HAProxy, keepalived and memcached logs"
 ---
 
 # Reading the HAProxy, keepalived and memcached logs in front of the OpenStack APIs

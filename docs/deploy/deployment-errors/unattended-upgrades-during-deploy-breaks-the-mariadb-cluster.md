@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-25
 description: "A deploy that worked before fails part-way: Ubuntu upgraded packages during the deploy, and MariaDB never forms its cluster."
+seo_title: "Unattended upgrades break the deploy and MariaDB"
 ---
 
 # kolla-ansible deploy fails part-way because Ubuntu upgraded packages during the deploy

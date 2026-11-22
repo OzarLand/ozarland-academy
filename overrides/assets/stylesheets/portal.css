@@ -3910,3 +3910,71 @@ a.portal-cta:focus-visible {
   color: var(--md-typeset-a-color);
   text-decoration: underline;
 }
+
+/* Search of every module, on the learning-path home (overrides/academy.html,
+   portal.js section 6). */
+.md-typeset .oz-search-all {
+  max-width: 45rem;
+  margin: 0 0 2rem;
+}
+
+.md-typeset .oz-search-all__lead {
+  margin: 0 0 0.6rem;
+  color: var(--portal-text-muted);
+}
+
+.oz-search-all__input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2.2rem;
+  padding: 0.4rem 0.7rem;
+  border: 0.1rem solid var(--portal-border);
+  border-radius: 0.4rem;
+  background-color: var(--md-default-bg-color);
+  color: var(--md-typeset-color);
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.oz-search-all__input:focus-visible {
+  outline: 0.15rem solid var(--md-accent-fg-color);
+  outline-offset: 0.1rem;
+}
+
+.md-typeset .oz-search-all__status {
+  margin: 0.5rem 0;
+  font-size: 0.7rem;
+  color: var(--portal-text-muted);
+}
+
+.md-typeset .oz-search-all__status:empty {
+  display: none;
+}
+
+.md-typeset ol.oz-search-all__results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset .oz-search-all__results li {
+  margin: 0;
+  padding: 0.55rem 0;
+  border-bottom: 0.05rem solid var(--portal-border);
+}
+
+.md-typeset .oz-search-all__results a {
+  font-weight: 600;
+}
+
+.md-typeset .oz-search-all__where {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--portal-text-muted);
+}
+
+.md-typeset .oz-search-all__results p {
+  margin: 0.2rem 0 0;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}

@@ -22,6 +22,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
 description: "The first globals.yml decision of a multinode deployment is which host interface carries which traffic."
+seo_title: "Interfaces, VLANs and MTU with OVS and OVN"
 ---
 
 # Network interfaces, VLANs and MTU for a multinode deployment, with Open vSwitch and OVN side by side

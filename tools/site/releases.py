@@ -63,6 +63,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import html
 import json
 import os
 import re
@@ -88,6 +89,11 @@ DOCS_ROOT = "docs"
 SITE_DIR = "site"
 #: Generated files of the root site (git-ignored).
 ROOT_BUILD = ".build/root"
+#: Index of the search of every module, written into the root site by assemble().
+PORTAL_SEARCH = "assets/data/portal-search.json"
+#: Pages left out of that index (path from the portal root): the LinkedIn
+#: publishing kit of the Production guide repeats the title of every memo.
+PORTAL_SEARCH_SKIP = ("production/LINKEDIN/",)
 #: Name used for the root site where the name of a site is expected.
 ROOT_NAME = "_root"
 #: Environment variable that holds the custom domain of the portal.
@@ -862,6 +868,59 @@ def sitemap_index(registry: Registry, root_url: str, site: Path) -> str:
     return "\n".join(lines) + "\n"
 
 
+_TAG = re.compile(r"<[^>]+>")
+_SPACE = re.compile(r"\s+")
+
+
+def _plain(text: str) -> str:
+    """Text of a search entry, without its HTML."""
+    return _SPACE.sub(" ", html.unescape(_TAG.sub(" ", text))).strip()
+
+
+def _snippet(text: str, limit: int = 180) -> str:
+    text = _plain(text)
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0]
+    return cut.rstrip(" ,.;:") + "…"
+
+
+def portal_search(registry: Registry, site: Path) -> dict[str, object]:
+    """Index of the search of every module, for the learning-path home.
+
+    Each site has its own full-text search (search.json, written by
+    Zensical). The home of the portal searches them all with this smaller
+    index, built from those files: the pages (title, a short extract) and the
+    sections of each page (heading), of every available site; of the
+    versioned module, its default release only, whose pages the other
+    releases repeat. A site without search.json is left out.
+    """
+    sites = []
+    entries = []
+    for release in registry.available:
+        module = registry.module(release.module)
+        if module is None or (module.versioned and release.id != module.default):
+            continue
+        index = site / release.path / "search.json"
+        if not index.is_file():
+            continue
+        items = json.loads(index.read_text(encoding="utf-8")).get("items", [])
+        label = module.title + (f" {release.openstack}" if module.versioned else "")
+        number = len(sites)
+        sites.append({"title": label, "path": release.path + "/"})
+        pages = {item["location"]: _plain(item["title"]) for item in items if "#" not in item["location"]}
+        for item in items:
+            location = item["location"]
+            page, _, anchor = location.partition("#")
+            if release.path + "/" + page in PORTAL_SEARCH_SKIP:
+                continue
+            if not anchor:
+                entries.append([number, location, pages[location], "", _snippet(item.get("text", ""))])
+            elif item.get("level") == 2 and page in pages:
+                entries.append([number, location, pages[page], _plain(item["title"]), ""])
+    return {"sites": sites, "entries": entries}
+
+
 def _clean(site: Path, registry: Registry) -> None:
     """Remove what an earlier build left: anything that is not an available site."""
     keep = {release.path for release in registry.available}
@@ -927,6 +986,10 @@ def assemble(root: Path, registry: Registry, site_dir: str = SITE_DIR) -> list[s
     written.append("sitemap.xml")
     (site / "robots.txt").write_text(robots_txt(root_url), encoding="utf-8")
     written.append("robots.txt")
+    data = json.dumps(portal_search(registry, site), ensure_ascii=False, separators=(",", ":"))
+    (site / PORTAL_SEARCH).parent.mkdir(parents=True, exist_ok=True)
+    (site / PORTAL_SEARCH).write_text(data + "\n", encoding="utf-8")
+    written.append(PORTAL_SEARCH)
     # Browsers ask for /favicon.ico whatever the page says.
     favicon = built / "assets" / "images" / "favicon.ico"
     if favicon.is_file():

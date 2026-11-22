@@ -1,6 +1,7 @@
 ---
 title: "10 — infra-operator crash-loops when the FRRConfiguration resource type is not installed"
 description: "The infra-operator contains a controller for BGP (BGPConfiguration) that watches FRRConfiguration objects of the frr-k8s project."
+seo_title: "10 — infra-operator crash-loops without FRR CRD"
 ---
 
 # 10 — infra-operator crash-loops when the `FRRConfiguration` resource type is not installed

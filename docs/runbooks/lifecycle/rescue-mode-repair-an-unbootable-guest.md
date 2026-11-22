@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Nova sees the instance as ACTIVE, but the guest operating system is broken."
+seo_title: "Repair an unbootable guest in rescue mode"
 ---
 
 # The guest does not boot or cannot be reached (broken fstab, kernel, network or SSH configuration). Repair its disk in rescue mode

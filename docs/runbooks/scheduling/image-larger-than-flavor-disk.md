@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Boot refused or aborted because the flavor's disk is too small for the image."
+seo_title: "Image larger than the flavor's disk"
 ---
 
 # Boot refused or aborted because the flavor's disk is too small for the image

@@ -461,6 +461,7 @@ class RootTest(RepoTest):
             self.built_files(),
             [
                 "404.html",
+                "assets/data/portal-search.json",
                 "assets/stylesheets/portal.css",
                 "day2/2023.1/index.html",
                 "day2/index.html",
@@ -497,6 +498,26 @@ class RootTest(RepoTest):
         self.assertNotIn("2023.1", portal)
         robots = (site / "robots.txt").read_text(encoding="utf-8")
         self.assertIn("Sitemap: https://example.org/portal/sitemap.xml", robots)
+
+    def test_portal_search(self) -> None:
+        self.fake_root_build()
+        items = [
+            {"location": "", "level": 1, "title": "Home", "text": "<p>Welcome &amp; hello</p>"},
+            {"location": "ops/", "level": 1, "title": "Ops <code>x</code>", "text": "word " * 60},
+            {"location": "ops/#restart", "level": 2, "title": "Restart", "text": "ignored"},
+            {"location": "ops/#deep", "level": 3, "title": "Deep", "text": "ignored"},
+        ]
+        write(self.root, "site/day2/ussuri/search.json", json.dumps({"items": items}))
+        write(self.root, "site/day2/ussuri/index.html", "ussuri")
+        releases.assemble(self.root, self.registry)
+        data = json.loads((self.root / "site" / releases.PORTAL_SEARCH).read_text(encoding="utf-8"))
+        self.assertEqual(data["sites"], [{"title": "Day two Ussuri", "path": "day2/ussuri/"}])
+        self.assertEqual(data["entries"][0], [0, "", "Home", "", "Welcome & hello"])
+        self.assertEqual(data["entries"][1][2], "Ops x")
+        self.assertTrue(data["entries"][1][4].endswith("…"))
+        self.assertLessEqual(len(data["entries"][1][4]), 181)
+        self.assertEqual(data["entries"][2], [0, "ops/#restart", "Ops x", "Restart", ""])
+        self.assertEqual(len(data["entries"]), 3)
 
     def test_assemble_writes_cname_for_a_domain(self) -> None:
         self.fake_root_build()

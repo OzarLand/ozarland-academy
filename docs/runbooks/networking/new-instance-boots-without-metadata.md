@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
 description: "The instance asks 169.254.169.254 for its metadata at first boot."
+seo_title: "New instance without metadata (no SSH key)"
 ---
 
 # New instance has an address, but no SSH key, no user data, default hostname

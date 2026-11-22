@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "One of three controllers is lost (hardware failure, a reinstalled disk) or must be rebuilt."
+seo_title: "Replacing a failed controller with Kolla-Ansible"
 ---
 
 # Replacing a failed controller in a three-controller Kolla-Ansible deployment

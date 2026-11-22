@@ -1,6 +1,7 @@
 ---
 title: "02 — Galera backup and restore scripts lose set -e; a failed restore exits 0"
 description: "backup_galera and restore_galera start with set -eu, then source mysql_root_auth.sh, whose second line is set +eu."
+seo_title: "02 — Galera backup scripts lose set -e"
 ---
 
 # 02 — Galera backup and restore scripts lose `set -e`; a failed restore exits 0

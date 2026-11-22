@@ -1,6 +1,7 @@
 ---
 title: "04 — edpm_bootstrap hides a failed package installation on CentOS Stream (fixed on main, not on 18-stable)"
 description: "On 18-stable, the task that installs the bootstrap packages of a data plane node only fails when the distribution is redhat."
+seo_title: "04 — edpm_bootstrap hides a failed package install"
 ---
 
 # 04 — `edpm_bootstrap` hides a failed package installation on CentOS Stream (fixed on `main`, not on `18-stable`)

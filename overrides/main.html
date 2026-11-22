@@ -55,9 +55,25 @@
     {% set oz_site.name = config.site_name ~ " " ~ release.openstack %}
   {% endfor %}
 {% endif %}
+{#- Search engines show about 60 characters of a title. A longer page title
+    gives way, in <title> only (the H1 stays whole), to the `seo_title` of
+    its front matter, or else to its first sentence ("Symptom. Why it
+    happens" keeps "Symptom"); the site name is dropped when it no longer
+    fits in 70 characters. -#}
 {% set oz_page_title = (page.title | striptags) if page and page.title else "" %}
+{% set oz_seo = oz_page_title %}
+{% if page and page.meta and page.meta.seo_title %}
+  {% set oz_seo = page.meta.seo_title %}
+{% elif (oz_page_title ~ " - " ~ oz_site.name) | length > 70 %}
+  {% set oz_first = oz_page_title | split(". ", 1) | first %}
+  {% if oz_first | length >= 15 %}{% set oz_seo = oz_first %}{% endif %}
+{% endif %}
 {% if oz_page_title and oz_page_title != config.site_name %}
-  {% set oz_title = oz_page_title ~ " - " ~ oz_site.name %}
+  {% if (oz_seo ~ " - " ~ oz_site.name) | length <= 70 %}
+    {% set oz_title = oz_seo ~ " - " ~ oz_site.name %}
+  {% else %}
+    {% set oz_title = oz_seo %}
+  {% endif %}
 {% elif oz_site.name == "OzarLand Academy" %}
   {% set oz_title = oz_site.name %}
 {% else %}
@@ -113,7 +129,8 @@
           another way.</p>
           <p>Try a shorter word or another spelling, or the name of a command, a tag or a container.</p>
           <p>Or look the word up in the <a href="{{ 'reference/glossary/' | url }}">Glossary</a>, or start from your
-          situation in <a href="{{ 'start/find-it-fast/' | url }}">Find it fast</a>.</p>
+          situation in <a href="{{ 'start/find-it-fast/' | url }}">Find it fast</a>, or
+          <a href="{{ (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ config.extra.portal.up }}#search">search every module</a>.</p>
         </div>
       </div>
     </template>

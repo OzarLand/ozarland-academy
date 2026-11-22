@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "A failed VM creation says what the user experienced, not which service caused it."
+seo_title: "Tracing a failed VM creation by request id"
 ---
 
 # What a VM creation traverses, and how to trace one failed boot by request id

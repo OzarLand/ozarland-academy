@@ -1,6 +1,7 @@
 ---
 title: "07 — The data plane troubleshooting page still uses a resource that was removed in 2024"
 description: "Contribution proposal to fix the upstream data plane troubleshooting page, with lab-captured replacement commands for a resource removed in 2024."
+seo_title: "07 — Troubleshooting page uses a removed resource"
 ---
 
 # 07 — The data plane troubleshooting page still uses a resource that was removed in 2024

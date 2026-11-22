@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-21
 description: "A multinode Kolla-Ansible deployment whose hosts are themselves instances of another OpenStack cloud."
+seo_title: "Three controllers, two computes, nested"
 ---
 
 # Three controllers and two computes, nested inside an existing OpenStack cloud

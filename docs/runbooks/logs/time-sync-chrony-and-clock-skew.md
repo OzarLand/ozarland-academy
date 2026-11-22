@@ -34,6 +34,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "OpenStack services compare timestamps written by different hosts: service heartbeats, agent reports, token expiry."
+seo_title: "Time sync logs (chrony) and clock skew"
 ---
 
 # Reading the time synchronisation logs (chrony, systemd-timesyncd), and how clock skew shows in OpenStack logs
