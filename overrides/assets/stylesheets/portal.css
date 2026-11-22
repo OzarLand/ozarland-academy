@@ -3841,3 +3841,58 @@ a.portal-cta:focus-visible {
 .md-typeset .oz-module-head .oz-band {
   border-top: 0.25rem solid var(--oz-accent);
 }
+
+/* Navigation back home (overrides/partials/header.html, nav.html, path.html).
+   The logo leads to the Academy home, the site name to the home of the site;
+   in the drawer, a way out of the site to the learning path and ozarland.com. */
+.md-header__topic > .oz-site-home {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-header__topic > .oz-site-home:hover,
+.md-header__topic > .oz-site-home:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.md-nav__title > .oz-site-home {
+  color: inherit;
+}
+
+.oz-nav-out {
+  display: none;
+  margin: 0 0.6rem 0.4rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.7rem;
+}
+
+.oz-nav-out a {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.3rem;
+  color: var(--md-typeset-a-color);
+  font-weight: 600;
+}
+
+.oz-nav-out a:hover,
+.oz-nav-out a:focus-visible {
+  background-color: var(--md-accent-fg-color--transparent);
+}
+
+@media screen and (max-width: 76.234375em) {
+  .md-nav--primary > .oz-nav-out {
+    display: block;
+  }
+}
+
+/* On a phone the breadcrumb wraps instead of cutting the names of the
+   Academy, the site and the sections. */
+@media screen and (max-width: 44.984375em) {
+  .md-path__list {
+    flex-wrap: wrap;
+    row-gap: 0.2rem;
+  }
+}

@@ -3,12 +3,16 @@
   changes; compare it with the theme's file when Zensical is upgraded.
 
   1. The release selector (partials/releases.html) sits after the title, on
-     every page.
+     every page. The logo leads to the home of OzarLand Academy (the portal
+     root) from every site, and the site name to the home of this site: the
+     two homes are one click away from any page.
   2. The root site of the portal (landing page, not-found page, pages of the
      planned releases) has no navigation and no search of its own: its header
      has no drawer button, no search and no tabs.
 -#}
 {% set portal_root = config.extra.portal and config.extra.portal.kind == "root" %}
+{#- base_url is "/" on a not-found page of the root site: no "//" prefix. -#}
+{% set oz_root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ (config.extra.portal.up if config.extra.portal else "") %}
 {% set class = "md-header" %}
 {% if "navigation.tabs.sticky" in features %}
   {% set class = class ~ " md-header--shadow md-header--lifted" %}
@@ -19,7 +23,7 @@
     (the districts of a release) apply to the versioned module only. -#}
 <header class="{{ class }}" data-md-component="header"{% if config.extra.portal and config.extra.portal.module %} data-oz-module="{{ config.extra.portal.module.id }}"{% endif %}>
   <nav class="md-header__inner md-grid" aria-label="{{ lang.t('header') }}">
-    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" title="{{ config.site_name | e }}" class="md-header__button md-logo" aria-label="{{ config.site_name }}" data-md-component="logo">
+    <a href="{{ oz_root }}" title="OzarLand Academy home" class="md-header__button md-logo" aria-label="OzarLand Academy home" data-md-component="logo">
       {% include "partials/logo.html" %}
     </a>
     {% if not portal_root %}
@@ -32,9 +36,7 @@
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
-          <span class="md-ellipsis">
-            {{ config.site_name }}
-          </span>
+          <a class="md-ellipsis oz-site-home" href="{{ '.' | url }}" title="Home of {{ config.site_name | e }}">{{ config.site_name }}</a>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">

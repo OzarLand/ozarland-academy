@@ -1,30 +1,55 @@
 {#-
-  Breadcrumb above the page title: Home, then the sections the page is in.
-  The theme's partial stays silent for a page one level down (every
-  operation, troubleshooting, risk and concept page), because Zensical 0.1.2
-  does not provide `nav.homepage` and a one-item path is not shown. Here the
-  path starts at the home page, so those pages get a way up as well, which
-  matters on small screens where the tabs are not displayed.
+  Breadcrumb above the page title, on every page of a site but its home:
+  OzarLand Academy (the portal root), the site, then the sections the page
+  is in. A reader who lands on a deep page from a search engine sees where
+  they are and goes up, to the site or to the whole Academy, in one click.
+
+  The theme's partial starts at `nav.homepage`, which Zensical 0.1.2 does
+  not provide, and stays silent for a page one level down: every operation,
+  troubleshooting, risk and concept page would have no way up on small
+  screens, where the tabs are not displayed.
 -#}
 {% import "partials/path-item.html" as item with context %}
 {% if page.meta and page.meta.hide %}
   {% set hidden = "hidden" if "path" in page.meta.hide %}
 {% endif %}
+{% set portal = config.extra.portal %}
 {% set sections = page.ancestors | reverse | list %}
-{#- Nothing on the home page itself (its URL is empty). -#}
-{% if sections and page.url %}
+{#- The first tab is the home section of the site: the site link stands
+    for it. -#}
+{% if sections and nav.items and (sections | first).title == (nav.items | first).title %}
+  {% set sections = sections[1:] %}
+{% endif %}
+{#- Name of the site: a release of the versioned module names its
+    OpenStack release, as the title of the page does. -#}
+{% set oz_site = namespace(name=config.site_name) %}
+{% if portal and portal.kind == "release" and portal.module.kind == "versioned" %}
+  {% for release in portal.releases if release.id == portal.current %}
+    {% set oz_site.name = config.site_name ~ " " ~ release.openstack %}
+  {% endfor %}
+{% endif %}
+{#- Nothing on the home page itself (its URL is empty), nor on the root site. -#}
+{% if portal and portal.kind == "release" and page.url and page.url not in ("./", "index.html") %}
+  {% set oz_root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
   <nav class="md-path" aria-label="Breadcrumb" {{ hidden }}>
     <ol class="md-path__list">
-      {#- The first tab is the home section itself: no second "Home". -#}
-      {% if (sections | first).title != (nav.items | first).title %}
-        <li class="md-path__item">
-          <a href="{{ '.' | url }}" class="md-path__link">
-            <span class="md-ellipsis">{{ (nav.items | first).title }}</span>
-          </a>
-        </li>
-      {% endif %}
+      <li class="md-path__item">
+        <a href="{{ oz_root }}" class="md-path__link">
+          <span class="md-ellipsis">OzarLand Academy</span>
+        </a>
+      </li>
+      <li class="md-path__item">
+        <a href="{{ '.' | url }}" class="md-path__link">
+          <span class="md-ellipsis">{{ oz_site.name }}</span>
+        </a>
+      </li>
       {% for nav_item in sections %}
-        {{ item.render(nav_item) }}
+        {#- A section index page does not link to itself. -#}
+        {% set own = namespace(index=false) %}
+        {% for child in nav_item.children or [] %}
+          {% if child.is_index and child.url == page.url %}{% set own.index = true %}{% endif %}
+        {% endfor %}
+        {% if not own.index %}{{ item.render(nav_item) }}{% endif %}
       {% endfor %}
     </ol>
   </nav>

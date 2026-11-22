@@ -12,7 +12,7 @@
 -#}
 {% extends "main.html" %}
 {% set portal = config.extra.portal %}
-{% set root = base_url ~ "/" ~ portal.up %}
+{% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
 {% set start = root ~ portal.default ~ "/" %}
 {% set img = root ~ "assets/images/ozarland/" %}
 {#- Position of the module on the path (its stage seal) and the next stop. -#}

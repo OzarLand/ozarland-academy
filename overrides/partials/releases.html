@@ -33,7 +33,7 @@
     {% if release.status == "planned" %}{% set found.planned = found.planned + 1 %}{% endif %}
   {% endfor %}
   {% set current = found.current %}
-  {% set root = base_url ~ "/" ~ portal.up %}
+  {% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
   <div class="portal-release" data-portal-release{% if page and page.url and portal.kind == "release" %} data-page="{{ page.url }}"{% endif %}>
     {% if portal.releases | length > 1 %}
       <details class="portal-release__menu">

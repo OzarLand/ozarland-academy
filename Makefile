@@ -91,6 +91,7 @@ docs-deps:
 docs-check:
 	$(PYTHON) tools/site/check_docs.py $(CHECK_FLAGS) $(RELEASE_FLAG)
 	$(PYTHON) tools/site/check_learning.py $(CHECK_FLAGS) $(RELEASE_FLAG)
+	$(PYTHON) tools/site/runbook_categories.py --check
 
 HUB ?=
 docs-content:

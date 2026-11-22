@@ -5,7 +5,7 @@
 -#}
 {% set h = "h" ~ (release_heading | d(2)) %}
 {% set portal = config.extra.portal %}
-{% set root = base_url ~ "/" ~ portal.up %}
+{% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") ~ portal.up %}
 {% set counts = namespace(planned=0) %}
 {% for release in portal.releases if release.status == "planned" %}
   {% set counts.planned = counts.planned + 1 %}
