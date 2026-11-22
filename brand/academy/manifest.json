@@ -227,7 +227,8 @@
     "height": 800,
     "alt_text": "Lumo waves while raising a brass lantern.",
     "module": "lab",
-    "status": "prompt-only"
+    "status": "superseded",
+    "superseded_by": "docs/lab/assets/images/S1-lumo-pose.webp"
   },
   {
     "file": "prompts/lumo-deploy.md",
@@ -237,7 +238,8 @@
     "height": 800,
     "alt_text": "Lumo points toward two blank route diagrams.",
     "module": "deploy",
-    "status": "prompt-only"
+    "status": "superseded",
+    "superseded_by": "docs/deploy/assets/images/S2-lumo-pose.webp"
   },
   {
     "file": "prompts/lumo-day2.md",
@@ -247,7 +249,8 @@
     "height": 800,
     "alt_text": "Lumo reads an open book beside a small brass server model.",
     "module": "day2",
-    "status": "prompt-only"
+    "status": "superseded",
+    "superseded_by": "docs/day2/<release>/assets/images/S3-lumo-pose.webp"
   },
   {
     "file": "prompts/lumo-runbooks.md",
@@ -257,7 +260,8 @@
     "height": 800,
     "alt_text": "Lumo examines a bridge with a lantern and gestures toward the path.",
     "module": "runbooks",
-    "status": "prompt-only"
+    "status": "superseded",
+    "superseded_by": "S4-lumo-pose of learning-path/manifest-parcours.json"
   },
   {
     "file": "prompts/lumo-production.md",
@@ -267,7 +271,8 @@
     "height": 800,
     "alt_text": "Lumo stands beside a lighthouse model holding a compass and lantern.",
     "module": "production",
-    "status": "prompt-only"
+    "status": "superseded",
+    "superseded_by": "S5-lumo-pose of learning-path/manifest-parcours.json"
   },
   {
     "file": "prompts/lumo-book.md",
