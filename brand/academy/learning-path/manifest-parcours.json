@@ -168,8 +168,8 @@
       "No magic, supernatural light, anthropomorphic failure, or visual claim that a metaphor proves technical behavior.",
       "Do not change Lumo's approved face, adult proportions, curly auburn hair, patterned headband, raised brass goggles, cream shirt, navy cloud cape, brass compass brooch, leather satchel, brown trousers or lace-up boots."
     ],
-    "status": "prompt-only",
-    "target_path": "overrides/assets/images/ozarland/stop-4/S4-opening.webp"
+    "status": "generated",
+    "target_path": "docs/runbooks/assets/images/S4-opening.webp"
   },
   {
     "id": "S4-lumo-pose",
@@ -191,8 +191,8 @@
       "Transparent-background pose must have clean real alpha, not a checkerboard or painted background.",
       "No cropped body, extra fingers, fused fingers or hidden stage-specific accessory."
     ],
-    "status": "prompt-only",
-    "target_path": "overrides/assets/images/ozarland/stop-4/S4-lumo-pose.webp"
+    "status": "generated",
+    "target_path": "docs/runbooks/assets/images/S4-lumo-pose.webp"
   },
   {
     "id": "S5-opening",

@@ -102,7 +102,7 @@ flowchart LR
     class E amber
 ```
 
-<details>
+<details markdown>
 <summary><b>The four statuses, word for word</b></summary>
 
 | Status | What it means |
@@ -142,7 +142,7 @@ flowchart LR
 
 Click a category to open it.
 
-<details>
+<details markdown>
 <summary><b>🏗️ Topologies</b></summary>
 
 | Pattern | Purpose | Scale | Network | Storage | Releases | Status |
@@ -152,7 +152,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>🌐 Networking</b></summary>
 
 | Networking pattern | Releases | Status |
@@ -162,7 +162,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>🧯 Deployment errors</b></summary>
 
 | Deployment error | Releases | Status |
@@ -179,7 +179,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>⚙️ Operations</b></summary>
 
 | Operations | Releases | Status |
@@ -194,7 +194,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>💾 Storage</b></summary>
 
 | Storage pattern | Releases | Status |
@@ -204,7 +204,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>🧾 Configuration</b></summary>
 
 | Configuration pattern | Releases | Status |
@@ -218,7 +218,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>🧩 Services and integrations</b></summary>
 
 | Service or integration | Releases | Status |
@@ -231,7 +231,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>⚖️ Comparisons</b></summary>
 
 | Comparison | Releases | Status |
@@ -243,7 +243,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>📌 Version notes</b></summary>
 
 | Version notes | Releases | Status |
@@ -252,7 +252,7 @@ Click a category to open it.
 
 </details>
 
-<details>
+<details markdown>
 <summary><b>📓 Experience reports</b></summary>
 
 | Experience report | Releases | Status |
