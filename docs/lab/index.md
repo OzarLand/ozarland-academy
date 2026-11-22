@@ -16,7 +16,7 @@ and repair it, and one command that deletes it all.**
 > [!NOTE]
 > **Status: early, tested on one cloud.** Both variants and all eleven exercises were run end to end between
 > 2026-10-23 and 2026-10-25 by OzarLand's AI lab agents (exercises 10 and 11 were edited after their run and not
-> run again), on one OpenStack cloud (Felcloud, the reference cloud
+> run again), on one OpenStack cloud (the reference cloud
 > below), with OpenStack 2026.1, Kolla-Ansible 22.2.0 and Ubuntu 24.04, in a project reaching the Internet through an
 > HTTPS proxy. Not tested yet: other clouds, a project with direct Internet access, and a run by a person following the
 > guide. Known script gaps are tracked in [issue #25](https://github.com/OzarLand/openstack-quick-lab/issues/25).
@@ -38,10 +38,8 @@ On a prepaid cloud you cannot spend more than your credit; on any other cloud, s
 | 🔥 **Cost of each forgotten day** | 4.70 TND (1.37 EUR); 5.06 TND (1.49 EUR) with a floating IP | 3 VMs: 11.42 TND (3.34 EUR). 5 VMs: 20.83 TND (6.07 EUR) |
 
 🌱 **New to OpenStack? Start with the single VM.** The costs are the measured duration multiplied by the reference cloud's listed prices on
-2026-10-23 (not an invoice); each guide has the details. Felcloud, OzarLand's first sponsor, provides the cloud credit used to
-build and test OzarLand's labs, and has no say over the content; its prepaid model fits a lab with no surprise bill.
-No provider is required: every variant works on any OpenStack cloud that meets its requirements. Its [pricing page](https://felcloud.io/pricing) says: "Top up your
-balance and spend only what you loaded." (checked on 2026-10-23).
+2026-10-23 (not an invoice); each guide has the details.
+No provider is required: every variant works on any OpenStack cloud that meets its requirements.
 
 > [!CAUTION]
 > On any cloud: on a **prepaid** one, load only the credit you are ready to spend; on a **pay-as-you-go** one, you are
