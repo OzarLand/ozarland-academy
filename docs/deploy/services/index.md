@@ -7,6 +7,8 @@ description: "How Kolla-Ansible deploys an OpenStack service or an integration (
 
 How Kolla-Ansible deploys an OpenStack service or an integration (Octavia, Designate, monitoring, logging, external Ceph and others): what to prepare, what to set, where it fails and which logs to read. One page per service, written with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
 
+<img src="../assets/images/S2-services.webp" width="1536" height="1024" loading="lazy" alt="LUMO walks through a sunlit workshop with shelves, a loading door and brass instruments set out along the harbour terrace.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |

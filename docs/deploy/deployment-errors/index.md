@@ -7,6 +7,8 @@ description: "Errors met during deploy, reconfigure, pull or upgrade, each with 
 
 Errors met during `deploy`, `reconfigure`, `pull` or `upgrade`, each with its symptom, cause and fix. One page per error, written as a runbook (`kind: runbook`) with the shared [runbook template](https://github.com/OzarLand/ozarland/blob/main/community/templates/runbook.md).
 
+<img src="../assets/images/S2-deployment-errors.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Jo lean over a workbench and look closely at a small brass model piece that does not fit its frame.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |

@@ -7,6 +7,8 @@ description: "Side-by-side comparisons of two approaches on one dimension (conta
 
 Side-by-side comparisons of two approaches on one dimension (container engine, ML2 driver, controller count, where the network services run). There is no comparison template yet: copy the structure of an existing page (`kind: comparison`, a *Validity and limits* section, the shared front matter of the [content metadata conventions](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/content-metadata.md)).
 
+<img src="../assets/images/S2-comparisons.webp" width="1536" height="1024" loading="lazy" alt="Sorel, LUMO and Jo stand at a table with two scale models of the same size, one domed and one arcaded, in even light.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |

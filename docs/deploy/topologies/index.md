@@ -7,6 +7,8 @@ description: "Reference topologies, one pattern per topology, from an all-in-one
 
 Reference topologies, one pattern per topology, from an all-in-one lab to multinode deployments: node roles, networks, storage, the settings that differ from Kolla-Ansible's defaults and what went wrong. Add a page with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
 
+<img src="../assets/images/S2-topologies.webp" width="1536" height="1024" loading="lazy" alt="Jo, LUMO and Sorel look at two scale models on a table, a single compact building and a larger group of linked buildings, lit the same way.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |
