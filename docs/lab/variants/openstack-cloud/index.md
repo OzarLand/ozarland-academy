@@ -66,28 +66,6 @@ The VM costs money **every hour it exists**, used or not, until you run `./destr
 - `create.sh` refuses to start while `COST_PER_HOUR` is empty. `./create.sh --no-cost-estimate` creates the lab
   anyway, without an estimate.
 
-### What a lab cost on the reference cloud
-
-Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../index.md#pick-your-lab)). It
-bills per second. Prices are its pay-as-you-go prices per hour, as listed on 2026-10-23 and checked again on
-2026-10-24. Its pricing page shows them in TND, and in EUR when you switch currency. The EUR prices are the page's
-own, not a conversion, so the ratio varies from row to row. The page says nothing about taxes.
-
-| Resource | Used by the lab | TND per hour | EUR per hour |
-|---|---|---|---|
-| Flavor `G0.basic.4c16g` (4 vCPU, 16 GB, 50 GB disk) | Always: `create.sh` chose it | 0.196 | 0.057 |
-| Floating IP | Only if you set `FLOATING_NETWORK` | 0.015 | 0.005 |
-| Root volume, 50 GB, HDD (0.000070 TND or 0.000056 EUR per GiB per hour) | No: the flavor has its own disk | (0.0035) | (0.0028) |
-
-| | TND | EUR |
-|---|---|---|
-| One full run, `create.sh` to `destroy.sh`: 56 min 41 s, measured on 2026-10-23 | 0.19 (0.20 with a floating IP) | 0.05 (0.06 with a floating IP) |
-| Each extra day the lab is left running | 4.70 (5.06 with a floating IP) | 1.37 (1.49 with a floating IP) |
-
-- These figures are the measured duration multiplied by the listed prices, not an amount read from an invoice.
-- The exercises add their own time: about 0.20 TND (0.06 EUR) per hour.
-- On the reference cloud, set `COST_PER_HOUR="0.196"` and `CURRENCY="TND"` (`0.211` with a floating IP), or the EUR
-  prices with `CURRENCY="EUR"`.
 
 ## What you need
 

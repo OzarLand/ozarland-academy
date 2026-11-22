@@ -13,7 +13,7 @@ done
 if [ -z "$COST_PER_HOUR" ] && [ -z "$NO_COST_ESTIMATE" ]; then
   die "COST_PER_HOUR is empty in config.env. Copy the price per hour of the flavor (plus the floating IP and root volume if your provider bills them apart) from your provider's price list. To create the lab without a cost estimate anyway, run: ./create.sh --no-cost-estimate"
 fi
-[ -z "$COST_PER_HOUR" ] || [[ "$COST_PER_HOUR" =~ ^[0-9]+([.][0-9]+)?$ ]] || die "COST_PER_HOUR=$COST_PER_HOUR is not a number (write it like 0.196, with a dot)."
+[ -z "$COST_PER_HOUR" ] || [[ "$COST_PER_HOUR" =~ ^[0-9]+([.][0-9]+)?$ ]] || die "COST_PER_HOUR=$COST_PER_HOUR is not a number (write it like 0.25, with a dot)."
 need openstack "Install python-openstackclient (pip install python-openstackclient)."
 need ssh-keygen "Install OpenSSH."
 grep -qE '^(OS_CLOUD|NETWORK|SSH_FROM)=".*<' "$HERE/config.env" && die "Fill in OS_CLOUD, NETWORK and SSH_FROM in config.env."

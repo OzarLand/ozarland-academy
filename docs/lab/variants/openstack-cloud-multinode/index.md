@@ -25,7 +25,7 @@ source ~/kolla-venv/bin/activate; . /etc/kolla/admin-openrc.sh; openstack server
 - **Time**: plan about 75 minutes (3 VMs) to 90 minutes (5 VMs) before your first exercise: 63 and 73 minutes
   measured for `create.sh` and `deploy.sh`, plus filling in `config.env` and logging in.
 
-Read [the cost risk](#the-cost-risk) first. It runs 3 to 5 VMs, so it costs 2.5 to 4.5 times the
+Read [the cost risk](#the-cost-risk) first. It runs 3 to 5 VMs, so it costs several times the
 [single-VM variant](../openstack-cloud/index.md). The rest of this page is the detail.
 
 > **Status:** both sizes were run end to end on 2026-10-25, from `create.sh` to `destroy.sh` (figures below);
@@ -88,9 +88,8 @@ One setting in `config.env`, `CONTROLLERS`, chooses the size: `"1"` (the default
 
 ## The cost risk
 
-**Every VM costs money every hour it exists**, used or not, until you run `./destroy.sh`. On the reference cloud,
-per hour, 3 VMs cost about two and a half times the single-VM variant, and 5 VMs about four and a half times. A lab
-forgotten overnight costs that much more too.
+**Every VM costs money every hour it exists**, used or not, until you run `./destroy.sh`. With 3 or 5 VMs, a lab
+forgotten overnight costs several times the single-VM variant.
 
 | Your cloud | What to do |
 |---|---|
@@ -105,31 +104,6 @@ forgotten overnight costs that much more too.
 - It shows the total per hour and per day. It refuses to start while the two prices are empty, unless you run
   `./create.sh --no-cost-estimate`.
 
-### What a lab cost on the reference cloud
-
-Measured on the reference cloud, a prepaid OpenStack cloud (see the [home page](../../index.md#pick-your-lab)). It
-bills per second. Prices are its pay-as-you-go prices per hour, as listed on 2026-10-23 and checked again on
-2026-10-25. The EUR prices are the page's own, not a conversion of the TND ones. The page says nothing about taxes.
-
-| Resource | Used by the lab | TND per hour | EUR per hour |
-|---|---|---|---|
-| Flavor `G0.basic.4c16g` (4 vCPU, 16 GB, 50 GB disk) | Each controller | 0.196 | 0.057 |
-| Flavor `G0.basic.4c8g` (4 vCPU, 8 GB, 50 GB disk) | Each compute | 0.140 | 0.041 |
-| Floating IP | Only if you set `FLOATING_NETWORK` | 0.015 | 0.005 |
-
-| | 3 VMs (small) | 5 VMs (HA) |
-|---|---|---|
-| Per hour | 0.476 TND (0.139 EUR) | 0.868 TND (0.253 EUR) |
-| Each day the lab is left running | 11.42 TND (3.34 EUR) | 20.83 TND (6.07 EUR) |
-| One run, measured on 2026-10-25 | `create.sh` to `destroy.sh`, 65 min 27 s: 0.52 TND (0.15 EUR) | `create.sh` to the end of `deploy.sh`, 72 min 50 s: 1.05 TND (0.31 EUR); a build followed at once by `destroy.sh`, about 75 min: 1.08 TND (0.32 EUR) |
-
-- The figures for a run are the measured duration multiplied by the listed prices, not an amount read from an
-  invoice.
-- Add 0.015 TND (0.005 EUR) per hour if you use a floating IP.
-- The exercises add their own time, at the hourly rate above.
-- On the reference cloud, set `COST_PER_HOUR_CONTROLLER="0.196"`, `COST_PER_HOUR_COMPUTE="0.140"`,
-  `COST_PER_HOUR_EXTRA="0"` (`"0.015"` with a floating IP) and `CURRENCY="TND"`, or the EUR prices with
-  `CURRENCY="EUR"`.
 
 ## Safety rules
 

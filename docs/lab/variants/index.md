@@ -6,7 +6,7 @@ description: "The two Quick lab variants, single VM and multinode: what each let
 # Labs
 
 Two variants of the same lab, deployed with Kolla-Ansible on VMs of an OpenStack cloud. Pick one by what you want to
-practise; each guide gives its requirements, quick start, costs and how to delete everything.
+practise; each guide gives its requirements, quick start, cost risk and how to delete everything.
 
 | | [Single VM](openstack-cloud/index.md) (`openstack-cloud`) | [Multinode](openstack-cloud-multinode/index.md) (`openstack-cloud-multinode`) |
 |---|---|---|
@@ -14,6 +14,5 @@ practise; each guide gives its requirements, quick start, costs and how to delet
 | 🖥️ **VMs and quota** | 1 VM: 4 vCPU, 16 GB RAM, 50 GB disk | 3 VMs: 12 vCPU, 32 GB RAM. 5 VMs (`CONTROLLERS="3"`): 20 vCPU, 64 GB RAM |
 | ⏱️ **Time** | About 1 hour (57 min measured, `create.sh` to `destroy.sh`) | Measured, `create.sh` to `destroy.sh`: 65 min with 3 VMs, about 75 min with 5 VMs |
 
-🌱 **New to OpenStack? Start with the single VM.** The cost of a run and of a forgotten day is in
-[Pick your lab](../index.md#pick-your-lab) on the home page and in each guide. Once a lab is up, break and repair it with
-the [exercises](../exercises/index.md).
+🌱 **New to OpenStack? Start with the single VM.** Once a lab is up, break and repair it with the
+[exercises](../exercises/index.md).

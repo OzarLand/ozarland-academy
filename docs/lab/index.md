@@ -34,11 +34,8 @@ On a prepaid cloud you cannot spend more than your credit; on any other cloud, s
 | 🎯 **What you can practise** | The core services: DHCP, metadata, Nova, Open vSwitch, security groups and floating IPs (exercises 1 to 6) | 3 VMs: live migration, a failed compute, host maintenance (exercises 7 to 9). 5 VMs: also a failed controller, Galera and RabbitMQ, VIP failover (exercises 10 and 11) |
 | 🖥️ **VMs and quota** | 1 VM: 4 vCPU, 16 GB RAM, 50 GB disk | 3 VMs: 12 vCPU, 32 GB RAM. 5 VMs (`CONTROLLERS="3"`): 20 vCPU, 64 GB RAM |
 | ⏱️ **Time** | About 1 hour (57 min measured, `create.sh` to `destroy.sh`) | Measured, `create.sh` to `destroy.sh`: 65 min with 3 VMs, about 75 min with 5 VMs |
-| 💶 **Cost of one run** | 0.19 TND (0.05 EUR); 0.20 TND (0.06 EUR) with a floating IP | 3 VMs: 0.52 TND (0.15 EUR). 5 VMs: 1.08 TND (0.32 EUR) |
-| 🔥 **Cost of each forgotten day** | 4.70 TND (1.37 EUR); 5.06 TND (1.49 EUR) with a floating IP | 3 VMs: 11.42 TND (3.34 EUR). 5 VMs: 20.83 TND (6.07 EUR) |
 
-🌱 **New to OpenStack? Start with the single VM.** The costs are the measured duration multiplied by the reference cloud's listed prices on
-2026-10-23 (not an invoice); each guide has the details.
+🌱 **New to OpenStack? Start with the single VM.**
 No provider is required: every variant works on any OpenStack cloud that meets its requirements.
 
 > [!CAUTION]
@@ -152,8 +149,8 @@ flowchart LR
 > **In one minute (for managers)**
 >
 > - **What:** a complete, disposable OpenStack for learning and for trying a procedure before production.
-> - **Cost:** one run on the single VM measured about 0.05 EUR (0.19 TND) for 57 minutes. The script shows the cost
->   per hour and asks first.
+> - **Cost:** billed by your cloud provider for as long as the VMs exist. The script shows the cost per hour, from the
+>   price you enter, and asks first.
 > - **Risk:** the VMs cost money every hour they exist. Use a prepaid cloud or a budget alert; one command deletes
 >   everything.
 > - **Who:** anyone comfortable with a terminal and SSH; no OpenStack knowledge needed to start.
