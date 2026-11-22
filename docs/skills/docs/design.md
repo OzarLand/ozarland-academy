@@ -5,6 +5,8 @@ description: "Status: implemented (see docs/evaluation-report.md for test status
 
 # Design — OpenStack operator skills
 
+<img src="../assets/images/S7-how-it-works.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ilyan consult an archive book with blank pages, tied by ordinary threads to the tools on the shelves.">
+
 Status: implemented (see `docs/evaluation-report.md` for test status).
 Input: `docs/knowledge-map.md`; for 0.2.0 also `docs/source-mapping.md`.
 Sections 1 to 8 describe the 0.1.0 design; section 9 what 0.2.0 changed.
