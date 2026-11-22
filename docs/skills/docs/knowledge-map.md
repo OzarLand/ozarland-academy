@@ -259,8 +259,7 @@ Recorded so that skills do not pretend otherwise:
 - No monitoring stack, networking backend, distribution or support contract is
   prescribed (Intro, *Scope and limits*).
 - No command-level troubleshooting catalogue. The author's separate
-  [OpenStack Production Guide](https://github.com/soufian-zaouam/openstack-production-guide)
-  (troubleshooting by symptom, RCA cases) is a companion work; it was **not**
+  *OpenStack Production Guide* (troubleshooting by symptom, RCA cases) is a companion work; it was **not**
   used as a source for this version of the skills.
 - No universal thresholds (e.g. "migrate at most N VMs at a time"). The book
   insists such boundaries are context-dependent (Ch. 9, 20).

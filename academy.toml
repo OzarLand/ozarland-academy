@@ -1,7 +1,7 @@
 # Registry of OzarLand Academy. Every tool reads this file
 # (tools/site/releases.py); nothing else lists the modules or the releases.
 #
-# The academy is one learning path in five steps. Each step is a module,
+# The academy is one learning path in eight stops (0 to 7). Each stop is a module,
 # published under its own URL segment; the order of the [[module]] blocks is
 # the order of the path.
 #

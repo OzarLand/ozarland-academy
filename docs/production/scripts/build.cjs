@@ -116,7 +116,7 @@ function catalog(memos) {
     for (const m of list) {
       const page = `categories/${cat}/${m._slug}.md`;
       out.push(
-        `| <a href="${page}"><img src="dist/${fileBase(m)}.png" alt="${plain(m.title)}" width="150"></a> ` +
+        `| <a href="${page}"><img src="dist/${fileBase(m)}.png" alt="${plain(m.title)}" width="150" loading="lazy"></a> ` +
           `| **${m.id}**<br>[${mdText(m.title)}](${page}) ` +
           `| ${mdText(m.lesson)} ` +
           `| [${m.runbook.path.split('/')[0]}/…](${runbookLink(m.runbook.path, '')})<br>\`${m.runbook.status}\` |`

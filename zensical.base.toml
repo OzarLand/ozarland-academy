@@ -29,7 +29,7 @@ site_description = "Learn to run OpenStack, step by step: discover, deploy, oper
 site_author = "OzarLand"
 # Footer line. The licence is the one of the repository (LICENSE: Apache
 # License 2.0); HTML is allowed here.
-copyright = 'A space of <a href="https://ozarland.com/">OzarLand</a> &middot; Licensed under the <a href="https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE">Apache License 2.0</a>'
+copyright = 'A space of <a href="https://ozarland.com/">OzarLand</a> &middot; <a href="https://github.com/OzarLand/ozarland-academy/blob/main/CONTRIBUTING.md">Contribute</a> &middot; Licensed under the <a href="https://github.com/OzarLand/ozarland-academy/blob/main/LICENSE">Apache License 2.0</a>'
 
 repo_url = "https://github.com/OzarLand/ozarland-academy"
 repo_name = "OzarLand/ozarland-academy"

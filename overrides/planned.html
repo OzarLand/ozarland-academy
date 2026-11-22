@@ -47,7 +47,12 @@
         {% endfor %}
       {% endif %}
       <p class="oz-state__actions">
-        {% if first.module %}
+        {% if page.meta.portal_release %}
+          {#- A planned release: the study read by default instead. -#}
+          {% for release in portal.releases if release.path == portal.default or release.id == portal.default %}
+            <a class="portal-cta portal-cta--primary" href="{{ root }}{{ release.path }}/">Read the {{ release.openstack }} study</a>
+          {% endfor %}
+        {% elif first.module %}
           <a class="portal-cta portal-cta--primary" href="{{ root }}{{ first.module.path }}/">Go to {{ first.module.title }}</a>
         {% endif %}
         <a class="portal-cta" href="{{ root }}">Back to the learning path</a>

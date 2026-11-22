@@ -3405,6 +3405,14 @@ a.portal-cta:focus-visible {
     max-width: none;
     padding: 0.25rem 0;
     border: 0;
+    /* A long path, URL or log line breaks inside the card instead of
+       widening the page. */
+    overflow-wrap: anywhere;
+  }
+
+  .md-typeset table:not([class])[data-portal-cards][data-portal-cards] td :is(code, pre) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 
   .md-typeset table:not([class])[data-portal-cards][data-portal-cards] td + td {

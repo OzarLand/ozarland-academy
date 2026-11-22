@@ -26,7 +26,7 @@ Related files at the root of the repository: [Makefile](../../Makefile),
 
 ## Modules and releases: layout of the sources and of the portal
 
-OzarLand Academy is one learning path in five steps; each step is a **module**. A module is either one site
+OzarLand Academy is one learning path in eight stops (0 to 7); each stop is a **module**. A module is either one site
 (`kind = "single"`) or, for the day-2 module, one site per OpenStack release (`kind = "versioned"`). Every site is
 self-contained and published under its own URL prefix, its *path*: `<module>/` or `<module>/<release>/`. So the search,
 the navigation and the "recently updated" list of a site cover that site only, and adding a module or a release never

@@ -10,7 +10,11 @@
 exclude_docs = """
 /scripts/
 /templates/
-/assets/
+/assets/brand/
+/assets/fonts/
+/assets/icons/
+/assets/index.md
+/assets/data/glossary.json
 /node_modules/
 /.cache/
 /package.json
