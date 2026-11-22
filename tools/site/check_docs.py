@@ -81,6 +81,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 DESCRIPTION_MAX = 160
 
+#: Longest `seo_title` (the <title> of a page with a long title, overrides/main.html).
+SEO_TITLE_MAX = 60
+
 #: The five alert types github.com renders (marker alone on its line).
 ALERT_TYPES = ("NOTE", "TIP", "IMPORTANT", "WARNING", "CAUTION")
 
@@ -117,6 +120,7 @@ RULES = {
     "front-matter": "page starts with a YAML front matter block that can be read",
     "title": "front matter has a non-empty `title`",
     "description": f"front matter has a `description` of at most {DESCRIPTION_MAX} characters",
+    "seo-title": f"`seo_title`, when present, is a text of at most {SEO_TITLE_MAX} characters",
     "impact": "`impact` values are in the vocabulary: " + ", ".join(IMPACT_VOCABULARY),
     "tags": "`tags` is a list of lowercase names",
     "link-file": "relative link target exists (exact case)",
@@ -1058,6 +1062,13 @@ class Checker:
         title = front.get("title")
         if not isinstance(title, str) or not title.strip():
             error(doc.rel, lines.get("title", 1), "title", "front matter has no `title`")
+
+        if "seo_title" in front:
+            seo = front["seo_title"]
+            if not isinstance(seo, str) or not seo.strip():
+                error(doc.rel, lines["seo_title"], "seo-title", "`seo_title` is empty or not a text")
+            elif len(seo) > SEO_TITLE_MAX:
+                error(doc.rel, lines["seo_title"], "seo-title", f"`seo_title` has {len(seo)} characters (maximum {SEO_TITLE_MAX})")
 
         description = front.get("description")
         if "description" not in front:

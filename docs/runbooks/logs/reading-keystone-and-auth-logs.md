@@ -24,6 +24,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the Keystone logs, and the authentication lines every service writes (401, 503, Fernet)."
+seo_title: "Reading the Keystone and authentication logs"
 ---
 
 # Reading the Keystone logs, and the authentication lines every service writes (401, 503, Fernet)

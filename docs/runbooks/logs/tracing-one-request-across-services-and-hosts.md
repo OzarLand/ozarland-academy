@@ -26,6 +26,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "One user action touches several services on several hosts, and each writes its own log with its own clock."
+seo_title: "Following one request through every log"
 ---
 
 # Following one request, instance, port or volume through the logs of every service and host

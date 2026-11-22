@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:lab-reviewer
 last_verified: 2026-10-24
 description: "A complete OpenStack 2026.1 (Keystone, Glance, Nova, Neutron with Open vSwitch, Placement, Heat, Horizon) on one VM of an existing cloud."
+seo_title: "All-in-one lab on a single VM"
 ---
 
 # All-in-one lab on a single VM, nested inside an existing OpenStack cloud

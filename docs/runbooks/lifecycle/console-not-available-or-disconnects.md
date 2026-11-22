@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "The instance console (noVNC or SPICE) does not open, fails at once, or says that the token is invalid or has expired."
+seo_title: "Instance console (noVNC, SPICE) does not open"
 ---
 
 # Instance console (noVNC or SPICE) does not open, fails at once, or shows "invalid or has expired"

@@ -1,6 +1,7 @@
 ---
 title: "Exercise 5. Restarting the Open vSwitch agent without cutting the network"
 description: "Restart the Neutron Open vSwitch agent and see that running instances keep their network, while new instances wait for it."
+seo_title: "Exercise 5. Restarting the Open vSwitch agent"
 ---
 
 # Exercise 5. Restarting the Open vSwitch agent without cutting the network

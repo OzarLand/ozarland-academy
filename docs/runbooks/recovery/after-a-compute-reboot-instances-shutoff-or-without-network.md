@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
 description: "After a compute reboot, instances stay SHUTOFF or come back without network."
+seo_title: "After a compute reboot, instances SHUTOFF"
 ---
 
 # After a compute reboot, instances stay SHUTOFF or come back without network

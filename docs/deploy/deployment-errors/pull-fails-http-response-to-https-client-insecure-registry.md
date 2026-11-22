@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "kolla-ansible pull fails on the first image with an HTTP response to an HTTPS client: Docker does not know the registry is plain HTTP."
+seo_title: "kolla-ansible pull: HTTP response to HTTPS client"
 ---
 
 # kolla-ansible pull fails with "http: server gave HTTP response to HTTPS client". Docker does not know the registry is plain HTTP

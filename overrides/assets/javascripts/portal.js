@@ -265,9 +265,155 @@
     scan();
   }
 
+  /* ----------------------------------------------- 6. Search every module
+   * The learning-path home (overrides/academy.html) searches the pages and
+   * section headings of every site, from assets/data/portal-search.json
+   * (tools/site/releases.py, portal_search): {sites: [{title, path}],
+   * entries: [[site, location, page title, heading, extract]]}. Every word
+   * of the query must appear; a match in a heading or a title ranks first.
+   * The query is kept in the address (?q=) so a search can be shared. */
+
+  function fold(text) {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  function initSearchAll() {
+    var box = document.querySelector("[data-portal-search-all]");
+    if (!box || !window.fetch) return;
+    var form = box.querySelector("[data-portal-search-all-form]");
+    var input = form.querySelector("input");
+    var status = box.querySelector("[data-portal-search-all-status]");
+    var list = box.querySelector("[data-portal-search-all-results]");
+    var root = box.getAttribute("data-portal-root");
+    var index = null;
+    var loading = null;
+    var pending = 0;
+    input.disabled = false;
+    status.textContent = "";
+
+    function load() {
+      if (!loading) {
+        loading = fetch(box.getAttribute("data-portal-search-all"))
+          .then(function (response) {
+            if (!response.ok) throw new Error(response.status);
+            return response.json();
+          })
+          .then(function (data) {
+            index = data;
+            data.entries.forEach(function (entry) {
+              entry.push(fold(entry[2]), fold(entry[3]), fold(entry[4]));
+            });
+          })
+          .catch(function () {
+            status.textContent = "The search could not be loaded: use the search of each module.";
+          });
+      }
+      return loading;
+    }
+
+    function score(entry, terms, phrase) {
+      var total = entry[3] ? 0 : 2;
+      // The words of the query side by side, in the title or the heading.
+      if (phrase.indexOf(" ") > 0 && (entry[3] ? entry[6] : entry[5]).replace(/[^a-z0-9_]+/g, " ").indexOf(phrase) >= 0) total += 10;
+      for (var i = 0; i < terms.length; i++) {
+        var term = terms[i];
+        var points = 0;
+        // A page title (entry[5]) is worth more than a heading (entry[6]),
+        // a match at the start of a word more than one inside it.
+        var at = entry[5].indexOf(term);
+        if (at >= 0) points = Math.max(points, at === 0 || !/[a-z0-9]/.test(entry[5][at - 1]) ? (entry[3] ? 4 : 12) : (entry[3] ? 2 : 8));
+        at = entry[6].indexOf(term);
+        if (at >= 0) points = Math.max(points, at === 0 || !/[a-z0-9]/.test(entry[6][at - 1]) ? 9 : 6);
+        if (!points && entry[7].indexOf(term) >= 0) points = 1;
+        if (!points) return 0;
+        total += points;
+      }
+      return total;
+    }
+
+    function render(query) {
+      list.textContent = "";
+      var terms = fold(query).split(/[^a-z0-9_]+/).filter(function (term) {
+        return term.length > 1;
+      });
+      if (!terms.length || !index) {
+        status.textContent = "";
+        return;
+      }
+      var found = [];
+      var phrase = terms.join(" ");
+      index.entries.forEach(function (entry) {
+        var points = score(entry, terms, phrase);
+        if (points) found.push([points, entry]);
+      });
+      found.sort(function (a, b) {
+        return b[0] - a[0];
+      });
+      var perPage = {};
+      var shown = 0;
+      for (var i = 0; i < found.length && shown < 25; i++) {
+        var entry = found[i][1];
+        var site = index.sites[entry[0]];
+        var key = entry[0] + " " + entry[1].split("#")[0];
+        perPage[key] = (perPage[key] || 0) + 1;
+        if (perPage[key] > 2) continue;
+        shown += 1;
+        var item = document.createElement("li");
+        var link = document.createElement("a");
+        link.href = root + site.path + entry[1];
+        link.textContent = entry[3] || entry[2];
+        item.appendChild(link);
+        var where = document.createElement("span");
+        where.className = "oz-search-all__where";
+        where.textContent = site.title + (entry[3] ? " › " + entry[2] : "");
+        item.appendChild(where);
+        if (entry[4]) {
+          var extract = document.createElement("p");
+          extract.textContent = entry[4];
+          item.appendChild(extract);
+        }
+        list.appendChild(item);
+      }
+      status.textContent = shown
+        ? found.length > shown
+          ? "The " + shown + " best of " + found.length + " matches."
+          : shown + (shown === 1 ? " match." : " matches.")
+        : "Nothing in the titles and headings. Try another word, or the search of a module for the full text.";
+    }
+
+    function run() {
+      var query = input.value.trim();
+      if (window.history && history.replaceState) {
+        var url = new URL(window.location.href);
+        if (query) url.searchParams.set("q", query);
+        else url.searchParams.delete("q");
+        history.replaceState(null, "", url.href);
+      }
+      load().then(function () {
+        render(query);
+      });
+    }
+
+    input.addEventListener("focus", load);
+    input.addEventListener("input", function () {
+      clearTimeout(pending);
+      pending = setTimeout(run, 150);
+    });
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      run();
+    });
+    var initial = new URLSearchParams(window.location.search).get("q");
+    if (initial) {
+      input.value = initial;
+      run();
+    }
+  }
+
   function init() {
     initSearchTriggers();
     initSearchScope();
+    initSearchAll();
     initUpdates();
     initScrollRegions();
     initReleases();

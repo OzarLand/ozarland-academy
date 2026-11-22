@@ -87,6 +87,22 @@
 {% endblock %}
 
 {% block content %}
+  {#- Search of every module (portal.js, section 6): its index,
+      assets/data/portal-search.json, is written by tools/site/releases.py
+      from the search of each site, and loaded on first use. Each result
+      opens the page; each site keeps its own full-text search. -#}
+  <section class="oz-search-all" aria-labelledby="search" data-portal-search-all="{{ root }}assets/data/portal-search.json" data-portal-root="{{ root }}">
+    <h2 id="search">Search every module</h2>
+    <p class="oz-search-all__lead">Page titles and section headings of every stop, in one place. For a word deep inside
+    a page, open its module and use its own search.</p>
+    <form class="oz-search-all__form" role="search" data-portal-search-all-form>
+      <label class="md-visually-hidden" for="oz-search-all-input">Search every module</label>
+      <input id="oz-search-all-input" class="oz-search-all__input" type="search" name="q" autocomplete="off" spellcheck="false" placeholder="For example: evacuate, rabbitmq, nova-compute down" disabled>
+    </form>
+    <p class="oz-search-all__status" role="status" aria-live="polite" data-portal-search-all-status>Search needs JavaScript: every module also has its own search.</p>
+    <ol class="oz-search-all__results" data-portal-search-all-results></ol>
+  </section>
+
   <h2 id="path">The learning path</h2>
   <p>
     {{ portal.modules | length }} stops across one island, from the harbour to the lighthouse and beyond. Each stop is a module with its own pages,

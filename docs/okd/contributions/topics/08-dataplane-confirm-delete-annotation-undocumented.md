@@ -1,6 +1,7 @@
 ---
 title: "08 — The annotation required to delete a running data plane deployment is not documented"
 description: "Contribution proposal documenting the confirm-delete annotation that blocks deleting a running data plane deployment, with lab captures of the effects."
+seo_title: "08 — Undocumented data plane delete annotation"
 ---
 
 # 08 — The annotation required to delete a running data plane deployment is not documented

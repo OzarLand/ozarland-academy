@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the Glance logs, and the image lines in Nova's logs (boot, snapshot)."
+seo_title: "Reading the Glance logs"
 ---
 
 # Reading the Glance logs, and the image lines in Nova's logs (boot, snapshot)

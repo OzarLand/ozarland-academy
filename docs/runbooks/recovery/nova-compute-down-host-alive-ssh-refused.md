@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
 description: "Two independent faults on one host: its nova-compute agent stopped, and the SSH user of your monitoring or automation is refused there."
+seo_title: "nova-compute down, SSH refused, host alive"
 ---
 
 # nova-compute is down and the compute refuses an SSH login, but the host is alive

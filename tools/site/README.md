@@ -8,7 +8,7 @@ Nothing here holds content.
 
 | File | Role |
 |---|---|
-| [releases.py](releases.py) | Reads `academy.toml`, gives the address of the portal (`SITE_DOMAIN`), writes the configuration Zensical builds for each site and for the root of the portal, and assembles the root (learning path, home of the versioned module, `versions.json`, not-found page, pages of the planned modules and releases, `CNAME`). Standard library only. |
+| [releases.py](releases.py) | Reads `academy.toml`, gives the address of the portal (`SITE_DOMAIN`), writes the configuration Zensical builds for each site and for the root of the portal, and assembles the root (learning path, home of the versioned module, `versions.json`, not-found page, pages of the planned modules and releases, `CNAME`, and `assets/data/portal-search.json`: the index of the "Search every module" box of the learning-path home, built from the `search.json` of each site, of the versioned module its default release only). Standard library only. |
 | [build.py](build.py) | Runs the whole build: `prebuild.py`, Zensical for each available site, Zensical for the root, then the assembly. Also starts the live preview of one site. |
 | [check_docs.py](check_docs.py) | Checks on the registry and on the Markdown sources of every available site. No build needed, standard library only. |
 | [check_learning.py](check_learning.py) | Checks the learning blocks of the front matter (`remember`, `scenarios`, `quiz`, `challenges`): shape, answers, one "best" choice, allowed inline HTML, `see` targets. Needs PyYAML, a pinned dependency. |
@@ -212,6 +212,7 @@ when there is at least one error. On GitHub Actions each error is also an annota
 | `front-matter` | error | The page starts with a front matter block that can be read. |
 | `title` | error | The front matter has a non-empty `title`. |
 | `description` | error | `description` is not empty and has at most 160 characters. A missing `description` is a warning. |
+| `seo-title` | error | `seo_title`, when present, is a text of at most 60 characters. It replaces a long page title in `<title>` and `og:title` only (overrides/main.html); without it, a title longer than 70 characters with the site name keeps its first sentence there. |
 | `impact` | error | Every `impact` value is one of `read-only`, `writes-config`, `pulls-images`, `restarts-on-drift`, `recreates-containers`, `critical`, `maintenance-window`, `recovery`. |
 | `tags` | warning | `tags` is a list of lowercase names. |
 | `link-file` | error | The target of a relative link or image exists, with the same letter case. |

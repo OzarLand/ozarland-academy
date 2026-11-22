@@ -24,6 +24,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the MariaDB and Galera logs, and the oslo.db lines that go with them."
+seo_title: "Reading the MariaDB and Galera logs"
 ---
 
 # Reading the MariaDB and Galera logs, and the oslo.db lines that go with them

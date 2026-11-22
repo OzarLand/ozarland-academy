@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "On Kolla-Ansible 2026.1, every OpenStack service reaches MariaDB through ProxySQL on the internal VIP."
+seo_title: "Database connections exhausted (Too many connections)"
 ---
 
 # Services fail on "Too many connections", "Max connect timeout" or "QueuePool limit". Database connections are exhausted

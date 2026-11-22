@@ -15,6 +15,7 @@ risk: state-changing
 authored_by: agent:lab-reviewer
 last_verified: 2026-10-22
 description: "Upgrading a disposable all-in-one lab from 2025.1 to 2026.1 with Kolla-Ansible: what happened."
+seo_title: "Upgrade report: 2025.1 to 2026.1, all-in-one lab"
 ---
 
 # Upgrading an all-in-one lab from 2025.1 to 2026.1 with Kolla-Ansible, what happened

@@ -38,6 +38,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the libvirt and QEMU logs of a compute, and the guest console log."
+seo_title: "Reading the libvirt and QEMU logs"
 ---
 
 # Reading the libvirt and QEMU logs of a compute, and the guest console log

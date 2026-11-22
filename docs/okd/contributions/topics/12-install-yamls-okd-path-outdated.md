@@ -1,6 +1,7 @@
 ---
 title: "12 — The OKD=true path of install_yamls dates from 2023; a report from OKD 4.22 on what still works"
 description: "Contribution proposal for a test report on the OKD switch of install_yamls, listing what the lab found on OKD 4.22 for the three platform prerequisites."
+seo_title: "12 — The OKD path of install_yamls is outdated"
 ---
 
 # 12 — The `OKD=true` path of install_yamls dates from 2023; a report from OKD 4.22 on what still works

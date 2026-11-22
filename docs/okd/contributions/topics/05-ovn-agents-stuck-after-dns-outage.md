@@ -1,6 +1,7 @@
 ---
 title: "05 — OVN agents on the compute node stay disconnected for up to 15 minutes after a control-plane DNS outage"
 description: "ovn-controller and the OVN metadata agent on the data plane node reach the southbound database by name (ssl:ovsdbserver-sb.openstack.svc:6642)."
+seo_title: "05 — OVN agents stuck after a DNS outage"
 ---
 
 # 05 — OVN agents on the compute node stay disconnected for up to 15 minutes after a control-plane DNS outage

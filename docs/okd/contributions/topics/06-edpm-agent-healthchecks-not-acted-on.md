@@ -1,6 +1,7 @@
 ---
 title: "06 — Data plane agent health checks: the metadata check can pass while the agent is cut off, and nothing acts on \"unhealthy\""
 description: "Contribution proposal showing that the OVN metadata agent health check can stay green while the agent is disconnected, and that nothing reacts to unhealthy."
+seo_title: "06 — Data plane health checks nobody acts on"
 ---
 
 # 06 — Data plane agent health checks: the metadata check can pass while the agent is cut off, and nothing acts on "unhealthy"
