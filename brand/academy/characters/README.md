@@ -14,5 +14,26 @@ prompts of the art direction.
 What never changes: curly auburn hair, goggles and patterned headband, the same face and proportions, the cream shirt,
 the navy cape with a plain white cloud and a brass compass brooch, the leather satchel, brown trousers and laced boots.
 
-The names, stops and signature objects of the characters on `cast.webp` go in the art direction of the learning path
-once they are validated.
+## The characters on `cast.webp`
+
+From left to right, row by row. The full list, with what each one teaches, is in
+[`../learning-path/personnages.md`](../learning-path/personnages.md).
+
+| # | Name | Stops | On the island | Signature object |
+|---:|---|---|---|---|
+| 1 | LUMO | 0 to 7 | Guide, apprentice builder then cartographer | Brass lantern, compass brooch |
+| 2 | Neri | 0, 1, 3, 4, 5, 7 | First inhabitant and travelling companion | Backpack with a rolled bedroll |
+| 3 | Jo | 0, 2, 3, 6 | Kolla-Ansible deployment | Standard service crate |
+| 4 | Linh | 0, 4, 5 | Networks and harbour paths | Wood and brass connector |
+| 5 | Safa | 0, 4, 5 | Volumes | Removable metal plate |
+| 6 | Maë | 0, 1, 3, 5 | Identity register | Plain brass token |
+| 7 | Alma | 1 | Harbour master of the quay lab | Mooring rope and brass hook |
+| 8 | Sorel | 2 | Master of the deployment models | Two blank scale models |
+| 9 | Ilyan | 3 | Librarian of the source code | Parchment with abstract, unreadable marks |
+| 10 | Ren | 4 | Watch officer on the bridge | Observation notebook and weather pennant |
+| 11 | Davi | 5 | Lighthouse keeper | Spare brass lens |
+| 12 | Kest | 6 | Keeper of the citadel's mechanisms | Manual control lever |
+| 13 | Noor | 0, 2, 3, 6 | Resource inventory (Placement), in a wheelchair | Brass inventory frame |
+
+The other keepers of stop 0 (Rami, Sacha, Jae, Eren, Imani, Pax, Talia, Aster, Farah, Taro, Ina) keep their names and
+looks when they come back.
