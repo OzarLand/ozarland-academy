@@ -5,6 +5,8 @@ description: "This repository gives operational advice for production OpenStack.
 
 # Knowledge validation policy
 
+<img src="../assets/images/S7-validation.webp" width="1536" height="1024" loading="lazy" alt="LUMO watches a finished trial while an operator presses a round, unmarked seal onto a blank register.">
+
 This repository gives operational advice for production OpenStack. A procedure
 can read well, pass every linter, and still fail on a real platform. This
 policy defines what this repository may call *validated*, what counts as

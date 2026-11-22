@@ -25,6 +25,8 @@ Soufian Zaouam's book and the OzarLand pages, and reviewed by him.
 - **What does not:** it never touches your platform, and you make every
   disruptive decision.
 
+<img src="assets/images/S7-opening.webp" width="1536" height="1024" alt="LUMO, with a full leather satchel and a nearly complete map in its outer pocket, stands in an open hall above the sea where nine ordinary tools are shelved in the background.">
+
 <div align="center">
   <img src="assets/demo.svg" alt="Claude Code session: asked whether to evacuate a host reported down, Claude loads openstack-incident-analysis and answers: fence the host first" width="820">
   <br>
@@ -51,6 +53,8 @@ Claude only sees what you paste or show it. It asks for the output it needs
 instead of guessing it, and it never runs anything on your platform.
 
 ## ⚡ Install in one minute
+
+<img src="assets/images/S7-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape holds a full-size brass lantern, a nearly complete map showing in the satchel pocket and a small brass key at the belt.">
 
 In Claude Code:
 
@@ -91,6 +95,8 @@ Details and caveats: [docs/installation.md](docs/installation.md).
 | ✅ tested | ✅ tested with the 0.1.0 skills; the two 0.2.0 skills not yet | expected, not tested yet | expected, not tested yet |
 
 ## 🧰 Pick a skill
+
+<img src="assets/images/S7-pick-a-skill.webp" width="1536" height="1024" loading="lazy" alt="Nine different sets of ordinary tools, each in its own place on a long table, laid out in front of LUMO.">
 
 You don't have to pick: Claude chooses. This table is for knowing what's there.
 
@@ -304,6 +310,8 @@ policy: [docs/knowledge-validation-policy.md](docs/knowledge-validation-policy.m
 
 ## 🛡️ Safety by design
 
+<img src="assets/images/S7-safety-by-design.webp" width="1536" height="1024" loading="lazy" alt="LUMO's hand rests on the brake of a still brass mechanism in the companions' hall.">
+
 | ✅ They always | 🚫 They never |
 |---|---|
 | propose **read-only** diagnostics first and label every step | run anything or touch your infrastructure on their own |
@@ -344,6 +352,8 @@ size. These runs measure reasoning, not whether a procedure works on
 OpenStack. [Full evaluation report →](docs/evaluation-report.md)
 
 ## 🧬 Where the knowledge comes from
+
+<img src="assets/images/S7-how-it-works.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ilyan consult an archive book with blank pages, tied by ordinary threads to the tools on the shelves.">
 
 The skills draw on OzarLand's knowledge and keep its validation status attached:
 
@@ -403,6 +413,8 @@ assets/                         images used in this README
 </details>
 
 ## 🌍 Part of OzarLand Academy
+
+<img src="assets/images/S7-journey-end.webp" width="1536" height="1024" loading="lazy" alt="LUMO stands on the hall's terrace with Neri, Noor and the guides Alma, Sorel, Ilyan, Ren, Davi and Kest, looking out to sea at dusk.">
 
 This module is a stop of [OzarLand Academy](../), the learning path of
 [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* The skills apply
