@@ -7,6 +7,8 @@ description: "Inventory layouts, variable organisation, configuration overrides,
 
 Inventory layouts, variable organisation, configuration overrides, registries, TLS and secrets handling (never their content). Add a page with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)).
 
+<img src="../assets/images/S2-configuration-and-secrets.webp" width="1536" height="1024" loading="lazy" alt="At a desk, LUMO sorts blank cards in a file box next to small brass connectors and a large closed chest with brass bands.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |

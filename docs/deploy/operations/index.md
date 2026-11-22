@@ -7,6 +7,8 @@ description: "Day-2 procedures on a running Kolla-Ansible deployment: adding and
 
 Day-2 procedures on a running Kolla-Ansible deployment: adding and removing hosts, choosing between `deploy`, `reconfigure` and `upgrade`, backups and recoveries, checks after a change. One page per procedure, written as a pattern (`kind: pattern`) with [`templates/deployment-pattern.md`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/deploy/templates/deployment-pattern.md) (the shared [deployment pattern template](https://github.com/OzarLand/ozarland/blob/main/community/templates/deployment-pattern.md)), its procedure steps carrying the ⚠️ and 🛑 warnings of the [risk conventions](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/risk-warnings.md).
 
+<img src="../assets/images/S2-operations.webp" width="1536" height="1024" loading="lazy" alt="Jo holds up a small brass part beside LUMO, in front of a long model on a table where one section is being replaced.">
+
 The status of each page is its front matter `status`; see the [repository README](../index.md#-how-much-each-page-was-checked) for what each status means.
 
 | Page | Status |

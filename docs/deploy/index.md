@@ -10,6 +10,8 @@ description: "Ways to deploy OpenStack with Kolla-Ansible, compared side by side
 [Index](#index) · [Status](#-how-much-each-page-was-checked) · [Wanted](#-first-pages-to-write) ·
 [Contribute](#-contributing)
 
+<img src="assets/images/S2-opening.webp" width="1536" height="1024" alt="LUMO, Sorel and Jo stand at a workbench in a sunlit harbour workshop, behind two blank model boards of the same size and a closed service crate.">
+
 Written so far from upstream documentation and lab builds; **operators' own patterns are what this repository is
 waiting for.**
 
@@ -281,10 +283,12 @@ Click a category to open it.
 
 ## 🌍 Part of OzarLand Academy
 
+<img src="assets/images/S2-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape holds a nearly blank map and an open brass compass, with two route pins fixed to the leather satchel.">
+
 This module is the second stop of [OzarLand Academy](../), the learning path of
 [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* Before it, the
 [Quick lab](../lab/) gives you a disposable OpenStack to practise on; after it, the path goes on with day-2
-operations with Kolla-Ansible, VM runbooks and the production guide.
+operations with Kolla-Ansible, VM runbooks, the production guide, the OKD lab and operator skills.
 
 ## ⚖️ License
 
