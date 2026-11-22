@@ -17,6 +17,16 @@
 {% set root = (base_url if base_url[-1:] == "/" else base_url ~ "/") %}
 {% set img = root ~ "assets/images/ozarland/" %}
 {% set hub = "https://github.com/OzarLand/ozarland" %}
+{% set home = "https://ozarland.com/" %}
+{#- Shortcuts for an operator already on a platform: the modules they need
+    when available (the runbooks by symptom, the day-2 study of the default
+    release, the production memos). -#}
+{% set quick = namespace(runbooks=none, day2=none, production=none) %}
+{% for module in portal.modules if module.status == "available" %}
+  {% if module.id == "runbooks" %}{% set quick.runbooks = module %}{% endif %}
+  {% if module.kind == "versioned" and module.default %}{% set quick.day2 = module %}{% endif %}
+  {% if module.id == "production" %}{% set quick.production = module %}{% endif %}
+{% endfor %}
 {% set first = namespace(module=none) %}
 {#- The test is in the body: the condition of a `for … if` is evaluated for
     every item before the body runs, so it cannot see `first.module`. -#}
@@ -33,7 +43,7 @@
     <div class="md-grid portal-hero__inner oz-hero__inner">
       <div class="oz-hero__text oz-plate">
         <p class="oz-hero__org">
-          <a href="{{ hub }}"><span aria-hidden="true">←</span> OzarLand</a>
+          <a href="{{ home }}"><span aria-hidden="true">←</span> OzarLand</a>
           <span class="oz-hero__badge">An OzarLand project</span>
         </p>
         <h1 class="portal-hero__title" id="welcome">{{ config.site_name }}</h1>
@@ -48,6 +58,12 @@
           {% endif %}
           <a class="portal-cta" href="#path">See the path</a>
         </p>
+        {% if quick.runbooks or quick.day2 or quick.production %}
+          <p class="oz-hero__shortcut">
+            Already on a platform?
+            {% if quick.runbooks %}<a href="{{ root }}{{ quick.runbooks.path }}/#-start-from-what-you-see">Start from a symptom</a> in the runbooks{% endif %}{% if quick.day2 %}{% if quick.runbooks %}, {% endif %}<a href="{{ root }}{{ quick.day2.path }}/{{ quick.day2.default }}/start/find-it-fast/">find a Kolla-Ansible operation fast</a>{% endif %}{% if quick.production %}{% if quick.runbooks or quick.day2 %} or {% endif %}browse the <a href="{{ root }}{{ quick.production.path }}/#catalog">production memos</a>{% endif %}.
+          </p>
+        {% endif %}
       </div>
       <figure class="oz-hero__art">
         <img src="{{ img }}hero/path-hero.webp" width="1600" height="1000" fetchpriority="high" alt="A group of travellers studies a map on a wooden terrace above an island city, waterfalls and sea.">
@@ -128,7 +144,7 @@
       </tbody>
     </table>
     <p class="oz-land__actions">
-      <a class="portal-cta portal-cta--primary" href="{{ hub }}">Visit OzarLand</a>
+      <a class="portal-cta portal-cta--primary" href="{{ home }}">Visit OzarLand</a>
       <a class="portal-cta" href="{{ hub }}/discussions">Ask a question</a>
     </p>
   </section>

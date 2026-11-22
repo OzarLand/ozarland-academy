@@ -230,8 +230,44 @@
     });
   }
 
+  /* --------------------------------------------------- 5. Search scope
+   * Each site has its own search: the field of the search dialog says which
+   * one ("Search VM runbooks"), so a reader does not expect results from the
+   * other modules. The dialog of the theme lives in an open shadow root that
+   * is created on first use; if its markup changes, the field keeps the
+   * theme's placeholder. */
+
+  function initSearchScope() {
+    var meta = document.querySelector('meta[name="portal-search-scope"]');
+    if (!meta || !window.MutationObserver) return;
+    var label = "Search " + meta.content;
+    function name(root) {
+      var input = root.querySelector("input[role=combobox]");
+      if (input && input.placeholder !== label) {
+        input.placeholder = label;
+        input.setAttribute("aria-label", label);
+      }
+    }
+    function attach(root) {
+      if (root.ozSearchScope) return;
+      root.ozSearchScope = true;
+      new MutationObserver(function () {
+        name(root);
+      }).observe(root, { childList: true, subtree: true });
+      name(root);
+    }
+    function scan() {
+      Array.prototype.forEach.call(document.body.children, function (element) {
+        if (element.shadowRoot) attach(element.shadowRoot);
+      });
+    }
+    new MutationObserver(scan).observe(document.body, { childList: true });
+    scan();
+  }
+
   function init() {
     initSearchTriggers();
+    initSearchScope();
     initUpdates();
     initScrollRegions();
     initReleases();

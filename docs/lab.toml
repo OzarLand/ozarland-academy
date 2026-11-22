@@ -10,6 +10,7 @@ nav = [
     "index.md",
   ] },
   { "Labs" = [
+    "variants/index.md",
     "variants/openstack-cloud/index.md",
     "variants/openstack-cloud-multinode/index.md",
   ] },

@@ -3896,3 +3896,17 @@ a.portal-cta:focus-visible {
     row-gap: 0.2rem;
   }
 }
+
+/* Learning-path home (overrides/academy.html): shortcuts for an operator
+   already on a platform, under the calls to action. */
+.oz-hero__shortcut {
+  margin: 0.9rem 0 0;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--portal-text-muted);
+}
+
+.oz-hero__shortcut a {
+  color: var(--md-typeset-a-color);
+  text-decoration: underline;
+}
