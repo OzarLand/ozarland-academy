@@ -310,7 +310,7 @@ def skill_bars(items):
 def render_readme_block(items):
     table, summary, _, _ = coverage_tables(items)
     return (f"{README_START}\n{status_badges(items)}\n\n{summary}\n\n{status_pie(items)}\n\n"
-            f"{skill_bars(items)}\n\n<details>\n<summary><b>Per-skill details and status counts</b>"
+            f"{skill_bars(items)}\n\n<details markdown>\n<summary><b>Per-skill details and status counts</b>"
             f"</summary>\n\n{table}\n\n{skill_status_table(items)}\n\n</details>\n{README_END}")
 
 
