@@ -32,6 +32,8 @@ What the sources do not establish, grouped by topic. Each line restates the open
 mark it [NOT AVAILABLE]; nothing here is an answer. The open questions [Q1–Q14](open-questions.md#q1) are in [Open
 questions](open-questions.md).
 
+<img src="../assets/images/S3-what-is-not-known.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ilyan lean over a map whose centre is still blank, marked at its edge by a small navy pennant.">
+
 ## Running VMs and compute hosts
 
 | Not established by the sources | Marked [NOT AVAILABLE] in |

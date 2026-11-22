@@ -9,7 +9,7 @@ Cette liste suit l’ordre de la planche validée : de gauche à droite, ligne p
 | 1 | LUMO | 0 à 7 | Guide du parcours, apprenti bâtisseur puis cartographe | Lanterne ordinaire en laiton, compas-broche | Il ou elle invite à distinguer les faits, les hypothèses et les vérifications avant de conclure. |
 | 2 | Neri | 0, 1, 3, 4, 5 et 7 | Homme adulte, habitant et compagnon de route | Sac à dos avec sac de couchage roulé | Neri montre qu’une question de débutant mérite une réponse précise et vérifiable. |
 | 3 | Jo | 0, 2, 3 et 6 | Responsable du déploiement Kolla-Ansible | Caisse de service standardisée | Jo aide à séparer la préparation et le déploiement des services des opérations sur les VM. |
-| 4 | Linh | 0, 4 et 5 | Spécialiste des réseaux et des chemins du port | Connecteur en bois et laiton | Linh rappelle qu’un chemin observé doit être vérifié à chaque frontière logique et physique. |
+| 4 | Linh | 0, 4 et 5 | Spécialiste des réseaux et des chemins du port | Longue-vue en laiton | Linh rappelle qu’un chemin observé doit être vérifié à chaque frontière logique et physique. |
 | 5 | Safa | 0, 4 et 5 | Spécialiste des volumes | Plaque métallique amovible | Safa invite à vérifier l’état et le cycle de vie d’un volume avant de le modifier. |
 | 6 | Maë | 0, 1, 3 et 5 | Gardienne du registre d’identité | Jeton lisse en laiton | Maë enseigne à vérifier la portée d’un accès et ce qu’un jeton autorise réellement. |
 

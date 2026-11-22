@@ -24,7 +24,7 @@ From left to right, row by row. The full list, with what each one teaches, is in
 | 1 | LUMO | 0 to 7 | Guide, apprentice builder then cartographer | Brass lantern, compass brooch |
 | 2 | Neri | 0, 1, 3, 4, 5, 7 | First inhabitant and travelling companion | Backpack with a rolled bedroll |
 | 3 | Jo | 0, 2, 3, 6 | Kolla-Ansible deployment | Standard service crate |
-| 4 | Linh | 0, 4, 5 | Networks and harbour paths | Wood and brass connector |
+| 4 | Linh | 0, 4, 5 | Networks and harbour paths | Brass spyglass |
 | 5 | Safa | 0, 4, 5 | Volumes | Removable metal plate |
 | 6 | Maë | 0, 1, 3, 5 | Identity register | Plain brass token |
 | 7 | Alma | 1 | Harbour master of the quay lab | Mooring rope and brass hook |

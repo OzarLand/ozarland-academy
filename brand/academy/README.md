@@ -12,7 +12,7 @@ This archive packages the Academy's chosen visual direction for an engineer inte
 
 ## What's still a draft
 
-- Six additional standalone Lumo pose illustrations are prompt-only. Their full generation prompts are in prompts/. Their intended output paths and dimensions are recorded in manifest.json.
+- Six standalone Lumo pose illustrations were planned as prompts in prompts/. Five of them, one per stop, are superseded by the LUMO pose of each stop in the art direction of the learning path (`learning-path/`), which follows LUMO's progression; manifest.json marks them `superseded`. The book pose (`prompts/lumo-book.md`) is still prompt-only.
 - The website hostname is still undecided; use relative asset paths until the domain is confirmed.
 - The illustration mappings should receive a final crop check against the actual page templates after integration.
 

@@ -10,6 +10,8 @@ The entry point by component: twelve OpenStack services and nine infrastructure 
 where the study covers it and that ends with its service card. Two more pages cut across the components: [Component
 dependencies](dependencies.md) and [Nova deep dive](nova-deep-dive.md).
 
+<img src="../assets/images/S3-components.webp" width="1536" height="1024" loading="lazy" alt="LUMO, Ilyan and Noor, in a wheelchair and holding a brass inventory frame, look at two workbenches set with distinct models and brass instruments.">
+
 One row per service card. The columns "Role and tag", "Containers" and "Runs on" restate the card; "Runs on" is the
 card row "Node types running its containers", read with the Ussuri example `multinode` inventory ([How to read a
 service card](#how-to-read-a-service-card)).

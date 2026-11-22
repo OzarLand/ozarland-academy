@@ -11,6 +11,8 @@ and what the kolla images do when a container starts. [Repository architecture](
 vocabulary that the other pages build on, including the 2024.1 container module `kolla_container`, which drives Docker
 or Podman.
 
+<img src="../assets/images/S3-concepts-and-reference.webp" width="1536" height="1024" loading="lazy" alt="Ilyan and LUMO stand between a table of building models and brass columns and a bookcase of plain boxes, books and scrolls.">
+
 ## Pages
 
 <div class="grid cards" markdown>

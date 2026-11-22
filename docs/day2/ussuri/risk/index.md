@@ -9,6 +9,8 @@ tags: [risk, tags, loop-notify, limit, scaling]
 Potentially dangerous operations on a running Kolla-Ansible Ussuri platform, what a tag really executes, and why a small
 change can create a large workload. Ratings are relative to a production cloud with running VMs.
 
+<img src="../assets/images/S3-small-change-large-effect.webp" width="1536" height="1024" loading="lazy" alt="Jo, holding a crate, and LUMO, reading, stand by a large brass gear mechanism on a bench where a small brass key lies on a parchment.">
+
 ## Start from
 
 - **By operation:** the [Operations](../operations/index.md) catalogue has one row per operation page, with the risks

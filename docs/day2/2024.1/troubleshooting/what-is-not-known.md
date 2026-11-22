@@ -40,6 +40,8 @@ settles, or that concern 2023.1 code which no longer exists, were removed or nar
 in 2024.1 (the Podman path, quorum queues, the staged etcd restart, the systemd unit change, the removed services) are
 marked "New in 2024.1".
 
+<img src="../assets/images/S3-what-is-not-known.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ilyan lean over a map whose centre is still blank, marked at its edge by a small navy pennant.">
+
 ## Running VMs and compute hosts
 
 | Not established by the sources | Marked [NOT AVAILABLE] in |

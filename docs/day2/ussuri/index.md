@@ -7,6 +7,8 @@ tags: [reconfigure, deploy, tags, risk, evidence, unknowns]
 
 # Kolla-Ansible Academy
 
+<img src="assets/images/S3-opening.webp" width="1536" height="1024" alt="LUMO, a small book at hand, sits at a library table beside Ilyan, a grey-bearded librarian with glasses who reads a parchment covered in abstract marks.">
+
 ## Start from what you need
 
 <div class="grid cards" markdown>
@@ -94,6 +96,8 @@ Every change is in the
 
 ## How to read this portal
 
+<img src="assets/images/S3-studies-shelves.webp" width="1536" height="1024" loading="lazy" alt="Ilyan and LUMO stand beside a long bookcase in which three sections are filled with books bound in different wood tones and two are still empty.">
+
 Every statement carries one of two evidence labels, defined in [Evidence
 labels](start/conventions.md#evidence-labels):
 
@@ -121,6 +125,8 @@ known](troubleshooting/what-is-not-known.md)). This page adds no finding of its 
 linked section says, and the linked section is the reference.
 
 ## Scope
+
+<img src="assets/images/S3-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape holds an open book, with a compass, route pins and a small lantern on the satchel and belt.">
 
 The portal is a source-level study of Kolla-Ansible `ussuri-eol` (`openstack/kolla-ansible`, tag `ussuri-eol`, HEAD
 `8a94fe9`). All conclusions come from the Ussuri implementation, not from newer releases ([Method and limits of the
