@@ -1,6 +1,6 @@
 ---
 title: "OKD storage"
-description: "OKD storage"
+description: "Explains how static local volumes bind to claims, where OpenStack data lives and how large it is, what deleting a claim does, and how to watch the shared disk."
 ---
 
 # OKD storage

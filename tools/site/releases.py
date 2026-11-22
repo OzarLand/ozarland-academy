@@ -835,8 +835,26 @@ def versions_json(registry: Registry, module: Module) -> list[dict]:
     ]
 
 
+def root_sitemap(registry: Registry, root_url: str) -> str:
+    """Sitemap of the indexable pages of the root site: the portal home and
+    the landing page of the versioned module (planned pages are noindex)."""
+    pages = [""] + [
+        rel[: -len("index.md")] for rel, meta in root_pages(registry).items() if meta["template"] == "landing.html"
+    ]
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    lines += [f"  <url><loc>{root_url}{page}</loc></url>" for page in pages]
+    lines.append("</urlset>")
+    return "\n".join(lines) + "\n"
+
+
+def robots_txt(root_url: str) -> str:
+    return f"User-agent: *\nAllow: /\n\nSitemap: {root_url}sitemap.xml\n"
+
+
 def sitemap_index(registry: Registry, root_url: str, site: Path) -> str:
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    if (site / "sitemap-portal.xml").is_file():
+        lines.append(f"  <sitemap><loc>{root_url}sitemap-portal.xml</loc></sitemap>")
     for release in registry.available:
         if (site / release.path / "sitemap.xml").is_file():
             lines.append(f"  <sitemap><loc>{root_url}{release.path}/sitemap.xml</loc></sitemap>")
@@ -903,8 +921,17 @@ def assemble(root: Path, registry: Registry, site_dir: str = SITE_DIR) -> list[s
             data = json.dumps(versions_json(registry, module), indent=2, ensure_ascii=False) + "\n"
             (site / module.id / "versions.json").write_text(data, encoding="utf-8")
             written.append(f"{module.id}/versions.json")
+    (site / "sitemap-portal.xml").write_text(root_sitemap(registry, root_url), encoding="utf-8")
+    written.append("sitemap-portal.xml")
     (site / "sitemap.xml").write_text(sitemap_index(registry, root_url, site), encoding="utf-8")
     written.append("sitemap.xml")
+    (site / "robots.txt").write_text(robots_txt(root_url), encoding="utf-8")
+    written.append("robots.txt")
+    # Browsers ask for /favicon.ico whatever the page says.
+    favicon = built / "assets" / "images" / "favicon.ico"
+    if favicon.is_file():
+        shutil.copyfile(favicon, site / "favicon.ico")
+        written.append("favicon.ico")
     domain = site_domain()
     if domain:
         # GitHub Pages ignores this file when the site is deployed by a

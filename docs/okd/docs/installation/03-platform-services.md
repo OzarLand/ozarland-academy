@@ -1,6 +1,6 @@
 ---
 title: "Step 3 — Platform services"
-description: "Step 3 — Platform services"
+description: "Installation step 3, run from the bastion, adds IP forwarding, twelve local volumes, cert-manager and MetalLB so the OpenStack operators can start on OKD."
 ---
 
 # Step 3 — Platform services

@@ -1,6 +1,6 @@
 ---
 title: "State of the lab after the knowledge base campaigns"
-description: "State of the lab after the knowledge base campaigns"
+description: "Inventory of the objects the knowledge base campaigns left on the lab, separating baseline from residue, with the command to list and remove each item."
 ---
 
 # State of the lab after the knowledge base campaigns

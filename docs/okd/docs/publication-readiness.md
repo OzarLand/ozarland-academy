@@ -1,6 +1,6 @@
 ---
 title: "Publication readiness report"
-description: "Publication readiness report"
+description: "Review of the repository before a possible public release, covering secrets, history, addresses, licensing and docs, and the open points left to maintainers."
 ---
 
 # Publication readiness report

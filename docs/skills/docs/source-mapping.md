@@ -1,6 +1,6 @@
 ---
 title: "Source mapping: OzarLand repositories to skills"
-description: "Source mapping: OzarLand repositories to skills"
+description: "Assessment of the earlier skills, VM runbooks and Kolla-Ansible patterns, the architecture decisions, and where each piece of knowledge went in version 0.2.0."
 ---
 
 # Source mapping: OzarLand repositories to skills

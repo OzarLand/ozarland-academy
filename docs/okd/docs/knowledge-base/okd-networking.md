@@ -1,6 +1,6 @@
 ---
 title: "OKD cluster networking"
-description: "OKD cluster networking"
+description: "Explains the four network mechanisms stacked on the OKD node, how a packet reaches OpenStack pods, and the commands to inspect each one on the bastion."
 ---
 
 # OKD cluster networking

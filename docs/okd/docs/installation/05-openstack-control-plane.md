@@ -1,6 +1,6 @@
 ---
 title: "Step 5 — OpenStack control plane"
-description: "Step 5 — OpenStack control plane"
+description: "Installation step 5 deploys the OpenStack control plane from one OpenStackControlPlane resource, with its three inputs, the startup sequence and the done check."
 ---
 
 # Step 5 — OpenStack control plane

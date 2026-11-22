@@ -1,6 +1,6 @@
 ---
 title: "Step 6 — OpenStack data plane"
-description: "Step 6 — OpenStack data plane"
+description: "Installation step 6 configures the compute nodes with Ansible through a service, a node set and an immutable deployment resource, then verifies the result."
 ---
 
 # Step 6 — OpenStack data plane

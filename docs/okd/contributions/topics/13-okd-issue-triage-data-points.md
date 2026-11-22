@@ -82,12 +82,12 @@ configuration attached.
 
 In order of usefulness:
 
-1. #2357: read the validation rule and the operator code path the
+1. \#2357: read the validation rule and the operator code path the
    reporter names, and confirm or correct the analysis in a comment. An
    untriaged report with a precise analysis is where a second reader
    helps most. A single-node data point ("revision 3, no loop") can be
    added, clearly marked as a different topology.
-2. #2341: post the chrony unit state and the time-source configuration
+2. \#2341: post the chrony unit state and the time-source configuration
    of a node where the unit does not fail, so the difference can be
    found.
 3. #2330: only if the scrape targets of the lab are compared first;

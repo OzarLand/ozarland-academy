@@ -1,6 +1,6 @@
 ---
 title: "OpenStackVersion and the minor update of OpenStack services"
-description: "OpenStackVersion and the minor update of OpenStack services"
+description: "Procedure for a minor update of OpenStack services by editing the OpenStackVersion target, with the eight stages, two data plane gates and image overrides."
 ---
 
 # OpenStackVersion and the minor update of OpenStack services

@@ -1,6 +1,6 @@
 ---
 title: "07 — The data plane troubleshooting page still uses a resource that was removed in 2024"
-description: "07 — The data plane troubleshooting page still uses a resource that was removed in 2024"
+description: "Contribution proposal to fix the upstream data plane troubleshooting page, with lab-captured replacement commands for a resource removed in 2024."
 ---
 
 # 07 — The data plane troubleshooting page still uses a resource that was removed in 2024
@@ -330,7 +330,7 @@ that commit, or redo the edit by hand if the page has moved.
 >
 > The troubleshooting page still lists services with
 > `oc get openstackansibleee`. That resource was replaced by Jobs in
-> #972, so the command now answers
+> \#972, so the command now answers
 > `error: the server doesn't have a resource type "openstackansibleee"`, and the Job name used in the
 > `oc logs` example no longer exists (Jobs are named
 > `<service>-<deployment>-<nodeset>`).

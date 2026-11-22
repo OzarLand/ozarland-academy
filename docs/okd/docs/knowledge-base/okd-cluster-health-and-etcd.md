@@ -1,6 +1,6 @@
 ---
 title: "OKD cluster health and etcd"
-description: "OKD cluster health and etcd"
+description: "Shows how to check OKD cluster health, inspect the static control plane pods, take etcd snapshots by hand and handle certificate rotation for OpenStack."
 ---
 
 # OKD cluster health and etcd

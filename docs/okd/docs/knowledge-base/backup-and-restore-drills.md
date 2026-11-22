@@ -1,6 +1,6 @@
 ---
 title: "Backup and restore drills"
-description: "Backup and restore drills"
+description: "Records real Galera and etcd restore drills with timings, markers proving the result, and the manual repairs the OpenStack cloud needed afterwards."
 ---
 
 # Backup and restore drills

@@ -1,6 +1,6 @@
 ---
 title: "Architecture"
-description: "Architecture"
+description: "Describes the lab design goals, its three virtual machines, four networks and software layers, the nested-cloud constraints and the alternatives considered."
 ---
 
 # Architecture
