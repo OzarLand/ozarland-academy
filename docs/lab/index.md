@@ -11,7 +11,7 @@ and repair it, and one command that deletes it all.**
 [Pick a lab](#pick-your-lab) · [Commands](#-the-three-commands) · [Exercises](#-exercises) ·
 [Delete it all](#delete-everything-when-you-are-done)
 
-<img src="assets/images/S1-opening.webp" width="1536" height="1024" alt="LUMO, holding a nearly blank map and a small compass, stands at a stone gateway on the harbour while a guide in a green jacket points along a wooden pier to a temporary workshop by the sea.">
+<img src="assets/images/S1-opening.webp" width="1536" height="1024" alt="LUMO, holding a nearly blank map and a small compass, stands at a stone gateway on the harbour while a grey-haired harbour master with a coiled rope points along a wooden pier to a temporary workshop by the sea.">
 
 > [!NOTE]
 > **Status: early, tested on one cloud.** Both variants and all eleven exercises were run end to end between
@@ -27,7 +27,7 @@ On a prepaid cloud you cannot spend more than your credit; on any other cloud, s
 
 ## Pick your lab
 
-<img src="assets/images/S1-pick-your-lab.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a guide sit at a table with a plan of piers, in front of a small pier with a single workshop and a larger group of linked piers with several workshops.">
+<img src="assets/images/S1-pick-your-lab.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a grey-haired harbour master sit at a table with a plan of piers, in front of a small pier with a single workshop and a larger group of linked piers with several workshops.">
 
 | | [Single VM](variants/openstack-cloud/index.md) (`openstack-cloud`) | [Multinode](variants/openstack-cloud-multinode/index.md) (`openstack-cloud-multinode`) |
 |---|---|---|
