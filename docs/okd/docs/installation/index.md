@@ -5,6 +5,8 @@ description: "Start here to build the lab from nothing."
 
 # Installation guide
 
+<img src="../../assets/images/S6-installation.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Noor, in a wheelchair and holding a brass inventory frame, look at a stone and brass citadel built in levels, with crates on each floor.">
+
 **Start here** to build the lab from nothing. The installation is a
 sequence of seven steps, from the virtual infrastructure to a test instance
 booted on the new cloud. Follow the pages in order, one at a time: each

@@ -12,6 +12,8 @@ work; this directory records **how each day-to-day task is done here**,
 with the output that was really observed, for people who know OpenStack
 from a Kolla-Ansible deployment.
 
+<img src="../../assets/images/S6-knowledge-base.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Noor, in a wheelchair with her inventory frame, stand in an archive room of tall bookcases and drawers.">
+
 Every command was run on the lab (single-node OKD 4.22,
 openstack-k8s-operators 18-stable, OpenStack 2023.1 Antelope, one KVM
 compute node) on 2026-11-12; the gateway test with three compute nodes

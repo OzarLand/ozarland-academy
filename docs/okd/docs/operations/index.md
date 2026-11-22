@@ -5,6 +5,8 @@ description: "Start here once the lab is deployed and the smoke test passes."
 
 # Operating OpenStack on OKD (Day 2)
 
+<img src="../../assets/images/S6-operations.webp" width="1536" height="1024" loading="lazy" alt="Kest pulls the brass lever on its stand while LUMO watches; the gears of the mechanism stay behind a rope barrier.">
+
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
 
 **Start here** once the lab is deployed and the smoke test passes. This
