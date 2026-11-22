@@ -1,6 +1,6 @@
 ---
 title: "08 — The annotation required to delete a running data plane deployment is not documented"
-description: "08 — The annotation required to delete a running data plane deployment is not documented"
+description: "Contribution proposal documenting the confirm-delete annotation that blocks deleting a running data plane deployment, with lab captures of the effects."
 ---
 
 # 08 — The annotation required to delete a running data plane deployment is not documented
@@ -224,7 +224,7 @@ points listed under "Not verified".
 > **Title:** docs: document the confirm-delete annotation for running
 > data plane deployments
 >
-> #2013 added a webhook check that refuses to delete a running
+> \#2013 added a webhook check that refuses to delete a running
 > `OpenStackDataPlaneDeployment` unless it is annotated with
 > `dataplane.openstack.org/confirm-delete=true`. The documentation does
 > not mention it, so users meet it for the first time in an error

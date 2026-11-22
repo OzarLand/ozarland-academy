@@ -9,9 +9,9 @@ Contributions from people who operate OpenStack are welcome. The most useful
 ones come from production experience.
 
 The quickest way in is an issue:
-[unsafe or wrong advice](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=unsafe-or-wrong-advice.yml)
+[unsafe or wrong advice](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-unsafe-or-wrong-advice.yml)
 or
-[improvement or correction](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=improvement.yml).
+[improvement or correction](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-improvement.yml).
 No code needed.
 
 Advice that could cause harm before it is fixed, or a secret found in the
@@ -31,7 +31,7 @@ Everyone taking part follows the OzarLand [code of conduct](https://github.com/O
   tools), kept in reference files and clearly scoped.
 - **Validation evidence.** You ran a procedure from a skill on a lab or in
   production, it worked, failed or worked only partly: report it with the
-  [*Validation evidence or failure*](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=validation-evidence.yml)
+  [*Validation evidence or failure*](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-validation-evidence.yml)
   form. This is how items move from *unverified* to *validated*.
 
 ## Where new knowledge belongs
@@ -82,7 +82,7 @@ In short:
    evidence.
 
 To report outdated or wrong instructions, use the
-[unsafe or wrong advice](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=unsafe-or-wrong-advice.yml)
+[unsafe or wrong advice](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-unsafe-or-wrong-advice.yml)
 form; to ask for a revalidation, the validation form above.
 
 ## Ground rules

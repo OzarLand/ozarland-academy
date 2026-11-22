@@ -1,6 +1,6 @@
 ---
 title: "Galera and RabbitMQ"
-description: "Galera and RabbitMQ"
+description: "Recovery decisions for Galera after an unclean stop and for a stuck RabbitMQ, with read-only checks, timings and the actions that must never be taken."
 ---
 
 # Galera and RabbitMQ

@@ -1,6 +1,6 @@
 ---
 title: "OKD access, users and security"
-description: "OKD access, users and security"
+description: "Explains the bastion credentials, how to create administrator and read-only accounts, what they can see, operator permissions and how to read the audit log."
 ---
 
 # OKD access, users and security

@@ -163,7 +163,7 @@ ssh -i .state/<prefix><lab>/id_ed25519 -N -L 8080:<vm-fixed-address>:80 ubuntu@<
 - `<vm-address>` is the address you log in to.
 - `<vm-fixed-address>` is the VM's address in `NETWORK` (`VM_FIXED_ADDRESS` in `.state/<prefix><lab>/state.env`).
   Without a floating IP, it is the same as `<vm-address>`.
-- `deploy.sh` prints this command, filled in, at the end. Leave it running and open <http://localhost:8080>.
+- `deploy.sh` prints this command, filled in, at the end. Leave it running and open `http://localhost:8080`.
 - Log in with the user `admin`. Stop the tunnel with Ctrl-C.
 
 The password is in `/etc/kolla/passwords.yml` on the VM. It is also the `OS_PASSWORD` of

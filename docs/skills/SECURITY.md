@@ -32,7 +32,7 @@ no e-mail contact.
 
 Wrong or unhelpful advice that involves no sensitive data and could not cause
 harm before it is fixed can go in a public issue:
-[unsafe or wrong advice](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=unsafe-or-wrong-advice.yml).
+[unsafe or wrong advice](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-unsafe-or-wrong-advice.yml).
 
 Say which skill and file, the prompt or situation, what the skill advised and
 what could go wrong. Do not include the sensitive data itself beyond what is

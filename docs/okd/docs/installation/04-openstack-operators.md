@@ -1,6 +1,6 @@
 ---
 title: "Step 4 — OpenStack operators"
-description: "Step 4 — OpenStack operators"
+description: "Installation step 4 installs the OpenStack operators through OLM with manual approval, giving one controller per service before any OpenStack service exists."
 ---
 
 # Step 4 — OpenStack operators

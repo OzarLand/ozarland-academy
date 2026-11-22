@@ -1,6 +1,6 @@
 ---
 title: "Open questions"
-description: "Open questions"
+description: "Lists what the lab campaigns observed but could not explain, defaults that need a decision, what was not tested, and which questions drills have since settled."
 ---
 
 # Open questions

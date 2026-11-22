@@ -1,6 +1,6 @@
 ---
 title: "Investigating a failed or stalled upgrade"
-description: "Investigating a failed or stalled upgrade"
+description: "Read-only, top-down method to find the first non-ready link of a failed or stalled OpenStack upgrade, with stall causes and fixes that resume reconciliation."
 ---
 
 # Investigating a failed or stalled upgrade

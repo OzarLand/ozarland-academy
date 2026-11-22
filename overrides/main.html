@@ -45,6 +45,29 @@
     follow the sections it expects. The other modules are plain sites. -#}
 {% set oz_day2 = config.extra.portal.kind == "release" and config.extra.portal.module.kind == "versioned" %}
 
+{#- Title of the page in <title> and og:title: "<page> - <site>", where the
+    site of a release of the versioned module names its OpenStack release
+    (the studies of several releases share page titles). A site home, whose
+    title is the site name, is "<site> · OzarLand Academy". -#}
+{% set oz_site = namespace(name=config.site_name) %}
+{% if oz_day2 %}
+  {% for release in config.extra.portal.releases if release.id == config.extra.portal.current %}
+    {% set oz_site.name = config.site_name ~ " " ~ release.openstack %}
+  {% endfor %}
+{% endif %}
+{% set oz_page_title = (page.title | striptags) if page and page.title else "" %}
+{% if oz_page_title and oz_page_title != config.site_name %}
+  {% set oz_title = oz_page_title ~ " - " ~ oz_site.name %}
+{% elif oz_site.name == "OzarLand Academy" %}
+  {% set oz_title = oz_site.name %}
+{% else %}
+  {% set oz_title = oz_site.name ~ " · OzarLand Academy" %}
+{% endif %}
+
+{% block htmltitle %}
+  <title>{{ oz_title }}</title>
+{% endblock %}
+
 {% block extrahead %}
   {#- Home-screen icon and link previews (OzarLand brand kit). The preview
       image is the one of the portal root, so its URL is absolute. -#}
@@ -52,7 +75,7 @@
   {% set oz_preview = config.extra.portal.root_url ~ "assets/images/ozarland/social-preview.jpg" %}
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="{{ config.site_name }}">
-  <meta property="og:title" content="{% if page and page.title and not page.is_homepage %}{{ page.title | striptags }} - {% endif %}{{ config.site_name }}">
+  <meta property="og:title" content="{{ oz_title }}">
   <meta property="og:description" content="{{ (page.meta.description if page and page.meta and page.meta.description else config.site_description) | striptags }}">
   {% if page and page.canonical_url %}<meta property="og:url" content="{{ page.canonical_url }}">{% endif %}
   <meta property="og:image" content="{{ oz_preview }}">

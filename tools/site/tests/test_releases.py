@@ -469,7 +469,9 @@ class RootTest(RepoTest):
                 "day2/versions.json",
                 "index.html",
                 "lab/index.html",
+                "robots.txt",
                 "runbooks/index.html",
+                "sitemap-portal.xml",
                 "sitemap.xml",
             ],
         )
@@ -488,6 +490,13 @@ class RootTest(RepoTest):
         sitemap = (site / "sitemap.xml").read_text(encoding="utf-8")
         self.assertIn("<loc>https://example.org/portal/day2/ussuri/sitemap.xml</loc>", sitemap)
         self.assertNotIn("2023.1", sitemap)
+        self.assertIn("<loc>https://example.org/portal/sitemap-portal.xml</loc>", sitemap)
+        portal = (site / "sitemap-portal.xml").read_text(encoding="utf-8")
+        self.assertIn("<loc>https://example.org/portal/</loc>", portal)
+        self.assertIn("<loc>https://example.org/portal/day2/</loc>", portal)
+        self.assertNotIn("2023.1", portal)
+        robots = (site / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("Sitemap: https://example.org/portal/sitemap.xml", robots)
 
     def test_assemble_writes_cname_for_a_domain(self) -> None:
         self.fake_root_build()

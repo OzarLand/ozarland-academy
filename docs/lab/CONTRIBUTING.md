@@ -8,8 +8,7 @@ description: "How to add a variant for another place to run the lab, a new exerc
 This repository follows the OzarLand community rules: the
 [code of conduct](https://github.com/OzarLand/ozarland/blob/main/CODE_OF_CONDUCT.md), the
 [review and merge policy](https://github.com/OzarLand/ozarland/blob/main/docs/review-policy.md) and the
-[content conventions](https://github.com/OzarLand/ozarland/tree/main/docs/conventions). The decision that created it
-is [ADR-0009](https://github.com/OzarLand/ozarland/blob/main/docs/adr/0009-openstack-quick-lab-repository.md).
+[content conventions](https://github.com/OzarLand/ozarland/tree/main/docs/conventions).
 
 Contributions are welcome in three forms: a variant for another place to run the lab, a new exercise, and fixes to
 what is here.

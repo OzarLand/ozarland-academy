@@ -21,8 +21,8 @@
 
 {% block extrahead %}
   {{ super() }}
+  <meta name="robots" content="noindex">
   {% if portal.kind == "root" %}
-    <meta name="robots" content="noindex">
     <script id="portal-not-found" type="application/json">{{ {"root_url": portal.root_url, "sites": portal.sites} | tojson }}</script>
     <script>
       (function () {

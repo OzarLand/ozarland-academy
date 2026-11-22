@@ -266,7 +266,7 @@ Knowledge without a test is welcome: it enters as `DOCUMENTED-UNVERIFIED`
 (from a source) or `PROPOSED-UNVERIFIED` (new), with `missing_evidence`
 saying what test would validate it. Evidence for an existing item, or a
 report that it failed, goes through the
-[*Validation evidence or failure*](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=validation-evidence.yml)
+[*Validation evidence or failure*](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-validation-evidence.yml)
 issue form. See also [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## 9. Review and approval

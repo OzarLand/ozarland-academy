@@ -374,11 +374,11 @@ You don't need to have read the book or the runbooks to use the skills.
 
 The most valuable contribution is operational experience. No code needed:
 
-- 🐛 [Report unsafe or wrong advice](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=unsafe-or-wrong-advice.yml):
+- 🐛 [Report unsafe or wrong advice](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-unsafe-or-wrong-advice.yml):
   a case where a skill gave unsafe or unhelpful advice.
-- 🧪 [Share validation evidence](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=validation-evidence.yml):
+- 🧪 [Share validation evidence](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-validation-evidence.yml):
   you ran a procedure on your platform; tell us what happened, success or failure.
-- ✏️ [Suggest an improvement or correction](https://github.com/OzarLand/openstack-operator-skills/issues/new?template=improvement.yml):
+- ✏️ [Suggest an improvement or correction](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-improvement.yml):
   a missing decision point, a technical note that has aged.
 - 📘 Read [CONTRIBUTING.md](CONTRIBUTING.md) to send a pull request.
 

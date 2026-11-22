@@ -1,6 +1,6 @@
 ---
 title: "OKD node maintenance: MachineConfig rolls, drain and recovery"
-description: "OKD node maintenance: MachineConfig rolls, drain and recovery"
+description: "Describes what a MachineConfig change does to a single-node cluster, measured outage times, why not to drain, and the compute repairs needed after a reboot."
 ---
 
 # OKD node maintenance: MachineConfig rolls, drain and recovery
