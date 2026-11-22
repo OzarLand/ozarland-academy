@@ -11,6 +11,7 @@ spirit as [`../../village/`](../../village/) for stop 0. Not published on the si
 | `decisions.md` | Decisions still open. |
 | `stop-1/` | Scene plan and manifest of stop 1 (Quick lab). The 8 images are generated and placed in `docs/lab/assets/images/` under English names: `S1-opening`, `S1-lumo-pose`, `S1-pick-your-lab`, `S1-create-use-destroy`, `S1-network`, `S1-compute`, `S1-failure-and-maintenance`, `S1-controllers-and-quorum`. |
 | `stop-2/` | Scene plan and manifest of stop 2 (Deployment patterns). The 9 images are in `docs/deploy/assets/images/`: `S2-opening`, `S2-lumo-pose`, `S2-topologies`, `S2-networking-and-storage`, `S2-configuration-and-secrets`, `S2-services`, `S2-deployment-errors`, `S2-operations`, `S2-comparisons`. |
+| `stop-3/` | Scene plan and manifest of stop 3 (Kolla-Ansible Academy). The 9 images are copied into each of the three studies, in `docs/day2/<release>/assets/images/`: `S3-opening`, `S3-lumo-pose`, `S3-studies-shelves`, `S3-start`, `S3-predict-a-run`, `S3-what-is-not-known`, `S3-components`, `S3-small-change-large-effect`, `S3-concepts-and-reference`. |
 
 Decisions already taken: LUMO gains one accessory per stop; the existing 1600x400 bands stay; 6 to 10 images per stop;
 production starts with stop 1 (Quick lab).

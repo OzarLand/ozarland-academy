@@ -61,6 +61,8 @@ and the source lines and sections that show it. The six rows of 2023.1 still hol
 container-engine options is new on this page. The per-host work that every run pays, independently of restarts, closes
 the page.
 
+<img src="../assets/images/S3-small-change-large-effect.webp" width="1536" height="1024" loading="lazy" alt="Jo, holding a crate, and LUMO, reading, stand by a large brass gear mechanism on a bench where a small brass key lies on a parchment.">
+
 | Small change | Why it is large | Source |
 |---|---|---|
 | One option for nova-compute | `/etc/kolla/config/nova/nova-compute.conf` targets every compute; loop-notify adds libvirt + ssh restarts (with the default Nova settings, which enable the `nova_libvirt` and `nova_ssh` containers). **New in 2024.1:** the same option in `/etc/kolla/config/nova/<host>/nova-compute.conf` is merged into that host's `nova-compute/nova.conf` only, so it reaches one compute | `nova.yml:125-147`; `roles/nova-cell/tasks/config.yml:69-89` (sources at `:78`, `:80`); `roles/nova-cell/tasks/check-containers.yml:2-22`; [Tags §2.4](tags.md#24-loop-notify-one-changed-item-notifies-the-handlers-of-all-items-code); [Reconfigure Nova §3](../operations/reconfigure-nova.md#3-what-changes-per-type-of-change-code) |

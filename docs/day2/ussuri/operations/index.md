@@ -9,6 +9,8 @@ tags: [reconfigure, deploy, upgrade, genconfig, deploy-containers, pull, loop-no
 What Kolla-Ansible Ussuri commands do when they run against a live platform, read from the source of the **unmodified
 `site.yml`**, its roles and Ansible 2.9.27. Nothing was run against a host.
 
+<img src="../assets/images/S3-predict-a-run.webp" width="1536" height="1024" loading="lazy" alt="LUMO holds a parchment beside a small brass server model on a workbench while Jo, carrying a crate, waits before touching anything.">
+
 Real `kolla-ansible` (Ussuri) invocations with what they select, their scope and their impact.
 
 > [!NOTE]

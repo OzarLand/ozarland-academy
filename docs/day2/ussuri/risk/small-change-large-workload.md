@@ -42,6 +42,8 @@ quiz:
 Why a small change can create a large workload: six small changes, each with why it is large and the source lines and
 sections that show it. The per-host work that every run pays, independently of restarts, closes the page.
 
+<img src="../assets/images/S3-small-change-large-effect.webp" width="1536" height="1024" loading="lazy" alt="Jo, holding a crate, and LUMO, reading, stand by a large brass gear mechanism on a bench where a small brass key lies on a parchment.">
+
 | Small change | Why it is large | Source |
 |---|---|---|
 | One option for nova-compute | targets every compute; loop-notify adds libvirt + ssh restarts | `nova.yml:117-135`; [Tags §2.4](tags.md#24-loop-notify-one-changed-item-notifies-the-handlers-of-all-items-code); [Reconfigure Nova §3](../operations/reconfigure-nova.md#3-what-changes-per-type-of-change-code) |

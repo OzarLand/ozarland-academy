@@ -9,6 +9,8 @@ tags: [evidence, inventory, tags, unknowns]
 The reference material of the study of Kolla-Ansible `2024.1-eom`: the headline findings, the glossary, the generated
 tables, the per-role fact sheets, the Ansible listings, and the method and limits of the study.
 
+<img src="../assets/images/S3-concepts-and-reference.webp" width="1536" height="1024" loading="lazy" alt="Ilyan and LUMO stand between a table of building models and brass columns and a bookcase of plain boxes, books and scrolls.">
+
 ## Pages
 
 <div class="grid cards" markdown>

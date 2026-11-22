@@ -39,6 +39,8 @@ quiz:
 The commands that show what a run would target, render and restart before it runs. Each row of the table gives one
 command, what it shows and its limits.
 
+<img src="../assets/images/S3-predict-a-run.webp" width="1536" height="1024" loading="lazy" alt="LUMO holds a parchment beside a small brass server model on a workbench while Jo, carrying a crate, waits before touching anything.">
+
 > [!NOTE]
 > **Key answers**
 >

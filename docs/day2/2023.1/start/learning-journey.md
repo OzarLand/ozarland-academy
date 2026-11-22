@@ -140,3 +140,5 @@ challenges:
 
 New to Kolla-Ansible Day-2 operations? Follow these five stages in order. Each stage groups a few pages of this study,
 from the easiest to the most detailed. You do not need to read everything at once: come back whenever you like.
+
+<img src="../assets/images/S3-start.webp" width="1536" height="1024" loading="lazy" alt="LUMO holds up a parchment while Ilyan lays out an open book, scrolls and blank index cards on a reading table.">

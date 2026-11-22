@@ -68,6 +68,8 @@ Each row of the table gives one command, what it shows and its limits.
 [§2](#2-the-first-20241-run-on-a-cloud-deployed-by-20231)
 adds what the first 2024.1 run on a cloud deployed by 2023.1 restarts, and how to see it beforehand.
 
+<img src="../assets/images/S3-predict-a-run.webp" width="1536" height="1024" loading="lazy" alt="LUMO holds a parchment beside a small brass server model on a workbench while Jo, carrying a crate, waits before touching anything.">
+
 > [!NOTE]
 > **Key answers**
 >

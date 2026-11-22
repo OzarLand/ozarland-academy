@@ -11,6 +11,8 @@ index](#symptom-index) names what an operator sees, restates what the study says
 that establishes it. The page also says where to look for one component, what is already known as a bug or as an open
 point, and which checks the study names.
 
+<img src="../assets/images/S3-what-is-not-known.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ilyan lean over a map whose centre is still blank, marked at its edge by a small navy pennant.">
+
 > [!IMPORTANT]
 > The study rests only on reading source code: kolla-ansible `ussuri-eol`, the kolla image repository `ussuri-eol` and
 > the Ansible 2.9.27 source. Nothing was run against a host, there are no timings, and every statement about data-plane
