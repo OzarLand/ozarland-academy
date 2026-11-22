@@ -5,6 +5,8 @@ description: "This guide explains how OpenStack is deployed and operated when Ku
 
 # Concepts
 
+<img src="../../assets/images/S6-compare.webp" width="1536" height="1024" loading="lazy" alt="Jo, holding a crate, LUMO and Kest stand behind two scale models of the same size: a timber workshop and a stone citadel with brass gears.">
+
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
 This guide explains how OpenStack is deployed and operated when Kubernetes

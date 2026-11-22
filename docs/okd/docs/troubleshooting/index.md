@@ -5,6 +5,8 @@ description: "These runbooks cover faults that really occur on an operator-manag
 
 # Troubleshooting runbooks
 
+<img src="../../assets/images/S6-troubleshooting.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Kest look at a pulley loop holding a crate in the air while a brass arm pushes another crate back into its marked frame on the floor.">
+
 > Status: validated on the lab (OKD 4.22.0-okd-scos.10, operators 18-stable) on 2026-11-11
 
 These runbooks cover faults that really occur on an operator-managed

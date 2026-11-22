@@ -5,6 +5,8 @@ description: "The previous document covered the standard Kubernetes objects. Non
 
 # Operators, CRDs and reconciliation
 
+<img src="../../assets/images/S6-reconciliation.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Kest watch a brass arm place a crate back in its marked slot, below a wall plan that shows three crates in three slots.">
+
 > Status: aligned with the lab deployed on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); explanatory page, commands spot-checked against the validated guides
 
 ## In short

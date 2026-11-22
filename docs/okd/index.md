@@ -11,6 +11,8 @@ and maintained when its lifecycle is managed by Kubernetes operators
 [OKD](https://okd.io), the community distribution of Kubernetes that powers
 OpenShift.
 
+<img src="assets/images/S6-opening.webp" width="1536" height="1024" alt="LUMO and Kest, a bearded keeper in a navy coat resting a hand on a brass lever, stand at the gate of a seaside citadel where brass arms move identical crates along rails.">
+
 It is written by and for OpenStack operators who know deployment tools such
 as Kolla-Ansible and want to understand the operator-based model: what a
 `KeystoneAPI` resource is, why editing a ConfigMap by hand does nothing,
@@ -128,6 +130,8 @@ check when it fails — in the [installation guide](docs/installation/index.md).
 | [Publication readiness](docs/publication-readiness.md) | Review of secrets, history, licensing and open points before a public release |
 
 ## Learning roadmap
+
+<img src="assets/images/S6-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape holds a book and a full-size brass lantern, with a small brass key hanging from the belt.">
 
 | Phase | Goal | Material |
 |---|---|---|

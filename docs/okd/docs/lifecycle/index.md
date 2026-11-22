@@ -5,6 +5,8 @@ description: "Start here before changing a version, taking a backup or rebooting
 
 # Lifecycle management
 
+<img src="../../assets/images/S6-lifecycle.webp" width="1536" height="1024" loading="lazy" alt="Kest holds a lever on a brass mechanism while LUMO looks at a card; on the table lie two spare gears and an empty brass tray.">
+
 > Status: partially validated on the lab — the pages of this directory were run against the lab on 2026-11-12 (OKD 4.22.0-okd-scos.10, operators 18-stable); each page states in its status line what was not executed (an operator upgrade through OLM, a rollback to volume snapshots, provoked failures, the OKD upgrade). The database restores (2026-11-12) and one etcd restore (2026-11-13) were executed: see [05](05-backup-and-restore.md)
 
 **Start here** before changing a version, taking a backup or rebooting the
