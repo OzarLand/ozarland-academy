@@ -10,6 +10,8 @@ instances keep running.
 **Time:** about 10 minutes.
 **Runbook:** [I need to restart nova_libvirt on a compute. Its instances keep running](../../runbooks/lifecycle/restarting-nova-libvirt-does-not-stop-instances/)
 
+<img src="../assets/images/S1-compute.webp" width="1536" height="1024" loading="lazy" alt="In a timber workshop, LUMO stands among brass-framed server racks while one person turns a valve on a rack and another pushes a crate on a trolley.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise). You need an instance you can ping from the lab VM:

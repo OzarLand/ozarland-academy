@@ -10,6 +10,8 @@ repair it.
 **Time:** about 20 minutes.
 **Runbook:** [New instance has an address, but no SSH key, no user data, default hostname](../../runbooks/networking/new-instance-boots-without-metadata/)
 
+<img src="../assets/images/S1-network.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a colleague with a spyglass look along the harbour paths and footbridges while a light mist drifts over the sea and a worker checks a brass railing.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise). Check that the metadata agent is alive:

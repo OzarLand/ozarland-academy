@@ -15,6 +15,8 @@ then recover the cluster with Kolla-Ansible's `mariadb-recovery`.
 [kolla-ansible deploy fails part-way because Ubuntu upgraded packages during the deploy](../../deploy/deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster/#recover-the-failed-deploy)
 (its `mariadb-recovery` part, with the warning and the backup it asks for)
 
+<img src="../assets/images/S1-controllers-and-quorum.webp" width="1536" height="1024" loading="lazy" alt="At dusk, LUMO and three companions look from a terrace at three towers joined by an arched bridge across the water; only the nearest tower has its lantern lit.">
+
 ## Before you start
 
 Do [exercise 10](10-lose-one-controller.md) first: it sets up the two terminals, the VIP, the cluster checks and the

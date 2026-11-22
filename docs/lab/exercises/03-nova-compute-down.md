@@ -10,6 +10,8 @@ does.
 **Time:** about 15 minutes.
 **Runbook:** [nova-compute is down on a compute, but its instances are still running](../../runbooks/recovery/nova-compute-down-instances-still-running/)
 
+<img src="../assets/images/S1-compute.webp" width="1536" height="1024" loading="lazy" alt="In a timber workshop, LUMO stands among brass-framed server racks while one person turns a valve on a rack and another pushes a crate on a trolley.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise). Create a test instance and note where it runs:

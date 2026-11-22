@@ -15,6 +15,8 @@ then bring the controller back and watch it rejoin.
 **Pattern:** [Three controllers and two computes, nested inside an existing OpenStack cloud](../../deploy/topologies/three-controllers-two-computes-nested-in-an-openstack-cloud/)
 (how the VIP, keepalived and the clusters are set up in this lab)
 
+<img src="../assets/images/S1-controllers-and-quorum.webp" width="1536" height="1024" loading="lazy" alt="At dusk, LUMO and three companions look from a terrace at three towers joined by an arched bridge across the water; only the nearest tower has its lantern lit.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise) and the
