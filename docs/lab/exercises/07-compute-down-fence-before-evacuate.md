@@ -13,6 +13,8 @@ description: "See a compute reported down while its instances may still be runni
 **Time:** about 30 minutes (about 15 minutes of commands and waiting on the lab, plus reading).
 **Runbook:** [A compute host has failed: fence it before you evacuate](../../runbooks/recovery/compute-host-failure-fence-before-evacuate/)
 
+<img src="../assets/images/S1-failure-and-maintenance.webp" width="1536" height="1024" loading="lazy" alt="On a stone quay, one server rack stands behind a rope while workers fit a second rack inside a wooden scaffold, watched by LUMO and a traveller with a backpack.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise) and the

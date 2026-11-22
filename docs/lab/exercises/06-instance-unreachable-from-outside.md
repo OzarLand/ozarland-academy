@@ -10,6 +10,8 @@ checks, in order.
 **Time:** about 20 minutes.
 **Runbook:** [Instance has its address and metadata, but is unreachable from outside](../../runbooks/networking/instance-unreachable-from-outside/)
 
+<img src="../assets/images/S1-network.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a colleague with a spyglass look along the harbour paths and footbridges while a light mist drifts over the sea and a worker checks a brass railing.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise). Create a security group that allows ping and SSH from

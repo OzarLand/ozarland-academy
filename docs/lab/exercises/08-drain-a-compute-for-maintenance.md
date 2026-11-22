@@ -14,6 +14,8 @@ its instances to the other compute, work on it, and put it back.
 **Runbook:** [Moving instances off a host for maintenance](../../runbooks/migration/moving-instances-off-a-host-for-maintenance/) (`status: lab-verified`; it
 also covers live migration)
 
+<img src="../assets/images/S1-failure-and-maintenance.webp" width="1536" height="1024" loading="lazy" alt="On a stone quay, one server rack stands behind a rope while workers fit a second rack inside a wooden scaffold, watched by LUMO and a traveller with a backpack.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise) and the

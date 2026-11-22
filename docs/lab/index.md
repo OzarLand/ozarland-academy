@@ -11,6 +11,8 @@ and repair it, and one command that deletes it all.**
 [Pick a lab](#pick-your-lab) · [Commands](#-the-three-commands) · [Exercises](#-exercises) ·
 [Delete it all](#delete-everything-when-you-are-done)
 
+<img src="assets/images/S1-opening.webp" width="1536" height="1024" alt="LUMO, holding a nearly blank map and a small compass, stands at a stone gateway on the harbour while a guide in a green jacket points along a wooden pier to a temporary workshop by the sea.">
+
 > [!NOTE]
 > **Status: early, tested on one cloud.** Both variants and all eleven exercises were run end to end between
 > 2026-10-23 and 2026-10-25 by OzarLand's AI lab agents (exercises 10 and 11 were edited after their run and not
@@ -24,6 +26,8 @@ and repair it, and one command that deletes it all.**
 On a prepaid cloud you cannot spend more than your credit; on any other cloud, set a budget alert first.
 
 ## Pick your lab
+
+<img src="assets/images/S1-pick-your-lab.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a guide sit at a table with a plan of piers, in front of a small pier with a single workshop and a larger group of linked piers with several workshops.">
 
 | | [Single VM](variants/openstack-cloud/index.md) (`openstack-cloud`) | [Multinode](variants/openstack-cloud-multinode/index.md) (`openstack-cloud-multinode`) |
 |---|---|---|
@@ -46,6 +50,8 @@ balance and spend only what you loaded." (checked on 2026-10-23).
 > [wanted](https://github.com/OzarLand/openstack-quick-lab/issues/5).
 
 ## 🔄 How it works
+
+<img src="assets/images/S1-create-use-destroy.webp" width="1536" height="1024" loading="lazy" alt="On the harbour, LUMO points at three floating piers: one being built by two workers, one in use as a workshop, and one left empty and clean.">
 
 ```mermaid
 flowchart LR
@@ -167,9 +173,12 @@ flowchart LR
 
 ## 🌍 Part of OzarLand Academy
 
+<img src="assets/images/S1-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape holds a nearly blank map in one hand and an open brass compass in the other, a small lantern at the belt.">
+
 This module is the first stop of [OzarLand Academy](../), the learning path of
 [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* After the lab, the
-path goes on with deployment patterns, day-2 operations with Kolla-Ansible, VM runbooks and the production guide.
+path goes on with deployment patterns, day-2 operations with Kolla-Ansible, VM runbooks, the production guide, the
+OKD lab and operator skills.
 Questions, corrections and reports from your cloud are welcome in the
 [Discussions](https://github.com/OzarLand/ozarland/discussions).
 

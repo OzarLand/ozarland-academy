@@ -14,6 +14,8 @@ notice.
 **Runbook:** [Moving instances off a host for maintenance](../../runbooks/migration/moving-instances-off-a-host-for-maintenance/) (`status: lab-verified`; it
 also covers live migration)
 
+<img src="../assets/images/S1-compute.webp" width="1536" height="1024" loading="lazy" alt="In a timber workshop, LUMO stands among brass-framed server racks while one person turns a valve on a rack and another pushes a crate on a trolley.">
+
 ## Before you start
 
 Read [before every exercise](index.md#before-every-exercise) and the

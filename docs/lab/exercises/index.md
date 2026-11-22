@@ -14,6 +14,8 @@ instead). The runbooks of exercises 1 to 9 are
 reference cloud by OzarLand's lab agents (1 to 6 on 2026-10-23, 7 to 11 on 2026-10-25); 10 and 11 were edited
 after that run.
 
+<img src="../assets/images/S1-network.webp" width="1536" height="1024" loading="lazy" alt="LUMO and a colleague with a spyglass look along the harbour paths and footbridges while a light mist drifts over the sea and a worker checks a brass railing.">
+
 | # | Exercise | Time | What you learn |
 |---|---|---|---|
 | 1 | [DHCP agents down](01-dhcp-agents-down.md) | 20 min | An instance can be `ACTIVE` and still have no address |
@@ -24,6 +26,8 @@ after that run.
 | 6 | [Instance unreachable from outside](06-instance-unreachable-from-outside.md) | 20 min | Security groups and floating IPs, checked in order |
 
 ### Multinode variant
+
+<img src="../assets/images/S1-failure-and-maintenance.webp" width="1536" height="1024" loading="lazy" alt="On a stone quay, one server rack stands behind a rope while workers fit a second rack inside a wooden scaffold, watched by LUMO and a traveller with a backpack.">
 
 These three need two computes: run them on the
 [multinode variant](../variants/openstack-cloud-multinode/index.md), not on the all-in-one lab. They were
@@ -37,6 +41,8 @@ These three need two computes: run them on the
 | 9 | [Live migration between the two computes](09-live-migration-between-computes.md) | 20 min | What moving a running instance costs its users, measured with a ping |
 
 ### Multinode variant, 3 controllers
+
+<img src="../assets/images/S1-controllers-and-quorum.webp" width="1536" height="1024" loading="lazy" alt="At dusk, LUMO and three companions look from a terrace at three towers joined by an arched bridge across the water; only the nearest tower has its lantern lit.">
 
 These two need the 5-VM size of the multinode variant (`CONTROLLERS="3"`). They were
 [run on a lab](https://github.com/OzarLand/openstack-quick-lab/pull/15#issuecomment-6399273095) on 2026-10-25
