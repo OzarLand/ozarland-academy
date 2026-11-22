@@ -84,6 +84,9 @@
   <meta property="og:image:alt" content="An island city with towers, aqueducts and waterfalls overlooks the sea at golden hour.">
   <meta name="twitter:card" content="summary_large_image">
   {% if config.extra.portal.kind == "release" %}
+    {#- What the search covers: this site only (portal.js names it in the
+        search field). -#}
+    <meta name="portal-search-scope" content="{{ oz_site.name }}">
     <meta name="portal-updates" content="{{ 'assets/data/updates.json' | url }}">
   {% endif %}
   {% if oz_day2 %}
