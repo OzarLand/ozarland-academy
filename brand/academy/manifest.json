@@ -272,7 +272,7 @@
     "alt_text": "Lumo stands beside a lighthouse model holding a compass and lantern.",
     "module": "production",
     "status": "superseded",
-    "superseded_by": "S5-lumo-pose of learning-path/manifest-parcours.json"
+    "superseded_by": "docs/production/illustrations/S5-lumo-pose.webp"
   },
   {
     "file": "prompts/lumo-book.md",

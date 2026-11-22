@@ -10,6 +10,8 @@ description: "A visual memo for OpenStack operators: one operational lesson per 
 [Catalog](#catalog) · [How to read a memo](#-how-to-read-a-memo) · [Not covered yet](#-not-covered-yet) ·
 [Build](#-build-it-yourself) · [Contribute](#-contributing)
 
+<img src="illustrations/S5-opening.webp" width="1536" height="1024" alt="LUMO, holding a map and a full-size brass lantern, stands on the harbour wall beside Davi, a grey-haired lighthouse keeper in a russet coat who holds up a brass lens, with the lighthouse at the harbour mouth behind them.">
+
 <p align="center">
 <a href="categories/compute/fence-before-evacuate.md"><img src="dist/pg-07-fence-before-evacuate.png" alt="Fence before you evacuate" width="270"></a>
 <a href="categories/vm-lifecycle/vm-stuck-in-build.md"><img src="dist/pg-01-vm-stuck-in-build.png" alt="VM stuck in BUILD?" width="270"></a>
@@ -29,6 +31,8 @@ No imposed tools, no single way of operating OpenStack.
 > **One memo = one operational lesson = one memorable visual.**
 
 ## 🧭 How to read a memo
+
+<img src="illustrations/S5-how-to-read-a-memo.webp" width="1536" height="1024" loading="lazy" alt="At a desk in the lighthouse, LUMO points at a sheet with four empty circles, a full-size brass lantern standing untouched beside it.">
 
 Every memo has the same seven parts, in the same place:
 
@@ -235,10 +239,13 @@ does not fit the canvas: the template never shrinks text to make it fit.
 
 ## 🌍 Part of OzarLand Academy
 
-This module is the last stop of [OzarLand Academy](../), the learning path of
+<img src="illustrations/S5-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape reads a map, holding a full-size brass lantern, with a compass, route pins and a notebook on the satchel.">
+
+This module is the fifth stop of [OzarLand Academy](../), the learning path of
 [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* Each memo comes
 from a page of the [VM runbooks](../runbooks/); the [Quick lab](../lab/) is where to try them, and the
-[deployment patterns](../deploy/) and [Kolla-Ansible Academy](../day2/) explain the platform underneath.
+[deployment patterns](../deploy/) and [Kolla-Ansible Academy](../day2/) explain the platform underneath. After it, the path goes on with the [OKD lab](../okd/) and the
+[operator skills](../skills/).
 
 ## ⚖️ License
 

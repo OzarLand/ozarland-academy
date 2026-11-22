@@ -146,6 +146,17 @@ function candidates(memos, dir) {
   return rows.length ? ['| Runbook | Status |', '|---|---|', ...rows].join('\n') : 'None at the moment: every runbook has its memo.';
 }
 
+// Painting shown under the title of each category page (art direction of
+// stop 5, brand/academy/learning-path/stop-5/): file in illustrations/ and alt text.
+const CATEGORY_IMAGES = {
+  'vm-lifecycle': ['S5-vm-lifecycle', 'LUMO, holding a full-size brass lantern, watches small boats and crates waiting in line at the departure quay.'],
+  compute: ['S5-compute', 'LUMO, notebook in hand, stands by a large rope winch and a hoist at rest on a clear stone quay.'],
+  networking: ['S5-networking', 'From a terrace, LUMO looks over the canals, footbridges, gates and quays that join the parts of the harbour.'],
+  storage: ['S5-storage', 'In an orderly warehouse, LUMO checks a crate on a trolley in front of racks of crates on wheeled stands.'],
+  'control-plane': ['S5-control-plane', 'In a calm signal room under the lighthouse, LUMO studies a wall clock without numbers, bells, signal lamps and a lever.'],
+  'production-operations': ['S5-production-operations', 'In the lighthouse workshop, LUMO points at four empty circles on a sheet while Davi checks a brass lens, the tools still set down.'],
+};
+
 function categoryIndex(cat, memos) {
   const list = memos.filter((m) => m.category === cat);
   return [
@@ -156,9 +167,16 @@ function categoryIndex(cat, memos) {
     '',
     `# ${CATEGORIES[cat]}`,
     '',
+    ...categoryImage(cat),
     ...list.map((m) => `- **${m.id}** [${mdText(m.title)}](${m._slug}.md): ${mdText(m.lesson)}`),
     '',
   ].join('\n');
+}
+
+function categoryImage(cat) {
+  const image = CATEGORY_IMAGES[cat];
+  if (!image || !fs.existsSync(path.join(ROOT, 'illustrations', `${image[0]}.webp`))) return [];
+  return [`<img src="../../illustrations/${image[0]}.webp" width="1536" height="1024" alt="${image[1]}">`, ''];
 }
 
 function linkedinKit(memos) {

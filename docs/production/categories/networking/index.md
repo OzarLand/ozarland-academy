@@ -9,6 +9,8 @@ description: "The production memos of the category Networking: one operational l
 
 # Networking
 
+<img src="../../illustrations/S5-networking.webp" width="1536" height="1024" alt="From a terrace, LUMO looks over the canals, footbridges, gates and quays that join the parts of the harbour.">
+
 - **PG-10** [ACTIVE, but no IP address?](active-but-no-ip.md): ACTIVE means Nova did its job. It says nothing about the network of the guest.
 - **PG-11** [Reachable inside, not outside?](unreachable-from-outside.md): Each check rules out one cause. Go through them in order.
 - **PG-12** [Ping works, big transfers stall?](ping-works-transfers-stall.md): A green ping proves small packets pass. Test the largest one the network promises.

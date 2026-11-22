@@ -9,6 +9,8 @@ description: "The production memos of the category Compute operations: one opera
 
 # Compute operations
 
+<img src="../../illustrations/S5-compute.webp" width="1536" height="1024" alt="LUMO, notebook in hand, stands by a large rope winch and a hoist at rest on a clear stone quay.">
+
 - **PG-06** [Compute “down”. Is the host dead?](compute-down-is-not-host-down.md): “Down” is a missing heartbeat, not a dead host. Prove it before you act.
 - **PG-07** [Fence before you evacuate](fence-before-evacuate.md): The precondition for evacuation is fencing, not a missing heartbeat.
 - **PG-08** [Disabled or down? Two fields](disabled-or-down.md): Disabled is a scheduling decision. Down is a belief about liveness.
