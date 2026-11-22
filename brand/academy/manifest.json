@@ -261,7 +261,7 @@
     "alt_text": "Lumo examines a bridge with a lantern and gestures toward the path.",
     "module": "runbooks",
     "status": "superseded",
-    "superseded_by": "S4-lumo-pose of learning-path/manifest-parcours.json"
+    "superseded_by": "docs/runbooks/assets/images/S4-lumo-pose.webp"
   },
   {
     "file": "prompts/lumo-production.md",

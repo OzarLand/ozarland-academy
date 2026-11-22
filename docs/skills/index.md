@@ -62,7 +62,7 @@ In Claude Code:
 That's it. The first time a skill opens its reference files, Claude Code asks
 for permission to read them: allow it.
 
-<details>
+<details markdown>
 <summary><b>Other ways to install</b> (copy, claude.ai, API)</summary>
 
 <br>
@@ -138,7 +138,7 @@ flowchart LR
     VM --> KA
 ```
 
-<details>
+<details markdown>
 <summary><b>Things to ask</b> (French works too)</summary>
 
 <br>
@@ -242,7 +242,7 @@ pie showData
 
 <sub>🟦 production-validated · 🟩 lab-validated · ⬜ not validated yet · one square is about 10 % of the skill's items</sub>
 
-<details>
+<details markdown>
 <summary><b>Per-skill details and status counts</b></summary>
 
 | Status | Items | Share |
@@ -279,7 +279,7 @@ pie showData
 | ⚠️ | Nothing production-validated yet |
 | ❌ | OVN, Ceph, other releases and other deployment tools: mostly untested |
 
-<details>
+<details markdown>
 <summary><b>Status names, partial validation and what CI proves</b></summary>
 
 | Usual term | Status here |
@@ -375,7 +375,7 @@ The most valuable contribution is operational experience. No code needed:
 Something that could cause harm before it is fixed, or a secret you found,
 goes privately through the [security policy](SECURITY.md).
 
-<details>
+<details markdown>
 <summary><b>Repository layout</b></summary>
 
 <br>

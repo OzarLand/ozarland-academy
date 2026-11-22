@@ -10,12 +10,16 @@ description: "Community runbooks for diagnosing and resolving virtual machine pr
 [Start from a symptom](#-start-from-what-you-see) · [Index](#index) · [Status](#-how-much-each-page-was-checked) ·
 [Contribute](#-contributing)
 
+<img src="assets/images/S4-opening.webp" width="1536" height="1024" alt="On a stone watch post above a calm sea, LUMO reads a notebook beside Ren, a watch officer in a green coat with a prosthetic leg who holds a striped weather pennant.">
+
 No imposed tools, no single way of operating OpenStack.
 
 - 🧪 Practise these runbooks on a disposable lab with
   the [Quick lab](../lab/).
 
 ## 🧭 How a runbook works
+
+<img src="assets/images/S4-observe-before-acting.webp" width="1536" height="1024" loading="lazy" alt="At a table with two open books and a wrench, LUMO lays a hand on the table without touching the tool while Ren writes in an observation notebook.">
 
 Each runbook follows the shared [runbook structure](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/runbook-structure.md):
 
@@ -87,7 +91,7 @@ flowchart LR
     class E amber
 ```
 
-<details>
+<details markdown>
 <summary><b>The four statuses, word for word</b></summary>
 
 | Status | What it means |
@@ -163,7 +167,9 @@ flowchart LR
 Click a category to open it. Source: **book** (*OpenStack, the Day After Tomorrow*, the maintainer's book), **lab run** (observed on a
 lab), **documentation** (upstream documentation and source), **production incident**.
 
-<details>
+<img src="assets/images/S4-lifecycle-and-scheduling.webp" width="1536" height="1024" loading="lazy" alt="Ren and LUMO stand on a bridge watching a line of handcarts loaded with crates, waiting in a row on the roadway.">
+
+<details markdown>
 <summary><b>🔄 Lifecycle</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -182,7 +188,7 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<details markdown>
 <summary><b>📅 Scheduling</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -198,7 +204,9 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<img src="assets/images/S4-migration.webp" width="1536" height="1024" loading="lazy" alt="From the watch post, Ren and LUMO watch a small convoy of handcarts cross an arched bridge from one shore to the other.">
+
+<details markdown>
 <summary><b>🚚 Migration</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -210,7 +218,9 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<img src="assets/images/S4-networking.webp" width="1536" height="1024" loading="lazy" alt="Linh looks through a brass spyglass over the harbour paths, footbridges and channels while LUMO takes notes.">
+
+<details markdown>
 <summary><b>🌐 Networking</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -228,7 +238,9 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<img src="assets/images/S4-volumes.webp" width="1536" height="1024" loading="lazy" alt="Safa holds a metal plate up to a tall rack of wooden crates while LUMO compares notes beside her.">
+
+<details markdown>
 <summary><b>💾 Volumes</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -242,7 +254,9 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<img src="assets/images/S4-diagnostics-and-logs.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ren look out over an aqueduct that links several white towers across the hillside.">
+
+<details markdown>
 <summary><b>🩺 Diagnostics</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -256,7 +270,7 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<details markdown>
 <summary><b>📜 Logs</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -287,7 +301,9 @@ lab), **documentation** (upstream documentation and source), **production incide
 </details>
 
 
-<details>
+<img src="assets/images/S4-recovery.webp" width="1536" height="1024" loading="lazy" alt="Ren and LUMO stand by a wooden barrier at the start of a bridge as a light mist lifts over the water.">
+
+<details markdown>
 <summary><b>🚑 Recovery</b></summary>
 
 | Page | Components | Releases | Status | Source |
@@ -334,10 +350,12 @@ behind it; open a *Problem solved* issue if you have one.
 
 ## 🌍 Part of OzarLand Academy
 
+<img src="assets/images/S4-lumo-pose.webp" width="280" height="280" loading="lazy" alt="LUMO in a navy cape reads a small book, with a field notebook in the satchel and a small lantern at the belt.">
+
 This module is the fourth stop of [OzarLand Academy](../), the learning path of
 [OzarLand](https://github.com/OzarLand/ozarland): *a shared land for better OpenStack operations.* Practise these
 runbooks on the [Quick lab](../lab/); the [deployment patterns](../deploy/) explain how the platform underneath was
-built, and the production guide closes the path.
+built; the production guide, the OKD lab and the operator skills come next.
 
 ## ⚖️ License
 

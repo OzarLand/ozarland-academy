@@ -11,6 +11,8 @@ How to find, read and interpret the logs of OpenStack services and of the system
 services, hypervisor, kernel), so that an operator can go from a symptom to the line that explains it. Each page
 cites the upstream documentation or source code it comes from; real log lines come from lab runs and are redacted.
 
+<img src="../assets/images/S4-diagnostics-and-logs.webp" width="1536" height="1024" loading="lazy" alt="LUMO and Ren look out over an aqueduct that links several white towers across the hillside.">
+
 These pages explain how to read; the fixes are in the runbooks of the other folders, which the pages link to.
 
 ## Pages
