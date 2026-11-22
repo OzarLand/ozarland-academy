@@ -21,7 +21,7 @@ if [ -z "$COST_PER_HOUR_CONTROLLER$COST_PER_HOUR_COMPUTE" ] && [ -z "$NO_COST_ES
 fi
 if [ -n "$COST_PER_HOUR_CONTROLLER$COST_PER_HOUR_COMPUTE" ]; then
   for c in COST_PER_HOUR_CONTROLLER COST_PER_HOUR_COMPUTE COST_PER_HOUR_EXTRA; do
-    num "${!c}" || die "$c=${!c} is not a number (write it like 0.196, with a dot)."
+    num "${!c}" || die "$c=${!c} is not a number (write it like 0.25, with a dot)."
   done
 fi
 python3 - "$SSH_FROM" <<'PY' || die "SSH_FROM=$SSH_FROM opens SSH to too many addresses: use your own address (/32), or at most a /16 (IPv6: /48)."
