@@ -327,7 +327,7 @@ Scenarios written from the book's field cases, each answered by
 `claude-sonnet-5-5` with and without the skills, then graded by a separate
 model against a rubric:
 
-<div align="center">
+<div align="center" markdown>
 
 | | Without skills | With skills |
 |---|:-:|:-:|

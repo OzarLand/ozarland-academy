@@ -1,9 +1,9 @@
 ---
-title: "OKD OpenStack Lab"
+title: "OKD OpenStack lab"
 description: "A reproducible lab to learn how OpenStack is deployed, operated and maintained when Kubernetes operators manage its lifecycle on OKD."
 ---
 
-# OKD OpenStack Lab
+# OKD OpenStack lab
 
 A reproducible laboratory for learning how OpenStack is deployed, operated
 and maintained when its lifecycle is managed by Kubernetes operators

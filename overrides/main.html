@@ -247,9 +247,14 @@
       the next stop at the end of the page. -#}
   {% set portal = config.extra.portal %}
   {% set module_home = portal.kind == "release" and portal.module.kind == "single" and page.url in ("", "./", "index.html") %}
-  {% if module_home %}
+  {#- The next stop also closes the home of a release of the versioned
+      module and the last page of a site, where the footer has no "Next". -#}
+  {% set next_stop = portal.kind == "release" and (page.url in ("", "./", "index.html") or not page.next_page) %}
+  {% if next_stop %}
     {% include "partials/module-stop.html" %}
     {% set root = base_url ~ "/" ~ portal.up %}
+  {% endif %}
+  {% if module_home %}
     {% set img = 'assets/images/ozarland/' | url %}
     {% set chips %}
       <div class="oz-module-head oz-module--{{ portal.module.id }}">
@@ -282,7 +287,7 @@
   {#- What a page template adds after the Markdown (overrides/journey.html). -#}
   {% block page_extra %}{% endblock %}
 
-  {% if module_home %}
+  {% if next_stop %}
     <nav class="oz-next" aria-label="Learning path">
       {% if stop.next %}
         <a class="oz-next__stop oz-module--{{ stop.next.id }}" href="{{ root }}{{ stop.next.path }}/">

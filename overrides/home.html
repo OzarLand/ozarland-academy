@@ -13,7 +13,7 @@
     <div class="md-grid portal-hero__inner oz-hero__inner">
       <div class="oz-hero__text">
       <p class="oz-hero__org">
-        <a href="https://github.com/OzarLand/ozarland"><span aria-hidden="true">←</span> OzarLand home</a>
+        <a href="https://ozarland.com/"><span aria-hidden="true">←</span> OzarLand home</a>
         <span class="oz-hero__badge">An OzarLand project</span>
       </p>
       {#- The page's H1: the one of the Markdown source is not repeated below.
@@ -89,4 +89,23 @@
     {{ page.content }}
   {% endif %}
   <p class="portal-updated" data-portal-updated="{{ page.url }}" hidden></p>
+  {#- The place of the module on the learning path, as on a module home
+      (overrides/main.html). -#}
+  {% set portal = config.extra.portal %}
+  {% if portal.kind == "release" %}
+    {% include "partials/module-stop.html" %}
+    {% set root = base_url ~ "/" ~ portal.up %}
+    <nav class="oz-next" aria-label="Learning path">
+      {% if stop.next %}
+        <a class="oz-next__stop oz-module--{{ stop.next.id }}" href="{{ root }}{{ stop.next.path }}/">
+          <span class="oz-stop__step">Next stop · {{ stop.next.step }}</span>
+          <span class="oz-next__title">{{ stop.next.title }}{% if stop.next.status != "available" %} (coming soon){% endif %} <span aria-hidden="true">→</span></span>
+        </a>
+      {% endif %}
+      <a class="oz-next__stop" href="{{ root }}">
+        <span class="oz-stop__step">OzarLand Academy · Stop {{ stop.index }}</span>
+        <span class="oz-next__title">The whole learning path</span>
+      </a>
+    </nav>
+  {% endif %}
 {% endblock %}
