@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "New instance in ERROR with \"Exceeded maximum number of retries\". The real error is on the computes that tried."
+seo_title: "\"Exceeded maximum number of retries\" on a new instance"
 ---
 
 # New instance in ERROR with "Exceeded maximum number of retries". The real error is on the computes that tried

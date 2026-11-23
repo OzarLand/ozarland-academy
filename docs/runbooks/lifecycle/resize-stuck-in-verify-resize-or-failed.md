@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Resize or cold migration not finished. Instance in VERIFY_RESIZE, stuck in RESIZE, or in ERROR after a failed resize."
+seo_title: "Resize stuck in VERIFY_RESIZE, RESIZE or ERROR"
 ---
 
 # Resize or cold migration not finished. Instance in VERIFY_RESIZE, stuck in RESIZE, or in ERROR after a failed resize

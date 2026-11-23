@@ -87,6 +87,10 @@
 {% block extrahead %}
   {#- Home-screen icon and link previews (OzarLand brand kit). The preview
       image is the one of the portal root, so its URL is absolute. -#}
+  {#- A page kept out of search engines says so in its front matter
+      (`robots: "noindex, follow"`); tools/site/releases.py then drops it
+      from the sitemap of its site. -#}
+  {% if page and page.meta and page.meta.robots %}<meta name="robots" content="{{ page.meta.robots }}">{% endif %}
   <link rel="apple-touch-icon" href="{{ 'assets/images/apple-touch-icon.png' | url }}">
   {% set oz_preview = config.extra.portal.root_url ~ "assets/images/ozarland/social-preview.jpg" %}
   <meta property="og:type" content="website">
@@ -99,6 +103,41 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="An island city with towers, aqueducts and waterfalls overlooks the sea at golden hour.">
   <meta name="twitter:card" content="summary_large_image">
+  {#- Structured data for search engines: where the page sits (the same
+      trail as the breadcrumb of partials/path.html), and for a page that
+      states how it was checked (runbooks, deployment patterns) an article
+      with its date of last verification. The publisher is the OzarLand
+      organization described on https://ozarland.com/. -#}
+  {% if config.extra.portal.kind == "release" and page and page.canonical_url %}
+    {% set oz_site_url = config.extra.portal.root_url ~ config.extra.portal.path ~ "/" %}
+    {% set oz_trail = [
+      {"@type": "ListItem", "position": 1, "name": "OzarLand", "item": "https://ozarland.com/"},
+      {"@type": "ListItem", "position": 2, "name": "OzarLand Academy", "item": config.extra.portal.root_url},
+      {"@type": "ListItem", "position": 3, "name": oz_site.name, "item": oz_site_url},
+    ] %}
+    {% if page.url and oz_page_title %}
+      {% set oz_trail = oz_trail + [{"@type": "ListItem", "position": 4, "name": oz_page_title, "item": page.canonical_url}] %}
+    {% endif %}
+    {% set oz_graph = [{"@type": "BreadcrumbList", "itemListElement": oz_trail}] %}
+    {% if page.meta and page.meta.kind and page.meta.status %}
+      {#- The template engine has no way to add a key to a map: the date of
+          last verification, when the page has one, goes through a filter
+          that drops empty values. -#}
+      {% set oz_article = {
+        "@type": "TechArticle",
+        "headline": oz_page_title,
+        "description": (page.meta.description or config.site_description) | striptags,
+        "inLanguage": "en",
+        "mainEntityOfPage": page.canonical_url,
+        "author": {"@type": "Organization", "@id": "https://ozarland.com/#organization", "name": "OzarLand", "url": "https://ozarland.com/"},
+        "publisher": {"@id": "https://ozarland.com/#organization"},
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "dateModified": (page.meta.last_verified | string) if page.meta.last_verified else none,
+      } %}
+      {% set oz_graph = oz_graph + [oz_article] %}
+    {% endif %}
+    <script type="application/ld+json">{{ {"@context": "https://schema.org", "@graph": oz_graph} | tojson }}</script>
+  {% endif %}
   {% if config.extra.portal.kind == "release" %}
     {#- What the search covers: this site only (portal.js names it in the
         search field). -#}
@@ -279,7 +318,9 @@
     {% set chips %}
       <div class="oz-module-head oz-module--{{ portal.module.id }}">
         <nav class="oz-crumbs" aria-label="Breadcrumb">
-          <a href="{{ root }}">OzarLand Academy</a>
+          <a href="https://ozarland.com/">OzarLand</a>
+          <span aria-hidden="true">/</span>
+          <a href="{{ root }}">Academy</a>
           <span aria-hidden="true">/</span>
           <span aria-current="page">{{ portal.module.title }}</span>
         </nav>
@@ -288,6 +329,37 @@
           <span class="oz-stop__step">Stop {{ stop.index }} · {{ portal.module.step }}</span>
         </p>
         <img class="oz-band" src="{{ img }}bands/{{ portal.module.id }}.webp" width="1600" height="400" alt="">
+      </div>
+    {{ chips }}{% endset %}
+  {% endif %}
+
+  {#- How much a page was checked, right under its title: the pages of the
+      runbooks and of the deployment patterns carry `status`,
+      `openstack_releases`, `deployment_methods`, `risk` and `last_verified`
+      in their front matter. A reader in an incident sees at once on which
+      release the page was observed and that a lab is not a production
+      platform; the detail stays in "Validity and limits" at the end. -#}
+  {% set lifecycle = "https://github.com/OzarLand/ozarland/blob/main/docs/knowledge-lifecycle.md#page-statuses" %}
+  {% if page.meta and page.meta.status and page.meta.kind and page.meta.status in ("draft", "lab-verified", "validated", "experimental") %}
+    {% set st = page.meta.status %}
+    {% set chips %}
+      <div class="oz-status oz-status--{{ st }}">
+        <p class="oz-status__line">
+          <a class="oz-status__chip" href="{{ lifecycle }}">{{ st }}</a>
+          <span>
+            {{ {"draft": "Written; its commands have not been run by anyone other than its author.",
+                "lab-verified": "Its commands were run on a lab, not on a production platform.",
+                "validated": "Confirmed by a human operator on a real platform.",
+                "experimental": "An attempt, kept for the record: do not rely on it."}[st] }}
+            {% if st != "validated" %}<strong>Not yet confirmed by a human operator on a real platform.</strong>{% endif %}
+          </span>
+        </p>
+        <p class="oz-status__facts">
+          {% if page.meta.openstack_releases %}<span>Observed on OpenStack {{ page.meta.openstack_releases | join(", ") }}</span>{% endif %}
+          {% if page.meta.deployment_methods %}<span>Deployment: {{ page.meta.deployment_methods | join(", ") }}</span>{% endif %}
+          {% if page.meta.risk %}<span>Risk: {{ page.meta.risk }}</span>{% endif %}
+          {% if page.meta.last_verified %}<span>Last verified: <time datetime="{{ page.meta.last_verified }}">{{ page.meta.last_verified }}</time></span>{% endif %}
+        </p>
       </div>
     {{ chips }}{% endset %}
   {% endif %}

@@ -1,6 +1,7 @@
 ---
 title: "PG-22 · Resize not finished?"
 description: "VERIFY_RESIZE is not stuck. It waits for a decision only the owner can make."
+seo_title: "Resize not finished?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source and lab-verified with Kolla-Ansible, two computes and local qcow2 disks: the unconfirmed resize, a service dying part way, SSH between computes and a smaller disk were reproduced; a destination that cannot run the guest was not. Nova does not shrink disks, except a root disk booted from volume. With resize_confirm_window set, resizes older than the window are confirmed without the owner and can no longer be reverted.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-22-resize-not-finished.png`](../../dist/pg-22-resize-not-finished.png) (1080 × 1350)
 - **Post title:** VERIFY_RESIZE is not a stuck state. It is a pending decision.
@@ -58,6 +60,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Placement #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

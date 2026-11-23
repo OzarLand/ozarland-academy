@@ -1,6 +1,7 @@
 ---
 title: "PG-32 · Boot from volume fails?"
 description: "The fault names the volume. Read its status and Cinder's message before you retry."
+seo_title: "Boot from volume fails?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova and Cinder 2026.1 sources; its five causes were partly reproduced on an all-in-one lab with Cinder LVM over iSCSI. The three minutes are Nova's default wait (block_device_allocate_retries). Cinder 2026.1 refuses a qcow2 image declared raw: the volume goes to error, it is not written as it is. Fixing an image property and rebooting does not help: the instance keeps the properties copied at build time. Fault wording varies with the client and microversion. Ironic and encrypted volumes are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-32-boot-from-volume-fails.png`](../../dist/pg-32-boot-from-volume-fails.png) (1080 × 1350)
 - **Post title:** Boot from volume fails: Nova reports it, Cinder explains it
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Cinder #Storage #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

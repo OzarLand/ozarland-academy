@@ -1,6 +1,7 @@
 ---
 title: "PG-27 · 401 with a valid token?"
 description: "A fresh token hides the problem. Test with one older than the token cache."
+seo_title: "401 with a valid token?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Keystone 2026.1 source and lab-verified on Kolla-Ansible with three controllers, where Keystone caches tokens in memcached shared by all nodes (600 s by default) and the keystone_fernet containers rotate and push the keys. Other deployments distribute keys differently. Intermittent failure is common but not the rule. If keys were replaced on every node, every client must simply authenticate again.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-27-401-with-a-valid-token.png`](../../dist/pg-27-401-with-a-valid-token.png) (1080 × 1350)
 - **Post title:** 401 with a token that should be valid: the fresh token is lying to you
@@ -60,6 +62,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Keystone #Authentication #ControlPlane #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

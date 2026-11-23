@@ -1,6 +1,7 @@
 ---
 title: "PG-35 · After a reboot, VMs stay off?"
 description: "A reboot brings back what is written down. Nova does not restart guests by default."
+seo_title: "After a reboot, VMs stay off?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -39,7 +40,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 configuration reference and Kolla-Ansible 2026.1, which does not set resume_guests_state_on_host_boot. Observed on one all-in-one lab: instances SHUTOFF without the option and resumed with it, and an external interface taken down without a reboot. Not observed: a container that does not come back, a lost MTU, a host address on br-ex, a multinode platform. A failed unit of a service disabled after deployment is not the cause: compare with globals.yml. ML2/OVN and DPDK are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-35-after-a-compute-reboot.png`](../../dist/pg-35-after-a-compute-reboot.png) (1080 × 1350)
 - **Post title:** After a compute reboot, the instances stay SHUTOFF. That is the default.
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Maintenance #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

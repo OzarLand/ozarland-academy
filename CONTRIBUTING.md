@@ -1,5 +1,15 @@
 # Contributing
 
+> **Looking for the quick way?** To confirm that a page worked on your platform, fix an error or propose a page:
+>
+> - VM runbooks: [docs/runbooks/CONTRIBUTING.md](docs/runbooks/CONTRIBUTING.md) (three ways to help, from the smallest)
+> - Deployment patterns: [docs/deploy/CONTRIBUTING.md](docs/deploy/CONTRIBUTING.md)
+> - Quick lab: [docs/lab/CONTRIBUTING.md](docs/lab/CONTRIBUTING.md)
+> - Production guide: [docs/production/CONTRIBUTING.md](docs/production/CONTRIBUTING.md)
+> - Operator skills: [docs/skills/CONTRIBUTING.md](docs/skills/CONTRIBUTING.md)
+>
+> The rest of this page is for the day-2 module, Kolla-Ansible Academy, and for the tooling of the portal.
+
 OzarLand Academy is one learning path made of modules, listed in [academy.toml](academy.toml). The portal is generated
 from the Markdown under `docs/`: one directory and one site per module (`docs/<module>/`), and for the day-2 module,
 Kolla-Ansible Academy, one per release (`docs/day2/<release>/`). A change to the content is a change to those files;

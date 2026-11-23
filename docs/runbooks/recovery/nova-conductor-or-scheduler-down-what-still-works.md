@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "nova-conductor and nova-scheduler run on the controllers and talk to everything else over RabbitMQ."
+seo_title: "nova-conductor or nova-scheduler down: what works"
 ---
 
 # nova-conductor or nova-scheduler is down. What still works, what waits, what fails, and where failed builds go (cell0)

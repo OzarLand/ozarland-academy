@@ -1,6 +1,7 @@
 ---
 title: "PG-06 · Compute “down”. Is the host dead?"
 description: "“Down” is a missing heartbeat, not a dead host. Prove it before you act."
+seo_title: "Compute “down”. Is the host dead?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -39,7 +40,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible and ML2/OVS, and observed in production on an earlier release by the runbook's maintainer. The lab stopped the agent on purpose: the real causes (crash, OOM kill, lost RabbitMQ connection) were not reproduced. A host that answers on TCP but refuses your SSH login is alive too. Applies to the libvirt driver.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-06-compute-down-is-not-host-down.png`](../../dist/pg-06-compute-down-is-not-host-down.png) (1080 × 1350)
 - **Post title:** "Compute down" does not mean the host is down
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #HighAvailability #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "A self-service network lives in a tunnel (VXLAN or Geneve) and reaches the outside through a Neutron router and floating IPs."
+seo_title: "Provider networks (flat, VLAN) with Kolla-Ansible"
 ---
 
 # Provider networks with Kolla-Ansible. Instances directly on a flat or VLAN network, without tunnels or routers

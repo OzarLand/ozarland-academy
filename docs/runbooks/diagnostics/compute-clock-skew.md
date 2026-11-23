@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "A compute whose clock is minutes off keeps working. Nothing fails and nothing alerts."
+seo_title: "Compute clock skew: its logs do not line up"
 ---
 
 # The logs of one compute do not line up with the controllers. Its clock has drifted

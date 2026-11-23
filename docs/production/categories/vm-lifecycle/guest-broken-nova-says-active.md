@@ -1,6 +1,7 @@
 ---
 title: "PG-30 · Guest broken, Nova says ACTIVE?"
 description: "The fault is in the guest, the data is intact. Rescue mode gets you to the disk."
+seo_title: "Guest broken, Nova says ACTIVE?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 rescue guide and source, and reproduced on an all-in-one lab with CirrOS guests: legacy rescue of a local-disk instance, stable device rescue of a volume-backed and a local-disk instance. The repair itself depends on the guest's operating system; other guests were not tested, and Windows guests are not covered. If / in the rescue system is the original disk, the rescue booted the broken system: use another rescue image.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-30-guest-broken-nova-says-active.png`](../../dist/pg-30-guest-broken-nova-says-active.png) (1080 × 1350)
 - **Post title:** The guest is broken, Nova says ACTIVE: rescue mode
@@ -59,6 +61,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Troubleshooting #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

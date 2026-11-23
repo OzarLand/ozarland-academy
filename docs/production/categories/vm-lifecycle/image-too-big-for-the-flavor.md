@@ -1,6 +1,7 @@
 ---
 title: "PG-33 · Image too big for the flavor?"
 description: "The file size is not the disk size. Compare the flavor with the image's virtual size."
+seo_title: "Image too big for the flavor?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source and lab-run on Kolla-Ansible with local disks: an image without min_disk, a zero-disk flavor and min_ram. Not run: the API refusal on the image file size, and the check on a Ceph RBD image backend. Booting from a volume of the right size is the other way out: the flavor's disk is then not used for the root disk, but the volume must be at least min_disk. Resizes to a smaller disk are another subject.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-33-image-too-big-for-the-flavor.png`](../../dist/pg-33-image-too-big-for-the-flavor.png) (1080 × 1350)
 - **Post title:** Flavor's disk is too small: the file size is not the disk size
@@ -58,6 +60,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Glance #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

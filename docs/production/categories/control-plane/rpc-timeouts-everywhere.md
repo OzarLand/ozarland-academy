@@ -1,6 +1,7 @@
 ---
 title: "PG-16 · MessagingTimeout everywhere?"
 description: "Computes reported down are a symptom here. Read every RabbitMQ node before you reset anything."
+seo_title: "MessagingTimeout everywhere?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from Kolla-Ansible 2026.1 and the RabbitMQ 4.2 guides, lab-verified with three controllers, quorum queues and Khepri. On that lab a partition healed by itself once the network was back; the manual partition recovery and a disk alarm were not run. What a partition does depends on the metadata store (Khepri or Mnesia) and on the queue types of your deployment. Requests sent during the incident can leave resources in transitional states.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-16-rpc-timeouts-everywhere.png`](../../dist/pg-16-rpc-timeouts-everywhere.png) (1080 × 1350)
 - **Post title:** MessagingTimeout in every service: diagnose the bus before the services
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #RabbitMQ #ControlPlane #IncidentResponse #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "The Keystone Fernet bootstrap or key distribution fails during kolla-ansible deploy, reconfigure or upgrade."
+seo_title: "kolla-ansible deploy fails in keystone: Fernet keys"
 ---
 
 # kolla-ansible deploy fails in the keystone role: Fernet bootstrap, key distribution, or key 0 missing

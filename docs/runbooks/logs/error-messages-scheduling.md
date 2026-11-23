@@ -22,6 +22,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Error messages: scheduling. No valid host was found, Exceeded maximum number of retries."
+seo_title: "Scheduling errors: No valid host, maximum retries"
 ---
 
 # Error messages: scheduling. No valid host was found, Exceeded maximum number of retries

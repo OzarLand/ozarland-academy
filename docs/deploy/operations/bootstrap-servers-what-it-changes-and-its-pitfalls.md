@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "kolla-ansible bootstrap-servers prepares hosts for Kolla-Ansible: packages, Docker, users, /etc/hosts, security settings."
+seo_title: "kolla-ansible bootstrap-servers: changes and pitfalls"
 ---
 
 # kolla-ansible bootstrap-servers: what it changes on the hosts, and its pitfalls

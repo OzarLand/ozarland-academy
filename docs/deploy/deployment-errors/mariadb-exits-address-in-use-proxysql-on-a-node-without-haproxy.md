@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "MariaDB exits with \"Address already in use\": ProxySQL holds port 3306 on a node without HAProxy."
+seo_title: "MariaDB \"Address already in use\": ProxySQL on 3306"
 ---
 
 # kolla-ansible deploy hangs on MariaDB port liveness. MariaDB exits with "Address already in use" because ProxySQL holds port 3306 on a node without HAProxy

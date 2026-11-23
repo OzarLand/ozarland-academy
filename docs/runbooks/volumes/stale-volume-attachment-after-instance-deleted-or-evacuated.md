@@ -23,6 +23,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Stale volume attachment. The volume is still in-use for an instance that was deleted or evacuated."
+seo_title: "Stale volume attachment: volume still in-use"
 ---
 
 # Stale volume attachment. The volume is still in-use for an instance that was deleted or evacuated

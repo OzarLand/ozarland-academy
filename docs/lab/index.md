@@ -11,6 +11,14 @@ and repair it, and one command that deletes it all.**
 [Pick a lab](#pick-your-lab) · [Commands](#-the-three-commands) · [Exercises](#-exercises) ·
 [Delete it all](#delete-everything-when-you-are-done)
 
+> [!NOTE]
+> **Before you start, you need three things:** an account on any public or private cloud that runs OpenStack, with a
+> quota for one VM of 4 vCPU and 16 GB of RAM; a terminal with `ssh`; about an hour. The lab installs OpenStack
+> *inside* VMs of that cloud. **No such account?** You can still read on: [LUMO's village](../village/) explains the
+> concepts with no machine at all, and the exercises and [runbooks](../runbooks/) show every command with its output.
+> **Stuck during a run?** [Ask in the Discussions](https://github.com/OzarLand/ozarland/discussions) or open a
+> [lab issue](https://github.com/OzarLand/ozarland-academy/issues/new?template=lab-failed.yml).
+
 <img src="assets/images/S1-opening.webp" width="1536" height="1024" alt="LUMO, holding a nearly blank map and a small compass, stands at a stone gateway on the harbour while a grey-haired harbour master with a coiled rope points along a wooden pier to a temporary workshop by the sea.">
 
 > [!NOTE]

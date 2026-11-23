@@ -1,6 +1,6 @@
 ---
 title: "Operator skills"
-description: "Nine Agent Skills that make Claude reason like a senior OpenStack operator during incidents, changes, maintenance and troubleshooting."
+description: "Nine Agent Skills that make Claude follow a senior OpenStack operator's method during incidents, changes, maintenance and troubleshooting."
 ---
 
 # 🤖 Operator skills
@@ -11,7 +11,7 @@ description: "Nine Agent Skills that make Claude reason like a senior OpenStack 
 [Examples](docs/examples.md) · [Results](#-does-it-help) · [Contribute](CONTRIBUTING.md)
 
 **Nine [Agent Skills](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/overview)
-that make Claude reason like a senior OpenStack operator** during incidents,
+that make Claude follow a senior OpenStack operator's method** during incidents,
 changes, maintenance and troubleshooting.
 They use the open Agent Skills format, and every `references/` file is plain
 Markdown that people and other assistants can read as it is.
@@ -182,17 +182,14 @@ confidently wrong exactly where production OpenStack punishes you.
 ## 🔬 Validation status
 
 > [!IMPORTANT]
-> **All procedures presented as validated in this knowledge base have been
-> successfully tested either in production or, at minimum, in a laboratory
-> environment. Procedures without sufficient execution evidence are explicitly
-> identified as unvalidated or experimental.**
+> **No procedure here has been validated on a production platform yet.** Some
+> were run on a lab by an automated agent (`LAB-VALIDATED`, which is
+> **lab-verified** in OzarLand's page statuses); the others are explicitly
+> marked unvalidated or experimental. The exact counts are in the table below.
 >
 > A lab result is never presented as a production result, and reading or
-> reviewing a procedure is not validation.
->
-> In OzarLand's page statuses, `LAB-VALIDATED` is **lab-verified** (run on a
-> lab by an automated agent), and nothing here is *validated* by an operator
-> yet ([mapping](docs/knowledge-validation-policy.md#2-statuses)).
+> reviewing a procedure is not validation
+> ([mapping of the statuses](docs/knowledge-validation-policy.md#2-statuses)).
 
 **How a procedure earns its status.** Each one carries a tag such as
 `[LAB-VALIDATED: VM-NET-04]`, and Claude tells you that status, and what the

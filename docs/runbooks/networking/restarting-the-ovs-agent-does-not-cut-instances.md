@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
 description: "I need to restart the Open vSwitch agent on a compute. Its instances keep their network."
+seo_title: "Restarting the OVS agent does not cut instances"
 ---
 
 # I need to restart the Open vSwitch agent on a compute. Its instances keep their network

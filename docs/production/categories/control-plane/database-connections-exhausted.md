@@ -1,6 +1,7 @@
 ---
 title: "PG-28 · Out of database connections?"
 description: "Three limits, three messages. The message tells you where to look first."
+seo_title: "Out of database connections?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, specific to Kolla-Ansible 2026.1, where every service reaches MariaDB through ProxySQL on the internal VIP; it was only partly reproduced on a lab. The limits and the 10 s timeout are Kolla-Ansible's defaults. Without ProxySQL the messages and the layers differ. Running instances are not affected; computes may be reported down if the conductor cannot write their heartbeat.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-28-database-connections-exhausted.png`](../../dist/pg-28-database-connections-exhausted.png) (1080 × 1350)
 - **Post title:** "Too many connections": three limits, three messages
@@ -63,6 +65,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #MariaDB #ProxySQL #ControlPlane #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

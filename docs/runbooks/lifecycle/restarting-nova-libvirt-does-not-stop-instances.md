@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-22
 description: "I need to restart nova_libvirt on a compute. Its instances keep running."
+seo_title: "Restarting nova_libvirt does not stop instances"
 ---
 
 # I need to restart nova_libvirt on a compute. Its instances keep running

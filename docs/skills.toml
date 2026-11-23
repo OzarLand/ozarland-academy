@@ -21,7 +21,7 @@ exclude_docs = """
 /CLAUDE.md
 /ruff.toml
 """
-site_description = "Nine Agent Skills that make Claude reason like a senior OpenStack operator during incidents, changes, maintenance and troubleshooting, with a validation status for every procedure."
+site_description = "Nine Agent Skills that make Claude follow a senior OpenStack operator's method during incidents, changes, maintenance and troubleshooting, with a validation status for every procedure."
 
 nav = [
   { "Home" = [

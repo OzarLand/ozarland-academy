@@ -16,7 +16,8 @@ a machine runs, how it is reached, where its data lives, and what keeps the whol
 
 > [!NOTE]
 > **For complete beginners.** No OpenStack, Linux or networking experience is needed. Each scene takes about ten
-> minutes. The commands are there to show what the real thing looks like; you will run them yourself in the
+> minutes, so the sixteen scenes are a little under three hours in all. Short on time? Scenes 1, 3, 5 and 9 give
+> the main picture. The commands are there to show what the real thing looks like; you will run them yourself in the
 > [Quick lab](../lab/), the next stop.
 
 ## The story

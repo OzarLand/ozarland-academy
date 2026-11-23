@@ -1,6 +1,7 @@
 ---
 title: "PG-23 · Live migration never completes?"
 description: "Watch whether the remaining memory goes down. If it hovers, waiting will not help."
+seo_title: "Live migration never completes?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Nova 2026.1 live migration guides and not reproduced on a lab. The timeout is Nova's default ([libvirt] live_migration_completion_timeout); a deployment may have changed it. The progress fields need compute API 2.24 or later. Auto-converge and post-copy must be allowed on all computes. A migration refused at once by a pre-check is a different case, as are PCI devices, vGPU and NUMA-pinned instances.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-23-live-migration-never-completes.png`](../../dist/pg-23-live-migration-never-completes.png) (1080 × 1350)
 - **Post title:** A live migration that never completes: watch one number
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #LiveMigration #Libvirt #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

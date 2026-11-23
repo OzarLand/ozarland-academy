@@ -1,6 +1,7 @@
 ---
 title: "PG-17 · APIs fail on database errors?"
 description: "The data is at risk only during the recovery. Know the most advanced node before you bootstrap."
+seo_title: "APIs fail on database errors?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from Kolla-Ansible 2026.1 and the Galera crash recovery and quorum reset guides; lab-verified on a disposable Kolla-Ansible lab with ProxySQL in front of MariaDB. With ProxySQL the services see its errors ("Max connect timeout reached") instead of the WSREP message. Running instances keep running. Single-node MariaDB and restoring from a backup are not covered. With every node stopped, wsrep_last_committed cannot be queried: the position comes from --wsrep-recover. A quorum reset run on both sides of a split creates two clusters.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-17-galera-lost-quorum.png`](../../dist/pg-17-galera-lost-quorum.png) (1080 × 1350)
 - **Post title:** Galera lost quorum: the data is at risk during the recovery, not before
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #MariaDB #Galera #ControlPlane #DatabaseReliability #OzarLand
 ```
+
+</details>
 
 ---
 

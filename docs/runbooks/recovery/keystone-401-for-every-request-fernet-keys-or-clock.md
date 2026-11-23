@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Calls to Nova, Neutron or any other service are refused with 401, for some tokens or every other time, although the user authenticated without trouble."
+seo_title: "Keystone 401 on valid tokens: Fernet keys or clock"
 ---
 
 # Requests fail with 401 for tokens that should be valid. Fernet keys differ between Keystone nodes, or a clock is off

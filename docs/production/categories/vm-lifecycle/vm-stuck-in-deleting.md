@@ -1,6 +1,7 @@
 ---
 title: "PG-04 · VM stuck in deleting?"
 description: "A delete has two paths. Know which one Nova will take before you retry."
+seo_title: "VM stuck in deleting?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source; three of five causes reproduced on an all-in-one lab. A local delete also deletes the volumes created with delete_on_termination. Soft delete (reclaim_instance_interval), Ironic and down cells are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-04-vm-stuck-in-deleting.png`](../../dist/pg-04-vm-stuck-in-deleting.png) (1080 × 1350)
 - **Post title:** VM stuck in deleting: why deleting it again does nothing
@@ -58,6 +60,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Troubleshooting #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

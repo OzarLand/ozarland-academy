@@ -1,6 +1,7 @@
 ---
 title: "PG-12 · Ping works, big transfers stall?"
 description: "A green ping proves small packets pass. Test the largest one the network promises."
+seo_title: "Ping works, big transfers stall?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible and ML2/OVS, VXLAN over an IPv4 underlay, for a tunnel interface whose MTU was lowered on one compute. A switch on the path dropping large frames, a platform-wide mismatch and an IPv6 underlay were not reproduced. Neutron never re-reads the MTU of the hosts after deployment. Instances pick up a new MTU at DHCP renewal or reboot. The global_physnet_mtu change was not run on the lab. OVN was not tested.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-12-ping-works-transfers-stall.png`](../../dist/pg-12-ping-works-transfers-stall.png) (1080 × 1350)
 - **Post title:** Ping works, large transfers stall: test the largest packet
@@ -60,6 +62,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #Networking #MTU #VXLAN #OzarLand
 ```
+
+</details>
 
 ---
 

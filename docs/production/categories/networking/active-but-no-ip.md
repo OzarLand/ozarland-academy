@@ -1,6 +1,7 @@
 ---
 title: "PG-10 · ACTIVE, but no IP address?"
 description: "ACTIVE means Nova did its job. It says nothing about the network of the guest."
+seo_title: "ACTIVE, but no IP address?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Applies to ML2/OVS with DHCP agents. Lab-verified on OpenStack 2026.1 with Kolla-Ansible for the case where every DHCP agent is down; a single network without a live agent and a missing dnsmasq were not reproduced. OVN has no DHCP agent: this memo does not apply (not tested). A subnet with DHCP disabled gives the same symptom. Starting the agents again can move networks to another DHCP agent (observed on a lab, without traffic loss).
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-10-active-but-no-ip.png`](../../dist/pg-10-active-but-no-ip.png) (1080 × 1350)
 - **Post title:** ACTIVE, no fault, no IP address: Nova did its job
@@ -60,6 +62,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #Networking #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

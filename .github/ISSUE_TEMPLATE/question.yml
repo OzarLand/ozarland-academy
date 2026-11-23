@@ -1,6 +1,6 @@
 name: Question
 description: An operational question you want tracked until it is answered.
-labels: ["kind/question", "status/open"]
+labels: ["status/triage"]
 body:
   - type: markdown
     attributes:

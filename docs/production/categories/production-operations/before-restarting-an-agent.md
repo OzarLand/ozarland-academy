@@ -1,6 +1,7 @@
 ---
 title: "PG-18 · Restarting an agent on a compute?"
 description: "Before a restart, know which process carries the workload, and what keeps it alive."
+seo_title: "Restarting an agent on a compute?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Production operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible defaults (nova_libvirt with pid_mode host, ML2/OVS with drop_flows_on_start at its default), and observed in production on an earlier release by the runbooks' maintainer. The docker commands are Kolla-Ansible specific. OVN was not tested. No output from the grep, or False, means flows are kept. A packaged libvirtd (no container) was not tested. If ovs-vswitchd itself does not answer, restarting the agent will not help.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-18-before-restarting-an-agent.png`](../../dist/pg-18-before-restarting-an-agent.png) (1080 × 1350)
 - **Post title:** Restarting libvirt or the OVS agent: will the instances survive?
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Neutron #ChangeManagement #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

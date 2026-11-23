@@ -28,6 +28,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Error messages: messaging and database. MessagingTimeout, AMQP connection and heartbeat lines, DBConnectionError."
+seo_title: "MessagingTimeout, AMQP and DBConnectionError explained"
 ---
 
 # Error messages: messaging and database. MessagingTimeout, AMQP connection and heartbeat lines, DBConnectionError

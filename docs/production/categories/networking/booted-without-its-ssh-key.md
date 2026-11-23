@@ -1,6 +1,7 @@
 ---
 title: "PG-37 · Booted without its SSH key?"
 description: "An instance gets its identity at first boot. Miss it, and the damage outlives the outage."
+seo_title: "Booted without its SSH key?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible and ML2/OVS, with every metadata agent down and CirrOS guests, which read the metadata at every boot. Not reproduced: agents alive but Nova's metadata API not answering. cloud-init images were not tested. Instances booted with a config drive do not use the metadata service for this. With OVN the metadata path is different.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-37-booted-without-its-ssh-key.png`](../../dist/pg-37-booted-without-its-ssh-key.png) (1080 × 1350)
 - **Post title:** ACTIVE, with an address, and no SSH key: the instance booted without metadata
@@ -57,6 +59,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #Nova #CloudInit #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

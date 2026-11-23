@@ -10,6 +10,21 @@ description: "Community runbooks for diagnosing and resolving virtual machine pr
 [Start from a symptom](#-start-from-what-you-see) · [Index](#index) · [Status](#-how-much-each-page-was-checked) ·
 [Contribute](#-contributing)
 
+> [!IMPORTANT]
+> **In an incident right now?** Go straight to the page. Read-only checks come first on each of them.
+>
+> | You see | Open |
+> |---|---|
+> | A compute is reported `down` | [Its instances still run](recovery/nova-compute-down-instances-still-running.md), [SSH is refused but the host is alive](recovery/nova-compute-down-host-alive-ssh-refused.md), or the [host is unreachable: fence before you evacuate](recovery/compute-host-failure-fence-before-evacuate.md) |
+> | `MessagingTimeout` everywhere, computes flapping | [RabbitMQ partitioned or blocked](recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md) |
+> | Every API fails on database errors | [Galera lost quorum](recovery/galera-cluster-lost-quorum-database-unavailable.md) |
+> | An API answers 503, or the VIP moves | [HAProxy backend DOWN, VIP flapping](recovery/api-returns-503-haproxy-backend-down-or-vip-flapping.md) |
+> | 401 on tokens that should be valid | [Fernet keys or clock](recovery/keystone-401-for-every-request-fernet-keys-or-clock.md) |
+> | "No valid host was found" | [No valid host with free capacity](scheduling/no-valid-host-with-free-capacity.md) |
+>
+> Anything else: the [full list of symptoms](#-start-from-what-you-see), or the search of this site (magnifier, top right).
+> These pages were checked on a lab, not on your platform: each one states its release and its status under its title.
+
 <img src="assets/images/S4-opening.webp" width="1536" height="1024" alt="On a stone watch post above a calm sea, LUMO reads a notebook beside Ren, a watch officer in a green coat with a prosthetic leg who holds a striped weather pennant.">
 
 No imposed tools, no single way of operating OpenStack.
@@ -160,6 +175,8 @@ flowchart LR
 | After a compute reboot, instances stay SHUTOFF or have no network | [After a compute reboot](recovery/after-a-compute-reboot-instances-shutoff-or-without-network.md) |
 | A volume stays in `deleting` or `error_deleting`, or comes back `available` after a delete | [Volume stuck in deleting](volumes/volume-stuck-in-deleting-or-error-deleting.md) |
 | A compute is unreachable and its instances are down | [Fence before you evacuate](recovery/compute-host-failure-fence-before-evacuate.md) |
+| A compute is reported `down`, but its instances still answer | [nova-compute down, instances still running](recovery/nova-compute-down-instances-still-running.md) |
+| A compute is reported `down` and refuses an SSH login, but the host is alive | [nova-compute down, SSH refused, host alive](recovery/nova-compute-down-host-alive-ssh-refused.md) |
 | `MessagingTimeout` in every service, computes reported down while they run | [RabbitMQ partitioned or blocked](recovery/rabbitmq-partition-or-alarm-rpc-timeouts.md) |
 
 ## Index

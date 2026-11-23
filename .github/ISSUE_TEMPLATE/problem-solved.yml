@@ -1,6 +1,6 @@
 name: Problem solved
 description: You fixed something that could become a runbook. Tell us how.
-labels: ["kind/problem-solved", "status/candidate"]
+labels: ["type/docs", "status/triage"]
 body:
   - type: markdown
     attributes:

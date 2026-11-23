@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "A compute was renamed, reinstalled or re-added. nova-compute refuses to start, or gets no resource provider."
+seo_title: "Compute renamed: resource provider conflict"
 ---
 
 # A compute was renamed, reinstalled or re-added. nova-compute refuses to start, or gets no resource provider

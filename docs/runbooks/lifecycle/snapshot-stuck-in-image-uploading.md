@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Instance snapshot never finishes. Task state image_pending_upload or image_uploading, image queued or saving."
+seo_title: "Snapshot stuck in image_uploading or queued"
 ---
 
 # Instance snapshot never finishes. Task state image_pending_upload or image_uploading, image queued or saving

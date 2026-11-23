@@ -1,6 +1,7 @@
 ---
 title: "PG-36 · Compute renamed or re-added?"
 description: "Three records must agree. A healthy container proves nothing: the log says which one differs."
+seo_title: "Compute renamed or re-added?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Nova and Placement 2026.1 sources and the upstream Compute Node Identification guide; the compute_id file exists from 2023.1. On a Kolla-Ansible lab the rename was simulated with [DEFAULT] host: nova-compute logged "Possible rename detected" and kept running, the container healthy, the service down. With the compute_id file lost, the container restarts in a loop instead (docker logs). The Placement name conflict was not reproduced. With Kolla-Ansible, read both inside the nova_compute container.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-36-compute-renamed-or-re-added.png`](../../dist/pg-36-compute-renamed-or-re-added.png) (1080 × 1350)
 - **Post title:** A compute was renamed. Now nova-compute refuses to start.
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Placement #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

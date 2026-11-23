@@ -12,6 +12,10 @@ description: "Ways to deploy OpenStack with Kolla-Ansible, compared side by side
 
 <img src="assets/images/S2-opening.webp" width="1536" height="1024" alt="LUMO, Sorel and Jo stand at a workbench in a sunlit harbour workshop, behind two blank model boards of the same size and a closed service crate.">
 
+> [!NOTE]
+> **Level: intermediate.** These pages assume you know what a controller, a compute and a virtual IP are. New to
+> OpenStack? Read [LUMO's village](../village/) and run the [Quick lab](../lab/) first.
+
 Written so far from upstream documentation and lab builds; **operators' own patterns are what this repository is
 waiting for.**
 

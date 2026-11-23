@@ -1,6 +1,7 @@
 ---
 title: "PG-39 · Extended, same size inside?"
 description: "Find the last stage that happened before you repeat the first."
+seo_title: "Extended, same size inside?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Storage
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Cinder and Nova 2026.1 sources. Lab-run on an all-in-one with Cinder LVM over iSCSI: the refusals, a backend failure and Nova not refreshing the device. Not run: growing a file system in the guest, a refresh failure on the compute, Ceph RBD and Fibre Channel. When the pool has too little space the scheduler refuses the extend: the volume keeps its old size and status.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-39-extended-but-same-size-inside.png`](../../dist/pg-39-extended-but-same-size-inside.png) (1080 × 1350)
 - **Post title:** The volume was extended. The guest still sees the old size.
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Cinder #Nova #Storage #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

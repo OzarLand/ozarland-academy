@@ -15,7 +15,7 @@ and its own site in the portal:
 | Intervene | VM runbooks | Symptom-driven runbooks for instance and hypervisor problems | [docs/runbooks/](docs/runbooks/index.md) | available |
 | Go to production | Production guide | Visual memos for production: one operational lesson per page | [docs/production/](docs/production/index.md) | available |
 | Compare | OKD OpenStack lab | OpenStack run by Kubernetes operators on OKD: a reproducible lab for operators who know Kolla-Ansible | [docs/okd/](docs/okd/index.md) | available |
-| Equip | Operator skills | Nine Agent Skills that make Claude reason like a senior OpenStack operator, with a validation status for every procedure | [docs/skills/](docs/skills/index.md) | available |
+| Equip | Operator skills | Nine Agent Skills that make Claude follow a senior OpenStack operator's method, with a validation status for every procedure | [docs/skills/](docs/skills/index.md) | available |
 
 The modules come from separate OzarLand repositories, moved here one at a time with their history: their pages keep
 the history of the former repository (`git log --follow docs/<module>/index.md`).

@@ -1,6 +1,7 @@
 ---
 title: "PG-41 · Volume will not delete?"
 description: "A volume that refuses to go may still be in use. Find the user before forcing anything."
+seo_title: "Volume will not delete?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Storage
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Cinder 2026.1 source. Reproduced on an all-in-one lab with Cinder LVM for a service down, a backend failure and a delete refused by the API; the Ceph RBD and encrypted-volume parts were not. On LVM a volume still open gives error_deleting rather than available. A delete can also be refused at once: attached, with snapshots, migrating or in a group. If the request was lost, waiting is not enough: once the service is up and idle, reset to error and delete again. An encrypted volume loses its key as soon as the delete is accepted, even if it comes back available.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-41-volume-will-not-delete.png`](../../dist/pg-41-volume-will-not-delete.png) (1080 × 1350)
 - **Post title:** A volume that will not delete may still be in use
@@ -58,6 +60,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Cinder #Storage #DataIntegrity #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -1,6 +1,6 @@
 name: "Quick lab: an exercise did not behave as written"
 description: What you saw differed from the exercise, or the runbook it links to did not help.
-labels: ["kind/docs", "status/open"]
+labels: ["type/docs", "area/lab", "status/triage"]
 body:
   - type: markdown
     attributes:
@@ -51,7 +51,7 @@ body:
     id: runbook
     attributes:
       label: Did the linked runbook help?
-      description: If the runbook itself is wrong, it may need an issue in openstack-vm-runbooks too.
+      description: "If the runbook itself is wrong, say so here. The runbooks are in this repository too (docs/runbooks/)."
       options:
         - Yes
         - Partly

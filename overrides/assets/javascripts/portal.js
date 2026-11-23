@@ -344,7 +344,7 @@
       var phrase = terms.join(" ");
       index.entries.forEach(function (entry) {
         var points = score(entry, terms, phrase);
-        if (points) found.push([points, entry]);
+        if (points) found.push([points + (index.sites[entry[0]].boost || 0), entry]);
       });
       found.sort(function (a, b) {
         return b[0] - a[0];
@@ -378,7 +378,7 @@
         ? found.length > shown
           ? "The " + shown + " best of " + found.length + " matches."
           : shown + (shown === 1 ? " match." : " matches.")
-        : "Nothing in the titles and headings. Try another word, or the search of a module for the full text.";
+        : "Nothing in the titles and headings. Try another word, or open a module and use its own search (the magnifier in its header), which reads the full text.";
     }
 
     function run() {

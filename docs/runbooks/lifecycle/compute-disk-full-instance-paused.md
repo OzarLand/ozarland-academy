@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-23
 description: "Compute disk full. An instance that writes is frozen, while Nova still shows it ACTIVE."
+seo_title: "Compute disk full: instance paused, Nova says ACTIVE"
 ---
 
 # Compute disk full. An instance that writes is frozen, while Nova still shows it ACTIVE

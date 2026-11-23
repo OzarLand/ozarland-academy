@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "RabbitMQ nodes do not form a cluster: on a first deployment, after a controller was added or reinstalled, or after passwords.yml changed."
+seo_title: "RabbitMQ nodes do not form a cluster (kolla-ansible)"
 ---
 
 # RabbitMQ nodes do not form a cluster during kolla-ansible deploy

@@ -1,6 +1,7 @@
 ---
 title: "PG-25 · Security group rule has no effect?"
 description: "Groups add up, on a default deny. Read the rules before you blame the agent."
+seo_title: "Security group rule has no effect?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Neutron 2026.1 documentation and source. The wrong rule, port security off and a dead agent were reproduced on a Kolla-Ansible all-in-one with ML2/OVS and the iptables hybrid firewall driver. ML2/OVN and the native OVS firewall driver were not run on a lab. The traffic can also be filtered elsewhere (guest firewall, router), or let through by an allowed address pair or a second port. The default-group case was only checked read-only. With OVN, an established connection may survive a rule removal (not verified).
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-25-security-group-rule-has-no-effect.png`](../../dist/pg-25-security-group-rule-has-no-effect.png) (1080 × 1350)
 - **Post title:** A security group rule that changes nothing: four things to check
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #SecurityGroups #Networking #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "PG-08 · Disabled or down? Two fields"
 description: "Disabled is a scheduling decision. Down is a belief about liveness."
+seo_title: "Disabled or down? Two fields"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source and reproduced on a Kolla-Ansible lab (ML2/OVS, no Cinder). The Forced Down column needs compute API microversion 2.11 or later. Nova refuses to set a service back up while evacuation records from that host are still "done": nova-compute must be restarted there first, which destroys the local copies of the evacuated instances. Ironic is not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-08-disabled-or-down.png`](../../dist/pg-08-disabled-or-down.png) (1080 × 1350)
 - **Post title:** Compute service: disabled and down are two different things
@@ -60,6 +62,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #CloudOperations #SRE #InfrastructureEngineering #OzarLand
 ```
+
+</details>
 
 ---
 
