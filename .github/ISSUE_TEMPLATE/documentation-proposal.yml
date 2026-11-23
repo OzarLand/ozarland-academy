@@ -1,6 +1,6 @@
 name: Documentation proposal
 description: Propose a new page, or report that an existing one is wrong, missing something or unsafe.
-labels: ["kind/docs", "status/open"]
+labels: ["type/docs", "status/triage"]
 body:
   - type: dropdown
     id: type

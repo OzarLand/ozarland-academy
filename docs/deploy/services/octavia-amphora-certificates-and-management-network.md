@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Octavia gives users load balancers. With the amphora provider, each load balancer is one Nova instance (two with ACTIVE_STANDBY) running HAProxy."
+seo_title: "Octavia amphora with Kolla-Ansible: certificates, network"
 ---
 
 # Octavia with the amphora provider. Certificates, the management network and the amphora image

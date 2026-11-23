@@ -1,7 +1,7 @@
 name: "Operator skills: Validation evidence or failure"
 description: You ran a procedure from a skill (or it failed), or something has changed and an item needs revalidation.
 title: "[validation] "
-labels: ["validation"]
+labels: ["type/docs", "status/triage"]
 body:
   - type: markdown
     attributes:

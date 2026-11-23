@@ -1,6 +1,6 @@
 name: "Quick lab: the lab failed at a step"
 description: A script or a step of the guide did not work as written, or the delete command left something behind.
-labels: ["kind/bug", "status/open"]
+labels: ["type/bug", "area/lab", "status/triage"]
 body:
   - type: markdown
     attributes:

@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Every API call fails at once. Expired TLS certificates or inconsistent Keystone Fernet keys."
+seo_title: "Every API call fails: expired TLS or Fernet keys"
 ---
 
 # Every API call fails at once. Expired TLS certificates or inconsistent Keystone Fernet keys

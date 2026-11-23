@@ -35,6 +35,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Reading the storage logs of a compute. iscsid, multipathd, NFS client messages and Ceph client (librbd) logs."
+seo_title: "Compute storage logs: iscsid, multipathd, NFS, RBD"
 ---
 
 # Reading the storage logs of a compute. iscsid, multipathd, NFS client messages and Ceph client (librbd) logs

@@ -1,7 +1,7 @@
 {#-
   Breadcrumb above the page title, on every page of a site but its home:
-  OzarLand Academy (the portal root), the site, then the sections the page
-  is in. A reader who lands on a deep page from a search engine sees where
+  OzarLand (ozarland.com), Academy (the portal root), the site, then the
+  sections the page is in. A reader who lands on a deep page from a search engine sees where
   they are and goes up, to the site or to the whole Academy, in one click.
 
   The theme's partial starts at `nav.homepage`, which Zensical 0.1.2 does
@@ -34,8 +34,13 @@
   <nav class="md-path" aria-label="Breadcrumb" {{ hidden }}>
     <ol class="md-path__list">
       <li class="md-path__item">
+        <a href="https://ozarland.com/" class="md-path__link">
+          <span class="md-ellipsis">OzarLand</span>
+        </a>
+      </li>
+      <li class="md-path__item">
         <a href="{{ oz_root }}" class="md-path__link">
-          <span class="md-ellipsis">OzarLand Academy</span>
+          <span class="md-ellipsis">Academy</span>
         </a>
       </li>
       <li class="md-path__item">

@@ -31,6 +31,10 @@ body {
   --portal-font-code: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", "DejaVu Sans Mono", monospace;
 
+  /* Headings: a system serif stack, as on https://ozarland.com/ (the old
+     book of the island). No web font. */
+  --portal-font-heading: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+
   /* The theme reads these two (it sets them on <body>). */
   --md-text-font-family: var(--portal-font-text);
   --md-code-font-family: var(--portal-font-code);
@@ -3977,4 +3981,77 @@ a.portal-cta:focus-visible {
   margin: 0.2rem 0 0;
   font-size: 0.7rem;
   line-height: 1.5;
+}
+
+/* How much a page was checked, under the title of a runbook or a deployment
+   pattern (overrides/main.html): status, release, deployment method, risk,
+   date. */
+.md-typeset .oz-status {
+  margin: -0.4rem 0 1.2rem;
+  padding: 0.55rem 0.8rem;
+  border: 0.05rem solid var(--portal-border);
+  border-left: 0.25rem solid var(--portal-slate-border);
+  border-radius: 0.3rem;
+  background-color: var(--portal-surface);
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.md-typeset .oz-status--lab-verified {
+  border-left-color: var(--portal-blue-border);
+}
+
+.md-typeset .oz-status--validated {
+  border-left-color: var(--portal-green-border);
+}
+
+.md-typeset .oz-status p {
+  margin: 0;
+}
+
+.md-typeset .oz-status__chip {
+  display: inline-block;
+  margin-right: 0.4rem;
+  padding: 0.1em 0.6em;
+  border: 0.05rem solid var(--portal-slate-border);
+  border-radius: 0.25rem;
+  background-color: var(--portal-slate-bg);
+  color: var(--portal-slate-fg);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.md-typeset .oz-status--lab-verified .oz-status__chip {
+  border-color: var(--portal-blue-border);
+  background-color: var(--portal-blue-bg);
+  color: var(--portal-blue-fg);
+}
+
+.md-typeset .oz-status--validated .oz-status__chip {
+  border-color: var(--portal-green-border);
+  background-color: var(--portal-green-bg);
+  color: var(--portal-green-fg);
+}
+
+.md-typeset .oz-status__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 1rem;
+  margin-top: 0.3rem !important;
+  color: var(--portal-text-muted);
+}
+
+/* Titles in the serif stack of the OzarLand home page: the Academy and the
+   home are the same book. Body text, tables and code keep their fonts. */
+.md-typeset h1,
+.md-typeset h2,
+.md-header__topic,
+.portal-hero__title,
+.oz-next__title {
+  font-family: var(--portal-font-heading);
+}
+
+.md-typeset h1,
+.md-typeset h2 {
+  letter-spacing: 0;
 }

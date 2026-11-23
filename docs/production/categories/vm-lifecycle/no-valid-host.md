@@ -1,6 +1,7 @@
 ---
 title: "PG-02 · No valid host, with free capacity?"
 description: "Three places a build can stop before any compute. Read the exact message first."
+seo_title: "No valid host, with free capacity?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Cells v2 and Placement apply to every current release. Lab-verified on OpenStack 2026.1 (all-in-one, Kolla-Ansible): unmapped host, reserved memory, disabled service and a filter. Stale allocations and missing traits were not reproduced. A plain allocation candidate list still shows a disabled compute: add --forbidden COMPUTE_STATUS_DISABLED (Placement API 1.22) to see what Nova sees. The allocation candidate commands need the osc-placement plugin. Ironic is not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-02-no-valid-host.png`](../../dist/pg-02-no-valid-host.png) (1080 × 1350)
 - **Post title:** "No valid host": three places the request can stop
@@ -58,6 +60,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Placement #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

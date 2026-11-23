@@ -1,6 +1,6 @@
 name: "Quick lab: propose a variant or an exercise"
 description: A way to run the lab somewhere else (another provider, a personal machine), or a new exercise.
-labels: ["kind/proposal", "status/open"]
+labels: ["type/feature", "area/lab", "status/triage"]
 body:
   - type: markdown
     attributes:

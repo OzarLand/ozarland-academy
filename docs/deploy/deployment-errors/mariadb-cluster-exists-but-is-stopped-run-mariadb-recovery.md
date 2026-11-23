@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "After every controller was down at the same time (power loss, all rebooted, every mariadb container stopped), MariaDB does not come back by itself."
+seo_title: "\"MariaDB cluster exists but is stopped\": recovery"
 ---
 
 # kolla-ansible fails with "MariaDB cluster exists but is stopped"

@@ -1,6 +1,6 @@
 name: Experience report
 description: Offer a first-hand account of an upgrade, incident, migration or architecture choice.
-labels: ["kind/experience", "status/open"]
+labels: ["type/docs", "status/triage"]
 body:
   - type: markdown
     attributes:

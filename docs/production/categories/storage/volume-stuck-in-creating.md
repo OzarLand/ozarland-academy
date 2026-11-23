@@ -1,6 +1,7 @@
 ---
 title: "PG-40 · Volume stuck in creating?"
 description: "No host: the scheduler. A host set: the backend. Cinder's message, or its log, says the rest."
+seo_title: "Volume stuck in creating?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Storage
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Cinder 2026.1 source and Kolla-Ansible 2026.1; four causes reproduced on an all-in-one lab. A large image copied slowly is a further case: wait, and follow the cinder-volume log. A request refused at once (quota, invalid type) creates no volume and is not this case. Volumes created by Nova for a boot from volume, backups, snapshots and encrypted volumes are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-40-volume-stuck-in-creating.png`](../../dist/pg-40-volume-stuck-in-creating.png) (1080 × 1350)
 - **Post title:** Volume stuck in creating: one field tells the scheduler from the backend
@@ -60,6 +62,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Cinder #Storage #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: "PG-20 · Cleaning up stale records?"
 description: "Project tools first, the database last. And first of all: is this record true?"
+seo_title: "Cleaning up stale records?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Production operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible; the volume steps were not run on that lab (no Cinder). "nova-manage placement audit" is read-only without --delete. Archiving and purging soft-deleted rows is a destructive step of its own, with retention requirements to check first. python-openstackclient 10.5.0 asks for confirmation before "server set --state"; earlier clients were not checked. "audit --delete" also removes the allocation of an instance being moved.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-20-cleaning-up-stale-records.png`](../../dist/pg-20-cleaning-up-stale-records.png) (1080 × 1350)
 - **Post title:** Stale records: project tools first, the database last
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Placement #OperationalExcellence #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

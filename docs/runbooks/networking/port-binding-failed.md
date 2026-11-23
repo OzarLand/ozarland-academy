@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Instance build or live migration fails with \"Binding failed for port\". Neutron could not bind the port on that host."
+seo_title: "\"Binding failed for port\" on build or live migration"
 ---
 
 # Instance build or live migration fails with "Binding failed for port". Neutron could not bind the port on that host

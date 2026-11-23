@@ -1,6 +1,7 @@
 ---
 title: "PG-07 · Fence before you evacuate"
 description: "The precondition for evacuation is fencing, not a missing heartbeat."
+seo_title: "Fence before you evacuate"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Derived from a real incident and lab-verified on OpenStack 2026.1 (Kolla-Ansible, ML2/OVS, local disks and Cinder LVM). Fencing through IPMI or the switch, the Ceph blocklist and evacuation with shared instance storage were not run on the lab. Evacuation semantics for local storage and the behaviour of a returning host should be checked against the Nova documentation of your release. Assumes the libvirt driver.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-07-fence-before-evacuate.png`](../../dist/pg-07-fence-before-evacuate.png) (1080 × 1350)
 - **Post title:** Fence before you evacuate. Always.
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #HighAvailability #DisasterRecovery #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

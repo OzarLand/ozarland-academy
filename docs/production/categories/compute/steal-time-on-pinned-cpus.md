@@ -1,6 +1,7 @@
 ---
 title: "PG-34 · Steal time on pinned CPUs?"
 description: "Live migration moves the symptom, not the cause. The cause is on the host."
+seo_title: "Steal time on pinned CPUs?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Derived from an operator's incident. On a lab (2026.1) the steal was reproduced and emulator threads moved; host isolation (it depends on the OS and hardware: check your vendor's guidance) and the overlap fix were not run. Per-CPU kernel threads (ksoftirqd, kworker...) exist on every CPU and are expected. With Kolla-Ansible, virsh runs in the nova_libvirt container. Live migration of pinned instances only became NUMA-aware in Train; before that a migration could itself create overlapping pinning. Changing a flavor's extra specs does not change running instances.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-34-steal-time-on-pinned-cpus.png`](../../dist/pg-34-steal-time-on-pinned-cpus.png) (1080 × 1350)
 - **Post title:** Steal time on pinned CPUs: live migration is not the fix
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Performance #NFV #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

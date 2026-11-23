@@ -1,6 +1,7 @@
 ---
 title: "PG-05 · ACTIVE in Nova, frozen for users?"
 description: "Nova does not watch the disk. Monitor the instance store and the power state."
+seo_title: "ACTIVE in Nova, frozen for users?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible, local qcow2 instance disks and CirrOS guests. Not tested with Ceph or other shared instance storage, volume-backed instances, or raw and LVM image backends. The pause comes from QEMU's default write-error policy; other releases were not checked. With Kolla-Ansible the store is the nova_compute Docker volume, and virsh runs in the nova_libvirt container.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-05-active-but-frozen.png`](../../dist/pg-05-active-but-frozen.png) (1080 × 1350)
 - **Post title:** ACTIVE in Nova, frozen for the user: the silent full disk
@@ -63,6 +65,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Libvirt #Monitoring #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

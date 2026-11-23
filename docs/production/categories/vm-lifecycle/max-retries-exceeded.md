@@ -1,6 +1,7 @@
 ---
 title: "PG-03 · Exceeded maximum number of retries?"
 description: "The fault is a summary. The cause is in the log of each compute that tried."
+seo_title: "Exceeded maximum number of retries?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source and lab-verified with two computes. Not every failure is retried: a network allocation failure or a boot-from-volume block device failure aborts the build on the first compute with another fault. Retries of resize and cold migration, and Ironic, are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-03-max-retries-exceeded.png`](../../dist/pg-03-max-retries-exceeded.png) (1080 × 1350)
 - **Post title:** "Exceeded maximum number of retries" tells you nothing. The computes do.
@@ -59,6 +61,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Troubleshooting #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

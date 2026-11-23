@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "SR-IOV splits a physical NIC (the PF) into virtual functions (VFs) that can be passed directly to instances."
+seo_title: "SR-IOV with Kolla-Ansible: VFs, agent, PCI whitelist"
 ---
 
 # SR-IOV with Kolla-Ansible. VFs on the host, the Neutron SR-IOV agent, the PCI whitelist Kolla-Ansible writes, and the scheduler filter

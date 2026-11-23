@@ -1,6 +1,7 @@
 ---
 title: "PG-13 · Volume stuck attaching or detaching?"
 description: "The hypervisor tells the truth about the instance. Trust it over both databases."
+seo_title: "Volume stuck attaching or detaching?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Storage
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the 2026.1 documentation and lab-verified on an all-in-one lab with LVM over iSCSI. A compute that cannot connect to the storage, other backends (RBD, multipath) and a multinode platform were not observed. Attachment records need volume API 3.27 or later; the attachment ID in server volume list needs compute API 2.89 or later. Does not cover multi-attach or boot volumes.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-13-volume-stuck-attaching-or-detaching.png`](../../dist/pg-13-volume-stuck-attaching-or-detaching.png) (1080 × 1350)
 - **Post title:** Volume stuck in attaching or detaching: four views, one truth
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Cinder #Nova #Storage #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

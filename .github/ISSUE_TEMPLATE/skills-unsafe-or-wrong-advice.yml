@@ -1,7 +1,7 @@
 name: "Operator skills: Unsafe or wrong advice"
 description: A skill gave advice an experienced operator would not follow.
 title: "[advice] "
-labels: ["advice"]
+labels: ["type/bug", "status/triage"]
 body:
   - type: markdown
     attributes:

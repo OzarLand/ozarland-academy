@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Kolla-Ansible terminates TLS in HAProxy, on the VIPs. Three switches in globals.yml decide what is encrypted, and each has its own certificate files."
+seo_title: "Kolla-Ansible TLS on internal and external endpoints"
 ---
 
 # TLS on the internal and external endpoints

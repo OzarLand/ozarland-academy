@@ -1,6 +1,7 @@
 ---
 title: "PG-44 · Logs do not line up?"
 description: "Before trusting a timeline built from several hosts, compare their clocks."
+seo_title: "Logs do not line up?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Production operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Observed on one lab build: OpenStack 2026.1, Kolla-Ansible, ML2/OVS, Ubuntu 24.04 with systemd-timesyncd, a 300 s backward drift on one compute for a few minutes. chrony was not run. Not tested: a drift on a controller, a forward drift, a larger or longer offset, TLS certificate validity, OVN. Do not assume this memo applies to them. With Nova's database service group driver, liveness is recorded on the controllers, with their clocks, which is why Nova and Neutron do not complain.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-44-logs-do-not-line-up.png`](../../dist/pg-44-logs-do-not-line-up.png) (1080 × 1350)
 - **Post title:** The logs of one host do not line up: check its clock before your theory
@@ -59,6 +61,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Observability #IncidentResponse #SRE #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -19,6 +19,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Extending an attached volume. Refused, error_extending, or the instance still sees the old size."
+seo_title: "Extend an attached volume: guest sees the old size"
 ---
 
 # Extending an attached volume. Refused, error_extending, or the instance still sees the old size

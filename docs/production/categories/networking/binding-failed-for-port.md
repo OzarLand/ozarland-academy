@@ -1,6 +1,7 @@
 ---
 title: "PG-38 · Binding failed for port?"
 description: "Nova names the host. Neutron must find a live agent, with the right mappings, under that exact name."
+seo_title: "Binding failed for port?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Neutron and Nova 2026.1 sources. A dead agent, mismatched host names (simulated) and a missing mapping (symptom only) were reproduced on an ML2/OVS Kolla-Ansible lab; the ML2/OVN parts and an unsupported network type were not. Ports already bound keep working; ports Nova created for a build are deleted when it fails. SR-IOV, hardware offload, routed provider networks and Ironic ports are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-38-binding-failed-for-port.png`](../../dist/pg-38-binding-failed-for-port.png) (1080 × 1350)
 - **Post title:** "Binding failed for port": start with the Neutron server log
@@ -64,6 +66,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #Nova #Networking #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

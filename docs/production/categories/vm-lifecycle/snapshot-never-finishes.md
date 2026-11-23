@@ -1,6 +1,7 @@
 ---
 title: "PG-29 · Snapshot never finishes?"
 description: "A slow snapshot is often just a large disk. No error in the compute log? Let it finish."
+seo_title: "Snapshot never finishes?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source. Lab-run on the standard path for a slow upload, an upload failure and a nova-compute restart mid-snapshot. Not run: a full compute disk or Glance store, the cold snapshot, and the direct snapshot on Ceph RBD, where the states differ. With Kolla-Ansible, HAProxy cuts an upload to Glance that lasts more than 6 hours. The whole disk is written on the compute first: a full file system there (shared with the instances by default) can also freeze instances that write. Earlier states: image_snapshot_pending (not received), image_snapshot (waiting for a slot).
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-29-snapshot-never-finishes.png`](../../dist/pg-29-snapshot-never-finishes.png) (1080 × 1350)
 - **Post title:** A snapshot that never finishes: find where it is before you clear it
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Glance #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

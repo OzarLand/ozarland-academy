@@ -1,6 +1,7 @@
 ---
 title: "PG-26 · The API answers 503?"
 description: "A 503 from HAProxy is a messenger. Find out why the backends fail their check."
+seo_title: "The API answers 503?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Specific to Kolla-Ansible 2026.1, where keepalived holds a VIP and HAProxy checks each API backend (GET /healthcheck, or GET / for Nova and Placement, expecting 200). Lab-verified; HAProxy down on every node and a virtual router ID collision were not run. A 503 on Keystone breaks every command. Running instances keep running: their data path does not go through HAProxy, but instances booting at that moment can miss their metadata.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-26-api-returns-503.png`](../../dist/pg-26-api-returns-503.png) (1080 × 1350)
 - **Post title:** 503 from the API: HAProxy is the messenger, not the cause
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #HAProxy #ControlPlane #HighAvailability #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

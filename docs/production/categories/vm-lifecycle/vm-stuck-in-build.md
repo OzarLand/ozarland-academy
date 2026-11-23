@@ -1,6 +1,7 @@
 ---
 title: "PG-01 · VM stuck in BUILD?"
 description: "A networking problem wearing a compute symptom."
+seo_title: "VM stuck in BUILD?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The mechanism is stable across recent releases. Lab-verified on OpenStack 2026.1 with Kolla-Ansible and ML2/OVS; the OVN steps of the runbook were not run on a lab. The diagram shows the cause reproduced on the lab; the runbook also covers Neutron being unable to notify Nova, and a host that is simply slow. If network-vif-plugged was received and the boot still fails, this is another problem. An agent already dead before the build gives binding_failed and a fast "Exceeded maximum number of retries" instead. Once in ERROR the host field is empty.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-01-vm-stuck-in-build.png`](../../dist/pg-01-vm-stuck-in-build.png) (1080 × 1350)
 - **Post title:** VM stuck in BUILD? Look at the network before you look at Nova.
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Neutron #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

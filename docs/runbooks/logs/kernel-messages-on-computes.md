@@ -39,6 +39,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Reading the kernel log of a compute (dmesg, journalctl -k). OOM killer, KVM, links and bonds, MTU, disks, conntrack, hung tasks."
+seo_title: "Compute kernel log (dmesg): OOM, KVM, MTU, conntrack"
 ---
 
 # Reading the kernel log of a compute (dmesg, journalctl -k). OOM killer, KVM, links and bonds, MTU, disks, conntrack, hung tasks

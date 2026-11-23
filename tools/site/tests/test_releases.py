@@ -511,13 +511,28 @@ class RootTest(RepoTest):
         write(self.root, "site/day2/ussuri/index.html", "ussuri")
         releases.assemble(self.root, self.registry)
         data = json.loads((self.root / "site" / releases.PORTAL_SEARCH).read_text(encoding="utf-8"))
-        self.assertEqual(data["sites"], [{"title": "Day two Ussuri", "path": "day2/ussuri/"}])
+        self.assertEqual(data["sites"], [{"title": "Day two Ussuri", "path": "day2/ussuri/", "boost": 0}])
         self.assertEqual(data["entries"][0], [0, "", "Home", "", "Welcome & hello"])
         self.assertEqual(data["entries"][1][2], "Ops x")
         self.assertTrue(data["entries"][1][4].endswith("…"))
         self.assertLessEqual(len(data["entries"][1][4]), 181)
         self.assertEqual(data["entries"][2], [0, "ops/#restart", "Ops x", "Restart", ""])
         self.assertEqual(len(data["entries"]), 3)
+
+    def test_prune_sitemap_drops_noindex_pages(self) -> None:
+        self.fake_root_build()
+        base = "https://example.org/portal/day2/ussuri/"
+        write(self.root, "site/day2/ussuri/index.html", "<html></html>")
+        write(self.root, "site/day2/ussuri/kit/index.html", '<meta name="robots" content="noindex, follow">')
+        write(
+            self.root,
+            "site/day2/ussuri/sitemap.xml",
+            f"<urlset>\n  <url>\n    <loc>{base}</loc>\n  </url>\n  <url>\n    <loc>{base}kit/</loc>\n  </url>\n</urlset>\n",
+        )
+        releases.assemble(self.root, self.registry)
+        sitemap = (self.root / "site/day2/ussuri/sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn(f"<loc>{base}</loc>", sitemap)
+        self.assertNotIn("kit/", sitemap)
 
     def test_assemble_writes_cname_for_a_domain(self) -> None:
         self.fake_root_build()

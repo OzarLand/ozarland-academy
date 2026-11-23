@@ -1,6 +1,7 @@
 ---
 title: "PG-24 · One compute's VMs lost network?"
 description: "Monitoring built on Nova states cannot see a data-plane outage."
+seo_title: "One compute's VMs lost network?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Lab-verified on OpenStack 2026.1 with Kolla-Ansible and ML2/OVS (VXLAN), with the host's own addresses on plain interfaces, not on an OVS bridge. The stop was made on purpose; a real out-of-memory kill or hang of ovs-vswitchd was not observed, and a stuck process was only simulated. OVN, other releases and deployment tools were not tested. With Kolla-Ansible, ovs-appctl runs in the openvswitch_vswitchd container.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-24-whole-compute-lost-network.png`](../../dist/pg-24-whole-compute-lost-network.png) (1080 × 1350)
 - **Post title:** Every instance on one compute lost its network. Nova says ACTIVE.
@@ -64,6 +66,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #OpenvSwitch #Monitoring #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

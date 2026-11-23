@@ -20,6 +20,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "A rule was added to a security group, and the traffic it allows still does not reach the instance (a port stays closed, ping fails)."
+seo_title: "Security group rule has no effect"
 ---
 
 # A security group rule has no effect. Traffic it allows is still blocked, or traffic it should block still passes

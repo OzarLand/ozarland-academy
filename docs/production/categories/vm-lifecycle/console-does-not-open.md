@@ -1,6 +1,7 @@
 ---
 title: "PG-31 · Console does not open?"
 description: "A console is a chain of hops. The API answer or the proxy log says which one refused."
+seo_title: "Console does not open?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Nova 2026.1 remote console guide and source and from Kolla-Ansible 2026.1; it was not reproduced on a lab. It follows noVNC, Kolla-Ansible's default; SPICE is covered only by equivalence. Causes covered: an expired token, a public URL the browser cannot use, a proxy that cannot reach the compute's VNC ports, the compute down or VNC off, the proxy down. VNC TLS, serial consoles and Horizon's own configuration are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-31-console-does-not-open.png`](../../dist/pg-31-console-does-not-open.png) (1080 × 1350)
 - **Post title:** The instance console does not open: four hops, two places to look
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Troubleshooting #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

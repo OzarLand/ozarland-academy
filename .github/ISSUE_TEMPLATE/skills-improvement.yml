@@ -1,7 +1,7 @@
 name: "Operator skills: Improvement or correction"
 description: A missing decision point, an aged technical note, backend coverage, or a docs fix.
 title: "[improvement] "
-labels: ["enhancement"]
+labels: ["type/feature", "status/triage"]
 body:
   - type: textarea
     id: what

@@ -1,6 +1,7 @@
 ---
 title: "LinkedIn publishing kit"
 description: "One post per memo of the Production guide: the image, a title, a caption and hashtags, ready to paste."
+robots: "noindex, follow"
 ---
 
 [← Production Guide](index.md)

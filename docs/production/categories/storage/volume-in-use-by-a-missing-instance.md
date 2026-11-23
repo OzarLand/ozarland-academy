@@ -1,6 +1,7 @@
 ---
 title: "PG-14 · In-use by a VM that is gone?"
 description: "A record is stale only when the hypervisor agrees. Check the host before you change the database."
+seo_title: "In-use by a VM that is gone?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Storage
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the 2026.1 documentation and partly observed on an all-in-one lab; the evacuation case needs two computes and was not run. Applies to volumes that are not multi-attach. Attachment records need volume API 3.27 or later, the attachment ID in server volume list needs compute API 2.89 or later. With python-openstackclient 9.0.0, "openstack volume attachment list --volume-id" ignored its filter and listed every attachment of the cloud: check the Volume ID column.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-14-volume-in-use-by-a-missing-instance.png`](../../dist/pg-14-volume-in-use-by-a-missing-instance.png) (1080 × 1350)
 - **Post title:** A volume still in-use for an instance that no longer exists
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Cinder #Storage #DataIntegrity #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

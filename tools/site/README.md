@@ -213,6 +213,7 @@ when there is at least one error. On GitHub Actions each error is also an annota
 | `title` | error | The front matter has a non-empty `title`. |
 | `description` | error | `description` is not empty and has at most 160 characters. A missing `description` is a warning. |
 | `seo-title` | error | `seo_title`, when present, is a text of at most 60 characters. It replaces a long page title in `<title>` and `og:title` only (overrides/main.html); without it, a title longer than 70 characters with the site name keeps its first sentence there. |
+| `robots` (front matter, not a rule) | | A page with `robots: "noindex, follow"` gets that meta tag (overrides/main.html) and is dropped from the sitemap of its site by `releases.py` (`prune_sitemap`). The pages of the runbooks and of the deployment patterns also get, from their front matter, a status line under their title (`status`, `openstack_releases`, `deployment_methods`, `risk`, `last_verified`) and JSON-LD (`BreadcrumbList`, `TechArticle`). |
 | `impact` | error | Every `impact` value is one of `read-only`, `writes-config`, `pulls-images`, `restarts-on-drift`, `recreates-containers`, `critical`, `maintenance-window`, `recovery`. |
 | `tags` | warning | `tags` is a list of lowercase names. |
 | `link-file` | error | The target of a relative link or image exists, with the same letter case. |

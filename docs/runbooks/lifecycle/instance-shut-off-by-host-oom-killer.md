@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Instance goes SHUTOFF by itself, nobody stopped it. The compute's OOM killer killed its QEMU process."
+seo_title: "Instance SHUTOFF by itself: the host OOM killer"
 ---
 
 # Instance goes SHUTOFF by itself, nobody stopped it. The compute's OOM killer killed its QEMU process

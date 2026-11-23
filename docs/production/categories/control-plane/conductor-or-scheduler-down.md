@@ -1,6 +1,7 @@
 ---
 title: "PG-42 · Conductor or scheduler down?"
 description: "With the conductor gone, every compute looks down. Nothing is wrong on the hosts."
+seo_title: "Conductor or scheduler down?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Nova 2026.1 source and lab-verified with Kolla-Ansible. The 60 s is rpc_response_timeout, Nova's default. Builds that timed out are not retried: their owners build again. A start, stop or reboot sent while the conductor was down can leave a task state that nothing clears. Applies when every copy of the service is down, in a single cell. Queued builds survive with quorum queues and RabbitMQ staying up; a RabbitMQ reset drops them.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-42-conductor-or-scheduler-down.png`](../../dist/pg-42-conductor-or-scheduler-down.png) (1080 × 1350)
 - **Post title:** nova-conductor down: every compute looks dead, and none of them is
@@ -64,6 +66,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #ControlPlane #IncidentResponse #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

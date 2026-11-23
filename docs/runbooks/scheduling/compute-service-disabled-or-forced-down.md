@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "openstack compute service list gives each nova-compute two independent fields."
+seo_title: "Compute service disabled or down: bring it back"
 ---
 
 # A compute shows disabled or down. Why, what still works on it, and how to bring it back

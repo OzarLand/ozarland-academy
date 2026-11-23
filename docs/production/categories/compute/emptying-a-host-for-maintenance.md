@@ -1,6 +1,7 @@
 ---
 title: "PG-09 · Emptying a host for patching?"
 description: "After a libvirt or QEMU patch, instances can move onto the host, not back. Plan the order."
+seo_title: "Emptying a host for patching?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Compute operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Derived from a patching campaign on a platform of up to several hundred hosts (release not recorded). Disable, live block migration and re-enable were lab-verified on 2026.1; cold migration and shared-storage live migration were not. Migration from a newer libvirt or QEMU to an older one is not supported. Constraints for PCI, SR-IOV, vGPU and CPU models depend on the release: check the Nova documentation of yours. A running instance keeps the old QEMU binary until it is migrated or restarted.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-09-emptying-a-host-for-maintenance.png`](../../dist/pg-09-emptying-a-host-for-maintenance.png) (1080 × 1350)
 - **Post title:** Emptying a compute host: one operation does not fit every instance
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #LiveMigration #Patching #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

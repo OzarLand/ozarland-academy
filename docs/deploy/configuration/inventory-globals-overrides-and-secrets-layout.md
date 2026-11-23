@@ -23,6 +23,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-24
 description: "A Kolla-Ansible deployment is driven by four things: an Ansible inventory, globals.yml, the per-service configuration overrides, and passwords.yml."
+seo_title: "Kolla-Ansible inventory, globals.yml and passwords.yml"
 ---
 
 # Laying out the configuration. Inventory, globals.yml, per-service overrides and passwords.yml, kept in git without secrets

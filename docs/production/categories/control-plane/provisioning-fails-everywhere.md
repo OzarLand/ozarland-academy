@@ -1,6 +1,7 @@
 ---
 title: "PG-43 · Provisioning fails everywhere?"
 description: "When everything fails at once, look at what everything shares."
+seo_title: "Provisioning fails everywhere?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -39,7 +40,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft: a read-only triage derived from an operator's incident, later traced to a RabbitMQ partition. Its checks ran on a Kolla-Ansible 2026.1 lab with three controllers, healthy and during a RabbitMQ memory alarm; not run: certificates, Fernet keys, memcached, Galera out of Primary. What a RabbitMQ partition looks like depends on its metadata store (Mnesia or Khepri). With OVN the agent list does not reflect the bus. Keystone, the load balancer, Galera and RabbitMQ each have their own memo for the repair.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-43-provisioning-fails-everywhere.png`](../../dist/pg-43-provisioning-fails-everywhere.png) (1080 × 1350)
 - **Post title:** VM creation fails everywhere: the cause is rarely in Nova
@@ -67,6 +69,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #IncidentResponse #ControlPlane #SRE #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

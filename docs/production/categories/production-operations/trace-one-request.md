@@ -1,6 +1,7 @@
 ---
 title: "PG-19 · A build failed. Which service?"
 description: "The last service that logged the request id is where it stopped. Start there."
+seo_title: "A build failed. Which service?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Production operations
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The provisioning path is common to current releases; the tracing was lab-verified on a 2026.1 Kolla-Ansible all-in-one, on two failures (no valid host, port binding). With several controllers, search them all. Past nova-compute, follow the port id (agent) and the instance name (libvirt). The server events can be thin after a rescheduled build: the cause is then only in the logs. The first error after the point where the request stopped can itself be the symptom of a dependency failing underneath (bus, database).
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-19-trace-one-request.png`](../../dist/pg-19-trace-one-request.png) (1080 × 1350)
 - **Post title:** A VM creation failed. Follow one request id, not the timestamps.
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Troubleshooting #Observability #IncidentResponse #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

@@ -21,6 +21,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-26
 description: "Every API fails on database errors. The Galera cluster lost quorum, or stopped on every node."
+seo_title: "Galera lost quorum: every API fails on database errors"
 ---
 
 # Every API fails on database errors. The Galera cluster lost quorum, or stopped on every node

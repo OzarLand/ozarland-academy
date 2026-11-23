@@ -44,8 +44,18 @@ const mdText = (s) => String(s).replace(/\*\*([^*]+)\*\*/g, '$1');
 
 // Front matter of a generated page: the title and description of the page in the portal. JSON strings are valid
 // YAML double-quoted scalars.
-const frontMatter = (title, description) =>
-  ['---', `title: ${JSON.stringify(plain(title))}`, `description: ${JSON.stringify(plain(description))}`, '---', ''].join('\n');
+// `extra` adds keys the portal reads: `seo_title` (the <title> of the page, at most 60 characters) and `robots`.
+const frontMatter = (title, description, extra = {}) =>
+  [
+    '---',
+    `title: ${JSON.stringify(plain(title))}`,
+    `description: ${JSON.stringify(plain(description))}`,
+    ...Object.entries(extra).filter(([, v]) => v).map(([k, v]) => `${k}: ${JSON.stringify(v)}`),
+    '---',
+    '',
+  ].join('\n');
+// In search results the memo number says nothing: the <title> is the question of the memo, when it fits.
+const seoTitle = (m) => (plain(m.title).length <= 60 ? plain(m.title) : '');
 
 function memoPage(m) {
   const img = `../../dist/${fileBase(m)}.png`;
@@ -54,7 +64,7 @@ function memoPage(m) {
   const li = m.linkedin;
   const tags = li.hashtags.map((t) => `#${t}`).join(' ');
   const out = [
-    frontMatter(`${m.id} · ${m.title}`, m.lesson),
+    frontMatter(`${m.id} · ${m.title}`, m.lesson, { seo_title: seoTitle(m) }),
     `[← Production Guide](../../index.md#catalog) · ${CATEGORIES[m.category]}`,
     '',
     GENERATED(`${m._slug}.yml`),
@@ -85,7 +95,9 @@ function memoPage(m) {
     '',
     `**Where this holds.** ${mdText(m.scope)}`,
     '',
-    '## LinkedIn kit',
+    // Folded: a reader in an incident does not need the publishing kit between the memo and its sources.
+    '<details markdown id="linkedin-kit">',
+    '<summary><b>LinkedIn kit</b> (to share this memo)</summary>',
     '',
     `- **Image:** [\`dist/${fileBase(m)}.png\`](${img}) (1080 × 1350)`,
     `- **Post title:** ${li.title}`,
@@ -98,6 +110,8 @@ function memoPage(m) {
     '',
     tags,
     '```',
+    '',
+    '</details>',
     '',
     '---',
     '',
@@ -181,7 +195,7 @@ function categoryImage(cat) {
 
 function linkedinKit(memos) {
   const out = [
-    frontMatter('LinkedIn publishing kit', 'One post per memo of the Production guide: the image, a title, a caption and hashtags, ready to paste.'),
+    frontMatter('LinkedIn publishing kit', 'One post per memo of the Production guide: the image, a title, a caption and hashtags, ready to paste.', { robots: 'noindex, follow' }),
     '[← Production Guide](index.md)',
     '',
     GENERATED('the linkedin block of every memo source'),

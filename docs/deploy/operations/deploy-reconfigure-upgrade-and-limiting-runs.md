@@ -22,6 +22,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Kolla-Ansible has one playbook, site.yml, and most commands run it with a different kolla_action."
+seo_title: "kolla-ansible deploy, reconfigure, upgrade, --limit"
 ---
 
 # deploy, reconfigure, upgrade and the others

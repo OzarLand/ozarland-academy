@@ -1,6 +1,7 @@
 ---
 title: "PG-15 · Control plane down: what runs?"
 description: "A control-plane outage is not a workload outage. Protect what runs, then repair."
+seo_title: "Control plane down: what runs?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Control plane
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** General behaviour of Nova and Neutron as documented upstream and observed by an operator in a real control-plane incident. The lab confirmation (OpenStack 2026.1, Kolla-Ansible all-in-one) covers ML2/OVS with a non-HA router only: OVN, L3 HA and router failover were not tested. Linux Bridge, SR-IOV and vendor SDN differ. Octavia, Designate and other services with their own data plane are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-15-control-plane-down.png`](../../dist/pg-15-control-plane-down.png) (1080 × 1350)
 - **Post title:** Control plane down is not the same as workloads down
@@ -66,6 +68,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #ControlPlane #IncidentResponse #CloudOperations #SRE #OzarLand
 ```
+
+</details>
 
 ---
 

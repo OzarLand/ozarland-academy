@@ -1,6 +1,7 @@
 ---
 title: "PG-21 · SHUTOFF by itself?"
 description: "The scheduler trusts the inventory. Make it match what the host really uses."
+seo_title: "SHUTOFF by itself?"
 ---
 
 [← Production Guide](../../index.md#catalog) · VM lifecycle
@@ -37,7 +38,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** The runbook is a draft, written from the Nova 2026.1, kernel and libvirt sources. On a lab only a cgroup-level OOM of one guest was reproduced; a host-wide OOM and memory overcommit were not. "Memory cgroup out of memory" in the kernel log means a cgroup limit was reached, not the host's memory. No "Killed process" line at that time means QEMU stopped for another reason. An out-of-memory inside the guest is a different problem.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-21-shutoff-by-itself.png`](../../dist/pg-21-shutoff-by-itself.png) (1080 × 1350)
 - **Post title:** An instance went SHUTOFF by itself. Nova did not stop it: the kernel did.
@@ -62,6 +64,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Nova #Linux #CapacityPlanning #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

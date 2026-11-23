@@ -1,6 +1,7 @@
 ---
 title: "PG-11 · Reachable inside, not outside?"
 description: "Each check rules out one cause. Go through them in order."
+seo_title: "Reachable inside, not outside?"
 ---
 
 [← Production Guide](../../index.md#catalog) · Networking
@@ -38,7 +39,8 @@ This memo is a memory aid. The procedure, with every command, its risk warning a
 
 **Where this holds.** Written from the Neutron 2026.1 documentation and lab-verified on ML2/OVS with the L3 agent and a legacy router, for the security group and floating IP causes. The OVN steps, the router missing on its node, the guest and the external network causes were not run on a lab. DVR, BGP-announced floating IPs and IPv6 without NAT, and provider networks attached directly to instances are not covered.
 
-## LinkedIn kit
+<details markdown id="linkedin-kit">
+<summary><b>LinkedIn kit</b> (to share this memo)</summary>
 
 - **Image:** [`dist/pg-11-unreachable-from-outside.png`](../../dist/pg-11-unreachable-from-outside.png) (1080 × 1350)
 - **Post title:** Reachable from inside, not from outside: four checks, in order
@@ -61,6 +63,8 @@ More memos: https://github.com/OzarLand/ozarland-academy/tree/main/docs/producti
 
 #OpenStack #Neutron #Networking #SecurityGroups #CloudOperations #OzarLand
 ```
+
+</details>
 
 ---
 

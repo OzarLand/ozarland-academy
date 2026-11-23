@@ -893,7 +893,8 @@ def portal_search(registry: Registry, site: Path) -> dict[str, object]:
     index, built from those files: the pages (title, a short extract) and the
     sections of each page (heading), of every available site; of the
     versioned module, its default release only, whose pages the other
-    releases repeat. A site without search.json is left out.
+    releases repeat. A site without search.json is left out. `boost` is added
+    to the score of every entry of a site (portal.js).
     """
     sites = []
     entries = []
@@ -907,7 +908,9 @@ def portal_search(registry: Registry, site: Path) -> dict[str, object]:
         items = json.loads(index.read_text(encoding="utf-8")).get("items", [])
         label = module.title + (f" {release.openstack}" if module.versioned else "")
         number = len(sites)
-        sites.append({"title": label, "path": release.path + "/"})
+        # A reader who searches the whole Academy is often in an incident: at equal relevance, a runbook comes
+        # before an exercise or a lesson on the same subject.
+        sites.append({"title": label, "path": release.path + "/", "boost": 3 if module.id == "runbooks" else 0})
         pages = {item["location"]: _plain(item["title"]) for item in items if "#" not in item["location"]}
         for item in items:
             location = item["location"]
@@ -919,6 +922,39 @@ def portal_search(registry: Registry, site: Path) -> dict[str, object]:
             elif item.get("level") == 2 and page in pages:
                 entries.append([number, location, pages[page], _plain(item["title"]), ""])
     return {"sites": sites, "entries": entries}
+
+
+_SITEMAP_URL = re.compile(r"\s*<url>\s*<loc>([^<]+)</loc>.*?</url>", re.S)
+_NOINDEX = re.compile(r'<meta name="robots" content="[^"]*noindex')
+
+
+def prune_sitemap(site: Path, release: Release, root_url: str) -> int:
+    """Drop from the sitemap of a site the pages that ask not to be indexed.
+
+    Zensical lists every page it builds. A page whose front matter says
+    `robots: "noindex, ..."` (overrides/main.html writes the meta tag) must not
+    be in the sitemap as well. Returns the number of URLs removed.
+    """
+    sitemap = site / release.path / "sitemap.xml"
+    if not sitemap.is_file():
+        return 0
+    base = f"{root_url}{release.path}/"
+    removed = 0
+
+    def keep(match: re.Match[str]) -> str:
+        nonlocal removed
+        loc = match.group(1)
+        if loc.startswith(base):
+            page = site / release.path / loc[len(base):] / "index.html"
+            if page.is_file() and _NOINDEX.search(page.read_text(encoding="utf-8", errors="replace")[:20000]):
+                removed += 1
+                return ""
+        return match.group(0)
+
+    text = _SITEMAP_URL.sub(keep, sitemap.read_text(encoding="utf-8"))
+    if removed:
+        sitemap.write_text(text, encoding="utf-8")
+    return removed
 
 
 def _clean(site: Path, registry: Registry) -> None:
@@ -980,6 +1016,8 @@ def assemble(root: Path, registry: Registry, site_dir: str = SITE_DIR) -> list[s
             data = json.dumps(versions_json(registry, module), indent=2, ensure_ascii=False) + "\n"
             (site / module.id / "versions.json").write_text(data, encoding="utf-8")
             written.append(f"{module.id}/versions.json")
+    for release in registry.available:
+        prune_sitemap(site, release, root_url)
     (site / "sitemap-portal.xml").write_text(root_sitemap(registry, root_url), encoding="utf-8")
     written.append("sitemap-portal.xml")
     (site / "sitemap.xml").write_text(sitemap_index(registry, root_url, site), encoding="utf-8")

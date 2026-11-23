@@ -24,6 +24,7 @@ upstream_refs:
 authored_by: agent:ozarland-author
 last_verified: 2026-10-27
 description: "Kolla-Ansible 2026.1 deploys Cinder with the lvm, nfs, ceph and iscsi back-ends, and Glance with file, ceph and s3 (Cinder and Glance guides)."
+seo_title: "Cinder and Glance back-ends: LVM, Ceph RBD, NFS"
 ---
 
 # Cinder and Glance back-ends compared. LVM, Ceph RBD and NFS, and what each choice implies
