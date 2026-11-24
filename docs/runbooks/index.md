@@ -34,7 +34,7 @@ No imposed tools, no single way of operating OpenStack.
 
 ## 🧭 How a runbook works
 
-<img src="assets/images/S4-observe-before-acting.webp" width="1536" height="1024" loading="lazy" alt="At a table with two open books and a wrench, LUMO lays a hand on the table without touching the tool while Ren writes in an observation notebook.">
+<img src="assets/images/S4-observe-before-acting.webp" width="1536" height="1024" loading="lazy" alt="At a workbench with two open blank notebooks, a lit brass lantern and a wrench, LUMO reads a field notebook and holds the other hand open above the table without touching the tool, while Ren writes in an observation notebook.">
 
 Each runbook follows the shared [runbook structure](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/runbook-structure.md):
 
