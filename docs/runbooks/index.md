@@ -55,6 +55,28 @@ flowchart LR
 
 State-changing commands carry ⚠️, destructive ones carry 🛑 with what can be lost and what to check first.
 
+### Where a command runs, and with which privileges
+
+The [runbook structure](https://github.com/OzarLand/ozarland/blob/main/docs/conventions/runbook-structure.md) asks
+every runbook to say where a command runs (the controller, a compute node, inside a container) and with which
+credentials. Read the line above a block of commands: it says it, for example "On a controller, with admin
+credentials" or "On each network node". The same rules apply to every page:
+
+- **`openstack ...` commands** are API calls. They need your OpenStack credentials (admin where the page says so), not
+  `sudo`. You can run them from any host that reaches the APIs and has the client and credentials.
+- **`docker`, `systemctl` and `ip netns` commands** act on the host that runs the service: the network node, the
+  compute node, or the controller, as the page says. The runbooks write them **without `sudo`**. On the lab, the
+  `ubuntu` user needs `sudo` for `docker` and `systemctl`: without it, `docker` answers `permission denied while trying
+  to connect to the docker API` (see [Before every exercise](../lab/exercises/)). Your platform sets its own policy: the
+  pages do not say who may run these commands, and do not state the least privilege each one needs.
+- **A user in the `docker` group is root-equivalent** on that host
+  ([what bootstrap-servers changes](../deploy/operations/bootstrap-servers-what-it-changes-and-its-pitfalls/)). Give
+  it with the same care as root.
+- **A label line** (`Kolla-Ansible:`, `Any:`) selects the variant for your deployment method, not a host or a user.
+
+If a page does not say where a command runs, treat that as a gap in the page and
+[tell us](https://github.com/OzarLand/ozarland-academy/issues/new?template=documentation-proposal.yml).
+
 ## 🎯 Scope
 
 Everything an operator does when an instance misbehaves, from the first symptom to the post-fix checks.

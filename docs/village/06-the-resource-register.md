@@ -88,6 +88,19 @@ openstack resource provider list
 openstack resource provider inventory list <PROVIDER_UUID>
 ```
 
+**On a real host.** The inventory is not always the hardware. For each resource, Placement offers
+`(total - reserved) * allocation_ratio`. `reserved` keeps some for the host itself: `reserved_host_memory_mb` is
+512 MB by default. `allocation_ratio` is the overcommit factor set by the operator in Nova's configuration
+(`cpu_allocation_ratio`, `ram_allocation_ratio`, `disk_allocation_ratio`): `ram_allocation_ratio` starts at 1.0, so
+memory is not overcommitted unless somebody raises it, and a ratio above 1.0 lets the instances together be promised
+more than the host has. This is also why quotas (scene 4) can add up to more than the hosts can run. To read the real
+numbers of one host, use `openstack resource provider list --name <compute>` and then
+`openstack resource provider inventory list <PROVIDER_UUID>` (columns `total`, `reserved`, `allocation_ratio`).
+The Academy pages do not state the default CPU ratio nor how many vCPUs a 16-core host reports: read them on your
+hosts. To go further: [No valid host with free capacity](../runbooks/scheduling/no-valid-host-with-free-capacity/) and
+[Instance shut off by the host OOM killer](../runbooks/lifecycle/instance-shut-off-by-host-oom-killer/), section "Why
+the host runs out of memory".
+
 **The lantern:** the beam picks out several candidates without naming a winner before the request is made.
 
 **Next:** Neri must now say what the house should contain and how big it should be.

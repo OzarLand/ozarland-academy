@@ -173,6 +173,40 @@ known limitations are maintained in [docs/versions.md](docs/versions.md).
 In short: single node (no high availability), no Cinder/Swift, instances
 reachable from inside the lab only.
 
+## What to take away if you run Kolla-Ansible
+
+This module describes one model and what was observed on one lab. It makes no
+recommendation for or against either approach. What it does establish, and
+what it does not:
+
+- **The model, mapped to what you know.** Most Kolla-Ansible actions have a
+  counterpart (configuration, restart, backup, upgrade): see the
+  [translation table](docs/concepts/01-from-kolla-to-operators.md). The
+  biggest difference is that the operators keep reconciling the desired state,
+  so a manual edit of a ConfigMap is reverted
+  ([manual changes reverted](docs/troubleshooting/manual-changes-reverted.md)).
+- **Rollback is different.** "Redeploy the previous tag" has no equivalent
+  for three of the four version axes; the lab could not test a downgrade
+  ([rollback limitations](docs/lifecycle/04-rollback-limitations.md)).
+- **One node, one replica.** With one replica, a restart is an outage of that
+  service of 20 to 60 seconds on the lab
+  ([restart a service](docs/operations/03-restart-a-service.md)). Nothing
+  here measures behaviour with several nodes or replicas under load
+  ([known limitations](docs/versions.md#known-limitations)).
+- **Not exercised.** An operator upgrade through OLM, the OKD upgrade, and the
+  volume snapshot rollback were not executed; the minor update used a
+  simulated newer version ([validation status](docs/versions.md#validation-status),
+  [minor update](docs/lifecycle/01-openstack-version-and-minor-update.md)).
+- **Release and network back end.** The services are 2023.1 "Antelope" images
+  with OVN, deployed by `18-stable` operators
+  ([versions](docs/versions.md#selected-versions)). The other modules of the
+  Academy were observed on 2026.1, mostly with ML2/OVS
+  ([VM runbooks](../runbooks/)). The module does not say which of its findings
+  hold on a newer release: treat the operator model and its mechanics as the
+  lesson, and re-test the numbers on the release you run.
+- **One environment.** Everything was validated on one deployment, on one host
+  cloud ([known limitations](docs/versions.md#known-limitations)).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Corrections from operators running

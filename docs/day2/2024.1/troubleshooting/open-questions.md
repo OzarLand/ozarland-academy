@@ -68,6 +68,7 @@ part. The others are [NOT AVAILABLE].
 | **Question** | Do running VMs survive a `nova_libvirt` restart or recreate? |
 | **Why it matters** | [F1](../reference/findings.md#f1) makes libvirt restarts frequent: any nova-cell drift on a compute restarts `nova_libvirt` with the rest of the role ([Nova deep dive §5](../components/nova-deep-dive.md#5-nova-libvirt-why-its-restart-is-special)) |
 | **Status** | [NOT AVAILABLE] |
+| **Outside this study** | The runbook [Restarting nova_libvirt does not stop instances](../../../runbooks/lifecycle/restarting-nova-libvirt-does-not-stop-instances/) and [lab exercise 4](../../../lab/exercises/04-restart-nova-libvirt/) restart `nova_libvirt` on a lab and report that the instances kept running (observed on 2026.1). It is an observation on another release (2026.1), not evidence for 2024.1: this study stays [NOT AVAILABLE]. |
 
 <a id="q2"></a>
 
@@ -78,6 +79,7 @@ part. The others are [NOT AVAILABLE].
 | **Question** | Data-plane loss during a `neutron_openvswitch_agent` restart |
 | **Why it matters** | [R5](../risk/risk-register.md#r5) |
 | **Status** | [NOT AVAILABLE] |
+| **Outside this study** | The runbook [Restarting the OVS agent does not cut instances](../../../runbooks/networking/restarting-the-ovs-agent-does-not-cut-instances/) and [lab exercise 5](../../../lab/exercises/05-restart-ovs-agent/) restart the Open vSwitch agent on a lab and report no lost request (observed on 2026.1). It is an observation on another release (2026.1), not evidence for 2024.1: this study stays [NOT AVAILABLE]. |
 
 <a id="q3"></a>
 
@@ -88,6 +90,7 @@ part. The others are [NOT AVAILABLE].
 | **Question** | Data-plane loss during an `openvswitch_vswitchd` restart or recreate |
 | **Why it matters** | [R7](../risk/risk-register.md#r7). New in 2024.1, a change of the `external_ids:hostname` key also notifies this restart (`roles/openvswitch/tasks/post-config.yml:3-23`, [Open vSwitch](../components/openvswitch.md#known-limits-and-open-points)) |
 | **Status** | [NOT AVAILABLE] |
+| **Outside this study** | The runbook [ovs-vswitchd down on a compute](../../../runbooks/networking/ovs-vswitchd-down-on-compute/) stops and starts `openvswitch_vswitchd` on a lab and reports that the instances of the compute lose the network until the agent has programmed the flows again (observed on 2026.1). It is an observation on another release (2026.1), not evidence for 2024.1: this study stays [NOT AVAILABLE]. |
 
 <a id="q4"></a>
 

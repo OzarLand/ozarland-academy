@@ -85,6 +85,10 @@ Each folder's README lists its pages and the template to use.
 | ⚖️ `comparisons/` | Side-by-side comparisons of patterns on one dimension (e.g. OVN vs OVS, Ceph vs LVM) |
 | 📄 `templates/` | Deployment-pattern template |
 
+**Preparing real servers?** There is no single "before the first deployment" page. The section *Before the first run*
+of [bootstrap-servers](operations/bootstrap-servers-what-it-changes-and-its-pitfalls.md) gathers what the pages already
+say about hosts, with a link to each, and lists what is not covered yet.
+
 ## 🔬 How much each page was checked
 
 Every page carries a status in its front matter and in the index below

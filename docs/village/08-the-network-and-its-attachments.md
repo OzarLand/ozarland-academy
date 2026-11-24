@@ -76,6 +76,16 @@ openstack subnet create --network <NET> --subnet-range <CIDR> <SUBNET>
 openstack port list
 ```
 
+**On a real host.** The Academy's default Kolla-Ansible platform uses ML2/OVS (Neutron's Open vSwitch driver, with its
+own agents). There, `openstack network create` makes no Linux object by itself: it writes records in Neutron's
+database. Objects appear where something uses the network. When an instance starts on a compute, its port is plugged
+into the Open vSwitch bridge `br-int` of that compute (a `qvo<port-id prefix>` interface with the iptables firewall
+described in scene 11). On the network hosts, the DHCP agent runs one `qdhcp-<network-id>` namespace per network. You
+can look, read-only, with `ip netns list | grep qdhcp-` on a network host and `ovs-vsctl show` inside the
+`openvswitch_db` container. These names are specific to ML2/OVS: ML2/OVN builds logical switches and flows instead.
+To go further: [Open vSwitch logs](../runbooks/logs/open-vswitch-logs/) (tap and `qvo` names, how to match them to a
+port) and [ML2/OVS versus ML2/OVN](../deploy/comparisons/ml2-ovs-versus-ml2-ovn-with-kolla-ansible/).
+
 **The lantern:** the beam follows a thin link between the workshop and the house that will be built.
 
 **Next:** the road is ready. LUMO can now ask for the house.

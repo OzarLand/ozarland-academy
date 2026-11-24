@@ -142,3 +142,20 @@ New to Kolla-Ansible Day-2 operations? Follow these five stages in order. Each s
 from the easiest to the most detailed. You do not need to read everything at once: come back whenever you like.
 
 <img src="../assets/images/S3-start.webp" width="1536" height="1024" loading="lazy" alt="LUMO holds up a parchment while Ilyan lays out an open book, scrolls and blank index cards on a reading table.">
+
+## Where this journey starts
+
+This study reads the sources of one tag, Kolla-Ansible 2024.1. It describes what the move to 2024.1 does to a cloud
+that 2023.1 deployed, so several early questions and quiz items, and the "first 2024.1 run" items of [Ten things to
+know](ten-things-to-know.md), start from such a cloud. If your first cloud is new, for example the 2026.1 lab of the
+Academy's [Quick lab](../../../lab/variants/openstack-cloud/), you have no 2023.1 cloud and no earlier run to compare
+with: those items are not about your cloud, and the study does not cover 2026.1.
+
+You can still learn from it. The five stages teach how Kolla-Ansible is built and how a command becomes tasks,
+restarts and risks. Start with [Conventions](conventions.md) to read the evidence labels. Then read
+[Repository architecture](../concepts/repository-architecture.md) and [Deployment execution
+flow](../concepts/deployment-execution-flow.md). Skip the "cloud deployed by 2023.1" parts on a first pass.
+
+Every statement here is code read in the 2024.1 sources, so the study gives no timings and no observed behaviour. The
+lab page gives the timings that were measured on 2026.1 ([Quick lab](../../../lab/variants/openstack-cloud/), section
+"Releases"). Treat them as a different release, not as 2024.1 evidence.

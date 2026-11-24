@@ -243,6 +243,15 @@ Last run on 2026-10-25, both sizes, on the reference cloud: OpenStack 2026.1, Ko
 - The live migration of the smoke test lost, to a ping every 0.2 s: 8.6 s on the 3-VM run, 2.8 s and 2.4 s on the
   two 5-VM runs.
 
+## Where to see the Kolla-Ansible commands
+
+As in the single-VM variant, you never type `kolla-ansible` yourself: `deploy.sh` runs `bootstrap-servers`,
+`prechecks` (with `--use-test-images` when the images come from quay.io), `pull`, `deploy` and `post-deploy` on
+controller 1, each as `kolla-ansible <step> -i ~/multinode`, from `~/kolla-venv`. On controller 1, the complete output of
+each step is in `~/.quicklab/kolla-<step>.log`, the inventory is `~/multinode` (the Kolla-Ansible multinode sample with
+this lab's VMs in its groups), and the settings written by the script are in `/etc/kolla/globals.yml`. The
+[single-VM guide](../openstack-cloud/index.md#where-to-see-the-kolla-ansible-commands) has the full table.
+
 ## When something fails
 
 - `deploy.sh` prints the failing task of `kolla-ansible`. The logs stay on controller 1, in `~/.quicklab/`.

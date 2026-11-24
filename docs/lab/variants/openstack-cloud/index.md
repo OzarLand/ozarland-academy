@@ -166,6 +166,29 @@ sudo grep '^keystone_admin_password' /etc/kolla/passwords.yml
 | Checks that Docker really uses its proxy after `bootstrap-servers` | A Docker that ignores its proxy fails every image pull |
 | `prechecks --use-test-images` when the images come from quay.io | Kolla-Ansible 2026.1 refuses the quay.io images, which are published for testing, unless told so; a lab is that use |
 
+### Where to see the Kolla-Ansible commands
+
+You never type `kolla-ansible` yourself: `deploy.sh` copies `remote-deploy.sh` to the VM, which runs the steps below,
+in this order, from Kolla-Ansible's virtual environment (`~/kolla-venv`) on the VM. For each one it writes the
+**complete output** to a file on the VM. Read them there, even after a successful run.
+
+| What | Where, on the VM |
+|---|---|
+| The command run for each step: `bootstrap-servers`, `prechecks` (with `--use-test-images` when the images come from quay.io), `pull`, `deploy`, `post-deploy`, each as `kolla-ansible <step> -i ~/all-in-one` | `~/.quicklab/kolla-<step>.log`, for example `kolla-prechecks.log` |
+| Everything the remote script printed: steps and timings | `~/.quicklab/run.log` (and on your computer, the log file `deploy.sh` names when it starts) |
+| The inventory (Kolla-Ansible's `all-in-one` sample, unchanged) | `~/all-in-one` |
+| The settings written by the script (`globals.yml`) and the generated passwords | `/etc/kolla/globals.yml`, `/etc/kolla/passwords.yml` |
+| One marker per finished step, with its duration in seconds | `~/.quicklab/done-<step>` |
+
+When a step fails, the script prints the failing tasks and the name of the log file. A failed precheck is read the
+same way, in `kolla-prechecks.log`.
+
+The lab does not ask you to run these commands by hand, and no exercise does it with `prechecks` or `deploy`.
+[Exercise 11](../../exercises/11-lose-two-controllers-quorum.md) is the first place where you run `kolla-ansible`
+yourself. To read what each command does and why, see the
+[all-in-one lab pattern](../../../deploy/topologies/all-in-one-lab-on-a-single-vm/) and the
+[day-2 module](../../../day2/).
+
 The full reasoning, with the errors met while building this lab, is in the
 [all-in-one lab pattern](../../../deploy/topologies/all-in-one-lab-on-a-single-vm/).
 
@@ -186,7 +209,8 @@ The last full run, from `create.sh` to `destroy.sh`, took 57 minutes:
 
 ## When something fails
 
-- `deploy.sh` prints the failing task of `kolla-ansible`. The full logs stay on the VM, in `~/.quicklab/`.
+- `deploy.sh` prints the failing task of `kolla-ansible`. The full logs stay on the VM, in `~/.quicklab/`
+  ([which file holds what](#where-to-see-the-kolla-ansible-commands)).
 - Fix the cause and run `./deploy.sh` again: it skips the steps already done.
 - To start again from scratch: `./destroy.sh`, then `./create.sh`.
 

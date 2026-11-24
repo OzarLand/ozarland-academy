@@ -77,11 +77,17 @@ These are operator views, on the controllers of a Kolla-Ansible deployment:
 ```bash
 docker ps --filter name=rabbitmq --filter name=mariadb
 docker exec rabbitmq rabbitmqctl cluster_status
-docker exec mariadb mysql -u root -p -e "SHOW STATUS LIKE 'wsrep_cluster_size';"
+docker exec -it mariadb mariadb -u root -p -e "SHOW STATUS LIKE 'wsrep_cluster_size';"
 ```
 
 Use `podman` instead of `docker` if your deployment runs Podman. The last command asks for the database root password
-of the deployment.
+of the deployment. On a Kolla-Ansible deployment it is `database_password` in `/etc/kolla/passwords.yml`; type it at
+the prompt (`-it` lets `-p` ask for it) rather than after `-p`, so that it stays out of your shell history. In a
+healthy three-controller cluster, `wsrep_cluster_size` is `3`.
+
+The client is `mariadb`: the Academy [lab](../lab/exercises/10-lose-one-controller/) and
+[runbooks](../runbooks/recovery/galera-cluster-lost-quorum-database-unavailable/) were written on 2026.1, whose MariaDB
+image has no `mysql` command. The Academy does not say whether the images of older releases still have one.
 
 **The lantern:** it lights the corridor without suggesting that one component explains everything.
 

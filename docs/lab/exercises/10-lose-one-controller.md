@@ -103,6 +103,25 @@ is the failure worth practising.
   openstack server create --image cirros --flavor m1.tiny --network demo-net --key-name mykey --wait ex10-test
   ```
 
+### Where does Glance run?
+
+Not observed on the lab. What the files say: the lab's `globals.yml` sets no Glance back end, so Glance keeps the
+`file` back end on its default volume, and the lab has no shared storage. For that case, the
+[Glance page of the day-2 study](../../day2/2023.1/components/glance/) (written from the 2023.1 sources, not from the lab's
+2026.1) says that only the first host of the inventory's Glance group runs `glance_api`; see also
+[Single control node versus three controllers](../../deploy/comparisons/single-control-node-versus-three-controllers/).
+The lab's inventory lists controller 1 first, and this exercise never pauses it. So the expectation is that
+`glance_api` runs on controller 1 only, and that pausing `<ctl-x>` does not stop image-based builds. This is a
+reading, not a measurement: to check it, run this on each controller (read-only) before you break anything:
+
+```bash
+sudo docker ps --filter name=glance
+```
+
+If `glance_api` is on `<ctl-x>`, tell us ([lab issue](https://github.com/OzarLand/ozarland-academy/issues/new?template=lab-failed.yml)).
+The instance that failed on the lab failed on the network, not on the image: its error was
+`Failed to allocate the network(s)`.
+
 Before reading on: the cluster survived the loss of one controller. What would happen with two?
 [Exercise 11](11-lose-two-controllers-quorum.md) answers.
 

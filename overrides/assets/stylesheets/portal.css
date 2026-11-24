@@ -4055,3 +4055,65 @@ a.portal-cta:focus-visible {
 .md-typeset h2 {
   letter-spacing: 0;
 }
+
+
+/* "What each stop was observed on" (overrides/academy.html). A table on wide
+   screens; on a phone each row becomes a block whose cells carry their
+   column name (data-label), so that the page never scrolls sideways. */
+.md-typeset .oz-observed {
+  max-width: 56rem;
+  margin-top: 2rem;
+}
+
+.md-typeset .oz-observed__table {
+  display: table;
+  width: 100%;
+  font-size: 0.75rem;
+}
+
+.md-typeset .oz-observed__table :is(th, td) {
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+@media (max-width: 44.99em) {
+  .md-typeset .oz-observed__table,
+  .md-typeset .oz-observed__table :is(tbody, tr, th, td) {
+    display: block;
+    width: auto;
+  }
+
+  .md-typeset .oz-observed__table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .md-typeset .oz-observed__table tr {
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.6rem;
+    background-color: var(--oz-parchment-soft);
+    border: 0.05rem solid var(--portal-border);
+    border-left: 0.2rem solid var(--oz-wood);
+    border-radius: 0.3rem;
+  }
+
+  .md-typeset .oz-observed__table :is(th, td) {
+    padding: 0.1rem 0;
+    border: 0;
+  }
+
+  .md-typeset .oz-observed__table td::before {
+    display: block;
+    color: var(--portal-text-muted);
+    font-weight: 700;
+    content: attr(data-label);
+  }
+}
+
+/* "What each stop was observed on": the names of the stops read as a column. */
+.oz-observed__table th {
+  text-align: left;
+}

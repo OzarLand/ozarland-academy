@@ -106,6 +106,16 @@ openstack console log show <SERVER>
 
 `server show` gives the status and the fixed IP; the console log shows whether the guest has finished booting.
 
+**On a real host.** With Kolla-Ansible's default local instance store, the root disk is a file on the compute, in the
+`nova_compute` Docker volume: `/var/lib/docker/volumes/nova_compute/_data` on the host. By default it is a `qcow2`
+overlay on a base image that is cached there (the `instances/_base` directory), so the compute keeps one cached copy
+for the instances it builds from that image. Each instance has its own directory under `instances/`. When that file
+system is full, the instances that write are paused while Nova may still show `ACTIVE`. Read-only, as root on the
+compute: `df -h /var/lib/docker/volumes/nova_compute/_data` and `du -xsh instances/*` in that directory. With Ceph or a
+boot from volume, the disk is not there. To go further:
+[Where instance disks live](../deploy/storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume/) and
+[Compute disk full](../runbooks/lifecycle/compute-disk-full-instance-paused/).
+
 **The lantern:** steady on the first house. It does not promise that the house will always be available.
 
 **Next:** the house is on Neri's private road. How does anyone from outside reach it?
