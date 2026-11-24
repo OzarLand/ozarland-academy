@@ -318,6 +318,40 @@ policy: [docs/knowledge-validation-policy.md](docs/knowledge-validation-policy.m
 | cite the book (`[Book: Ch. 9]`) and mark everything else `[Addition]` | hide uncertainty: release-specific facts are flagged to verify |
 | state the validation status of each procedure, and what its lab run did not cover | present an untested procedure as tested, or a lab result as valid everywhere |
 
+## 🎓 Using the skills as a learner
+
+The skills do not make you able to tell a good answer from a plausible one: the evaluation grades reasoning, not
+whether a procedure works ([Does it help?](#-does-it-help)). Use an answer as a lead to check, not as an order.
+
+1. **Read the validation status first.** Each procedure the answer relies on carries a tag, and Claude says what
+   it means and what the test did not cover. `LAB-VALIDATED` means it ran on a lab, by an automated agent, for the
+   steps and configuration recorded. Every other tag (`DOCUMENTED-UNVERIFIED`, `PROPOSED-UNVERIFIED`) means no
+   recorded execution. Nothing is production-validated
+   ([policy](docs/knowledge-validation-policy.md#2-statuses)). The tag id (such as `VM-NET-04`) is an entry in
+   [`validation/inventory.yaml`](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/validation/inventory.yaml);
+   the [coverage report](docs/validation-coverage.md) lists the evidence of each.
+2. **Start with the read-only checks.** Every answer proposes them first. Run those on a lab or a test project
+   before anything that changes state, and leave state-changing steps to platforms you own and understand.
+3. **Compare with the runbook behind it.** The procedures come from the [VM runbooks](../runbooks/) and the
+   [Deployment patterns](../deploy/) ([source mapping](docs/source-mapping.md)). Open the runbook, read its
+   status and its "Validity and limits", and practise it on the [Quick lab](../lab/). If the answer and the
+   runbook differ, trust neither until you know why, and
+   [report it](https://github.com/OzarLand/ozarland-academy/issues/new?template=skills-unsafe-or-wrong-advice.yml).
+4. **Ask who decides.** The skills never run anything and never authorize a change: a lead or a colleague who
+   operates the platform makes the disruptive decisions.
+
+**What to redact before you paste.** The skills ask you to remove passwords, tokens, keys and credentials in URLs
+first, for example `transport_url`, `[database] connection`, `clouds.yaml`, Kolla `passwords.yml`, `OS_*`
+variables and client `--debug` output ([rule 11](https://github.com/OzarLand/ozarland-academy/blob/main/docs/skills/shared/evidence-and-safety.md)).
+What you paste reaches the model. Whether your company allows that is for your company to say; this page does not
+decide it.
+
+**Without any model.** The skills are plain Markdown. Every `references/` file can be read as it is, with no
+assistant and nothing sent anywhere: the method, the failure patterns and the procedures with their tags. The pages
+do not give a reading order. A simple one: open the `SKILL.md` of the skill that matches your problem (the table
+above links each one), then the files of its `references/` folder that it names. The same procedures are also
+written, with their lab evidence, in the [VM runbooks](../runbooks/).
+
 ## 📊 Does it help?
 
 Scenarios written from the book's field cases, each answered by

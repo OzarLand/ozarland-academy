@@ -71,6 +71,9 @@ openstack image list
 openstack flavor list
 ```
 
+**On a real host.** The compute does not keep a fresh full copy for each instance: with the default local store it
+caches the base image and each instance disk is a `qcow2` overlay on it. Scene 9 shows where, with links.
+
 **The lantern:** the light falls on two objects that are clearly not the same.
 
 **Next:** what is in it and how big it is are settled. Before building, the house needs a road.

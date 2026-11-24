@@ -148,6 +148,26 @@ Click a memo for its page: the image, the same content as text, the runbook link
 
 <!-- catalog:end -->
 
+## 🧱 What this guide is not: a readiness checklist
+
+The memos start at the symptom, once something is already wrong. This guide does not list what must be in place
+before the first user arrives, and no page of the Academy does it as one checklist. The pages below cover parts of
+that question, each for its own topic:
+
+| Topic | Where to read |
+|---|---|
+| Monitoring and alerting: what Kolla-Ansible deploys, and the rules, receivers and dashboards you still have to bring | [Monitoring with Prometheus, Grafana and Alertmanager](../deploy/services/monitoring-prometheus-grafana-and-alerting/) |
+| Logs, searched by request ID, and how long they are kept | [Central logging with Fluentd and OpenSearch](../deploy/services/central-logging-fluentd-and-opensearch/) |
+| Backing up and restoring the MariaDB database of every service | [MariaDB backup and restore with mariabackup](../deploy/operations/mariadb-backup-and-restore-with-mariabackup/) |
+| Host firewall and what `bootstrap-servers` changes on a host | [bootstrap-servers](../deploy/operations/bootstrap-servers-what-it-changes-and-its-pitfalls/) |
+| Checks before a change to a running platform (a run of `kolla-ansible`, release 2024.1) | [Pre-execution checklist](../day2/2024.1/operations/pre-execution-checklist/) |
+| Why visibility, recovery, decision rights and capacity come before the incident | the book [*OpenStack, the Day After Tomorrow*](https://book.ozarland.com/): chapters 8 (visibility before action), 10 (recovery is a feature), 13 (decision rights), 20 (security, capacity and business criticality) |
+
+Not covered by any page yet: which alerts to have for the symptoms of the memos (compute service down, RabbitMQ
+partition, Galera cluster size, certificate expiry), how often to back up, how to watch capacity, and who decides to
+fence or evacuate at night. Those need a source from a real platform before they can be written; the section below lists the other topics left out, and
+how to contribute is in the [contributing](#-contributing) section.
+
 ## 📌 Not covered yet
 
 A memo is only written from a runbook that documents the subject. These topics were considered for the first

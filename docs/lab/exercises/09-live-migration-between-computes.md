@@ -74,8 +74,28 @@ openstack server show ex9-test -c status -c OS-EXT-SRV-ATTR:host
   long? Note it: that is what a user of this instance would have noticed. The gap varies from run to run: on this
   variant, the runs of 2026-10-25 lost between 1.8 s and 8.6 s. Once, the replies stopped at the switch-over and
   did not come back before the ping was stopped; SSH timed out for a few minutes, then the instance answered again
-  within about 5 minutes, without having restarted. The cause is not known yet. If that happens to you, wait a few
-  minutes before you go on.
+  within about 5 minutes, without having restarted. The cause is not known yet: nothing was recorded at the time, so
+  the guest, the destination compute and the network are all still possible. If that happens to you, record the
+  read-only outputs below during the silent period, then wait a few minutes before you go on:
+
+  ```bash
+  openstack server migration list --server ex9-test
+  openstack server show ex9-test -c status -c OS-EXT-SRV-ATTR:host
+  openstack port list --server ex9-test -f value -c ID      # then, for that port id:
+  openstack port show <port-id> -c status -c binding_host_id -c binding_vif_type
+  openstack network agent list
+  sudo docker exec nova_libvirt virsh list --all             # on each compute
+  ```
+
+  What a healthy output looks like is not established for the silent case. For the port, the runbook
+  [Port binding failed](../../runbooks/networking/port-binding-failed/) shows `binding_vif_type` `ovs` on a working
+  port. This lab has no recorded check of flows or ARP after a switch-over: the question stays open, and your outputs
+  would help ([open a lab issue](https://github.com/OzarLand/ozarland-academy/issues/new?template=lab-failed.yml)).
+  The runbooks
+  [Live migration never completes](../../runbooks/migration/live-migration-never-completes-or-times-out/) and
+  [Instance unreachable from outside](../../runbooks/networking/instance-unreachable-from-outside/) do not cover this
+  case: the first is about migrations that do not finish, the second was written for floating IP and security group
+  causes.
 - On `<compute-2>`, the instance now runs in the hypervisor; on `<compute-1>`, it is gone. On each compute (from
   controller 1: `ssh -i ~/.ssh/quicklab_ed25519 ubuntu@<compute-address>`):
 

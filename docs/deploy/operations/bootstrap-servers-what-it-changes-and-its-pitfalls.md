@@ -38,6 +38,29 @@ This page lists what the command changes, from the Kolla-Ansible 2026.1 bootstra
 the work, in the `openstack.kolla` collection `stable/2026.1` (installed by `kolla-ansible install-deps`): `baremetal`,
 `docker`, `etc_hosts`, `kolla_user`, `packages`, `apparmor_libvirt`, `journal`.
 
+## Before the first run: what the Academy says must be true on a host
+
+No page lists everything a bare host needs. This table gathers what other pages of the Academy already establish, with
+the page that says it. It is not a complete list, and its order is a reading order, not a tested sequence.
+
+| Item | What the Academy says | Where |
+|---|---|---|
+| Deploy host | Kolla-Ansible 2026.1 needs Python 3.11 or later on the deploy host; the Ansible version must be one the release supports | [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) (Version notes), [wrong Ansible on the deploy host](../deployment-errors/ansible-version-not-supported-or-wrong-ansible-on-the-deploy-host.md) |
+| Host OS | The 2026.1 prechecks accept only Ubuntu noble among Ubuntu releases; they run on the deploy host too. Other distributions and versions: not covered | [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) (What went wrong) |
+| SSH access | The deploy host reaches every host over SSH as the Ansible user. On the first run the `kolla` user may not exist yet, so pass another user (pitfall 6 below). With `create_kolla_user` the run then gives `kolla` passwordless sudo | [adding a compute node](adding-a-compute-node.md), this page |
+| Host names | Keep each host name stable and unique: Nova registers the compute service under it. Overrides under `config/<service>/<hostname>/` use the host's name in the inventory, not the machine's | [adding a compute node](adding-a-compute-node.md), [inventory, globals, overrides](../configuration/inventory-globals-overrides-and-secrets-layout.md) |
+| Network interfaces | Decide which interface carries which traffic (`network_interface`, `api_interface`, `tunnel_interface`, `neutron_external_interface`). VLANs and bonds come from the host's own network configuration. `neutron_external_interface` must be up with no IP address, kept after a reboot | [interfaces, VLANs and MTU](../networking/interfaces-vlans-and-mtu-ovs-and-ovn.md), [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) |
+| Time | The 2026.1 roles do not configure NTP. Galera and RabbitMQ need synchronised clocks, so set it up first and check it | [Version notes](#version-notes) below, [all-in-one lab](../topologies/all-in-one-lab-on-a-single-vm.md) (step 2 shows a check), [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) (Key choices) |
+| Automatic upgrades | Turn them off or schedule them: one upgraded `libc6` and `systemd` in the middle of a deploy and MariaDB never formed its cluster | [unattended upgrades during deploy](../deployment-errors/unattended-upgrades-during-deploy-breaks-the-mariadb-cluster.md) |
+| Access to packages and images | `bootstrap-servers` and `pull` need the apt sources, the Docker repository and the registry; behind a proxy or offline, set them first | [local registry and offline deployment](../configuration/local-registry-and-offline-deployment.md), [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) (What went wrong) |
+| Disk for instances | Give each compute's instance store its own file system, mounted on `/var/lib/docker/volumes/nova_compute/_data` before the deploy; otherwise a full instance store fills the root file system | [three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md) (Storage design), [Nova instance disks](../storage/nova-instance-disks-local-ceph-rbd-or-boot-from-volume.md) |
+| Cinder with LVM | Create the volume group `cinder-volumes` on each storage host beforehand | [Cinder and Glance back-ends](../storage/cinder-and-glance-backends-compared-lvm-ceph-nfs.md) |
+| Host firewall | Decide `disable_firewall` before the first run (pitfall 2 below) | this page |
+
+Not covered by any page yet: hardware and BIOS settings, the size of `/var/lib/docker`, the disk layout of a bare-metal
+controller, and the full list of what `kolla-ansible prechecks` verifies. For a run on an existing platform, see the
+[pre-execution checklist](../../day2/2024.1/operations/pre-execution-checklist/) of the 2024.1 study.
+
 ## Topology
 
 Runs from the deploy host against every host of the inventory, or the hosts of `--limit`.
@@ -108,6 +131,29 @@ reported with it and to use it at your own risk.
 disables `ufw` with an `allow` policy on Debian/Ubuntu, or stops and disables `firewalld` on the Red Hat family. A
 rerun on a live platform drops host firewall rules someone enabled since. Set `disable_firewall: false` before any run
 on hosts whose firewall is managed.
+
+What this page can and cannot say about protecting the hosts:
+
+- **The switch.** `disable_firewall`, default `true`, in the `baremetal` role of the `openstack.kolla` collection
+  (`tasks/install.yml`, as in the table above). The Kolla-Ansible 2024.1 source study records the same default and the
+  task with its `path:line` citations, and notes that a run silently removes a host firewall added since the last run:
+  [fact sheet E](../../day2/2024.1/reference/factsheets/e-host-bootstrap-ops-playbooks/).
+- **What Kolla-Ansible configures itself.** Only `enable_external_api_firewalld`. In the 2024.1 study it opens each
+  external service port in `external_api_firewalld_zone` (`roles/haproxy-config/tasks/main.yml:55-71`:
+  [fact sheet A](../../day2/2024.1/reference/factsheets/a-infra-lb-ovn/)). The study describes nothing else this option
+  does, so treat it as a rule for the external API ports, not as a firewall for the flows between hosts.
+- **The intended security model** (network separation or another firewall) is not stated by any page of the Academy. It
+  is the subject of the Kolla-Ansible [security guide](https://docs.openstack.org/kolla-ansible/2026.1/user/security.html)
+  listed under *Related*; the text of that guide has not been checked for this page.
+- **The ports between hosts.** There is no complete list in the Academy, so none is given here. The pages hold
+  only fragments, each for its own purpose: RabbitMQ needs TCP 4369 and 25672 between the RabbitMQ hosts, and the AMQP
+  port 5672 (5671 with TLS) ([RabbitMQ nodes do not form a cluster](../deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md));
+  the 2024.1 MariaDB prechecks verify that 3306, 4567, 4568 and 4444 are free
+  ([fact sheet B](../../day2/2024.1/reference/factsheets/b-mariadb-rabbitmq-keystone/)); the hosting cloud of the nested
+  lab had to let VRRP (IP protocol 112) and UDP 4789 pass between the lab hosts
+  ([three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md)).
+  Live migration, console proxies and Geneve are not covered. Until a page lists them from a lab run, write host
+  firewall rules only after checking each flow on your own platform.
 
 **3. `/etc/hosts` is updated only on the hosts of the run.** Entries are written on the hosts in the limit, for every
 host of the inventory. A host added with `--limit <new-host>` is unknown to the `/etc/hosts` of the others. For

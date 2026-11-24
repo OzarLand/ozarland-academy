@@ -145,7 +145,24 @@ Then read the agent log and the unit status from before the restart to find why 
 ### For the instances created during the outage
 
 Their DHCP client may retry by itself after a while, depending on the image. Otherwise reboot them. On the lab,
-CirrOS had not retried 90 s after the agent came back, and got its lease at the next boot.
+CirrOS had not retried 90 s after the agent came back, and got its lease at the next boot. What other images do
+(cloud-init images, `dhclient`, `systemd-networkd`, a retry that never stops or a give-up) depends on the image's DHCP
+client. This page has no observation of it and does not say. Check it on a test instance of your own image: the
+steps are under "Verification" (a test instance, then its console log).
+
+**Find the candidates.** Nova shows these instances as `ACTIVE` with an address, because Neutron allocated it, so
+the status does not tell. This page knows no command that lists the ports whose guest got no lease. What you can
+do is list the instances by creation time and compare with the outage window:
+
+```bash
+openstack server list --all-projects --long -c ID -c Name -c Status -c Created
+```
+
+Read the outage window from the agent log or the unit status (see Diagnosis). Keep the instances created inside it
+(and on a network served by the agents that were down). Then read the console of each one, as in Quick checks
+step 2. A `lease` or `bound` line means the guest got its address and needs no reboot. The `Created` column is the
+one the runbook [Instance stuck in BUILD waiting for vif-plugged](../lifecycle/instance-stuck-in-build-waiting-for-vif-plugged.md)
+already uses; this page did not test it on the lab.
 
 > ⚠️ **State-changing.** Reboots the instance. Its owner loses whatever runs in it for the time of the boot; nothing
 > is lost on disk. Tell the owner first. It cannot be undone, but it changes nothing beyond a normal reboot.

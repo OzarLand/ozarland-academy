@@ -73,6 +73,22 @@ These two need the 5-VM size of the multinode variant (`CONTROLLERS="3"`). They 
 > The exercises use `docker` only to look (`docker ps`, `docker exec`, `docker logs`). On a deployment without these
 > units (an older release, or another deployment tool), use that tool's own way to stop a service.
 
+## Runbooks and patterns in the exercises
+
+The runbooks and the deployment pages that the exercises name belong to later stops of the
+[Academy](../../): runbooks are stop 4, deployment patterns stop 2. You do not need to have read those stops, and you
+should not read the runbook first. In each exercise you break the lab, look at what you see, and only then open the
+runbook for the repair step ("Diagnose and repair with the runbook", or "Read the runbook" in exercise 4). The page tells you
+where to start in it, for example at its **Quick checks**.
+
+- **Exercises 1 to 9.** The runbook is the repair step of the exercise: open it at that step. What you learn is
+  the method of the runbook, so the rest of the runbook can wait. To go further, read it in full later, in
+  [stop 4](../../runbooks/).
+- **Exercise 10.** The pattern is background: it explains how the virtual IP, keepalived and the clusters are set up in
+  this lab. To go further, read it in [stop 2](../../deploy/).
+- **Exercise 11.** Steps 1 to 3 and the check need no other page. The recovery of step 4 (optional) follows a procedure of
+  stop 2, which the exercise names with its warning.
+
 ## Before every exercise
 
 - The lab is running, and you followed its variant's guide to the end.

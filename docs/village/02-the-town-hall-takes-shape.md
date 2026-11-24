@@ -87,8 +87,8 @@ kolla-ansible prechecks -i ./multinode
 kolla-ansible deploy -i ./multinode
 ```
 
-You will run these yourself in the [Quick lab](../lab/), and the [day-2 module](../day2/) explains what each of them
-really does.
+In the [Quick lab](../lab/) a script, `deploy.sh`, runs these commands for you on the lab VM, and keeps their output in
+log files you can read: the lab guide says where. The [day-2 module](../day2/) explains what each of them really does.
 
 **The lantern:** the flame steadies and lights the threshold of the town hall.
 

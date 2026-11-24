@@ -108,6 +108,12 @@
     {{ portal.modules | length }} stops across one island, from the harbour to the lighthouse and beyond. Each stop is a module with its own pages,
     navigation and search: follow them in order, or go straight to the one you need.
   </p>
+  <p>
+    The order is the one of the list below. The lab sends you to a few pages of later stops (a runbook for each
+    repair, a deployment pattern for two exercises): open them at the step that names them. The
+    <a href="{{ hub }}/tree/main/newcomers">newcomer path</a> of the OzarLand hub is not a stop: it comes after the village,
+    and you can read it beside the lab.
+  </p>
   <ol class="oz-trail">
     {% for module in portal.modules %}
       {% set planned = module.status != "available" %}
@@ -125,6 +131,66 @@
       </li>
     {% endfor %}
   </ol>
+
+  {#- "What each stop was observed on" (issue 64). The stop, its title and the
+      releases of the Kolla-Ansible Academy come from academy.toml through
+      `portal.modules` and `portal.releases` (on the root site, the releases
+      of the versioned module). academy.toml does not know the release, the
+      deployment tool or the network back end that the other stops were
+      observed on: those cells are written here, by hand, from what the home
+      page of each module states (lab: docs/lab/index.md and its variants;
+      deploy: docs/deploy/index.md; runbooks: docs/runbooks/index.md;
+      production: docs/production/index.md; okd: docs/okd/index.md;
+      skills: docs/skills/index.md). "not stated" means that home page does
+      not say. When one of those pages changes, update the cell. -#}
+  {% set observed = {
+    "village": ["not stated", "Kolla-Ansible (scene 2)", "not stated"],
+    "lab": ["2026.1", "Kolla-Ansible 22.2.0", "Open vSwitch"],
+    "deploy": ["2026.1", "Kolla-Ansible 22.2.0", "Open vSwitch in the lab patterns; Open vSwitch and OVN compared"],
+    "runbooks": ["2026.1", "Kolla-Ansible 22.2.0", "Mostly ML2/OVS; OVN largely untested"],
+    "production": ["2026.1", "Mostly Kolla-Ansible", "Mostly ML2/OVS"],
+    "okd": ["2023.1 Antelope", "openstack-k8s-operators, on OKD", "OVN"],
+    "skills": ["2026.1 (one skill also lists 2025.1)", "Kolla-Ansible, mostly 22.x", "ML2/OVS"]
+  } %}
+  <section class="oz-observed" id="observed" aria-labelledby="observed-title">
+    <h2 id="observed-title">What each stop was observed on</h2>
+    <p>
+      The stops do not all use the same OpenStack release or the same network back end. This table says what each one was
+      written, studied or tested on, so that you can read it with that in mind. It does not recommend a release.
+    </p>
+    <p>
+      How to read it: each page states its own release under its title or in its text. The concepts carry over from one
+      release to another; the exact commands, options and defaults may not. Check the release and the network back end
+      of your own platform before you act on a page. "Not stated" means that the home page of the stop does not say.
+    </p>
+    <table class="oz-observed__table">
+      <caption class="md-visually-hidden">OpenStack release, deployment tool and network back end of each stop</caption>
+      <thead>
+        <tr><th scope="col">Stop</th><th scope="col">OpenStack release</th><th scope="col">Deployment tool</th><th scope="col">Network back end</th></tr>
+      </thead>
+      <tbody>
+        {% for module in portal.modules %}
+          <tr>
+            <th scope="row"><a href="{{ root }}{{ module.path }}/">Stop {{ module.stop }} · {{ module.title }}</a></th>
+            {% if module.kind == "versioned" %}
+              <td data-label="OpenStack release">
+                {% for release in portal.releases if release.status == "available" %}
+                  {{ release.openstack }}{% if release.id == module.default %} (default){% endif %}{% if not loop.last %}<br>{% endif %}
+                {% endfor %}
+              </td>
+              <td data-label="Deployment tool">Kolla-Ansible, studied from its source code, one study per release</td>
+              <td data-label="Network back end">not stated</td>
+            {% else %}
+              {% set row = observed[module.id] if module.id in observed else ["not stated", "not stated", "not stated"] %}
+              <td data-label="OpenStack release">{{ row[0] }}</td>
+              <td data-label="Deployment tool">{{ row[1] }}</td>
+              <td data-label="Network back end">{{ row[2] }}</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
 
   <section class="oz-book oz-module--book" aria-labelledby="book">
     <img class="oz-book__band" src="{{ img }}bands/book.webp" width="1600" height="400" loading="lazy" alt="">

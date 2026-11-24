@@ -106,3 +106,21 @@ Each scene has the same parts:
 The village is a first mental map, not a cloud you can touch. When the last scene ends, the road leads to the
 [Quick lab](../lab/): a real, disposable OpenStack where you can do everything LUMO did, then break it and repair it
 safely.
+
+### In which order to read the Academy
+
+The order of the stops is the one on the [home page of the Academy](../): this village (stop 0), then 1 Quick lab,
+2 Deployment patterns, 3 Kolla-Ansible Academy, 4 VM runbooks, 5 Production guide, 6 OKD OpenStack lab and
+7 Operator skills. Each stop is also made to be entered from the one before it, but you may go straight to the
+one you need.
+
+- **Village, then lab.** Read the scenes in order, then do the lab. In the lab you meet pages of later stops, because the exercises
+  repair what they break with a runbook of stop 4 (exercises 10 and 11 use pages of stop 2). Open them when the
+  exercise tells you to, at that step, and not before: the [exercises page](../lab/exercises/) says how.
+- **The newcomer path.** It is not a stop of the Academy. It is five short pages in the
+  [OzarLand hub](https://github.com/OzarLand/ozarland/tree/main/newcomers), and the hub itself places it after this
+  village. The lab says it explains the vocabulary "as you go": read it beside the lab, whenever a word is new.
+- **The rest.** Stops 2 to 7 go deeper on what the lab only used. You can read them in the order of the home page, or start from
+  the question you have.
+- **Which OpenStack release each stop was observed on** is not the same for all stops: the table "What each stop was observed on" on the
+  [home page of the Academy](../) lists it.

@@ -8,8 +8,8 @@ tags: [nova, neutron, bootstrap-servers, pull, deploy, limit, facts, scaling]
 
 How to add a compute node with `bootstrap-servers`, `pull` and `deploy`, each with `--limit` on the new host, and what
 `deploy --limit` then touches: it creates the containers of the new compute, delegates tasks to the controllers, gathers
-facts for all hosts, and does not touch existing computes apart from the delegated `setup`. The page gives no
-verification steps for the new compute.
+facts for all hosts, and does not touch existing computes apart from the delegated `setup`. The sources give no
+verification steps for the new compute beyond the one wait that `deploy` performs: see [§3](#3-verification).
 
 The scenario section is written for the [assumed deployment](index.md#assumed-deployment), with `compute004` as the new
 host.
@@ -118,6 +118,28 @@ task files:
     migration to the new compute fails meanwhile ([fact sheet E
     §3](../reference/factsheets/e-host-bootstrap-ops-playbooks.md#3-etchosts-generation)).
 
+## 3. Verification
+
+- **What the run itself checks** [CODE]: after the new compute's containers exist, `deploy` waits for the new compute's
+  service to appear in `openstack compute service list`, run through `kolla_toolbox` on `control01` and retried up to
+  20 times every 10 s (`roles/nova-cell/tasks/wait_discover_computes.yml:8-43`). Then the discovery block runs
+  `nova-manage cell_v2 discover_hosts`, and a failure of that block stops every host of the play
+  (`roles/nova-cell/tasks/discover_computes.yml:4-23`). This is all that this study establishes: the wait looks only
+  for the compute service in the list ([§2](#2-add-a-compute-node), "Order on the new host").
+- **What the study does not establish** [NOT AVAILABLE]: that the new compute service is up and enabled, that the host
+  is mapped to a cell, that a resource provider exists, that the network agent is alive, that an instance can boot on
+  the new host, and how a missing `/etc/hosts` entry would show on the existing hosts. No task of the plays read for
+  this page checks them, and no run was used as evidence.
+
+> [!NOTE]
+> **Outside this study.** The Academy has a page that shows these checks on a lab, with the commands and the expected
+> result of each: [Adding a compute node to a running Kolla-Ansible
+> deployment](../../../deploy/operations/adding-a-compute-node/), step 6, "Verify, then test with an instance". It is a
+> deployment pattern, status `draft`, written for 2026.1, not for 2024.1. It is a pointer, not evidence for 2024.1:
+> check the commands against your own release. The case of a host not mapped to a cell is explained in [No valid host
+> was found, although capacity exists](../../../runbooks/scheduling/no-valid-host-with-free-capacity/) (runbook,
+> 2026.1).
+
 ## Related
 
 - [Risk register](../risk/risk-register.md) — [R14](../risk/risk-register.md#r14) (`bootstrap-servers` re-run on a
@@ -134,4 +156,5 @@ task files:
 - [Fact sheet E §3](../reference/factsheets/e-host-bootstrap-ops-playbooks.md#3-etchosts-generation) — `/etc/hosts`
   generation
 - [Reconfigure Nova §6](reconfigure-nova.md#6-operational-risks-and-verification) — the checks listed after a Nova
-  run (`openstack compute service list`, `nova-manage cell_v2 list_hosts`); this page lists none
+  run (`openstack compute service list`, `nova-manage cell_v2 list_hosts`); see [§3](#3-verification) for what this
+  page establishes

@@ -52,6 +52,44 @@ No provider is required: every variant works on any OpenStack cloud that meets i
 > console before you start. A variant for a personal machine with KVM, with no cloud cost, is
 > [wanted](https://github.com/OzarLand/openstack-quick-lab/issues/5).
 
+## No cloud yet?
+
+The lab needs a project on an OpenStack cloud, because it builds its OpenStack *inside* VMs of that cloud. This page
+names no provider and gives no price.
+
+- **What kind of account works:** any OpenStack cloud you may create VMs on: a public one, or the private cloud of a
+  company or a university. The cloud's release is not stated by the guides. What the project must offer is in each
+  guide's "What you need": a quota for the VMs (see the table above), a network with Internet access through a router,
+  a floating IP or a host of the same network to reach the VM, and a `clouds.yaml`.
+  The multinode variant also needs the right to create a network and ports with port security disabled, and
+  allowed address pairs for the 5-VM size.
+- **Nested virtualisation** (KVM inside the VM) is not required: the scripts use `qemu` when the VM does not offer it.
+  Instances are then much slower; live migration still works, but is much slower
+  ([multinode guide](variants/openstack-cloud-multinode/index.md#what-you-need)).
+- **Read-only checks before you create anything:** `openstack quota show` and `openstack limits show --absolute`
+  (your quota), `openstack extension list --network | grep -i allowed-address-pairs` (the 5-VM size), and, on a
+  test VM, `grep -cE 'vmx|svm' /proc/cpuinfo` and `ls -l /dev/kvm` (nested virtualisation). The
+  [OKD lab prerequisites](../okd/docs/prerequisites/) explain the same checks. Port security and VRRP between VMs
+  cannot be read from a command alone: the multinode guide says what can tell.
+- **Without an account you can still learn:** read [LUMO's village](../village/) and the [runbooks](../runbooks/),
+  which show every command with its output, and the [exercises](exercises/index.md), which show what each step prints.
+  A variant for a personal machine with KVM does not exist yet; it is only
+  [wanted](https://github.com/OzarLand/openstack-quick-lab/issues/5).
+
+## What the lab does not deploy
+
+The scripts deploy Keystone, Glance, Nova, Neutron, Placement, Heat and Horizon (single-VM guide). They write no
+setting for Cinder, Swift, Octavia, Barbican or Designate, and `config.example.env` has no option to switch them on:
+you cannot practise volumes or these services in the lab. Where to learn them, by reading:
+
+| Topic | Where |
+|---|---|
+| Cinder volumes, Swift objects | [Village scene 12](../village/12-the-attached-disk-and-the-archive/) |
+| Octavia, Barbican, Designate | [Village scene 15](../village/15-the-specialised-workshops/) |
+| Cinder and Glance back ends, boot from volume | [Storage patterns](../deploy/storage/) |
+| Volume problems | [Volumes runbooks](../runbooks/volumes/) |
+| What Kolla-Ansible does for each of these services | [Day-2 module](../day2/) |
+
 ## 🔄 How it works
 
 <img src="assets/images/S1-create-use-destroy.webp" width="1536" height="1024" loading="lazy" alt="On the harbour, LUMO points at three floating piers: one being built by two workers, one in use as a workshop, and one left empty and clean.">

@@ -94,6 +94,15 @@ openstack floating ip create <PUBLIC_NET>
 openstack server add floating ip <SERVER> <IP>
 ```
 
+**On a real host.** With ML2/OVS and the L3 agent, a Neutron router is a `qrouter-<router-id>` network namespace on a
+network host (with HA routers, on several, and only the `active` one carries the floating IP). The address
+translation is done there by the host's own iptables: the floating IP sits on the router's `qg-` interface, and a
+destination NAT (DNAT) rule in the namespace sends it to the instance's fixed IP. You can look, read-only, as root on
+that host: `ip netns exec qrouter-<router-id> ip -brief addr` and `ip netns exec qrouter-<router-id> iptables -t nat -S`.
+With ML2/OVN there is no namespace: the router is a logical router in the OVN database. To go further:
+[Instance unreachable from outside](../runbooks/networking/instance-unreachable-from-outside/), section "Where the
+router lives".
+
 **The lantern:** the beam points at two different addresses and at the bridge between them.
 
 **Next:** the bridge exists. LUMO checks which crossings are allowed.

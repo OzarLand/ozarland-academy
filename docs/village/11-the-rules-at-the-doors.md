@@ -97,6 +97,14 @@ openstack security group rule list <SG>
 openstack security group rule create --protocol tcp --dst-port 443 --remote-ip 0.0.0.0/0 <SG>
 ```
 
+**On a real host.** Who applies the rules depends on the driver. With Kolla-Ansible 2026.1 and ML2/OVS, the Open
+vSwitch agent on the compute writes them as iptables chains named after the port id (`neutron-openvswi-i<id>` for
+incoming traffic, `-o<id>` for outgoing); each instance port has a Linux bridge `qbr…` between the instance and
+`br-int`. With ML2/OVN, the rules are OVN access lists turned into flows. Read-only, on the compute:
+`sudo docker exec -u root neutron_openvswitch_agent iptables-save | grep <first 10 characters of the port id>`. To go
+further: [Security group rules not applied](../runbooks/networking/security-group-rules-not-applied/), section "Where
+the rules are enforced".
+
 **The lantern:** the beam narrows onto the openings that are actually needed.
 
 **Next:** the network is under control. LUMO turns to where the data lives.
