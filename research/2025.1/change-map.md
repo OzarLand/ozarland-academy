@@ -409,6 +409,34 @@ Points that lot 6 found while re-reading the stateful service pages; they are wr
 - **Membership:** with loop-notify gone, a controller change restarts `nova_compute` and `neutron_openvswitch_agent`
   on the computes, no longer `nova_libvirt` and `nova_ssh`.
 
+### X26 — Found in lot 7 (2026-11-25) [CODE]
+
+Points that lot 7 found while re-reading the Nova and Neutron pages; they are written in `components/nova-deep-dive.md`,
+`components/nova.md`, `operations/reconfigure-nova.md`, `components/neutron.md`, `operations/reconfigure-neutron.md`
+and `operations/add-a-compute-node.md`.
+
+- **`nova_metadata` and the inventory:** the container runs only on hosts of the new `nova-metadata` group that are
+  also in one of the groups of the "Apply role nova" play (`nova.yml:103-108`, `roles/nova/defaults/main.yml:33-61`); a
+  2024.1 inventory has no such group. `reload_api.yml` does not list it, so after an upgrade with
+  `nova_safety_upgrade` nothing starts it again (`roles/nova/tasks/reload_api.yml:5-23`).
+- **Nova restarts:** a `nova_compute` change no longer restarts `nova_libvirt` and `nova_ssh`; a scheduler change no
+  longer restarts `nova_api`. The first 2025.1 run restarts all three compute containers, each for its own reasons
+  (`compute_id`, `kolla_nova_libvirt_start`, `stdio_handler = "logd"`, `max_workers`, unit text).
+- **Nova config:** `catalog_info = block-storage::internalURL` (`roles/nova/templates/nova.conf.j2:67`,
+  `roles/nova-cell/templates/nova.conf.j2:112`); the libvirt secret usage names change to `ceph-ephemeral-nova` and
+  `ceph-persistent-cinder`.
+- **Version checks:** the libvirt version and script checks start one-shot containers on the first host of the
+  `compute` group, so `deploy --limit <new compute>` runs containers on an existing compute
+  (`roles/nova-cell/tasks/version-check.yml:2-21, :79-98`).
+- **`compute_id` of a new compute:** a UUID derived from the node name (`roles/nova-cell/tasks/config.yml:104-110`), so
+  a host that reuses a node name gets the same id.
+- **Neutron:** Linux Bridge removed without a precheck; the first 2025.1 run recreates most neutron containers
+  (`/dev/shm` always mounted, new environment of the DHCP and L3 agents, metadata agent healthcheck off by default);
+  `network_vlan_ranges` now lists one physical network per bridge; `neutron_agents_wrappers` (child containers, netns
+  cleanup skipped); `upgrade.yml` no longer re-runs the Keystone registration.
+- **ML2 plugin check:** the OVN condition reads `container_volume_facts['ovn_nb_db']` at the top level of the result,
+  which the 2025.1 module no longer returns (`roles/neutron/tasks/neutron_plugin_agent_check.yml:28`).
+
 ## 2. Impact on the 2024.1 pages
 
 69 pages (`find docs/day2/2024.1 -name '*.md'`). "Cited lines" counts the `path:line` citations of the page that
@@ -582,3 +610,11 @@ need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 202
 | `mariadb-recovery` with ProxySQL | X25 | whether the run ends green while ProxySQL or the VIP does not serve the database |
 | Container-engine migration with MariaDB | X25 | database downtime of the full recovery it runs |
 | Add a file to `/etc/kolla/config/keystone/domains`, `deploy -t keystone` | X25 | whether `keystone` restarts and loads the new domain |
+| Upgrade 2024.1 → 2025.1 with a 2024.1 inventory (no `nova-metadata` group) | X13, X26 | the failure, or a run without any metadata API |
+| Upgrade with `nova_safety_upgrade: yes` | X26 | whether `nova_metadata` stays stopped after the upgrade |
+| `reconfigure -t nova` with a `nova-compute.conf` override | X5, X26 | that only `nova_compute` restarts, and `nova_libvirt` stays up |
+| `nova_libvirt` restart with running guests | X15, X26 | guest console logging across the restart of virtlogd (Q22) |
+| Add a compute that reuses the node name of a removed one | X26 | what Nova does with the same `compute_id` |
+| First 2025.1 `deploy -t neutron` on computes | X26 | whether every agent is recreated at once, and the data-plane effect |
+| `neutron_agents_wrappers: yes` on network nodes | X26 | whether keepalived, haproxy and dnsmasq survive an agent restart |
+| Cloud on `neutron_plugin_agent: linuxbridge`, first 2025.1 run | X13, X26 | what happens to the Linux Bridge agent and its networks |
