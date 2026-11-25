@@ -1,0 +1,528 @@
+---
+title: Compute scaling and performance
+description: Which Kolla-Ansible 2025.1 operations grow with the number of compute nodes, why, and how to bound them.
+tags: [scaling, nova, limit, serial, facts, pull, images, forks]
+remember:
+  - "With the default linear strategy, a task is queued for every host that has it next, and the next task starts only when all of them have finished: the slowest host sets the pace. <span class=\"ev ev-code\">CODE</span>"
+  - "Adding computes adds waves, not tasks: a task on H hosts needs ⌈H/F⌉ waves, F being <code>forks</code> (one worker per fork, at most the batch size). The 2025.1 CLI has no <code>--forks</code> option: set forks in <code>ansible.cfg</code> or <code>ANSIBLE_FORKS</code>."
+  - "In 2025.1 a no-change <code>reconfigure -t nova</code> makes 29 remote invocations per compute (27 in 2024.1) and 3 <code>compare_container</code> calls; one of the 29 is a hypervisor list on the Nova API, run on the first conductor for every compute. <span class=\"ev ev-code\">CODE</span>"
+  - "<code>--limit</code> bounds the restarts, but fact gathering stays O(inventory) unless you narrow the new <code>kolla_ansible_delegate_facts_hosts</code>. <span class=\"ev ev-code\">CODE</span>"
+  - "<code>kolla_serial</code> bounds simultaneous restarts per play, but adds time, and only <code>deploy</code> and <code>deploy-containers</code> accept it; <code>max_fail_percentage</code> stops nothing early at its default of 100. <span class=\"ev ev-code\">CODE</span>"
+quiz:
+  - q: "Does this study give how long a run takes?"
+    options: ["Yes, measured on a lab", "No: work is counted as operations read from the source"]
+    answer: 1
+    explain: "Task-result totals and wall times are NOT AVAILABLE: nothing was run against a host."
+    see: "2-work-per-compute-host-read-from-the-task-files"
+  - q: "How many remote module invocations does a no-change <code>reconfigure -t nova</code> make for one compute in 2025.1 (default services, Cinder LVM, kvm, Docker, non-Ubuntu host)?"
+    options: ["27, as in 2024.1", "29: the libvirt version check and the <code>compute_id</code> file add three, the removed <code>post-config.yml</code> takes one away", "About 50, because the common role runs too"]
+    answer: 1
+    explain: "<code>version-check.yml</code> adds a container-facts call on every compute, <code>config.yml</code> adds the hypervisor list (run on the first conductor) and the <code>compute_id</code> copy, and the <code>nova_libvirt_secrets</code> volume removal is gone <span class=\"ev ev-code\">CODE</span>. compute001 makes 36, with the delegated discovery and version-check steps."
+    see: "2-work-per-compute-host-read-from-the-task-files"
+  - q: "What do more computes add to a play?"
+    options: ["More tasks on each host", "More waves: ⌈H/F⌉, with H hosts and F forks"]
+    answer: 1
+    explain: "The critical path of a play is the number of executed task-items on the slowest host × ⌈H/F⌉ waves. One 2025.1 exception grows faster: the hypervisor list returns every hypervisor, once per compute."
+    see: "41-model"
+  - q: "Does <code>--limit</code> reduce fact gathering?"
+    options: ["Yes, facts are gathered only on the limited hosts", "Not by default: the limited hosts gather the facts of every host in <code>kolla_ansible_delegate_facts_hosts</code>, which defaults to the whole inventory"]
+    answer: 1
+    explain: "Without a fact cache, the limited hosts gather the facts of the other hosts in a delegated loop whose items run one after another <span class=\"ev ev-code\">CODE</span>. New in 2025.1, <code>kolla_ansible_delegate_facts_hosts</code> can narrow that list."
+    see: "6-scaling-at-3-10-and-30-computes-read-from-the-code"
+---
+
+# Compute scaling and performance
+
+Which Kolla-Ansible 2025.1 operations grow with the number of compute nodes, why, and how to bound them.
+
+> [!NOTE]
+> **Key answers**
+>
+> - **No timings are given.** Work is counted as operations read from the source; task-result totals and wall times are
+>   [NOT AVAILABLE] ([§2](#2-work-per-compute-host-read-from-the-task-files), [§4.1](#41-model)).
+> - **Per compute, for the default 2025.1 service set with Cinder LVM, `nova_compute_virt_type: kvm`, the Docker engine
+>   and a non-Ubuntu host, a no-change `reconfigure -t nova` makes 29 remote module invocations (36 on compute001) and 3
+>   `compare_container` calls; a full `deploy` or `reconfigure` makes 10 `compare_container` calls** [CODE]
+>   ([§2](#2-work-per-compute-host-read-from-the-task-files)). **Changed in 2025.1:** two more than 2024.1 (27, 31 on
+>   compute001). The new libvirt version check adds a container-facts call on every compute
+>   (`roles/nova-cell/tasks/version-check.yml:35-43`), the new `compute_id` block adds a hypervisor list and a copy
+>   (`roles/nova-cell/tasks/config.yml:53-110`), and the `nova_libvirt_secrets` volume removal of `post-config.yml` is
+>   gone. `deploy -t nova` runs the same tasks: `reconfigure.yml` only imports `deploy.yml`
+>   (`roles/nova-cell/tasks/reconfigure.yml:2`).
+> - **New in 2025.1, one step grows faster than the fleet:** every compute asks the Nova API for the list of **all**
+>   hypervisors, through `kolla_toolbox` on the first conductor (`roles/nova-cell/tasks/config.yml:59-73`). A run on C
+>   computes makes C such calls, each returning about C entries [CODE]; it also runs in `genconfig`
+>   ([§3](#3-expensive-tasks-and-their-scaling-factors)).
+> - **Adding computes adds waves, not tasks:** the critical path of a play is the number of executed task-items on the
+>   slowest host × ⌈H/F⌉ waves ([§4.1](#41-model)). Operation counts for 10 to 500 computes:
+>   [§4.2](#42-operation-counts-by-fleet-size).
+> - **`--limit` bounds the restarts, but fact gathering stays O(inventory)** unless you narrow the new
+>   `kolla_ansible_delegate_facts_hosts` [CODE] ([§6](#6-scaling-at-3-10-and-30-computes-read-from-the-code)).
+> - **Why a small change becomes a large workload:** a work multiplier (every run that includes the `compute` group
+>   executes the full per-host chain on every compute, even with no change) and a restart multiplier (global inputs, no
+>   `serial`). **Changed in 2025.1:** loop-notify no longer widens one changed container to the whole role
+>   ([§5](#5-why-a-small-change-becomes-a-large-workload)).
+> - **What to do about it:** the ranked optimisations ([§8](#8-bottlenecks-and-optimisation-opportunities-ranked)).
+>   `kolla_serial` bounds simultaneous restarts per play, but adds time ([§7](#7-influence-of-the-main-variables)).
+
+> **No timings are given here.** Work is expressed as *operation counts* read from the source and as formulas whose
+> parameters depend on your own environment. Nothing was run against a host. The evidence labels **[CODE]** and
+> **[NOT AVAILABLE]** are defined once, in [Evidence labels](../start/conventions.md#evidence-labels). Here
+> [NOT AVAILABLE] covers, for example, task-result totals and wall times. Citations that start with `lib/ansible/` are
+> read in ansible-core 2.18.20, the version studied for 2025.1 (`requirements.txt:14` and
+> `roles/prechecks/vars/main.yml:4-5` accept 2.17 to 2.18; 2.17 is not studied).
+
+---
+
+<a id="1-how-ansible-29-spends-time-in-kolla-ansible"></a>
+<a id="1-how-ansible-core-214-spends-time-in-kolla-ansible"></a>
+<a id="1-how-ansible-core-216-spends-time-in-kolla-ansible"></a>
+
+## 1. How ansible-core 2.18 spends time in Kolla-Ansible
+
+| Factor | Mechanism | Consequence for Kolla |
+|---|---|---|
+| **Linear strategy (default)** | The strategy takes the next task of the play and queues it for **every host whose next task it is** (up to `forks` at a time), then **waits until all queued results are back before it moves to the next task** [CODE: ansible-core 2.18.20 `lib/ansible/plugins/strategy/linear.py:47-90` (next task in lockstep), `:126`, `:195` (queue for each host), `:216` (wait for the results)] | The slowest host sets the pace of every task. One slow compute (disk, SSH, container engine) slows the whole fleet |
+| **forks** (Ansible default 5; Kolla's `doc/source/user/ansible-tuning.rst:20-34` raises it to 20 as an example) | Max parallel host executions per task: the task queue manager creates `min(forks, batch size)` worker slots for each play run, and each queued host/task takes a free slot [CODE: ansible-core 2.18.20 `lib/ansible/executor/task_queue_manager.py:141`, `:171-175`, `:317`; `lib/ansible/plugins/strategy/__init__.py:396-428`; default 5: `lib/ansible/config/base.yml:698-704`]. **Changed in 2025.1:** the `kolla-ansible` CLI has no `--forks` option any more (2024.1: `tools/kolla-ansible`; the 2025.1 options are listed in `kolla_ansible/ansible.py:32-141`). It runs `ansible-playbook` as a child process (`kolla_ansible/ansible.py:282`, `:298`), so `forks` comes from `ansible.cfg` or the `ANSIBLE_FORKS` environment variable (`lib/ansible/config/base.yml:702-704`) | A task on *H* hosts needs ⌈H/F⌉ waves |
+| **Loops** (`with_dict: <role>_services \| select_services_enabled_and_mapped_to_host`, `with_items`) | Items run **sequentially on each host** [CODE: ansible-core 2.18.20 `lib/ansible/executor/task_executor.py:299`, `:347`]; each item that passes its `when` is a separate module execution (separate remote command). **Changed in 2025.1:** most service loops are filtered before they start (`kolla_ansible/filters.py:99-109`), so items for services that are disabled or not mapped to the host are no longer even created as skipped items (`releasenotes/notes/performance-improvements-42c34ebf4243312a.yaml:3-13`). This removes task-result overhead on the deploy host, not remote invocations: skipped items never ran a module | `config.yml` and `check-containers.yml` cost *items × invocation latency* per host |
+| **Remote module invocation** | Without pipelining (off by default: ansible-core 2.18.20 `lib/ansible/config/base.yml:124-126`), each invocation = SSH exec to create a tmp dir, transfer the AnsiballZ payload, run it, clean up. With `become`, `sudo` is added | The fixed cost per invocation dominates idempotent runs |
+| **Deploy-host templating** | `template` and `merge_configs` render **on the deploy host** for every host and item, then `copy` compares checksums remotely [CODE: `ansible/action_plugins/merge_configs.py:149-165, :208-216`; ansible-core 2.18.20 `lib/ansible/plugins/action/template.py:151`, `:184-191`, `lib/ansible/plugins/action/copy.py:261`, `:383`] | Deploy-host CPU scales with hosts × templates. `nova.conf.j2` and `neutron.conf.j2` are large, with loops over groups |
+| **Controller-side tasks** | `group_by`, `set_fact`, `include_*`, `meta` run in Ansible workers without SSH | Cheap per host, but not free: the 50-item `group_by` loop (`site.yml:20-74`; still 50 in 2025.1, with `valkey` in and `swift` out) is templated in a deploy-host worker for every host, and `group_by` runs no module on the host [CODE: ansible-core 2.18.20 `lib/ansible/plugins/action/group_by.py:31-51`]. Its CPU cost per host is [NOT AVAILABLE] |
+| **`run_once` / `delegate_to`** | Run once (per batch) on one host: the linear strategy queues a `run_once` task for the first host and stops there [CODE: ansible-core 2.18.20 `lib/ansible/plugins/strategy/linear.py:178`, `:205-206`] | Constant cost unless `serial` multiplies it. A delegated task **without** `run_once` runs once per host on the delegate: the 2025.1 hypervisor list runs C times on the first conductor ([§3](#3-expensive-tasks-and-their-scaling-factors)) |
+| **Handlers** | Run at flush points on notified hosts: `flush_handlers` switches the notified hosts to the handlers state, and the linear strategy inserts the play's handlers in its task list and queues each one like a task, in parallel up to `forks` [CODE: ansible-core 2.18.20 `lib/ansible/plugins/strategy/__init__.py:951-961`, `lib/ansible/plugins/strategy/linear.py:87-88`, `:126`, `:195`] | Restart time of the slowest container on the slowest host |
+| **`until`/`retries` loops** | e.g. compute registration wait (`retries: 20`, `delay: 10`: `roles/nova-cell/tasks/wait_discover_computes.yml:27-28`), Keystone registration retries (5 × 10 s: `roles/service-ks-register/defaults/main.yml:38, :40`), image pull retries (3 × 5 s: `roles/service-images-pull/defaults/main.yml:6-7`), `wait_for` | `retries: n` means up to n + 1 attempts and n sleeps of `delay` per task, plus the time of each attempt [CODE: ansible-core 2.18.20 `lib/ansible/executor/task_executor.py:658-670`, `:821`]; how many attempts a run needs is [NOT AVAILABLE] |
+| **Fact gathering** | `setup` on every host at the start, skipped when facts are already cached (`gather-facts.yml:19-25`). With `--limit`, the limited hosts gather the facts of **every host in `kolla_ansible_delegate_facts_hosts` sequentially** in a delegated loop, the hosts being divided between the limited hosts (`gather-facts.yml:34-62`). **New in 2025.1:** that list is a variable, `groups['all']` by default (`gather-facts.yml:47`, `group_vars/all.yml:43`), documented in `doc/source/user/ansible-tuning.rst:164-203` | O(total hosts) serial latency per limited run without fact caching, unless the list is narrowed |
+| **`max_fail_percentage`** | Every play sets `max_fail_percentage: <service>_max_fail_percentage \| default(kolla_max_fail_percentage) \| default(100)` (e.g. `gather-facts.yml:7-10`, `site.yml:96-99`, `nova.yml:141-144`). The check breaks the play only when the failed hosts of the current batch exceed that percentage of the batch [CODE: ansible-core 2.18.20 `lib/ansible/plugins/strategy/linear.py:336-347`; the failed-host list is cleared for each batch, `lib/ansible/executor/task_queue_manager.py:334`, `:386-387`] | At the default 100 it never stops a play early: one failed or slow compute does not stop the others. Setting a lower value is an operator choice; its effect on a given run is [NOT AVAILABLE] |
+
+---
+
+## 2. Work per compute host (read from the task files)
+
+Counts below are read from the task files of the roles that run on a compute [CODE], for the default 2025.1 service
+set with Cinder LVM (`enable_cinder` and `enable_cinder_backend_lvm` set; this adds `iscsid` on computes:
+`group_vars/all.yml:863, :865-866, :911`, `roles/iscsi/defaults/main.yml:3-6`, `inventory/multinode:307-310`),
+`nova_compute_virt_type: kvm` (`group_vars/all.yml:1253`), the Docker engine (`kolla_container_engine: "docker"`,
+`group_vars/all.yml:100`) and a non-Ubuntu host (Ubuntu adds one `systemd` call:
+`roles/nova-cell/tasks/config-host.yml:44-53`). Task-result totals depend on how skipped tasks, includes and `meta`
+tasks are counted at run time; the sources do not give them [NOT AVAILABLE].
+
+- A "task result" is one task × one host, including skipped tasks.
+- A "remote invocation" is one module execution for the host, counting each executed loop item. Loop items skipped by
+  `when` run no module and are not counted. In 2025.1 most nova-cell loops are filtered before they start, so the 5
+  services not mapped to a compute are not even items any more (`roles/nova-cell/tasks/config.yml:10`, `:118`,
+  `:136`; `roles/service-check-containers/tasks/main.yml:27`). A `with_first_found` task whose files are all absent
+  (`skip: true`) has no item and runs no module (`roles/nova-cell/tasks/config.yml:21-31, :233-246`).
+- Controller-only work is excluded from the invocation count: `group_by`, `set_fact`, `assert`, `debug`, `fail`,
+  `include_*`, `meta`.
+- Each `template`, `copy` or `merge_configs` item counts as one invocation, although the copy action behind them runs
+  two modules on the host when the file is unchanged (remote `stat`, then `file`) [CODE: ansible-core 2.18.20
+  `lib/ansible/plugins/action/copy.py:261`, `:383`]. SSH round trips are therefore higher than the invocation count.
+- A delegated task without `run_once` is counted for the host it is run for, although it executes on the delegate.
+  **New in 2025.1:** one such task runs for every compute, the hypervisor list on the first conductor
+  (`roles/nova-cell/tasks/config.yml:59-73`).
+- Where two figures are given, the higher one is compute001, the first host of the nova-cell play (`compute` is its
+  first host pattern: `nova.yml:125-134`). It also runs the delegated `run_once` steps:
+  - compute discovery on the first conductor, control01 (3 invocations:
+    `roles/nova-cell/tasks/wait_discover_computes.yml:8-43`, `get_cell_settings.yml:2-21`,
+    `discover_computes.yml:14-21`);
+  - one `stat` of `vendordata.json` on the deploy host (`roles/nova-cell/tasks/config.yml:40-45`);
+  - **new in 2025.1**, three version-check steps on the first compute itself: the one-shot `libvirt_version_check`
+    container, the image digest read through `service-image-info` and the one-shot `nova_libvirt_script_check`
+    container (`roles/nova-cell/tasks/version-check.yml:3-21, :30-33, :80-98`;
+    `roles/service-image-info/tasks/main.yml:2-13`, `defaults/main.yml:3`).
+- The `common` role is not part of a `-t nova` run: it has its own play, tagged `common` only (`site.yml:88-103`),
+  and the nova-cell role has no `meta` dependency on it (the role has no `meta/` directory). **Changed in 2025.1:** its
+  invocations per host are 19 instead of 20. The fluentd `ensure_image` and its label read are gone, and a
+  `kolla.target` template is new (`roles/common/tasks/config.yml:54-58`). The 19 are 3 config directories, 9 templates,
+  2 ownership fixes, 3 `compare_container` and the `kolla_logs` volume and its link
+  (`roles/common/tasks/config.yml:2-24, :54-66, :104-169, :171-289`, `roles/service-check-containers/tasks/main.yml:4-29`,
+  `roles/common/tasks/bootstrap.yml:2-16`, with `enable_fluentd` and `enable_rabbitmq` true,
+  `group_vars/all.yml:879, :845`). With Podman two more steps run (`/etc/tmpfiles.d/kolla.conf` and
+  `systemd-tmpfiles --create`: `roles/common/tasks/config.yml:42-52`), and on CentOS Stream 10 or Rocky 10 hosts one
+  more (`/var/log/journal`: `:30-40`; the default is Rocky 9, `group_vars/all.yml:52`, `:1375-1384`). These run only
+  when the `common` play runs (no tag or `-t common`).
+- *N* is the number of inventory hosts in `groups['all']`, localhost included (`inventory/multinode:32-33`).
+
+| Action | Task results per compute | Executed (non-skipped) | Remote module invocations per compute | `compare_container` calls per compute (one in-container `kolla_set_configs --check` exec each when the container exists) | Source |
+|---|---|---|---|---|---|
+| `deploy` (first time) | NOT AVAILABLE | NOT AVAILABLE | NOT AVAILABLE | 10 calls, 0 execs (containers missing) | `check-containers.yml` of common (3), iscsi (1), openvswitch (2), neutron (1), nova-cell (3), all through `roles/service-check-containers/tasks/main.yml:4-29`; `module_utils/kolla_container_worker.py:58-65`, `module_utils/kolla_docker_worker.py:146-181` |
+| `deploy` (no change) | NOT AVAILABLE | NOT AVAILABLE | NOT AVAILABLE | 10 | as above |
+| `reconfigure` (no tag, no change) | NOT AVAILABLE | NOT AVAILABLE | NOT AVAILABLE | 10 | as above; the same tasks as `deploy` |
+| `reconfigure -t nova` (no change) | NOT AVAILABLE | NOT AVAILABLE | 29 (36 on compute001) | 3 (nova-cell only) | breakdown below |
+| `reconfigure -t nova --limit compute001` (no change) | NOT AVAILABLE | NOT AVAILABLE | 36 + delegated fact loop (hosts of `kolla_ansible_delegate_facts_hosts` − 1; *N* − 1 by default) | 3 | breakdown below; `gather-facts.yml:34-62` |
+| `deploy-containers -t nova --limit compute001` (no change) | NOT AVAILABLE | NOT AVAILABLE | 4 (`setup` + 3 `compare_container`) + delegated fact loop | 3 | `roles/nova-cell/tasks/deploy-containers.yml:2`, `roles/nova-cell/tasks/check-containers.yml:2-3` |
+| `pull` (all) | NOT AVAILABLE | NOT AVAILABLE | 11 (`setup`, 10 image pulls) | 0 | `roles/service-images-pull/tasks/main.yml:2-18` (one `pull_image` per enabled service mapped to the host, up to 4 attempts each) |
+| `reconfigure -t haproxy` | 4 (facts + group_by only) | 4 | 1 (`setup`) | 0 | plays tagged `always`: `gather-facts.yml:5-26, :34-62` (the second play targets only limited hosts), `site.yml:7-75`; `site.yml:105-118` (the only play tagged `haproxy`, the loadbalancer play, targets the `loadbalancer` group) |
+
+The 10 per compute: `fluentd`, `kolla_toolbox`, `cron` (`roles/common/defaults/main.yml:3-27`), `iscsid`
+(`roles/iscsi/defaults/main.yml:3-6`), `openvswitch_db` and `openvswitch_vswitchd`
+(`roles/openvswitch/defaults/main.yml:3-34`), `neutron_openvswitch_agent` (`roles/neutron/defaults/main.yml:30-52`;
+`neutron_plugin_agent` is still `openvswitch`, `group_vars/all.yml:332`, and the other neutron agents are off on a
+compute by default, e.g. `neutron_enable_ovn_agent: "no"`, `group_vars/all.yml:1245`), `nova_libvirt`, `nova_ssh`,
+`nova_compute` (`roles/nova-cell/defaults/main.yml:5-65`). The same list drives the 10 image pulls. Still holds in
+2025.1.
+
+Breakdown of the 29 remote invocations of a no-change `-t nova` run for one compute, read from the task files [CODE]
+(compute001 adds 7 delegated or `run_once` invocations, for 36):
+
+| Kind | Invocations | Source |
+|---|---|---|
+| `template` items (module-load persistence, udev rule, config.json ×3, qemu.conf, libvirtd.conf, SASL ×3, ssh files ×4, `hostnqn`) | 15 | module-load, nova-cell `config-host.yml` + `config.yml` (`roles/module-load/tasks/main.yml:18-27`; `roles/nova-cell/tasks/config-host.yml:30-39`; `roles/nova-cell/tasks/config.yml:112-118, :150-164, :166-180, :189-204, :206-219, :248-257`; `libvirt_enable_sasl: true`, `roles/nova-cell/defaults/main.yml:578`) |
+| `file` items (config dirs ×3) | 3 | nova-cell (`roles/nova-cell/tasks/config.yml:2-10`) |
+| **New:** `compute_id` (hypervisor list through `kolla_toolbox` on the first conductor, then one `copy`) | 2 | `roles/nova-cell/tasks/config.yml:53-110` |
+| `kolla_container` (compare_container ×3) | 3 | `roles/nova-cell/tasks/check-containers.yml:2-3`, `roles/service-check-containers/tasks/main.yml:4-29` |
+| **New:** `kolla_container_facts` (libvirt version check) | 1 | `roles/nova-cell/tasks/version-check.yml:35-43` |
+| `merge_configs` (nova.conf ×1 on a compute) | 1 | nova-cell `config.yml` (`roles/nova-cell/tasks/config.yml:120-136`; `roles/nova-cell/defaults/main.yml:496-502`) |
+| `sysctl` ×2, `modprobe`, `setup` | 4 | facts, module-load, nova-cell `config-host.yml` (`gather-facts.yml:19-25`; `roles/module-load/tasks/main.yml:8-16`; `roles/nova-cell/tasks/config-host.yml:11-24`) |
+
+Compared with 2024.1 (27, 31 on compute001) [CODE]:
+
+- **Added:** the container-facts call of the libvirt version check, on every compute
+  (`roles/nova-cell/tasks/version-check.yml:35-43`), and the `compute_id` block: a hypervisor list and one `copy`
+  (`roles/nova-cell/tasks/config.yml:53-110`). The version read inside `nova_libvirt` runs only on a compute whose
+  running container uses another image than the target, so not in a no-change run (`version-check.yml:45-56`).
+- **Removed:** the `remove_volume` of `nova_libvirt_secrets`, because `post-config.yml` is gone; that volume is now
+  removed only by the libvirt cleanup, with the other libvirt volumes and only when
+  `nova_libvirt_cleanup_remove_volumes` is set (`roles/nova-cell/tasks/libvirt-cleanup.yml:45-55`).
+- **Same count, new layout:** `qemu.conf` and `libvirtd.conf` are two `with_first_found` tasks instead of one loop, so
+  an operator template can replace either (`roles/nova-cell/tasks/config.yml:150-180`).
+- `config-host.yml`, `module-load` and the discovery files are unchanged.
+- **compute001:** 4 delegated invocations in 2024.1, 7 in 2025.1; the 3 new ones are the version-check steps above.
+- **Not counted:** `multipath.conf` runs only with `enable_multipathd` (`roles/nova-cell/tasks/config.yml:285-303`, off
+  by default: `group_vars/all.yml:927`).
+
+> [!NOTE]
+> "No change" means a cloud already deployed with 2025.1 code. The first 2025.1 run after an upgrade from 2024.1 is
+> not a no-change run, for three reasons read in the code [CODE]:
+>
+> - The systemd unit now carries `PartOf=kolla.target`, and `compare_container` compares the whole unit file text
+>   (`module_utils/kolla_container_worker.py:58-65`, `module_utils/kolla_systemd_worker.py:155-168`), so a container
+>   whose unit was written by 2024.1 code is reported as changed.
+> - With Docker on hosts outside the Red Hat family, the default `ulimits` changed ([Repository architecture
+>   §6](repository-architecture.md#6-custom-modules--container-lifecycle-via-kolla_container)).
+> - `nova-compute.json.j2` gained the `compute_id` entry (`roles/nova-cell/templates/nova-compute.json.j2:10-15`), so
+>   `kolla_set_configs --check` sees a new file for `nova_compute`.
+>
+> The restarts that follow are counted in [§6](#6-scaling-at-3-10-and-30-computes-read-from-the-code) only for the
+> override case.
+
+Per-**controller** counts are [NOT AVAILABLE]. Controllers carry more roles than computes, but they are few.
+Compute-side work is what scales, with one 2025.1 exception that lands on a controller: the first conductor runs one
+hypervisor list per compute.
+
+### 2.1 Fleet totals scale linearly
+
+Total task results ≈ `fixed + Σ_hosts per-host count`:
+
+- **Full no-change `reconfigure`, 3 computes:** the fleet and per-compute task-result totals are [NOT AVAILABLE].
+- **Each additional compute adds** [CODE, counts from [§2](#2-work-per-compute-host-read-from-the-task-files)]:
+  - 10 `compare_container` calls (10 `kolla_set_configs --check` execs once its containers exist) to every full
+    `deploy`/`reconfigure`; the task results and remote invocations it adds to a full run are [NOT AVAILABLE];
+  - 29 remote invocations and 3 checks to every `-t nova` run; the task results it adds are [NOT AVAILABLE];
+  - one more hypervisor list on the first conductor, and one more entry in every other compute's list (the one
+    quantity that grows faster than linearly).
+
+The same scenarios at 10 and 30 computes, with forks 5/20/50, are in
+[§6](#6-scaling-at-3-10-and-30-computes-read-from-the-code).
+
+---
+
+## 3. Expensive tasks and their scaling factors
+
+Scope legend:
+
+- **D** = once per deployment (`run_once`, delegated);
+- **Ctl** = once per controller;
+- **C** = once per compute;
+- **C×S** = once per compute and per container/service;
+- **H** = once per host of any kind;
+- **Cond** = only when a condition holds (e.g. drift).
+
+| Task | Role / file | Target hosts | Scope | Scaling factor | Why it can be slow | Optimisation |
+|---|---|---|---|---|---|---|
+| Fact gathering (`setup`) | `gather-facts.yml:19-25` | all | H | ⌈N/F⌉ waves | full `setup` collects hardware, network (many interfaces with OVS/Neutron), mounts; facter/ohai if present | `kolla_ansible_setup_filter: "ansible_[!qt]*"` (skips `qvo`/`tap` interface facts), `kolla_ansible_setup_gather_subset` (both default to `omit`: `group_vars/all.yml:31, :37`), fact caching (`gathering = smart` + jsonfile; with cached facts the `setup` task is skipped: `gather-facts.yml:23-25`) — documented in `doc/source/user/ansible-tuning.rst:36-85, :106-141` |
+| Delegated fact gathering under `--limit` | `gather-facts.yml:34-62` | limited hosts gather the hosts of `kolla_ansible_delegate_facts_hosts` | **sequential per limited host** (list size / L each) | O(N) serial by default | `delegate_to` loop runs items one after another | **New in 2025.1:** narrow `kolla_ansible_delegate_facts_hosts` (`group_vars/all.yml:43`; rules of thumb in `doc/source/user/ansible-tuning.rst:188-203`: controllers are needed, other computes are not). Fact cache; or pre-warm the cache with `kolla-ansible gather-facts` without a limit (`doc/source/user/ansible-tuning.rst:68-85`) |
+| `group_by` enabled services (50 items) | `site.yml:20-74` | all | H (deploy-host CPU) | N × 50 | templating each item | none needed below ~1,000 hosts; it *saves* time later by eliminating disabled plays (`site.yml:4-6`) |
+| `common` config + check | `roles/common/tasks/config.yml`, `check-containers.yml`, `bootstrap.yml` | every host of the `common` play (`site.yml:88-103`) | H × 19 invocations ([§2](#2-work-per-compute-host-read-from-the-task-files)) | N | 3 container checks (`docker exec` each) + 14 templates/files + 2 bootstrap steps | `--limit` batches; the play is tagged `common` only, so any service tag (e.g. `-t nova`) skips it, `-t common` runs it alone, `--skip-tags common` removes it |
+| `nova-cell` config | `roles/nova-cell/tasks/config.yml` | computes + conductors | C × 24 invocations (19 in `config.yml`, 5 in `config-host.yml` with its `module-load` include, [§2](#2-work-per-compute-host-read-from-the-task-files)) | C | `merge_configs` renders `nova.conf.j2` **on the deploy host for every compute**; per-item template loops | Deploy-host CPU (more cores, fewer forks than cores × ~2); `--limit` |
+| **New:** hypervisor list for `compute_id` | `roles/nova-cell/tasks/config.yml:53-110` (list at `:59-73`) | each compute, **delegated to the first conductor** | C on one controller | C calls × ~C entries each | each call is an `ansible` run inside `kolla_toolbox` on control01 (`library/kolla_toolbox.py:135-151`, `:155`), up to `forks` at once, and one Nova API request listing every hypervisor; no `run_once`, no `failed_when` | none in the code. `--limit` bounds the number of calls, not the size of each answer. Also runs in `genconfig` (`roles/nova-cell/tasks/main.yml:2` includes `config.yml`); a failed call fails that compute ([lab test](#lab-tests)) |
+| **New:** libvirt version check | `roles/nova-cell/tasks/version-check.yml` | computes; first compute for the `run_once` steps | C (container facts) + D (two one-shot containers, one image read) | C | each one-shot container is created, run and removed on the first compute (`roles/nova-cell/tasks/version-check.yml:3-21, :80-98`); the version read inside `nova_libvirt` runs only where the image differs (`roles/nova-cell/tasks/version-check.yml:45-56`) | skip with `--skip-tags nova-libvirt-version-check,nova-libvirt-script-check` (`roles/nova-cell/tasks/version-check.yml:73, :116`) when you know the image is right; tag names from the [tag index](../risk/tag-index.md) |
+| `nova-cell` check-containers | `check-containers.yml` → `service-check-containers` | computes | C×S (3 containers) | 3C `docker exec` | `kolla_set_configs --check` starts a Python process in each container | – |
+| Compute registration wait | `nova-cell/tasks/wait_discover_computes.yml` | first compute of each batch, delegated to conductor | D per batch | up to 21 attempts with 20 × 10 s of sleep per batch; **multiplied by the number of batches when `kolla_serial` is used** | waits until *all* computes of the batch appear in `compute service list` | Keep batches large for this play, or run it once at the end |
+| `discover_hosts --by-service` | `discover_computes.yml` | conductor[0] | D per batch | cell size (it scans services) | one nova-manage call per batch | – |
+| Keystone registration | `service-ks-register` | first host | D per play/batch | per service (up to 6 attempts, 5 × 10 s of sleep: `roles/service-ks-register/defaults/main.yml:38, :40`) | runs `ansible` inside `kolla_toolbox` (container exec + Python startup) | – |
+| DB-sync bootstrap containers | `<role>/tasks/bootstrap_service.yml` | first host | D (per batch with serial) | per service | container create + DB migration check | Skip by using `deploy-containers` for config-only applies |
+| OVS post-config | `roles/openvswitch/tasks/post-config.yml` | network + computes | C (3 `kolla_toolbox` items, `Set system-id, hostname and hw-offload`: `roles/openvswitch/tasks/post-config.yml:3-23`. The bridge and port tasks run on network hosts, and on computes only when `computes_need_external_bridge` is true: DVR, provider networks or OVN distributed FIP, `roles/openvswitch/tasks/post-config.yml:25-53`, `group_vars/all.yml:1224`) | C | always runs; each item runs `ansible` inside the `kolla_toolbox` container (`library/kolla_toolbox.py:135-151`, `:155`) | – |
+| Neutron config-host | `roles/neutron/tasks/config-host.yml` | network + computes | C | C | module load (`roles/neutron/tasks/config-host.yml:2-13`), an IPv6 `sysctl -n` check on every host (`roles/neutron/tasks/config-host.yml:15-18`), sysctl settings through the `sysctl` role only where the L3 agent runs (`roles/neutron/tasks/config-host.yml:20-34`) | – |
+| Neutron config + check | `roles/neutron/tasks/config.yml` | network + computes + controllers | C (per-compute count not established [NOT AVAILABLE]) | C | `merge_configs` of `neutron.conf` and `openvswitch_agent.ini` per host (`roles/neutron/tasks/config.yml:73-103, :152-164`) | – |
+| Image pull | `service-images-pull` | every host | C×S (10 images per compute with the default services and Cinder LVM, [§2](#2-work-per-compute-host-read-from-the-task-files)) | C × image size | registry bandwidth, disk I/O, layer extraction | Local registry mirror close to the computes; pre-pull before maintenance; lower `forks` (in `ansible.cfg` or `ANSIBLE_FORKS`) to cap registry load |
+| Container (re)creation | handlers | notified hosts | Cond, C×S | number of drifted containers | stop (up to `docker_graceful_timeout`, 60 s by default: `group_vars/all.yml:148`), rm, create, start; `kolla_set_configs` on start | Batch with `--limit`/`kolla_serial`; avoid unnecessary drift ([§5](#5-why-a-small-change-becomes-a-large-workload)) |
+| nova-libvirt restart | nova-cell handler | computes | Cond (only when `nova_libvirt` itself changed, in 2025.1) | C | `retries: 5`; readiness check and SASL user re-creation after it (`roles/nova-cell/handlers/main.yml:86-133`) | Avoid libvirt-side drift; batch |
+| Fluentd/cron/toolbox restart | common handlers | all hosts of the `common` play, only when that play runs | Cond (any service enabled/disabled) | N | – | Batch fleet-wide changes |
+| `/etc/hosts` block | ansible-collection-kolla's `roles/etc_hosts/tasks/etc-hosts.yml:25-41` (`bootstrap-servers`) | all | H, content O(N) | **N²** templating | loops over every `baremetal` host | Run `bootstrap-servers` only when adding hosts |
+| Docker daemon restart | ansible-collection-kolla's `roles/docker/handlers/main.yml:10-15`, notified by `roles/docker/tasks/config.yml:9-53` (`daemon.json`) | all | Cond | N simultaneous | `restarted` by default (`docker_systemd_reload: false`, `roles/docker/defaults/main.yml:71`); whether every container on the host stops is [NOT AVAILABLE] ([R14](../risk/risk-register.md#r14)) | `-e kolla_serial=…` with `bootstrap-servers` (`kolla-host.yml:6`) |
+| SSH connection setup | Ansible ssh connection plugin | all | H (handshake once per host, again after 60 s idle) | invocations × SSH round trips | ansible-core already multiplexes connections without any `ansible.cfg` (default `ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s`: ansible-core 2.18.20 `lib/ansible/plugins/connection/ssh.py:79-81`). Kolla ships no `ansible.cfg` for deployments, so `pipelining` stays off and each invocation still makes several round trips (tmp dir, transfer, exec, cleanup) | `pipelining = True` (requires no `requiretty`; `doc/source/user/ansible-tuning.rst:8-18`). On large fleets, a longer persistence such as `ssh_args = -C -o ControlMaster=auto -o ControlPersist=30m` |
+| Certificate distribution | `service-cert-copy` (when `kolla_copy_ca_into_containers`, `no` by default: `group_vars/all.yml:1064`) | every service config dir | C×S | per service | `copy` per service dir | Only enable when needed |
+
+---
+
+## 4. Performance model for 10 / 50 / 100 / 200 / 500 computes
+
+### 4.1 Model
+
+For a play whose tasks all run on the compute group (the nova-cell, openvswitch and neutron plays are dominated by
+it):
+
+```text
+T_play ≈ Σ_tasks [ ceil(H_task / F_eff) × items_task × t_inv ]      (remote work, per-task barrier)
+       + Σ_tasks [ H_task × t_render_task / P ]                       (deploy-host templating, P cores)
+       + Σ_delegated/run_once steps                                    (constant per batch)
+       + T_handlers (if drift)                                         (≈ max over hosts of restart time)
+```
+
+- `H` = hosts in the play (computes + the few others).
+- `F_eff` = min(forks, batch size, what the deploy host CPU and SSH can sustain); the first two bounds are in the code
+  (ansible-core 2.18.20 `lib/ansible/executor/task_queue_manager.py:317`), the third is [NOT AVAILABLE].
+- `t_inv` = latency of one remote module invocation: SSH round trips, AnsiballZ transfer, Python start, `sudo`. The
+  sources do not give it [NOT AVAILABLE]; it depends on your environment (the median per-task time on a single host,
+  from `-vvv` timestamps or the `profile_tasks` callback).
+- `t_render` = deploy-host CPU time to render a template for one host [NOT AVAILABLE].
+- **New in 2025.1:** the hypervisor-list task does not fit the first line cleanly. Its C invocations all execute on
+  one host, the first conductor, and each one's latency grows with the size of the answer, about C entries. Its
+  cost on that host and on the Nova API is [NOT AVAILABLE].
+
+Because of the per-task barrier, the critical path of a play is **(number of executed task-items on the slowest host) ×
+⌈H/F⌉ waves**. Adding computes adds waves, not tasks.
+
+### 4.2 Operation counts by fleet size
+
+Built from the per-compute counts read from the code in [§2](#2-work-per-compute-host-read-from-the-task-files) [CODE].
+Columns whose per-compute count the sources do not give are marked n/a [NOT AVAILABLE]. The "Waves per task" columns
+give ⌈C/F⌉ for compute hosts at F = 20, 50 and 100; the worked examples below use F = 50. The waves multiply the
+per-host invocation chain, they do not add tasks.
+
+| Computes (C) | Compute task results, full `reconfigure` (per-compute count n/a) | `kolla_set_configs --check` execs on computes (10·C) | Invocations, `-t nova` (29·C) | Hypervisor lists on the first conductor, `-t nova` (C) | Hypervisor entries returned in total (≈ C², all computes registered) | Waves per task at F=20 | Waves per task at F=50 | Waves per task at F=100 | Image pulls for a full image update (10·C) | Delegated fact `setup` calls with `--limit <1 host>`, default list (*N* − 1 = C + 7 with 8 non-compute hosts, localhost included) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 10 | n/a | 100 | 290 | 10 | 100 | 1 | 1 | 1 | 100 | 17 |
+| 50 | n/a | 500 | 1,450 | 50 | 2,500 | 3 | 1 | 1 | 500 | 57 |
+| 100 | n/a | 1,000 | 2,900 | 100 | 10,000 | 5 | 2 | 1 | 1,000 | 107 |
+| 200 | n/a | 2,000 | 5,800 | 200 | 40,000 | 10 | 4 | 2 | 2,000 | 207 |
+| 500 | n/a | 5,000 | 14,500 | 500 | 250,000 | 25 | 10 | 5 | 5,000 | 507 |
+
+Reading the table:
+
+- **No-change `reconfigure -t nova`, C=500, F=50.** Each compute runs a chain of 29 remote invocations. With 10
+  waves per task, the compute-side critical path is ≈ **290 × t_inv** plus deploy-host templating
+  (500 × nova.conf renders) and the constant delegated steps. Nothing restarts, and yet the run still costs
+  ~14,500 remote invocations, 1,500 `docker exec` config checks (3 per compute) and 500 `kolla_toolbox` runs on the
+  first conductor, each listing about 500 hypervisors.
+- **The same run after a global change** (e.g. `enable_barbican`) adds a handler phase for every compute container
+  whose files changed. Which nova-cell containers that is depends on the files the change touches; with a change that
+  reaches `nova.conf` only, it is `nova_compute` on every compute, 500 restarts, all in the same flush unless batched
+  ([§5](#5-why-a-small-change-becomes-a-large-workload)). The common containers (fluentd, cron, kolla_toolbox) are
+  not touched by `-t nova`; they restart at the next run of the `common` play (`site.yml:88-103`) when their own files
+  change (for `enable_barbican`, fluentd and cron: `roles/common/tasks/config.yml:104-169, :171-239`).
+- **Image updates multiply data volume.** A tag change downloads 10 images per compute: 5,000 image pulls at C=500.
+  Registry egress ≈ C × Σ(size of the new layers); image sizes are [NOT AVAILABLE]
+  ([Q8](../troubleshooting/open-questions.md#q8) in [Findings](../reference/findings.md)). With the default `forks`
+  and no `kolla_serial`, this traffic is concurrent across up to `forks` hosts.
+- **Fact gathering with `--limit`.** Gathering the 507 other hosts serially from one host costs ≈507 × t_setup before
+  any real work. Fact caching removes it; narrowing `kolla_ansible_delegate_facts_hosts` to the controllers bounds it.
+
+### 4.3 What is constant, per batch, or per host
+
+| Constant (D) | Per batch (with `serial`) | Per controller | Per compute | Per container | Conditional |
+|---|---|---|---|---|---|
+| Keystone registration, DB create/grant, DB-sync containers, cell create/update, `map_cell0`, haproxy frontend rendering (per `loadbalancer` host) | all `run_once` steps above, including the libvirt version check's one-shot containers (new), compute registration wait (up to 20 × 10 s of sleep), `discover_hosts` | API configs, MariaDB/RabbitMQ rolling restarts (per DB/MQ node) | facts, `group_by`, common (when its play runs), config-host, nova-cell/OVS/neutron config, OVS post-config, container facts of the version check, the hypervisor list (run on the first conductor) | `compare_container` exec, image pull, restart/recreate | handlers (drift), image download (new image), libvirt version read (image differs), `update_cell` (URL change), Docker restart (`daemon.json` change) |
+
+---
+
+## 5. Why a small change becomes a large workload
+
+Two independent multipliers apply. The first still holds in 2025.1; the second is narrower.
+
+1. **Work multiplier (always).** Every run that includes the `compute` group executes the full per-host chain on
+   every compute, even with no change ([§2](#2-work-per-compute-host-read-from-the-task-files)): config re-rendering and
+   comparison, container config checks, common role (in untagged runs), sysctl and modules, OVS post-config,
+   discovery, and in 2025.1 the libvirt version check and the hypervisor list. **Kolla has no "only if changed"
+   short-circuit at play level.**
+2. **Restart multiplier (when inputs are global).** Global inputs are rendered into every compute's files ([Component
+   dependencies §5](../components/dependencies.md#5-compute-node-dependency-summary)). **Changed in 2025.1:**
+   loop-notify no longer widens one drifted container to the whole role on that host. The config tasks do not notify;
+   `service-check-containers` compares each container and notifies only the items it found changed
+   (`roles/service-check-containers/tasks/main.yml:4-29`, `:34-41`; [Tags
+   §2.4](../risk/tags.md#24-loop-notify-is-gone-in-20251-code)). A global input still restarts every container whose
+   files it reaches, on every compute, and without `kolla_serial` all those restarts land in one handler flush.
+
+---
+
+## 6. Scaling at 3, 10 and 30 computes, read from the code
+
+The scenarios of [§2](#2-work-per-compute-host-read-from-the-task-files) at 3, 10 and 30 computes, for an inventory with
+3 controllers, 2 network nodes, 1 storage node, 1 monitoring node and localhost (the shape of
+`inventory/multinode:3-33` with more computes). Counts on computes come from
+[§2](#2-work-per-compute-host-read-from-the-task-files) [CODE]. Cells marked n/a are [NOT AVAILABLE]: the sources give
+neither task-result totals, nor the non-compute part of the fleet counts, nor durations.
+
+| Scenario | Computes | forks | Task results (fleet) | per compute | `compare_container` calls on computes | Hypervisor lists on control01 | Restarts/recreates | nova-cell play duration | Total duration |
+|---|---|---|---|---|---|---|---|---|---|
+| `deploy` (first time) | 3 | 20 | n/a | n/a | 30 (no check exec) | 3 | n/a | n/a | n/a |
+| `deploy` (first time) | 10 | 20 | n/a | n/a | 100 (no check exec) | 10 | n/a | n/a | n/a |
+| `deploy` (first time) | 30 | 20 | n/a | n/a | 300 (no check exec) | 30 | n/a | n/a | n/a |
+| `reconfigure -t nova` (no change) | 3 | 20 | n/a | n/a | 9 | 3 | 0 | n/a | n/a |
+| `reconfigure -t nova` (no change) | 10 | 20 | n/a | n/a | 30 | 10 | 0 | n/a | n/a |
+| `reconfigure -t nova` (no change) | 30 | 20 | n/a | n/a | 90 | 30 | 0 | n/a | n/a |
+| `reconfigure -t nova` (no change), forks 5 | 30 | 5 | n/a | n/a | 90 | 30 | 0 | n/a | n/a |
+| `reconfigure -t nova` (no change), forks 50 | 30 | 50 | n/a | n/a | 90 | 30 | 0 | n/a | n/a |
+| `reconfigure -t nova` with a nova-compute-only override | 30 | 20 | n/a | n/a | 90 | 30 | **30** (30 × nova_compute; 90 in 2024.1) | n/a | n/a |
+| `reconfigure -t nova --limit compute001` (no change) | 30 | 20 | n/a | n/a | 3 | 1 | 0 | n/a | n/a |
+
+What the code shows:
+
+1. **Per-compute work is constant and fleet work is linear, with one exception.**
+   - Every compute runs the same task files for the same services
+     ([§2](#2-work-per-compute-host-read-from-the-task-files)), so the per-compute counts do not depend on C and the
+     compute part of every fleet count grows by the per-compute count. The per-compute task-result counts for a deploy
+     and a `-t nova` run are [NOT AVAILABLE].
+   - The number of `compare_container` calls grows by 10 per compute for a deploy and 3 per compute for `-t nova`.
+     A call runs `docker exec kolla_set_configs --check` only when the container exists and no other attribute
+     differs; it then also compares the container's systemd unit file (`module_utils/kolla_container_worker.py:58-65`,
+     `module_utils/kolla_docker_worker.py:146-181`). On a first-time deploy every container is missing, so no check
+     exec runs; a no-change run does one exec per call [CODE]. With Podman the same steps go through
+     `module_utils/kolla_podman_worker.py`; this page counts the Docker path only.
+   - **The exception, new in 2025.1:** the answer to each hypervisor list grows with the number of registered
+     hypervisors, so the total data the first conductor handles grows with C² (`roles/nova-cell/tasks/config.yml:59-79`:
+     the whole list is returned, then filtered on the deploy host by `selectattr`) [CODE]. On a first-time deploy the
+     list is empty or partial, and the `compute_id` is generated from the host name instead (`:104-110`).
+   - forks changes none of these counts: it only bounds how many hosts run a task at once
+     (ansible-core 2.18.20 `lib/ansible/executor/task_queue_manager.py:317`) [CODE].
+2. **The compute-wide plays grow with C.**
+   - The plays that run on every compute are common, iscsi (with Cinder LVM), openvswitch, nova-cell and neutron
+     (`site.yml:88-103`, `:605-619`, `:669-691`; `nova.yml:125-147`; `compute` is in the `common`, `iscsid` and
+     `openvswitch` groups: `inventory/multinode:49-54, :105-108, :307-310`) [CODE]. **Changed in 2025.1:** openvswitch
+     now runs before nova-cell ([Execution flow §2.4](deployment-execution-flow.md#24-compute-node-deployment-what-one-compute-host-experiences)).
+     The share of run time they take as C grows is [NOT AVAILABLE].
+3. **forks and the deploy host's CPU.**
+   - Whether, and at which forks value, the deploy host's CPU becomes the bottleneck is [NOT AVAILABLE]
+     ([Q7](../troubleshooting/open-questions.md#q7) in [Findings](../reference/findings.md)).
+   - What runs on the deploy host is in the code [CODE]: one worker process per queued host/task, up to forks
+     (ansible-core 2.18.20 `lib/ansible/executor/task_queue_manager.py:317`,
+     `lib/ansible/plugins/strategy/__init__.py:396-428`), module packaging (AnsiballZ) for every invocation
+     (ansible-core 2.18.20 `lib/ansible/plugins/action/__init__.py:221`, `:296`), templating of `nova.conf.j2`
+     (`ansible/action_plugins/merge_configs.py:149-165`) and the per-host `group_by` loop (`site.yml:20-74`).
+   - Whether forks overlap SSH and remote-execution latency in production, and up to which point, is
+     [NOT AVAILABLE].
+   - Size the deploy host (cores) together with forks.
+   - **New in 2025.1:** forks also sets how many hypervisor lists run at the same time on the first conductor, since
+     they are queued like any other per-host task. Whether that load matters for control01 or the Nova API is
+     [NOT AVAILABLE].
+4. **A small change restarts the fleet in one step, but only the changed containers** [CODE]. With one
+   nova-compute-only override on 30 computes, only the `nova_compute` config changes (`nova.conf` is rendered for
+   `nova-compute` and not for `nova-libvirt` or `nova-ssh` on a compute: `roles/nova-cell/defaults/main.yml:496-502`),
+   so `service-check-containers` notifies `Restart nova-compute container` alone: 30 container restarts, against 90 in
+   2024.1 with loop-notify. Without `kolla_serial` all 30 computes are in one batch (`nova.yml:140`, `serial` defaults
+   to "0", and the CLI's own value is 0: `kolla_ansible/cli/commands.py:20-22`; ansible-core 2.18.20
+   `lib/ansible/executor/playbook_executor.py:183-191`, `:290`), so the restarts run at one handler flush
+   (`roles/nova-cell/tasks/deploy.yml:18-19`), on at most `forks` hosts at a time (ansible-core 2.18.20
+   `lib/ansible/plugins/strategy/__init__.py:396-428, :951-961`). How close together they land in time is
+   [NOT AVAILABLE]. The lower count is read from the code, not observed ([lab test](#lab-tests)).
+5. **`--limit` bounds the restarts, but fact gathering stays O(inventory) by default** [CODE].
+   - With `--limit compute001` on the 30-compute inventory (38 hosts, localhost included), compute001 runs
+     **38 `setup` calls in sequence**: its own (`gather-facts.yml:19-25`), plus one delegated call for each of the
+     37 other inventory hosts (`gather-facts.yml:34-62`: with one limited host, the slice
+     `kolla_ansible_delegate_facts_hosts[0::1]` is the whole list, minus the limited host itself, `:47`, `:59`). The
+     delegated loop runs its items one after another (ansible-core 2.18.20 `lib/ansible/executor/task_executor.py:299`,
+     `:347`). Its duration is [NOT AVAILABLE].
+   - **New in 2025.1:** set `kolla_ansible_delegate_facts_hosts` to a shorter list and the loop shrinks with it
+     (`group_vars/all.yml:43`). Kolla's own guidance says controllers are needed and other computes are not
+     (`doc/source/user/ansible-tuning.rst:188-203`). With the 3 controllers only, compute001 would make 4 `setup`
+     calls instead of 38. Whether a compute-only run then renders the same files is not established from the code
+     alone ([lab test](#lab-tests)).
+   - The delegated `discover_hosts`/`list_cells` work and the hypervisor list run on the first conductor, control01
+     (`roles/nova-cell/tasks/wait_discover_computes.yml:42-43`, `discover_computes.yml:21`,
+     `roles/nova-cell/tasks/config.yml:73`).
+   - With SSH, multiply the delegated count by the real per-host `setup` time; at 500 computes it is ≈508 sequential
+     fact gatherings before any work starts, with the default list.
+
+---
+
+## 7. Influence of the main variables
+
+| Variable | Effect | Guidance |
+|---|---|---|
+| **Ansible forks** | Divides the number of waves per task (⌈H/F⌉). Bounded by deploy-host CPU (templating, AnsiballZ build per invocation) and memory (one worker process per queued host/task, up to forks). **Changed in 2025.1:** no `--forks` on the `kolla-ansible` CLI; set `forks` in `ansible.cfg` or `ANSIBLE_FORKS` | Raise until deploy-host CPU saturates; where that happens is [NOT AVAILABLE] ([§6](#6-scaling-at-3-10-and-30-computes-read-from-the-code)). Size the deploy host for templating |
+| **Serial (`kolla_serial`)** | Bounds simultaneous *restarts* per play, but **adds** time: every batch re-runs `run_once` steps (now including the libvirt version check) and the compute registration wait, and each batch waits for the slowest host. **Changed in 2025.1:** `reconfigure` and `upgrade` force `kolla_serial=0` after your `-e` (`kolla_ansible/cli/commands.py:136`, `:278`) | Use `deploy -e kolla_serial=N` for restart safety on changes with drift, not for no-change runs ([Controlled batches §1.2](../operations/controlled-batches.md#12-rolling-runs-with-kolla_serial-not-with-reconfigure)). Prefer `genconfig` + `deploy-containers --limit` batches |
+| **`max_fail_percentage`** | Set on every play, 100 unless `kolla_max_fail_percentage` or a per-service variable is set (`doc/source/user/ansible-tuning.rst:143-162`); compared with the failures of the current batch only ([§1](#1-how-ansible-core-218-spends-time-in-kolla-ansible)) | Leave at 100 for no-change runs; a lower value makes a batch stop the play when too many of its hosts fail |
+| **`kolla_ansible_delegate_facts_hosts`** (new in 2025.1) | Sets which hosts a `--limit` run gathers facts for by delegation; default `groups['all']` (`group_vars/all.yml:43`) | Narrow it for compute-only `--limit` runs on large inventories, per `doc/source/user/ansible-tuning.rst:188-203`; check the rendered files on a lab first |
+| **Task delegation** | `delegate_to` steps serialise on one host (conductor[0], neutron-server[0], rabbitmq[0]). In 2025.1 conductor[0] also runs one hypervisor list per compute | That host's health gates the whole run |
+| **SSH overhead** | Each remote invocation pays several SSH round trips (tmp dir, transfer, exec, cleanup). The connection itself is reused: ansible-core defaults to `ControlMaster=auto` with `ControlPersist=60s` (ansible-core 2.18.20 `lib/ansible/plugins/connection/ssh.py:79-81`), so a new handshake happens only after a host has been idle for 60 s | `pipelining = True` (requires no `requiretty` in sudoers) is the main lever. On large fleets, a longer `ControlPersist` (keep `-C -o ControlMaster=auto` in `ssh_args`) and a short `ControlPath` |
+| **Docker image size** | Pull time and disk I/O per host | Local registry, pre-pull, avoid unnecessary tag churn |
+| **Network bandwidth** | Concurrent pulls from up to `forks` hosts | Cap with a lower `forks` during `pull`; registry caching |
+| **Disk I/O** | Image extraction, container creation, `/etc/kolla` writes | SSD for `/var/lib/docker` |
+| **Container startup time** | Handlers start the container through its systemd unit and wait until the unit is running, polled every 5 s (`module_utils/kolla_docker_worker.py:376-400`, `module_utils/kolla_systemd_worker.py:98-105`, `:206-217`), not for service readiness, except explicit waits (haproxy, OVS DB, MariaDB WSREP, RabbitMQ) | – |
+| **Handler execution** | Runs at the flush in parallel; `docker_graceful_timeout` (60 s by default, `group_vars/all.yml:148`) bounds stop time | Batch to bound the blast radius |
+| **Parallel vs sequential** | Hosts run in parallel within a task; items and tasks run sequentially per host; plays are sequential | Reduce items (disable unused services), use tags to skip plays, use `--limit` to skip hosts |
+
+---
+
+## 8. Bottlenecks and optimisation opportunities (ranked)
+
+1. **Avoid running compute-wide plays when you do not need them.**
+   - Use `-t nova-api` for API-only changes (no computes: the nova-cell play is not tagged `nova-api`,
+     `nova.yml:110-114, :135-139`).
+   - Use `--limit` for host-scoped changes.
+   - Use `--skip-tags haproxy` when frontends are not changing (it skips the whole loadbalancer play:
+     `site.yml:105-118`). Under a service tag such as `-t nova` the loadbalancer play's final restart check is already
+     skipped in 2025.1 ([Tags §2.2](../risk/tags.md#22-handlers-ignore-tags-code)).
+2. **Separate config from apply.** `genconfig` once, then `deploy-containers --limit <batch>`. With `-t nova`, the
+   apply step on a compute runs only `setup` and the `check-containers.yml` loop of nova-cell
+   (4 invocations instead of 29 for `reconfigure -t nova`, [§2](#2-work-per-compute-host-read-from-the-task-files)), and
+   runs no bootstrap, Keystone or version-check steps [CODE: `roles/nova-cell/tasks/deploy-containers.yml:2`,
+   `roles/nova/tasks/deploy-containers.yml:2`, `nova.yml:53-55, :89-91`]. **Changed in 2025.1:** `genconfig` no longer
+   pulls the fluentd image, but it now runs the hypervisor list for every compute, so it needs a working Nova API
+   ([§3](#3-expensive-tasks-and-their-scaling-factors)).
+3. **Fact caching + setup filter + a narrower delegated list.** This removes or bounds the O(N) serial delegated
+   gathering under `--limit` and speeds the first play. All options are documented in
+   `doc/source/user/ansible-tuning.rst`.
+4. **SSH pipelining** cuts the per-invocation constant that multiplies 29–36 invocations per compute in a `-t nova`
+   run (the count for a full run is [NOT AVAILABLE]). A longer `ControlPersist` than the 60 s default avoids
+   repeated handshakes on large fleets.
+5. **Size forks to the deploy host.** Templating of large Jinja templates (`nova.conf.j2`, `neutron.conf.j2`) happens
+   on the deploy host, per compute. Keep in mind that forks also sets the concurrency of the hypervisor lists on the
+   first conductor.
+6. **Pre-pull images** (`kolla-ansible pull`) before upgrade windows, from a nearby registry. A pre-pulled
+   `nova_libvirt` image also makes the version check's one-shot containers start without a download.
+7. **Minimise global drift.**
+   - Batch `enable_*` changes.
+   - Avoid touching RabbitMQ/memcached membership casually.
+   - Keep compute-relevant overrides in `nova/nova-compute.conf` (or `nova/<host>/nova-compute.conf` for one host:
+     `roles/nova-cell/tasks/config.yml:131`) rather than the global `nova.conf`.
+   - Do not put server-only ML2 options in `neutron/ml2_conf.ini`.
+8. **Keep batches large for the nova-cell play when using `kolla_serial`.** The compute registration wait, discovery
+   and the version check's one-shot containers run once per batch.
+9. **Disable services you do not use.** The `group_by` optimisation removes their plays entirely (`site.yml:4-6`).
+   Every enabled service adds tasks to the common role and to every host in its groups.
+
+## Lab tests
+
+These points are read from the code and need a lab run before an operator relies on them (they are also in the
+change map of the study):
+
+- **Hypervisor list cost:** time and load of `reconfigure -t nova` on the first conductor and the Nova API with many
+  computes, and whether `genconfig` fails on a cloud whose Nova API is down
+  (`roles/nova-cell/tasks/config.yml:53-110`).
+- **Override restarts only `nova_compute`:** a nova-compute-only override restarts one container per compute, not
+  three ([§6](#6-scaling-at-3-10-and-30-computes-read-from-the-code) item 4).
+- **Narrowed `kolla_ansible_delegate_facts_hosts`:** a `--limit` compute run with the list set to the controllers
+  renders the same nova-cell, openvswitch and neutron files as a run with the default list.
+
+## Related
+
+- [Execution flow §5](deployment-execution-flow.md#5-batching-serial-and-its-interaction-with-order) (batching)
+- [Why a small change creates a large workload](../risk/small-change-large-workload.md) (small change, large workload)
+- [Write config first, apply in controlled batches
+  §1.1](../operations/controlled-batches.md#11-compute-changes-in-controlled-batches-recommended-pattern) (batched
+  compute changes)
+- [Open questions](../troubleshooting/open-questions.md) ([Q7](../troubleshooting/open-questions.md#q7),
+  [Q8](../troubleshooting/open-questions.md#q8): timings and image sizes)
+- [Kolla-Ansible Academy](../index.md)

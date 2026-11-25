@@ -1,0 +1,297 @@
+[WARNING]: Invalid characters were found in group names but not replaced, use
+-vvvv to see details
+[WARNING]: Could not match supplied host pattern, ignoring:
+all_using_limit_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+kolla_action_precheck
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_loadbalancer_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_letsencrypt_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_collectd_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_influxdb_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_telegraf_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_redis_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_valkey_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_mariadb_True
+[WARNING]: Could not match supplied host pattern, ignoring: mariadb_restart
+[WARNING]: Could not match supplied host pattern, ignoring: mariadb_start
+[WARNING]: Could not match supplied host pattern, ignoring:
+mariadb_bootstrap_restart
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_memcached_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_prometheus_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_iscsid_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_multipathd_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_rabbitmq_True
+[WARNING]: Could not match supplied host pattern, ignoring: rabbitmq_restart
+[WARNING]: Could not match supplied host pattern, ignoring: enable_etcd_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_keystone_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_opensearch_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_ceph_rgw_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_glance_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_ironic_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_cinder_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_placement_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_openvswitch_True_enable_ovs_dpdk_False
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_openvswitch_True_enable_ovs_dpdk_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_ovn_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_nova_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_neutron_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_kuryr_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_hacluster_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_heat_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_horizon_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_magnum_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_mistral_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_manila_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_gnocchi_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_ceilometer_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_aodh_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_barbican_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_cyborg_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_designate_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_trove_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_watcher_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_grafana_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_cloudkitty_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_tacker_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_octavia_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_zun_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_blazar_True
+[WARNING]: Could not match supplied host pattern, ignoring:
+enable_masakari_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_venus_True
+[WARNING]: Could not match supplied host pattern, ignoring: enable_skyline_True
+
+playbook: ansible/site.yml
+
+  play #1 (all): Gather facts for all hosts	TAGS: [always]
+      TASK TAGS: [always]
+
+  play #2 (all_using_limit_True): Gather facts for all hosts (if using --limit)	TAGS: [always]
+      TASK TAGS: [always]
+
+  play #3 (all): Group hosts based on configuration	TAGS: [always]
+      TASK TAGS: [always]
+
+  play #4 (kolla_action_precheck): Apply role prechecks	TAGS: []
+      TASK TAGS: []
+
+  play #5 (cron,fluentd,kolla-logs,kolla-toolbox): Apply role common	TAGS: [common]
+      TASK TAGS: [common]
+
+  play #6 (loadbalancer,&enable_loadbalancer_True): Apply role loadbalancer	TAGS: [haproxy,keepalived,loadbalancer]
+      TASK TAGS: [aodh, barbican, blazar, ceph-rgw, cinder, cloudkitty, cyborg, designate, etcd, glance, gnocchi, grafana, haproxy, heat, horizon, influxdb, ironic, keepalived, keystone, letsencrypt, loadbalancer, magnum, manila, mariadb, masakari, memcached, mistral, neutron, nova, nova-api, nova-cell, octavia, opensearch, placement, prometheus, rabbitmq, skyline, tacker, trove, venus, watcher, zun]
+
+  play #7 (letsencrypt,&enable_letsencrypt_True): Apply role letsencrypt	TAGS: []
+      TASK TAGS: [letsencrypt]
+
+  play #8 (collectd,&enable_collectd_True): Apply role collectd	TAGS: []
+      TASK TAGS: [collectd]
+
+  play #9 (influxdb,&enable_influxdb_True): Apply role influxdb	TAGS: []
+      TASK TAGS: [influxdb]
+
+  play #10 (telegraf,&enable_telegraf_True): Apply role telegraf	TAGS: []
+      TASK TAGS: [telegraf]
+
+  play #11 (redis,&enable_redis_True): Apply role redis	TAGS: []
+      TASK TAGS: [redis]
+
+  play #12 (valkey,&enable_valkey_True): Apply role valkey	TAGS: []
+      TASK TAGS: [valkey]
+
+  play #13 (mariadb,&enable_mariadb_True): Apply role mariadb	TAGS: [mariadb]
+      TASK TAGS: [mariadb]
+
+  play #14 (mariadb_restart,&enable_mariadb_True): Restart mariadb services	TAGS: [mariadb]
+      TASK TAGS: [mariadb]
+
+  play #15 (mariadb_start,&enable_mariadb_True): Start mariadb services	TAGS: [mariadb]
+      TASK TAGS: [mariadb]
+
+  play #16 (mariadb_bootstrap_restart,&enable_mariadb_True): Restart bootstrap mariadb service	TAGS: [mariadb]
+      TASK TAGS: [mariadb]
+
+  play #17 (mariadb,&enable_mariadb_True): Apply mariadb post-configuration	TAGS: [mariadb]
+      TASK TAGS: [mariadb]
+
+  play #18 (memcached,&enable_memcached_True): Apply role memcached	TAGS: []
+      TASK TAGS: [memcache, memcached]
+
+  play #19 (prometheus,prometheus-node-exporter,prometheus-mysqld-exporter,prometheus-memcached-exporter,prometheus-cadvisor,prometheus-alertmanager,prometheus-openstack-exporter,prometheus-elasticsearch-exporter,prometheus-blackbox-exporter,prometheus-libvirt-exporter,&enable_prometheus_True): Apply role prometheus	TAGS: []
+      TASK TAGS: [prometheus]
+
+  play #20 (iscsid,tgtd,&enable_iscsid_True): Apply role iscsi	TAGS: []
+      TASK TAGS: [iscsi]
+
+  play #21 (multipathd,&enable_multipathd_True): Apply role multipathd	TAGS: []
+      TASK TAGS: [multipathd]
+
+  play #22 (rabbitmq,&enable_rabbitmq_True): Apply role rabbitmq	TAGS: [rabbitmq]
+      TASK TAGS: [rabbitmq]
+
+  play #23 (rabbitmq_restart,&enable_rabbitmq_True): Restart rabbitmq services	TAGS: [rabbitmq]
+      TASK TAGS: [rabbitmq]
+
+  play #24 (rabbitmq,&enable_rabbitmq_True): Apply rabbitmq post-configuration	TAGS: [rabbitmq]
+      TASK TAGS: [rabbitmq]
+
+  play #25 (etcd,&enable_etcd_True): Apply role etcd	TAGS: []
+      TASK TAGS: [etcd]
+
+  play #26 (keystone,&enable_keystone_True): Apply role keystone	TAGS: []
+      TASK TAGS: [keystone]
+
+  play #27 (opensearch,&enable_opensearch_True): Apply role opensearch	TAGS: []
+      TASK TAGS: [opensearch]
+
+  play #28 (kolla-toolbox,&enable_ceph_rgw_True): Apply role ceph-rgw	TAGS: []
+      TASK TAGS: [ceph-rgw]
+
+  play #29 (glance-api,&enable_glance_True): Apply role glance	TAGS: []
+      TASK TAGS: [glance]
+
+  play #30 (ironic-api,ironic-conductor,ironic-inspector,ironic-tftp,ironic-http,&enable_ironic_True): Apply role ironic	TAGS: []
+      TASK TAGS: [ironic]
+
+  play #31 (cinder-api,cinder-backup,cinder-scheduler,cinder-volume,&enable_cinder_True): Apply role cinder	TAGS: []
+      TASK TAGS: [cinder]
+
+  play #32 (placement-api,&enable_placement_True): Apply role placement	TAGS: []
+      TASK TAGS: [placement]
+
+  play #33 (openvswitch,&enable_openvswitch_True_enable_ovs_dpdk_False): Apply role openvswitch	TAGS: []
+      TASK TAGS: [openvswitch]
+
+  play #34 (openvswitch,&enable_openvswitch_True_enable_ovs_dpdk_True): Apply role ovs-dpdk	TAGS: []
+      TASK TAGS: [ovs-dpdk]
+
+  play #35 (ovn-controller,&enable_ovn_True): Apply role ovn-controller	TAGS: []
+      TASK TAGS: [ovn, ovn-controller]
+
+  play #36 (ovn-nb-db,ovn-northd,ovn-sb-db,&enable_ovn_True): Apply role ovn-db	TAGS: []
+      TASK TAGS: [ovn, ovn-db]
+
+  play #37 (nova-api,&enable_nova_True): Bootstrap nova API databases	TAGS: [nova,nova-api,nova-api-bootstrap,nova-bootstrap]
+      TASK TAGS: [nova, nova-api, nova-api-bootstrap, nova-bootstrap]
+
+  play #38 (nova-conductor,&enable_nova_True): Bootstrap nova cell databases	TAGS: [nova-cell,nova,nova-cell-bootstrap,nova-bootstrap]
+      TASK TAGS: [nova, nova-bootstrap, nova-cell, nova-cell-bootstrap]
+
+  play #39 (nova-api,nova-scheduler,nova-super-conductor,&enable_nova_True): Apply role nova	TAGS: [nova-api-upgrade,nova,nova-api,nova-api-deploy]
+      TASK TAGS: [nova, nova-api, nova-api-deploy, nova-api-upgrade]
+
+  play #40 (compute,nova-compute-ironic,nova-conductor,nova-novncproxy,nova-serialproxy,nova-spicehtml5proxy,&enable_nova_True): Apply role nova-cell	TAGS: [nova-cell,nova-cell-upgrade,nova,nova-cell-deploy]
+      TASK TAGS: [nova, nova-cell, nova-cell-deploy, nova-cell-upgrade]
+
+  play #41 (nova-scheduler,&enable_nova_True): Refresh nova scheduler cell cache	TAGS: [nova-refresh-scheduler-cell-cache,nova-api,nova]
+      TASK TAGS: [nova, nova-api, nova-refresh-scheduler-cell-cache]
+
+  play #42 (nova-super-conductor,&enable_nova_True): Reload global Nova super conductor services	TAGS: [nova-api-reload,nova,nova-reload,nova-api]
+      TASK TAGS: [nova, nova-api, nova-api-reload, nova-reload]
+
+  play #43 (compute,nova-compute-ironic,nova-conductor,nova-novncproxy,nova-serialproxy,nova-spicehtml5proxy,&enable_nova_True): Reload Nova cell services	TAGS: [nova-cell,nova-reload,nova,nova-cell-reload]
+      TASK TAGS: [nova, nova-cell, nova-cell-reload, nova-reload]
+
+  play #44 (nova-api,nova-scheduler,&enable_nova_True): Reload global Nova API services	TAGS: [nova-api-reload,nova,nova-reload,nova-api]
+      TASK TAGS: [nova, nova-api, nova-api-reload, nova-reload]
+
+  play #45 (nova-api,&enable_nova_True): Run Nova API online data migrations	TAGS: [nova-api-online-data-migrations,nova,nova-api,nova-online-data-migrations]
+      TASK TAGS: [nova, nova-api, nova-api-online-data-migrations, nova-online-data-migrations]
+
+  play #46 (nova-conductor,&enable_nova_True): Run Nova cell online data migrations	TAGS: [nova-cell,nova,nova-online-data-migrations,nova-cell-online-data-migrations]
+      TASK TAGS: [nova, nova-cell, nova-cell-online-data-migrations, nova-online-data-migrations]
+
+  play #47 (neutron-server,neutron-dhcp-agent,neutron-l3-agent,ironic-neutron-agent,neutron-metadata-agent,neutron-ovn-metadata-agent,neutron-metering-agent,neutron-bgp-dragent,neutron-infoblox-ipam-agent,compute,manila-share,&enable_neutron_True): Apply role neutron	TAGS: []
+      TASK TAGS: [neutron]
+
+  play #48 (compute,&enable_kuryr_True): Apply role kuryr	TAGS: []
+      TASK TAGS: [kuryr]
+
+  play #49 (hacluster,hacluster-remote,&enable_hacluster_True): Apply role hacluster	TAGS: []
+      TASK TAGS: [hacluster]
+
+  play #50 (heat-api,heat-api-cfn,heat-engine,&enable_heat_True): Apply role heat	TAGS: []
+      TASK TAGS: [heat]
+
+  play #51 (horizon,&enable_horizon_True): Apply role horizon	TAGS: []
+      TASK TAGS: [horizon]
+
+  play #52 (magnum-api,magnum-conductor,&enable_magnum_True): Apply role magnum	TAGS: []
+      TASK TAGS: [magnum]
+
+  play #53 (mistral-api,mistral-engine,mistral-executor,mistral-event-engine,&enable_mistral_True): Apply role mistral	TAGS: []
+      TASK TAGS: [mistral]
+
+  play #54 (manila-api,manila-data,manila-share,manila-scheduler,&enable_manila_True): Apply role manila	TAGS: []
+      TASK TAGS: [manila]
+
+  play #55 (gnocchi-api,gnocchi-metricd,gnocchi-statsd,&enable_gnocchi_True): Apply role gnocchi	TAGS: []
+      TASK TAGS: [gnocchi]
+
+  play #56 (ceilometer-central,ceilometer-notification,ceilometer-compute,ceilometer-ipmi,&enable_ceilometer_True): Apply role ceilometer	TAGS: []
+      TASK TAGS: [ceilometer]
+
+  play #57 (aodh-api,aodh-evaluator,aodh-listener,aodh-notifier,&enable_aodh_True): Apply role aodh	TAGS: []
+      TASK TAGS: [aodh]
+
+  play #58 (barbican-api,barbican-keystone-listener,barbican-worker,&enable_barbican_True): Apply role barbican	TAGS: []
+      TASK TAGS: [barbican]
+
+  play #59 (cyborg-api,cyborg-agent,cyborg-conductor,&enable_cyborg_True): Apply role cyborg	TAGS: []
+      TASK TAGS: [cyborg]
+
+  play #60 (designate-api,designate-central,designate-producer,designate-mdns,designate-worker,designate-sink,designate-backend-bind9,&enable_designate_True): Apply role designate	TAGS: []
+      TASK TAGS: [designate]
+
+  play #61 (trove-api,trove-conductor,trove-taskmanager,&enable_trove_True): Apply role trove	TAGS: []
+      TASK TAGS: [trove]
+
+  play #62 (watcher-api,watcher-engine,watcher-applier,&enable_watcher_True): Apply role watcher	TAGS: []
+      TASK TAGS: [watcher]
+
+  play #63 (grafana,&enable_grafana_True): Apply role grafana	TAGS: []
+      TASK TAGS: [grafana]
+
+  play #64 (cloudkitty-api,cloudkitty-processor,&enable_cloudkitty_True): Apply role cloudkitty	TAGS: []
+      TASK TAGS: [cloudkitty]
+
+  play #65 (tacker-server,tacker-conductor,&enable_tacker_True): Apply role tacker	TAGS: []
+      TASK TAGS: [tacker]
+
+  play #66 (octavia-api,octavia-health-manager,octavia-housekeeping,octavia-worker,&enable_octavia_True): Apply role octavia	TAGS: []
+      TASK TAGS: [octavia]
+
+  play #67 (zun-api,zun-wsproxy,zun-compute,zun-cni-daemon,&enable_zun_True): Apply role zun	TAGS: []
+      TASK TAGS: [zun]
+
+  play #68 (blazar-api,blazar-manager,&enable_blazar_True): Apply role blazar	TAGS: []
+      TASK TAGS: [blazar]
+
+  play #69 (masakari-api,masakari-engine,masakari-hostmonitor,masakari-instancemonitor,&enable_masakari_True): Apply role masakari	TAGS: []
+      TASK TAGS: [masakari]
+
+  play #70 (venus-api,venus-manager,&enable_venus_True): Apply role venus	TAGS: []
+      TASK TAGS: [venus]
+
+  play #71 (skyline,&enable_skyline_True): Apply role skyline	TAGS: []
+      TASK TAGS: [skyline]
