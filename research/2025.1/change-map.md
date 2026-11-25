@@ -378,6 +378,37 @@ Points that lot 5 found while re-reading the shared infrastructure pages; they a
 - **`service-cert-copy`:** backend files are copied for `<role>_enable_tls_backend` and `tls-backend` hosts only; no
   task notifies.
 
+### X25 — Found in lot 6 (2026-11-25) [CODE]
+
+Points that lot 6 found while re-reading the stateful service pages; they are written in `components/mariadb.md`,
+`components/rabbitmq.md`, `components/keystone.md`, `operations/database-operations.md`,
+`operations/change-control-plane-membership.md` and fact sheet B.
+
+- **MariaDB checks use the node, not the VIP:** the WSREP waits, the post-deploy check (still named "through VIP") and
+  the end of `mariadb-recovery` query `api_interface_address` through `kolla_toolbox`
+  (`roles/mariadb/tasks/check.yml:6-22`), so a run can end green while the VIP or ProxySQL does not serve the database.
+- **No clustercheck container by default:** `enable_mariadb_clustercheck` follows `mariadb_loadbalancer`
+  (`roles/mariadb/defaults/main.yml:132`), and `upgrade` removes an existing one under ProxySQL
+  (`roles/mariadb/tasks/upgrade.yml:2-9`).
+- **`innodb_log_file_size = 2048M` and `mariadbd-safe`:** the first 2025.1 run restarts every MariaDB node, in the
+  `serial: "33%"` restart play.
+- **Backup:** commands renamed with hyphens (`setup.cfg:72-73`); the client reads the backup host itself
+  (`roles/mariadb/templates/backup.my.cnf.j2:5-6`); new file layout (`full-…/`, `incr-…-since-…/`, `last_full_file`),
+  and an incremental backup fails until a 2025.1 full backup exists (kolla `docker/mariadb/mariadb-server/backup.sh:28-31`);
+  `mariadb_backup_target` is set but never read (`group_vars/all.yml:555`).
+- **Recovery:** the 2024.1 bug that started a disabled clustercheck is fixed (`recover_cluster.yml:186, :217`); a
+  container-engine migration runs the full recovery (`roles/mariadb/tasks/deploy.yml:6-9`,
+  `migrate-container-engine.yml:12-17`).
+- **RabbitMQ:** quorum, transient quorum and stream fanout queues are always on (stream fanout by default), RabbitMQ
+  4.0 is the default image, `remove-ha-all-policy` is unconditional, and `version-check.yml:64` still names a
+  `rabbitmq-upgrade` command that no longer exists.
+- **Keystone:** `www_authenticate_uri` now names `keystone_public_url` in 25 template lines of 23 roles, so the first
+  2025.1 run changes every API service with a `[keystone_authtoken]` section; both keystone backends add
+  `option httpchk`; a new domain file now restarts `keystone` instead of failing the check step; `keystone_fernet`
+  detection uses the container list, not its state (`roles/keystone/tasks/bootstrap_service.yml:2-19`).
+- **Membership:** with loop-notify gone, a controller change restarts `nova_compute` and `neutron_openvswitch_agent`
+  on the computes, no longer `nova_libvirt` and `nova_ssh`.
+
 ## 2. Impact on the 2024.1 pages
 
 69 pages (`find docs/day2/2024.1 -name '*.md'`). "Cited lines" counts the `path:line` citations of the page that
@@ -545,3 +576,9 @@ need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 202
 | First 2025.1 run on an OVN cloud | X24 | whether every NB, SB and northd container restarts at once, and RAFT recovery |
 | `neutron_ovn_availability_zones` with two zones, first 2025.1 run | X24 | how Neutron reads `a:b` instead of `a,b` |
 | First 2025.1 `reconfigure -t common` | X24 | whether `fluentd`, `cron` and `kolla_toolbox` restart, and for how long logs are lost |
+| Upgrade 2024.1 → 2025.1 of RabbitMQ (3.13 → 4.0) with the queues of 2024.1 | X11, X25 | how the transient and fanout queues move to quorum and stream queues, and what clients see meanwhile |
+| First 2025.1 run on the API services (`www_authenticate_uri` on the public URL) | X25 | what clients see in the `WWW-Authenticate` header, and whether internal-only clients are affected |
+| `mariadb-backup --incremental` right after the upgrade | X25 | the "No full backup file found." failure, then a full and an incremental backup, restore of the new layout and disk space of the temporary copy |
+| `mariadb-recovery` with ProxySQL | X25 | whether the run ends green while ProxySQL or the VIP does not serve the database |
+| Container-engine migration with MariaDB | X25 | database downtime of the full recovery it runs |
+| Add a file to `/etc/kolla/config/keystone/domains`, `deploy -t keystone` | X25 | whether `keystone` restarts and loads the new domain |
