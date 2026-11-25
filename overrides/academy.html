@@ -179,7 +179,7 @@
                 {% endfor %}
               </td>
               <td data-label="Deployment tool">Kolla-Ansible, studied from its source code, one study per release</td>
-              <td data-label="Network back end">not stated</td>
+              <td data-label="Network back end">Open vSwitch is the default of the studied code (<code>neutron_plugin_agent</code>); the OVN roles are studied too</td>
             {% else %}
               {% set row = observed[module.id] if module.id in observed else ["not stated", "not stated", "not stated"] %}
               <td data-label="OpenStack release">{{ row[0] }}</td>
@@ -190,6 +190,24 @@
         {% endfor %}
       </tbody>
     </table>
+    <p>
+      Three findings that look different between the 2024.1 study and the 2026.1 pages were read again in the source code
+      of both releases (Kolla-Ansible <code>2024.1-eom</code> and 22.2.0). They are the same in both, and the pages describe
+      different sides of them:
+    </p>
+    <ul>
+      <li><strong>Stopping a container.</strong> Each container runs under a systemd unit whose stop command is
+        <code>docker stop -t 60</code>; if the container stops outside systemd, as with a plain <code>docker stop</code>,
+        the unit starts it again after a delay computed from the container timeouts, 11 seconds with the defaults (<code>ansible/module_utils/kolla_systemd_worker.py</code>).</li>
+      <li><strong>RabbitMQ quorum queues.</strong> On by default in 2024.1 (<code>om_enable_rabbitmq_quorum_queues: true</code>),
+        written into each service&rsquo;s configuration in 2026.1. New in 2024.1, the default since.</li>
+      <li><strong>MTU of tenant networks.</strong> Neutron takes the IP header and the tunnel header off the physical MTU;
+        Kolla-Ansible sets the Geneve header to 38 bytes in both releases. On a 1500-byte network, that gives 1450 for VXLAN
+        and 1442 for Geneve.</li>
+    </ul>
+    <p>
+      This is a reading of the code, not a test. Other findings of the 2024.1 study have not been compared.
+    </p>
   </section>
 
   <section class="oz-book oz-module--book" aria-labelledby="book">
