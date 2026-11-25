@@ -98,8 +98,9 @@ numbers of one host, use `openstack resource provider list --name <compute>` and
 `openstack resource provider inventory list <PROVIDER_UUID>` (columns `total`, `reserved`, `allocation_ratio`).
 With Kolla-Ansible's defaults, a libvirt compute keeps Nova's own: when the host is first registered, its CPU ratio
 is 4.0 and its RAM and disk ratios are 1.0 (Nova 2026.1, `initial_cpu_allocation_ratio` and the like; Kolla-Ansible
-22.2.0 changes these values only for Ironic). Nova counts the host's logical CPUs, so a host with 16 cores offers
-16 × 4 = 64 vCPUs, or 128 if hyperthreading shows 32 logical CPUs. This is read from the code, not measured on the lab,
+22.2.0 sets the RAM ratio and the reserved memory only for Ironic). Nova counts the host's logical CPUs: 16 logical
+CPUs give 64 vCPUs, and a 16-core host with hyperthreading on, as most servers ship, shows 32 and so offers 128.
+`cpu_shared_set` and `cpu_dedicated_set` change that count. This is read from the code, not measured on the lab,
 and an operator may have changed the ratios: read them on your hosts. To go further: [No valid host with free capacity](../runbooks/scheduling/no-valid-host-with-free-capacity/) and
 [Instance shut off by the host OOM killer](../runbooks/lifecycle/instance-shut-off-by-host-oom-killer/), section "Why
 the host runs out of memory".

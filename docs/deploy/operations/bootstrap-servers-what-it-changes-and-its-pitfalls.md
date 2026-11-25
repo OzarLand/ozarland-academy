@@ -70,17 +70,18 @@ ports are free on the host.
 |---|---|---|
 | Inventory | `enable_loadbalancer` is on and the `loadbalancer` group is missing or empty | `inventory_checks.yml` |
 | Host OS | The distribution and release are not in the list of the release: Ubuntu `noble`, Debian `bookworm` or `trixie`, CentOS Stream or Rocky `10` (`vars/main.yml`); switch: `prechecks_enable_host_os_checks` | `host_os_checks.yml` |
-| Time sync | None of `chrony`, `chronyd`, `ntp`, `ntpd`, `systemd-timesyncd` is active, or `timedatectl` says the clock is not synchronised; switch: `prechecks_enable_host_ntp_checks` | `timesync_checks.yml` |
+| Time sync | None of `chrony`, `chronyd`, `ntp`, `ntpd`, `systemd-timesyncd` is active, or `timedatectl` says the clock is not synchronised; skipped on hosts of the `deployment` group; switch: `prechecks_enable_host_ntp_checks` | `timesync_checks.yml` |
 | Time zone | `/etc/localtime` is missing | `datetime_checks.yml` |
 | API interface | `api_interface` is missing, down, or has no address | `port_checks.yml` |
 | Host services | The host does not use systemd; Docker older than 18.09; `nscd` is running; an empty value in `passwords.yml` (run `kolla-genpwd`); the same VIP for internal and external with TLS on one side only | `service_checks.yml` |
 | Python on the hosts | The Docker SDK older than 3.4.1, or `dbus` cannot be imported | `package_checks.yml` |
-| Ansible | Its version is not between 2.19 and 2.20 | `package_checks.yml` |
+| Ansible | The ansible-core version (major.minor) is not between 2.19 and 2.20 | `package_checks.yml` |
 | Users | `config_owner_user` or `config_owner_group` does not exist; the Ansible user cannot use sudo without a password | `user_checks.yml` |
 | External database | If one is used, its address cannot be reached from the hosts | `database_checks.yml` |
 | Registry | The images come from `quay.io/openstack.kolla` (test images) without `--use-test-images` | `registry_checks.yml` |
 
-The time sync check means that prechecks fail on a host with no NTP daemon, even though the roles do not install one. For a run on an existing platform, see the
+The time sync check means that prechecks fail on a host with no NTP daemon, even though the roles do not install one.
+Ubuntu noble runs `systemd-timesyncd` by default, so this mostly concerns minimal or custom images. For a run on an existing platform, see the
 [pre-execution checklist](../../day2/2024.1/operations/pre-execution-checklist/) of the 2024.1 study.
 
 ## Topology
@@ -168,11 +169,12 @@ What this page can and cannot say about protecting the hosts:
   `doc/source/user/security.rst`) says that before Zed, Kolla-Ansible disabled any host firewall and left its
   configuration to the users; since then it can configure only the external API ports in firewalld, which must be
   installed beforehand. No other protection is set up for the flows between hosts: with the default
-  `disable_firewall: true`, protecting them (network separation, a firewall outside the hosts, or host rules you
-  write) is the operator's job.
-- **The ports between hosts.** The default ports of the services the Quick lab deploys, read from Kolla-Ansible 22.2.0
-  (`ansible/group_vars/all/*.yml` and `ansible/roles/nova-cell/defaults/main.yml`). This is a reading of the code,
-  not a tested flow table: it does not say which host role talks to which, and a setting in `globals.yml` can move a port.
+  `disable_firewall: true`, protecting them is the operator's job: network separation, a firewall outside the hosts,
+  or host rules, which need `disable_firewall: false` first, since each run otherwise turns the host firewall off.
+- **The ports between hosts.** A partial list of default ports for services the Quick lab deploys, read from
+  Kolla-Ansible 22.2.0 (`ansible/group_vars/all/*.yml` and `ansible/roles/nova-cell/defaults/main.yml`). It is a
+  reading of the code, not a tested flow table and not a complete allow-list: it does not say which host role talks
+  to which, and a setting in `globals.yml` can move a port.
 
   | Purpose | Port | Where it is set |
   |---|---|---|
@@ -184,12 +186,17 @@ What this page can and cannot say about protecting the hosts:
   | Consoles: noVNC, serial, SPICE | TCP 6080, 6083, 6082 | `nova.yml` |
   | libvirt between computes (live migration) | TCP 16509 (16514 with `libvirt_tls`) | `nova_libvirt_port` |
   | Nova's SSH between computes (resize, cold migration) | TCP 8022 | `nova_ssh_port` |
+  | Keystone's SSH between controllers (Fernet keys pushed to the others) | TCP 8023 | `keystone.yml` (`keystone_ssh_port`) |
+  | Horizon | TCP 80 or 443 on the VIP; 8080 on the controllers behind HAProxy | `horizon.yml` |
+  | ProxySQL, when enabled (default in the three-controller lab) | TCP 6032 (admin), and it takes the database port | `proxysql.yml` |
   | HAProxy statistics and monitor | TCP 1984, 61313 | `haproxy.yml` |
   | Keepalived (the VIP) | VRRP, IP protocol 112 | `keepalived` role |
   | VXLAN tunnels (ML2/OVS) | UDP 4789 | Neutron default; also needed by the nested lab ([three controllers, two computes](../topologies/three-controllers-two-computes-nested-in-an-openstack-cloud.md)) |
 
-  Not covered: the ports QEMU opens for the memory transfer of a live migration, Geneve and the OVN databases, and
-  services the lab does not deploy. Check each flow on your own platform before you write host firewall rules. Two
+  Not covered: the VNC, SPICE and serial ports of each instance on the computes (from 5900 for VNC), which the console
+  proxies on the controllers must reach; the ports QEMU opens for the memory transfer of a live migration; Geneve and
+  the OVN databases; and services the lab does not deploy. A blocked 8023 breaks Fernet key distribution, and a blocked
+  VNC port leaves the console page loading without connecting. Check each flow on your own platform before you write host firewall rules. Two
   pages show some of these ports in use: [RabbitMQ nodes do not form a cluster](../deployment-errors/rabbitmq-nodes-do-not-form-a-cluster.md)
   and, for 2024.1, [fact sheet B](../../day2/2024.1/reference/factsheets/b-mariadb-rabbitmq-keystone/).
 
