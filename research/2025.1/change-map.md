@@ -437,6 +437,32 @@ and `operations/add-a-compute-node.md`.
 - **ML2 plugin check:** the OVN condition reads `container_volume_facts['ovn_nb_db']` at the top level of the result,
   which the 2025.1 module no longer returns (`roles/neutron/tasks/neutron_plugin_agent_check.yml:28`).
 
+### X27 — Found in lot 8 (2026-11-25) [CODE]
+
+Points that lot 8 found while re-reading fact sheet D, the dependency page and the fact sheet index; they are written in
+`reference/factsheets/d-barbican-octavia-swift-manila-compute-roles.md`, `components/dependencies.md` and
+`reference/factsheets/index.md`.
+
+- **Octavia:** `upgrade.yml` no longer creates the persistence database (`roles/octavia/tasks/upgrade.yml:1-9`); the
+  jobboard runs on Valkey or Redis (`roles/octavia/templates/octavia.conf.j2:168-186`, sentinel name `kolla` at
+  `:183`); `/dev/shm` is always mounted (in 2024.1 only with `om_enable_queue_manager`).
+- **Coordination:** the backend order is Valkey, then Redis, then etcd (`group_vars/all.yml:573,1178,1403`); Valkey
+  has its own role and play (`site.yml:399-413`).
+- **OVN Southbound relays:** with `enable_ovn_sb_db_relay` (default `enable_ovn`, `group_vars/all.yml:953`),
+  `ovn_sb_connection` is the relay list (`:646-648`), so the first deploy moves `ovn-remote` of every chassis.
+- **Manila:** the policy copy now has `become` (`roles/manila/tasks/config.yml:85-93`); the BridgeInterfaceDriver
+  branch is gone; FlashBlade backend `fb1`; `httpchk` on the API backends; `/dev/shm` always mounted.
+- **Cyborg:** a haproxy key and FQDN variables are added (`group_vars/all.yml:388-392`); the `cyborg` group of the
+  sample inventory is control only (`inventory/multinode:146-147`; 2024.1 also listed `compute`, so `cyborg-api` and
+  `cyborg-conductor` landed on computes), while `cyborg-agent` stays on `compute` (`:414-415`); the play still uses `serial|default("0")` (`site.yml:874`).
+- **Other compute-side roles:** the telegraf plugin task and the masakari policy `dest` are fixed; ceilometer central
+  and compute healthchecks are off; cadvisor gets `--listen_ip`; kuryr gets `[oslo_concurrency]`; zun reads
+  `ceph_cluster` and `ceph_cinder_user`; the iscsi precheck reads `container_facts.containers`.
+- **Counts:** 26 roles embed the memcached host list, 38 `loadbalancer.yml` files, 30 roles use `service-ks-register`;
+  one fewer than 2024.1 in each case because `swift` is gone.
+- **Images:** horizon's settings hash now covers the themes directory, and `compress` is no longer retried (kolla
+  `docker/horizon/extend_start.sh:213,246`).
+
 ## 2. Impact on the 2024.1 pages
 
 69 pages (`find docs/day2/2024.1 -name '*.md'`). "Cited lines" counts the `path:line` citations of the page that
@@ -618,3 +644,6 @@ need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 202
 | First 2025.1 `deploy -t neutron` on computes | X26 | whether every agent is recreated at once, and the data-plane effect |
 | `neutron_agents_wrappers: yes` on network nodes | X26 | whether keepalived, haproxy and dnsmasq survive an agent restart |
 | Cloud on `neutron_plugin_agent: linuxbridge`, first 2025.1 run | X13, X26 | what happens to the Linux Bridge agent and its networks |
+| Upgrade 2024.1 → 2025.1 with Octavia and the jobboard | X27 | whether the jobboard moves to Valkey or Redis without losing running flows |
+| First 2025.1 deploy with OVN and relays on | X16, X27 | how long each chassis takes to reconnect when `ovn-remote` moves to the relays |
+| First 2025.1 run on compute hosts with ceilometer | X27 | whether `ceilometer_compute` is recreated by the healthcheck change |

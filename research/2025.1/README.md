@@ -1,4 +1,4 @@
-# 2025.1 study: in progress (lots 1 to 7 written)
+# 2025.1 study: in progress (lots 1 to 8 written)
 
 The 2025.1 (Epoxy, Kolla-Ansible 20.x, tag `2025.1-eom`) study has not been written yet. The release stays "planned"
 in `academy.toml`, so the portal shows it as "coming soon".
@@ -17,7 +17,7 @@ in `academy.toml`, so the portal shows it as "coming soon".
 
 ## Progress
 
-- Change map written (X1 to X20), completed by lot 1 (X21), lot 3 (X22), lot 4 (X23), lot 5 (X24), lot 6 (X25) and lot 7 (X26).
+- Change map written (X1 to X20), completed by lot 1 (X21), lot 3 (X22), lot 4 (X23), lot 5 (X24), lot 6 (X25), lot 7 (X26) and lot 8 (X27).
 - Lots 1 to 4 were committed locally together (commit "Start the 2025.1 (Epoxy) study of the day2 module: lots 1 to
   4"); each later lot is committed locally on its own. Nothing is pushed.
 - Lot 1 written (2026-11-25): `reference/method-and-limits.md`, `concepts/repository-architecture.md`,
