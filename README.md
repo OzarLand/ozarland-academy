@@ -56,14 +56,15 @@ stages for beginners. The study rests only on reading source code; nothing was r
 of the study](docs/day2/2023.1/reference/method-and-limits.md)).
 
 The module is organised by release of OpenStack and Kolla-Ansible. Each release is a separate study, with its own pages
-under `docs/day2/<release>/` and its own site at `day2/<release>/` in the portal. Three releases are studied today,
-Ussuri, 2023.1 and 2024.1:
+under `docs/day2/<release>/` and its own site at `day2/<release>/` in the portal. Four releases are studied today,
+Ussuri, 2023.1, 2024.1 and 2025.1:
 
 | Release | OpenStack | Kolla-Ansible | Sources |
 |---|---|---|---|
 | `ussuri` | Ussuri | 10.x, tag `ussuri-eol` | [docs/day2/ussuri/](docs/day2/ussuri/index.md) |
 | `2023.1` | 2023.1 Antelope | 16.x, tag `2023.1-eol` | [docs/day2/2023.1/](docs/day2/2023.1/index.md) |
 | `2024.1` | 2024.1 Caracal | 18.x, tag `2024.1-eom` | [docs/day2/2024.1/](docs/day2/2024.1/index.md) |
+| `2025.1` | 2025.1 Epoxy | 20.x, tag `2025.1-eom` | [docs/day2/2025.1/](docs/day2/2025.1/index.md) |
 
 The registry also lists the planned releases, from Victoria (Kolla-Ansible 11.x) onwards. A planned release has no
 content: the portal shows it in the release selector as "coming soon" and publishes a single page that says the study
@@ -111,6 +112,21 @@ does not carry over.
 The 2024.1 pages were re-studied from the 2023.1 study in the same way: every 2023.1 citation was looked up in the
 2024.1 sources and every statement re-checked against them; [Method and limits](docs/day2/2024.1/reference/method-and-limits.md)
 says what changed, and [research/2024.1/](research/2024.1/README.md) keeps the change map used for the re-study.
+
+### Versions studied: 2025.1
+
+| Component | Version |
+|---|---|
+| OpenStack release | 2025.1 Epoxy (`openstack_release: "2025.1"`, `ansible/group_vars/all.yml:795`) |
+| Kolla-Ansible | 20.x series: tag `2025.1-eom`, commit `7222f0f` |
+| Kolla (images) | tag `2025.1-eom` of `openstack/kolla`, commit `c4b53a2` |
+| ansible-collection-kolla | tag `2025.1-eom`, commit `09189c7` (`requirements.yml` pins `stable/2025.1`) |
+| Ansible | ansible-core 2.18.20 (`requirements.txt` accepts 2.17 to 2.18) |
+
+The 2025.1 pages were re-studied from the 2024.1 study in the same way: every 2024.1 citation was looked up in the
+2025.1 sources and every statement re-checked against them; [Method and limits](docs/day2/2025.1/reference/method-and-limits.md)
+says what changed, and [research/2025.1/](research/2025.1/README.md) keeps the change map used for the re-study. No lab
+run was made: the points that the code does not settle are left for the community to confirm, through an issue.
 
 ### How the content of a release is organised
 
