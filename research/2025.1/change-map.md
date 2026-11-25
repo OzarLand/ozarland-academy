@@ -343,6 +343,41 @@ Points that lot 4 found while re-reading the images and open-questions pages; th
 - **systemd:** units carry `PartOf=kolla.target`; `kolla.target` is written by `ansible/roles/common/tasks/config.yml:54-58` and
   never enabled.
 
+### X24 — Found in lot 5 (2026-11-25) [CODE]
+
+Points that lot 5 found while re-reading the shared infrastructure pages; they are written in `components/common.md`,
+`operations/apply-common-changes.md`, `components/haproxy-keepalived.md`, `components/openvswitch.md`,
+`components/ovn.md`, `components/memcached.md`, `components/iscsi.md`, `components/chrony.md` and fact sheet A.
+
+- **HAProxy under `-t <service>` (F18):** the per-service files are rendered, but the only compare that sees them is
+  the last include of the loadbalancer play (`site.yml:319-324`), which carries only the play tags. The new frontend
+  waits for the next `-t haproxy`, `-t loadbalancer` or untagged run.
+- **Two compares per loadbalancer run:** the role's own `check-containers.yml`, then the final include; both feed one
+  handler flush, so HAProxy restarts at most once per run.
+- **`any_errors_fatal` on the backup waits** (`roles/loadbalancer/handlers/main.yml:119, :154`): a backup HAProxy or
+  ProxySQL that does not come back fails every host, before the master is touched.
+- **Keepalived ProxySQL check** now logs in with `proxysql_admin_password`
+  (`roles/loadbalancer/templates/keepalived/check_alive_proxysql.sh.j2:6-12`).
+- **`external-frontend-map` always listed** in `haproxy.json` (optional unless the single frontend is on), which
+  removes the 2024.1 oddity.
+- **Removed source files are not compared:** `kolla_set_configs --check` walks the source side of a directory only
+  (kolla `docker/base/set_configs.py:213-231`), so the removal of `services.d/mariadb.cfg` does not restart HAProxy by
+  itself.
+- **OVN Southbound relays:** count = ceil(`ovn-controller` hosts / 50), ports 16641, 16642, …, seeded random choice
+  per client; the `ovn-controller` play runs before the `ovn-db` play, so the chassis point at relays before they
+  exist on the first 2025.1 run; the 51st `ovn-controller` host adds a relay and moves part of the clients.
+- **OVN DB containers gain `environment`:** the first 2025.1 compare is expected to restart every NB, SB and northd
+  container at once.
+- **OVN availability zones** in `ovn-cms-options` are now joined with `:` instead of `,`
+  (`roles/ovn-controller/tasks/setup-ovs.yml:24`).
+- **Command check:** memcached settings and OVN command lines written by `genconfig` are now applied by the next
+  compare (kolla `docker/base/set_configs.py:580-586`); in 2024.1 they were not.
+- **`nova.yml` moved after the OVS and OVN plays** (`site.yml:667`; 2024.1 imported it before openvswitch).
+- **First 2025.1 run of `common`:** the three common containers are expected to restart (new CA entries, new fluentd
+  command and file names, unit text).
+- **`service-cert-copy`:** backend files are copied for `<role>_enable_tls_backend` and `tls-backend` hosts only; no
+  task notifies.
+
 ## 2. Impact on the 2024.1 pages
 
 69 pages (`find docs/day2/2024.1 -name '*.md'`). "Cited lines" counts the `path:line` citations of the page that
@@ -501,3 +536,12 @@ need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 202
 | Kill `virtlogd` inside `nova_libvirt` with a running guest | X15, X23 | guest console and log behaviour (Q22) |
 | Remove a CA from `kolla_copy_ca_into_containers`, `reconfigure` | X23 | whether the CA leaves the container bundle |
 | Horizon deploy with a slow `compress` | X23 | failure without the old retry loop |
+| Change a keystone frontend option, `reconfigure -t keystone`, then `reconfigure -t haproxy` | X24 | whether HAProxy keeps the old frontend after the first run and applies it at the second (F18) |
+| Stop HAProxy on a backup during a `reconfigure -t haproxy` | X24 | whether `any_errors_fatal` stops the play on every host before the master is touched |
+| Change `proxysql_admin_password`, `reconfigure -t loadbalancer` | X24 | whether keepalived's ProxySQL check fails and the VIP moves |
+| Enable ProxySQL on a cloud that had `mariadb.cfg` | X24 | whether the old `mariadb` frontend stays loaded in HAProxy |
+| Upgrade 2024.1 → 2025.1 with OVN, relays on | X16, X24 | how long the chassis stay without a Southbound connection between the `ovn-controller` and `ovn-db` plays |
+| Add the 51st `ovn-controller` host | X24 | reconnection of the chassis and agents whose relay changes |
+| First 2025.1 run on an OVN cloud | X24 | whether every NB, SB and northd container restarts at once, and RAFT recovery |
+| `neutron_ovn_availability_zones` with two zones, first 2025.1 run | X24 | how Neutron reads `a:b` instead of `a,b` |
+| First 2025.1 `reconfigure -t common` | X24 | whether `fluentd`, `cron` and `kolla_toolbox` restart, and for how long logs are lost |
