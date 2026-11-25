@@ -190,7 +190,7 @@ Under `-t keystone` that include is not selected, so nothing notifies the HAProx
 under `services.d/` is rewritten, but HAProxy keeps the old configuration until a later run reaches the check step
 (no tag, or `-t haproxy`, `keepalived` or `loadbalancer`) [CODE]. ansible-core lists the play that way: under
 `--list-tasks -t nova` it shows only the `nova` and `nova-cell` includes ([list-tasks-nova.txt](../reference/listings/list-tasks-nova.txt),
-lines 106-109). [NOT AVAILABLE] Confirmation on a lab (lab test). The restart sequence of an untagged or
+lines 106-109). [NOT AVAILABLE] To be confirmed by the community. The restart sequence of an untagged or
 `-t haproxy` run is in [§5](#5-role--handler-map-core-services).
 
 ### 2.3 `include_role` + `tags: always` inside (the haproxy play) [CODE]
@@ -240,7 +240,7 @@ only**, on every compute host the run reaches. A scheduler-only override likewis
 (`roles/nova/tasks/config.yml:56-69`), not `nova_api` as in 2024.1.
 
 Impact analysis in [Operations](../operations/index.md). [NOT AVAILABLE] Confirmation on a lab that only the changed
-container restarts (lab test).
+container restarts (to be confirmed by the community).
 
 ### 2.5 `run_once` with `serial` [CODE]
 

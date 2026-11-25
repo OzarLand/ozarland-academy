@@ -1,7 +1,9 @@
-# 2025.1 study: in progress (lots 1 to 9 written)
+# 2025.1 study: written (lots 1 to 10), not yet reviewed
 
-The 2025.1 (Epoxy, Kolla-Ansible 20.x, tag `2025.1-eom`) study has not been written yet. The release stays "planned"
-in `academy.toml`, so the portal shows it as "coming soon".
+The 2025.1 (Epoxy, Kolla-Ansible 20.x, tag `2025.1-eom`) study is written: all ten lots are committed locally. Lot 10
+marks the release "available" in `academy.toml`, with `docs/day2/2025.1.toml` and the README table; it is not pushed
+and waits for review. No lab run is planned (decision of 2026-11-25): what the code does not settle is left for the
+community to confirm, through an issue on the repository.
 
 ## Method
 
@@ -11,7 +13,7 @@ in `academy.toml`, so the portal shows it as "coming soon".
   2025.1 sources with 2025.1 `path:line` citations, or [NOT AVAILABLE]. The study goes straight from 2024.1 to 2025.1
   (both SLURP releases); 2024.2 stays planned.
 - [change-map.md](change-map.md): the cross-cutting changes from 2024.1 to 2025.1, the impact on each page, the lots
-  and the points that need a lab run.
+  and the points left for the community to confirm.
 - Every page is passed through a citation checker (each `path:line` must exist in the 2025.1 tree) and
   `tools/site/check_learning.py`.
 
@@ -90,10 +92,22 @@ in `academy.toml`, so the portal shows it as "coming soon".
   with the citation checker (on fact sheet E, collection paths checked with a `roles/` prefix and kolla image paths by
   hand). `check_learning.py` passes; the only `check_docs.py` errors are links to pages of lot 10 and the missing
   `docs/day2/2025.1.toml`. New points are in the change map (X28) and its table.
-- Lot 10: not started.
+- Lot 10 written (2026-11-25): `risk/risk-register.md` (R1 to R33, about 260 references; new R31
+  `migrate-container-engine`, R32 `reconfigure`/`upgrade` that ignore `kolla_serial`, R33 OVN Southbound relays),
+  `risk/small-change-large-workload.md` (53), `troubleshooting/known-bugs-and-limitations.md` (115),
+  `troubleshooting/index.md` (rewritten as a shorter index that links to the 2025.1 sections),
+  `troubleshooting/what-is-not-known.md`, the start pages (`ten-things-to-know.md`, `learning-journey.md` with new
+  2025.1 quiz items, `find-it-fast.md`) and the index pages (`index.md`, `operations/`, `concepts/`, `components/`,
+  `reference/`, `risk/`). The "Lab tests" sections of the 2025.1 pages, fact sheet E and §4 of the change map become
+  "To be confirmed by the community", with a line on reporting through an issue. Release steps done:
+  `docs/day2/2025.1.toml`, the images under `docs/day2/2025.1/assets/`, `academy.toml` (`available`, tag
+  `2025.1-eom`) and the README table. `check_docs.py` and `check_learning.py` pass with no error; the unit tests of
+  `tools/site/tests` pass apart from the modules missing in the checking environment (`pymdownx`). The full build
+  (`make docs-build STRICT=1`) was not run.
 
 ## Release steps
 
-Follow CONTRIBUTING.md "Making a release available": `docs/day2/2025.1.toml` with the navigation,
-`status = "available"` and `tag = "2025.1-eom"` in `academy.toml`, the README table, then
-`make docs-check docs-build STRICT=1` with no error before merging into `main`.
+Done in lot 10, following CONTRIBUTING.md "Making a release available": `docs/day2/2025.1.toml` with the navigation,
+`status = "available"` and `tag = "2025.1-eom"` in `academy.toml`, and the README table. Still to do before merging
+into `main`: `make docs-check docs-build STRICT=1` with no error, and the review of the pull request. The `default`
+release of the module stays `2024.1`; changing it is a separate decision.

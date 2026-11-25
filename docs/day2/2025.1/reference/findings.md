@@ -17,7 +17,7 @@ quiz:
   - q: "In 2025.1, you add a backend option to Keystone's HAProxy frontend and run <code>kolla-ansible deploy -t keystone</code>. When does HAProxy use the new frontend?"
     options: ["At the end of the run: the frontend task restarts HAProxy", "Not until a run that includes the loadbalancer play's final check, for example <code>-t haproxy</code> or a run without tags"]
     answer: 1
-    explain: "F18 <span class=\"ev ev-code\">CODE</span>: the frontend task no longer notifies, and the final <code>check-containers</code> include of the loadbalancer play carries only the play tags (<code>haproxy</code>, <code>keepalived</code>, <code>loadbalancer</code>), so <code>-t keystone</code> skips it. Ansible's own listing shows it. A lab run has not confirmed it yet."
+    explain: "F18 <span class=\"ev ev-code\">CODE</span>: the frontend task no longer notifies, and the final <code>check-containers</code> include of the loadbalancer play carries only the play tags (<code>haproxy</code>, <code>keepalived</code>, <code>loadbalancer</code>), so <code>-t keystone</code> skips it. Ansible's own listing shows it. Left for the community to confirm."
     see: "f18---t-service-no-longer-restarts-haproxy"
   - q: "What does <code>kolla-ansible reconfigure -e kolla_serial=1</code> do in 2025.1?"
     options: ["Reconfigures one host at a time", "Runs with <code>kolla_serial=0</code>: the command adds its own value after yours"]
@@ -59,7 +59,7 @@ The study consolidates three things. This page holds the first:
 >   batched with `kolla_serial` ([F19](#f19)); every compute asks the Nova API for all hypervisors, through the first
 >   conductor, also in `genconfig` ([F20](#f20)); a dropped `config.json` entry makes the check restart the container on
 >   every run until it is recreated ([F21](#f21)); `ovs_wrapper` does not reach the Open vSwitch daemons on stop
->   ([F22](#f22)). All five are read from the code and need a lab run.
+>   ([F22](#f22)). All five are read from the code and are left for the community to confirm.
 
 Evidence levels: **[CODE]** and **[NOT AVAILABLE]**, defined once, in [Evidence
 labels](../start/conventions.md#evidence-labels). The study rests only on reading source code; no run against a host is
@@ -295,7 +295,7 @@ new default `ulimits`.
 |---|---|
 | **Finding** | **The systemd unit template changed again, and the unit text is part of the container check.** The 2025.1 template adds `PartOf=kolla.target`. `compare_container` reports a change when `check_unit_change` finds that the unit file on disk differs from the rendered template, whole text compared. So the first 2025.1 check of a container whose unit was written by 2024.1 code reports it as changed, even when nothing else differs, and `service-check-containers` notifies its restart handler, which rewrites the unit, reloads systemd and enables it. **Also new in 2025.1:** the default container dimensions set a `nofile` ulimit on every host with Docker (2024.1 set it only on Red Hat family hosts), and `compare_container` compares ulimits, so with Docker on Debian or Ubuntu such a container differs in its options and is **recreated**. A container that a 2025.1 run creates, recreates or restarts gets the new unit and is not flagged again. One-shot containers have no unit |
 | **Evidence** | [CODE] `module_utils/kolla_systemd_worker.py:20-40` (template, `PartOf` at `:27`), `:155-168` (`check_unit_change`: whole text), `:173-186` (`create_unit_file`: write, reload, enable); `module_utils/kolla_container_worker.py:58-65` (`compare_container`), `:274-303, :326-336` (ulimits compared); `module_utils/kolla_podman_worker.py:301-308` (same for Podman), `:219-228, :484-500` (Podman filters the two limits out); `group_vars/all.yml:201-224` (default dimensions); `module_utils/kolla_docker_worker.py:352` (`recreate_or_restart_container`), `:450-470` (`restart_container`); `roles/common/tasks/config.yml:54-58` (`kolla.target`) ([Repository architecture §6](../concepts/repository-architecture.md#6-custom-modules--container-lifecycle-via-kolla_container)) |
-| **Why it matters** | After an upgrade from 2024.1, a `deploy`/`reconfigure` that the operator expects to be a no-op restarts every checked container whose unit no 2025.1 run has rewritten yet (for example a role left out of a tagged or `--limit` upgrade), and recreates it with Docker on Debian or Ubuntu. Run that first apply as its own controlled step ([Controlled batches §1.1](../operations/controlled-batches.md#11-compute-changes-in-controlled-batches-recommended-pattern)). Which containers restart on a real platform needs a lab run |
+| **Why it matters** | After an upgrade from 2024.1, a `deploy`/`reconfigure` that the operator expects to be a no-op restarts every checked container whose unit no 2025.1 run has rewritten yet (for example a role left out of a tagged or `--limit` upgrade), and recreates it with Docker on Debian or Ubuntu. Run that first apply as its own controlled step ([Controlled batches §1.1](../operations/controlled-batches.md#11-compute-changes-in-controlled-batches-recommended-pattern)). Which containers restart on a real platform is left for the community to confirm |
 
 <a id="f17"></a>
 
@@ -313,37 +313,37 @@ new default `ulimits`.
 
 ### F18 — `-t <service>` no longer restarts HAProxy
 
-**New in 2025.1** [CODE], confirmed by ansible-core's own listing; not yet run on a lab.
+**New in 2025.1** [CODE], confirmed by ansible-core's own listing; to be confirmed by the community.
 
 | | |
 |---|---|
 | **Finding** | **A service tag rewrites the service's HAProxy frontend without applying it.** The `haproxy-config` task that writes `services.d/<service>.cfg` no longer notifies `Restart haproxy container` (2024.1 notified it twice). The restart is decided by one `check-containers` include of the `loadbalancer` role at the end of the loadbalancer play, after its 38 service includes. That include has no tags of its own, so it carries only the play tags `haproxy`, `keepalived` and `loadbalancer`. Under `-t keystone` (or any service tag) the service include runs, because it is tagged with the service, and the final check is skipped: the file is written, the running HAProxy keeps the old frontend |
 | **Evidence** | [CODE] `roles/haproxy-config/tasks/main.yml:2-14` (writes `services.d/<service>.cfg`, no `notify`); `site.yml:115-118` (play tags), `:319-324` (final `check-containers` include, skipped for `kolla_action == 'config'`), `:325-327` (block `when`); `roles/loadbalancer/templates/haproxy/haproxy.json.j2:16-21` (`services.d` copied at start); [list-tasks-nova.txt](listings/list-tasks-nova.txt) lines 106-109 (under `-t nova` the loadbalancer play lists the `nova-api` and `nova-cell` includes only) ([Tags §2.2](../risk/tags.md#22-handlers-ignore-tags-code)) |
-| **Why it matters** | A frontend change made with a service tag stays pending until a run that includes the final check: `-t haproxy`, `-t loadbalancer` or a run without tags. That later run applies every pending frontend at once. Lab test: change a frontend option, run `deploy -t keystone`, check the HAProxy config in use, then run `deploy -t haproxy` |
+| **Why it matters** | A frontend change made with a service tag stays pending until a run that includes the final check: `-t haproxy`, `-t loadbalancer` or a run without tags. That later run applies every pending frontend at once. Check for the community: change a frontend option, run `deploy -t keystone`, check the HAProxy config in use, then run `deploy -t haproxy` |
 
 <a id="f19"></a>
 
 ### F19 — `reconfigure` and `upgrade` cannot be batched
 
-**New in 2025.1** [CODE]; not yet run on a lab.
+**New in 2025.1** [CODE]; to be confirmed by the community.
 
 | | |
 |---|---|
 | **Finding** | **`kolla-ansible reconfigure` and `kolla-ansible upgrade` always run with `kolla_serial=0`.** The value is a module constant of the new Python CLI (2024.1 read `ANSIBLE_SERIAL` from the environment). The command's own extra vars are added after the user's `-e` options, and ansible-core keeps the later value, so `reconfigure -e kolla_serial=1` runs every play on all its hosts at once. `deploy`, `deploy-containers` and `bootstrap-servers` set no `kolla_serial` and accept the user's value |
 | **Evidence** | [CODE] `kolla_ansible/cli/commands.py:20-22` (`ANSIBLE_SERIAL = 0`), `:136` (Reconfigure), `:278` (Upgrade); `kolla_ansible/ansible.py:261-266` (user `-e`, then the command's extra vars); ansible-core 2.18.20 `lib/ansible/utils/vars.py:94-105, :198-224` (`-e` options merged in order, the later value replaces the earlier) ([Controlled batches §1.2](../operations/controlled-batches.md#12-rolling-runs-with-kolla_serial-not-with-reconfigure)) |
-| **Why it matters** | A rolling reconfigure is `deploy -e kolla_serial=N`, which runs the same tasks ([F5](#f5)). A rolling upgrade with `kolla_serial` is not possible through the CLI. Lab test: `upgrade -e kolla_serial=30%` and check the batches in the output |
+| **Why it matters** | A rolling reconfigure is `deploy -e kolla_serial=N`, which runs the same tasks ([F5](#f5)). A rolling upgrade with `kolla_serial` is not possible through the CLI. Check for the community: `upgrade -e kolla_serial=30%` and check the batches in the output |
 
 <a id="f20"></a>
 
 ### F20 — Every compute lists all hypervisors through the first conductor
 
-**New in 2025.1** [CODE]; not yet run on a lab.
+**New in 2025.1** [CODE]; to be confirmed by the community.
 
 | | |
 |---|---|
 | **Finding** | **The nova-cell `config.yml` writes a `compute_id` file for every compute from a Nova API answer.** For each compute it runs `openstack.cloud.resources` (type `hypervisor`) through `kolla_toolbox`, delegated to the first conductor, without `run_once` and without `failed_when`; then it matches the compute's node name and writes the hypervisor id, or a UUID derived from the node name when no hypervisor matches. A run on C computes makes C such calls on one controller, each listing every hypervisor. It runs in `deploy`, `reconfigure` and `genconfig`, since `genconfig` runs `config.yml` too. `nova-compute.json.j2` copies the file to `/var/lib/nova/compute_id` |
 | **Evidence** | [CODE] `roles/nova-cell/tasks/config.yml:53-110` (`:59-73` the list, delegated at `:73`; `:93-101` matched id; `:104-110` generated UUID); `roles/nova-cell/tasks/main.yml:2`; `library/kolla_toolbox.py:135-151, :155` (an `ansible localhost -m …` run inside the container); `roles/nova-cell/templates/nova-compute.json.j2:10-15` ([Compute scaling §3](../concepts/compute-scaling-and-performance.md#3-expensive-tasks-and-their-scaling-factors)) |
-| **Why it matters** | A no-change `reconfigure -t nova` now depends on the Nova API being up, and loads the first conductor and the API in proportion to C², read from the code. A failed call fails that compute. The first 2025.1 run restarts `nova_compute` everywhere because its `config.json` gains the entry. Lab test: time and load of a `-t nova` run with many computes, and `genconfig` with the Nova API down |
+| **Why it matters** | A no-change `reconfigure -t nova` now depends on the Nova API being up, and loads the first conductor and the API in proportion to C², read from the code. A failed call fails that compute. The first 2025.1 run restarts `nova_compute` everywhere because its `config.json` gains the entry. Check for the community: time and load of a `-t nova` run with many computes, and `genconfig` with the Nova API down |
 
 <a id="f21"></a>
 
@@ -355,7 +355,7 @@ new default `ulimits`.
 |---|---|
 | **Finding** | **`kolla_set_configs --check` raises `StateMismatch` (exit 1) when a destination recorded in the container's defaults state is no longer a destination of `config.json`, and nothing ever removes a recorded destination from that state.** The state file is in the container layer and survives a restart; only a recreate starts a new one. So once an entry is dropped (for example `libvirt_enable_sasl` or `kolla_copy_ca_into_containers` turned off), every `deploy`, `reconfigure` and `deploy-containers` reports the container as changed and restarts it, until a new image or changed parameters recreate it. The same state code (unchanged since 2024.1) also swaps each saved entry in place, so from the third start the "original" kept for a destination that existed in the image is an earlier rendered file |
 | **Evidence** | [CODE] kolla `docker/base/set_configs.py:589-642` (`execute_config_check`, `:626-636` `StateMismatch`), `:476-498` (`remove_or_restore_configs`: no key removed, entry swapped at `:496`), `:501-537` (`backup_configs`: keys only added), `:540-556` (`handle_defaults`, state rewritten at `:556`), `:38, :453-458` (state in `/etc/kolla/defaults`); `module_utils/kolla_docker_worker.py:171-172` (exit 1 is a change). A run of these functions outside a container, with one image file and one dropped entry, gave `StateMismatch` after the restart and an earlier rendered file in place of the image's ([Kolla images §2.3](../concepts/kolla-images.md#23-kolla_set_configs-copy-and-permissions), [§6](../concepts/kolla-images.md#6-day-2-consequences) item 4) |
-| **Why it matters** | A cloud where an option was turned off sees the same containers restart on every run, which looks like drift that never settles; for `nova_libvirt` that is a restart of the hypervisor's libvirt on every run. Lab test: turn off `libvirt_enable_sasl` on one compute, run `reconfigure` twice, watch the restarts and the check output, then check whether removing the container and running `deploy-containers` ends the loop |
+| **Why it matters** | A cloud where an option was turned off sees the same containers restart on every run, which looks like drift that never settles; for `nova_libvirt` that is a restart of the hypervisor's libvirt on every run. Check for the community: turn off `libvirt_enable_sasl` on one compute, run `reconfigure` twice, watch the restarts and the check output, then check whether removing the container and running `deploy-containers` ends the loop |
 
 <a id="f22"></a>
 
@@ -367,7 +367,7 @@ new default `ulimits`.
 |---|---|
 | **Finding** | **Both Open vSwitch containers now run under kolla's `ovs_wrapper`, whose stop handler cannot reach the daemon.** On TERM or QUIT the wrapper runs `ovs-appctl -T1 -t /run/openvswitch/$1.$child.ctl exit`, then exits 0. Inside the handler function `$1` is the function's own first argument, and `trap` passes none, so the path is `/run/openvswitch/.<pid>.ctl`, not the daemon's control socket. The daemon is not asked to exit; the wrapper, which is the container's main process, exits at once |
 | **Evidence** | [CODE] kolla `docker/openvswitch/openvswitch-base/ovs_wrapper.sh:3-19`; `roles/openvswitch/templates/openvswitch-vswitchd.json.j2:2`, `roles/openvswitch/templates/openvswitch-db-server.json.j2:2`. A bash run of the same handler pattern printed `/run/openvswitch/.<pid>.ctl` ([Kolla images §2.6](../concepts/kolla-images.md#26-signals-and-pid-1)) |
-| **Why it matters** | `ovs-vswitchd` and `ovsdb-server` then end when the container's processes are killed, without their own shutdown. [NOT AVAILABLE] Whether that changes anything for flows and `conf.db` compared with a clean exit. Lab test: stop `openvswitch_vswitchd` and read the end of `ovs-vswitchd.log` |
+| **Why it matters** | `ovs-vswitchd` and `ovsdb-server` then end when the container's processes are killed, without their own shutdown. [NOT AVAILABLE] Whether that changes anything for flows and `conf.db` compared with a clean exit. Check for the community: stop `openvswitch_vswitchd` and read the end of `ovs-vswitchd.log` |
 
 ## Related
 

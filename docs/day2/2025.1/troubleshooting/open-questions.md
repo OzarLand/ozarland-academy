@@ -301,7 +301,7 @@ part. Q12 concerned Swift, which 2025.1 no longer deploys. The others are [NOT A
 |---|---|
 | **Question** | When `nova_libvirt` restarts or is recreated, what happens to the console output of the running guests, now that it goes through a virtlogd that runs in that container? |
 | **Why it matters** | `qemu.conf` sets `stdio_handler = "logd"` (2024.1: `"file"`), and `kolla_nova_libvirt_start` starts `virtlogd` in the background before `libvirtd` (`roles/nova-cell/templates/qemu.conf.j2:1`, kolla `docker/nova/nova-libvirt/kolla_nova_libvirt_start.sh:9,12`) [CODE]. A restart stops virtlogd while the guests keep running ([Kolla images §5.1](../concepts/kolla-images.md#51-nova-libvirt-the-start-path-is-passive), [§6](../concepts/kolla-images.md#6-day-2-consequences) item 20) |
-| **Status** | [NOT AVAILABLE] libvirt, QEMU and virtlogd are not in these sources. Lab test: restart `nova_libvirt` with a running guest and check its console log and its state |
+| **Status** | [NOT AVAILABLE] libvirt, QEMU and virtlogd are not in these sources. Check for the community: restart `nova_libvirt` with a running guest and check its console log and its state |
 
 <a id="q23"></a>
 
@@ -313,7 +313,7 @@ part. Q12 concerned Swift, which 2025.1 no longer deploys. The others are [NOT A
 |---|---|
 | **Question** | After an entry is removed from a service's `config.json`, does every later `deploy`, `reconfigure` or `deploy-containers` really restart that container until it is recreated, and is removing the container a safe way out? |
 | **Why it matters** | [F21](../reference/findings.md#f21): `--check` raises `StateMismatch` for a recorded destination that is no longer listed, and the defaults state that records it is never pruned (kolla `docker/base/set_configs.py:476-537,589-642`) [CODE]; a run of these functions outside a container behaves that way |
-| **Status** | [NOT AVAILABLE] No real container was run. Lab test: turn off `libvirt_enable_sasl` on one compute and run `reconfigure` twice ([Kolla images, Lab tests](../concepts/kolla-images.md#lab-tests)) |
+| **Status** | [NOT AVAILABLE] No real container was run. Check for the community: turn off `libvirt_enable_sasl` on one compute and run `reconfigure` twice ([Kolla images, To be confirmed by the community](../concepts/kolla-images.md#to-be-confirmed-by-the-community)) |
 
 ## Related
 

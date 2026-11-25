@@ -1,0 +1,106 @@
+# Settings of the release "2025.1" of the module "day2" (registered in academy.toml).
+#
+# tools/site/releases.py merges this [project] table over the shared
+# zensical.base.toml to produce the configuration given to Zensical: tables
+# are merged, lists and plain values replace those of the base. It then sets
+# what follows from the path of the site, day2/2025.1: docs_dir
+# (docs/day2/2025.1), site_dir (site/day2/2025.1), site_url (<portal address>day2/2025.1/)
+# and edit_uri (blob/main/docs/day2/2025.1/). edit_uri may be set here to
+# override it; docs_dir, site_dir and site_url may not.
+
+[project]
+site_description = "Source-code study of Kolla-Ansible 2025.1-eom for Day-2 operations: procedures, impact, risks and reference."
+
+# Page titles come from each page's front matter; only sections are named here.
+nav = [
+  { "Home" = [
+    "index.md",
+    "start/learning-journey.md",
+    "start/find-it-fast.md",
+    "start/ten-things-to-know.md",
+    "start/conventions.md",
+  ] },
+  { "Operations" = [
+    "operations/index.md",
+    "operations/pre-execution-checklist.md",
+    "operations/predict-a-run.md",
+    "operations/reconfigure-a-service.md",
+    "operations/reconfigure-nova.md",
+    "operations/reconfigure-neutron.md",
+    "operations/apply-common-changes.md",
+    "operations/controlled-batches.md",
+    "operations/update-container-images.md",
+    "operations/add-a-compute-node.md",
+    "operations/change-control-plane-membership.md",
+    "operations/database-operations.md",
+    "operations/stop-and-destroy.md",
+    "operations/command-quick-lookup.md",
+  ] },
+  { "Troubleshooting" = [
+    "troubleshooting/index.md",
+    "troubleshooting/known-bugs-and-limitations.md",
+    "troubleshooting/open-questions.md",
+    "troubleshooting/what-is-not-known.md",
+  ] },
+  # Components in two groups: OpenStack services, then what they depend on.
+  { "Components" = [
+    "components/index.md",
+    "components/dependencies.md",
+    "components/nova-deep-dive.md",
+    { "OpenStack services" = [
+      "components/keystone.md",
+      "components/glance.md",
+      "components/placement.md",
+      "components/nova.md",
+      "components/neutron.md",
+      "components/cinder.md",
+      "components/horizon.md",
+      "components/heat.md",
+      "components/barbican.md",
+      "components/octavia.md",
+      "components/swift.md",
+      "components/manila.md",
+    ] },
+    { "Infrastructure and dependencies" = [
+      "components/mariadb.md",
+      "components/rabbitmq.md",
+      "components/memcached.md",
+      "components/haproxy-keepalived.md",
+      "components/common.md",
+      "components/openvswitch.md",
+      "components/ovn.md",
+      "components/chrony.md",
+      "components/iscsi.md",
+    ] },
+  ] },
+  { "Risk and impact" = [
+    "risk/index.md",
+    "risk/risk-register.md",
+    "risk/tags.md",
+    "risk/tag-index.md",
+    "risk/small-change-large-workload.md",
+  ] },
+  { "Concepts" = [
+    "concepts/index.md",
+    "concepts/repository-architecture.md",
+    "concepts/deployment-execution-flow.md",
+    "concepts/compute-scaling-and-performance.md",
+    "concepts/kolla-images.md",
+  ] },
+  { "Reference" = [
+    "reference/index.md",
+    "reference/findings.md",
+    "reference/glossary.md",
+    "reference/generated-inventory.md",
+    { "Per-role fact sheets" = [
+      "reference/factsheets/index.md",
+      "reference/factsheets/a-infra-lb-ovn.md",
+      "reference/factsheets/b-mariadb-rabbitmq-keystone.md",
+      "reference/factsheets/c-glance-placement-cinder-horizon-heat.md",
+      "reference/factsheets/d-barbican-octavia-swift-manila-compute-roles.md",
+      "reference/factsheets/e-host-bootstrap-ops-playbooks.md",
+    ] },
+    "reference/listings/index.md",
+    "reference/method-and-limits.md",
+  ] },
+]

@@ -22,7 +22,7 @@ not establish it, often because it depends on Docker, Podman, containerd, system
 module that lives in an Ansible collection outside the sources (`ufw`, `selinux`, `sysctl`, `authorized_key`,
 `git_config`, `docker_prune` are redirected out of ansible-core: ansible-core 2.18.20
 `lib/ansible/config/ansible_builtin_runtime.yml`, e.g. `:745-746` for `docker_prune`). NOT AVAILABLE points are left
-for the community to confirm (see [Lab tests](#lab-tests)).
+for the community to confirm (see [To be confirmed by the community](#to-be-confirmed-by-the-community)).
 
 > [!NOTE]
 > **Key answers**
@@ -1033,10 +1033,10 @@ commented examples. **Several Docker knobs are not listed in globals.yml at all*
 9. With `kolla_container_engine: podman`, set `podman_registry` (and friends) yourself if you need a private registry
    configured on the hosts: kolla-ansible does not map `docker_registry` to them.
 
-## Lab tests
+## To be confirmed by the community
 
-These points are read from the code; a run on a lab installed in 2024.1 and upgraded to 2025.1 would confirm them.
-They stay [NOT AVAILABLE] until such a run is recorded.
+These points are read from the code; a run on a cloud installed in 2024.1 and upgraded to 2025.1 would confirm them.
+No lab run is planned for this study: they stay [NOT AVAILABLE] until the community reports such a run. If you run one of these checks, please share what you saw in an [issue on the repository](https://github.com/OzarLand/ozarland-academy/issues).
 
 | Test | What the code does not settle |
 |---|---|

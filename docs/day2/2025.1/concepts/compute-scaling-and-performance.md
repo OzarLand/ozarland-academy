@@ -245,7 +245,7 @@ Scope legend:
 | `group_by` enabled services (50 items) | `site.yml:20-74` | all | H (deploy-host CPU) | N × 50 | templating each item | none needed below ~1,000 hosts; it *saves* time later by eliminating disabled plays (`site.yml:4-6`) |
 | `common` config + check | `roles/common/tasks/config.yml`, `check-containers.yml`, `bootstrap.yml` | every host of the `common` play (`site.yml:88-103`) | H × 19 invocations ([§2](#2-work-per-compute-host-read-from-the-task-files)) | N | 3 container checks (`docker exec` each) + 14 templates/files + 2 bootstrap steps | `--limit` batches; the play is tagged `common` only, so any service tag (e.g. `-t nova`) skips it, `-t common` runs it alone, `--skip-tags common` removes it |
 | `nova-cell` config | `roles/nova-cell/tasks/config.yml` | computes + conductors | C × 24 invocations (19 in `config.yml`, 5 in `config-host.yml` with its `module-load` include, [§2](#2-work-per-compute-host-read-from-the-task-files)) | C | `merge_configs` renders `nova.conf.j2` **on the deploy host for every compute**; per-item template loops | Deploy-host CPU (more cores, fewer forks than cores × ~2); `--limit` |
-| **New:** hypervisor list for `compute_id` | `roles/nova-cell/tasks/config.yml:53-110` (list at `:59-73`) | each compute, **delegated to the first conductor** | C on one controller | C calls × ~C entries each | each call is an `ansible` run inside `kolla_toolbox` on control01 (`library/kolla_toolbox.py:135-151`, `:155`), up to `forks` at once, and one Nova API request listing every hypervisor; no `run_once`, no `failed_when` | none in the code. `--limit` bounds the number of calls, not the size of each answer. Also runs in `genconfig` (`roles/nova-cell/tasks/main.yml:2` includes `config.yml`); a failed call fails that compute ([lab test](#lab-tests)) |
+| **New:** hypervisor list for `compute_id` | `roles/nova-cell/tasks/config.yml:53-110` (list at `:59-73`) | each compute, **delegated to the first conductor** | C on one controller | C calls × ~C entries each | each call is an `ansible` run inside `kolla_toolbox` on control01 (`library/kolla_toolbox.py:135-151`, `:155`), up to `forks` at once, and one Nova API request listing every hypervisor; no `run_once`, no `failed_when` | none in the code. `--limit` bounds the number of calls, not the size of each answer. Also runs in `genconfig` (`roles/nova-cell/tasks/main.yml:2` includes `config.yml`); a failed call fails that compute ([to be confirmed by the community](#to-be-confirmed-by-the-community)) |
 | **New:** libvirt version check | `roles/nova-cell/tasks/version-check.yml` | computes; first compute for the `run_once` steps | C (container facts) + D (two one-shot containers, one image read) | C | each one-shot container is created, run and removed on the first compute (`roles/nova-cell/tasks/version-check.yml:3-21, :80-98`); the version read inside `nova_libvirt` runs only where the image differs (`roles/nova-cell/tasks/version-check.yml:45-56`) | skip with `--skip-tags nova-libvirt-version-check,nova-libvirt-script-check` (`roles/nova-cell/tasks/version-check.yml:73, :116`) when you know the image is right; tag names from the [tag index](../risk/tag-index.md) |
 | `nova-cell` check-containers | `check-containers.yml` → `service-check-containers` | computes | C×S (3 containers) | 3C `docker exec` | `kolla_set_configs --check` starts a Python process in each container | – |
 | Compute registration wait | `nova-cell/tasks/wait_discover_computes.yml` | first compute of each batch, delegated to conductor | D per batch | up to 21 attempts with 20 × 10 s of sleep per batch; **multiplied by the number of batches when `kolla_serial` is used** | waits until *all* computes of the batch appear in `compute service list` | Keep batches large for this play, or run it once at the end |
@@ -425,7 +425,7 @@ What the code shows:
    `lib/ansible/executor/playbook_executor.py:183-191`, `:290`), so the restarts run at one handler flush
    (`roles/nova-cell/tasks/deploy.yml:18-19`), on at most `forks` hosts at a time (ansible-core 2.18.20
    `lib/ansible/plugins/strategy/__init__.py:396-428, :951-961`). How close together they land in time is
-   [NOT AVAILABLE]. The lower count is read from the code, not observed ([lab test](#lab-tests)).
+   [NOT AVAILABLE]. The lower count is read from the code, not observed ([to be confirmed by the community](#to-be-confirmed-by-the-community)).
 5. **`--limit` bounds the restarts, but fact gathering stays O(inventory) by default** [CODE].
    - With `--limit compute001` on the 30-compute inventory (38 hosts, localhost included), compute001 runs
      **38 `setup` calls in sequence**: its own (`gather-facts.yml:19-25`), plus one delegated call for each of the
@@ -437,7 +437,7 @@ What the code shows:
      (`group_vars/all.yml:43`). Kolla's own guidance says controllers are needed and other computes are not
      (`doc/source/user/ansible-tuning.rst:188-203`). With the 3 controllers only, compute001 would make 4 `setup`
      calls instead of 38. Whether a compute-only run then renders the same files is not established from the code
-     alone ([lab test](#lab-tests)).
+     alone ([to be confirmed by the community](#to-be-confirmed-by-the-community)).
    - The delegated `discover_hosts`/`list_cells` work and the hypervisor list run on the first conductor, control01
      (`roles/nova-cell/tasks/wait_discover_computes.yml:42-43`, `discover_computes.yml:21`,
      `roles/nova-cell/tasks/config.yml:73`).
@@ -503,10 +503,10 @@ What the code shows:
 9. **Disable services you do not use.** The `group_by` optimisation removes their plays entirely (`site.yml:4-6`).
    Every enabled service adds tasks to the common role and to every host in its groups.
 
-## Lab tests
+## To be confirmed by the community
 
-These points are read from the code and need a lab run before an operator relies on them (they are also in the
-change map of the study):
+These points are read from the code and were not run on a lab: they stay to be confirmed by the community before an
+operator relies on them (they are also in the change map of the study). If you run one of these checks, please share what you saw in an [issue on the repository](https://github.com/OzarLand/ozarland-academy/issues).
 
 - **Hypervisor list cost:** time and load of `reconfigure -t nova` on the first conductor and the Nova API with many
   computes, and whether `genconfig` fails on a cloud whose Nova API is down

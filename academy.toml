@@ -146,9 +146,10 @@ kolla_ansible = "19.x"
 
 [[module.release]]
 id = "2025.1"
-status = "planned"
+status = "available"
 openstack = "2025.1 Epoxy"
 kolla_ansible = "20.x"
+tag = "2025.1-eom"
 
 [[module]]
 id = "runbooks"

@@ -36,7 +36,7 @@ scenarios:
         why: "<code>deploy</code> runs the same tasks as <code>reconfigure</code> and adds no <code>kolla_serial</code>, so your value batches the plays. With <code>kolla_max_fail_percentage</code> 0, one failed host of the current batch breaks the play and the run stops before the next batch <span class=\"ev ev-code\">CODE</span>."
       - text: "Run <code>kolla-ansible reconfigure -t nova -e kolla_serial=10</code>."
         verdict: "risky"
-        why: "The command's own <code>-e kolla_serial=0</code> is passed after yours and the later value wins, so the plays run with 0: no batching <span class=\"ev ev-code\">CODE</span>. A lab run has not confirmed it yet."
+        why: "The command's own <code>-e kolla_serial=0</code> is passed after yours and the later value wins, so the plays run with 0: no batching <span class=\"ev ev-code\">CODE</span>. Left for the community to confirm."
     see: "12-rolling-runs-with-kolla_serial-not-with-reconfigure"
 quiz:
   - q: "What does <code>deploy-containers</code> run?"
@@ -160,8 +160,8 @@ kolla-ansible deploy -i multinode -t nova -e kolla_serial=10
   (`kolla_ansible/cli/commands.py:20-22`), and `reconfigure` and `upgrade` always add `kolla_serial=0`
   (`kolla_ansible/cli/commands.py:136, :278`). That value comes after your own `-e` options
   (`kolla_ansible/ansible.py:261-266`), and ansible-core keeps the last value of a repeated extra var
-  (`lib/ansible/utils/vars.py:94-105, :198-224`), so `reconfigure -e kolla_serial=10` runs with 0 [CODE; a lab run has
-  not confirmed it]. `deploy`, `deploy-containers`, `pull`, `genconfig`, `stop` and `check` set no `kolla_serial`, so
+  (`lib/ansible/utils/vars.py:94-105, :198-224`), so `reconfigure -e kolla_serial=10` runs with 0 [CODE; to be confirmed by
+  the community]. `deploy`, `deploy-containers`, `pull`, `genconfig`, `stop` and `check` set no `kolla_serial`, so
   your `-e kolla_serial=10` reaches their plays.
 - **`deploy` instead of `reconfigure`.** For a given tag both run the same tasks: every role's `reconfigure.yml` but
   bifrost's imports or includes `deploy.yml` ([Repository architecture

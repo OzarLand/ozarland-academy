@@ -22,7 +22,7 @@ quiz:
   - q: "What does <code>kolla-ansible reconfigure -e kolla_serial=1</code> do in 2025.1?"
     options: ["Reconfigures one host at a time", "Runs with <code>kolla_serial=0</code>, because the command adds its own value after yours", "Refuses the option"]
     answer: 1
-    explain: "The command's own <code>-e kolla_serial=0</code> comes after the user's <code>-e</code> (<code>kolla_ansible/ansible.py:261-266</code>) and the later value wins <span class=\"ev ev-code\">CODE</span>. A lab run has not confirmed it yet."
+    explain: "The command's own <code>-e kolla_serial=0</code> comes after the user's <code>-e</code> (<code>kolla_ansible/ansible.py:261-266</code>) and the later value wins <span class=\"ev ev-code\">CODE</span>. Left for the community to confirm."
     see: "5-batching-serial-and-its-interaction-with-order"
   - q: "Does <code>reconfigure</code> on a running cloud run the DB sync containers?"
     options: ["No, only <code>deploy</code> runs them", "Yes, of keystone, glance, cinder, placement, nova, neutron, heat and others", "Only for Neutron"]
@@ -372,7 +372,7 @@ Order caveats:
 | `stop` | no | no | no | no | no | no | `stop_container` for every enabled container on the host, honouring `skip_stop_containers`; **new in 2025.1**, `--ignore-missing` passes `kolla_action_stop_ignore_missing` so missing containers do not fail the task (`roles/service-stop/tasks/main.yml:2-25`). The command refuses to run without `--yes-i-really-really-mean-it` (`kolla_ansible/cli/commands.py:285-315`) |
 | `prechecks` (`precheck`) | no | no | no | no | no | no | `prechecks` role + each role's `precheck.yml` (port checks, group validation) (`kolla_ansible/cli/commands.py:99-110`) |
 | `validate-config` (`config_validate`) | no | no | no | no | no | no | `kolla_ansible/cli/commands.py:143-155`. Runs `oslo-config-validator` inside each running container that has a validation list, and writes the errors under `service_config_validate_output_dir` on the deploy host (`roles/service-config-validate/tasks/main.yml:2-13`, `validate.yml:2-50`) |
-| `check` (**new in 2025.1**) | no | no | no | no | no | no | `kolla_ansible/cli/commands.py:495-506`. 52 roles have a `check.yml` that imports `service-check`, which reads the role's containers with `kolla_container_facts` and **fails the host** when one is missing, not running or unhealthy (`roles/service-check/tasks/main.yml:2-40`). A failed host counts for `max_fail_percentage` like in any other run ([§5](#5-batching-serial-and-its-interaction-with-order)). [NOT AVAILABLE] Real output, and how far a `check` run goes after the first failure (lab test) |
+| `check` (**new in 2025.1**) | no | no | no | no | no | no | `kolla_ansible/cli/commands.py:495-506`. 52 roles have a `check.yml` that imports `service-check`, which reads the role's containers with `kolla_container_facts` and **fails the host** when one is missing, not running or unhealthy (`roles/service-check/tasks/main.yml:2-40`). A failed host counts for `max_fail_percentage` like in any other run ([§5](#5-batching-serial-and-its-interaction-with-order)). [NOT AVAILABLE] Real output, and how far a `check` run goes after the first failure (to be confirmed by the community) |
 
 The combination **`genconfig` → (review the diff) → `deploy-containers --limit <batch>`** is the only built-in way to
 separate "write the config" from "apply it", and to apply in controlled batches. It works because `compare_container`
@@ -390,7 +390,7 @@ so in 2025.1 a memcached setting change written by `genconfig` is applied by the
 `deploy` or `reconfigure`; in 2024.1 `deploy-containers` never applied it. A change confined to the `permissions` list of `config.json` is still not
 compared: the check path runs only the command check and the file check (`set_configs.py:655-657`), not
 `handle_permissions` (`:347`). [NOT AVAILABLE] Which existing containers report a command difference at the first 2025.1
-run (lab test).
+run (to be confirmed by the community).
 
 An `optional` file that newly appears, and whose destination does not exist in the container yet, counts as drift:
 `--check` exits 1 and the restart copies the file [CODE kolla `docker/base/set_configs.py:178-185, :237-255,
@@ -443,7 +443,7 @@ The bar lengths are illustrative only; no duration is known from the code.
   and `upgrade` always add `kolla_serial=0` (`:136, :278`). That value is passed after your own `-e`
   (`kolla_ansible/ansible.py:261-266`), and ansible-core keeps the last value of a repeated extra var
   (`lib/ansible/utils/vars.py:94-105, :198-224`), so `kolla-ansible reconfigure -e kolla_serial=1` runs every play
-  with `kolla_serial=0` [CODE; a lab run has not confirmed it]. `deploy`, `deploy-containers`, `pull`, `genconfig`,
+  with `kolla_serial=0` [CODE; to be confirmed by the community]. `deploy`, `deploy-containers`, `pull`, `genconfig`,
   `stop`, `check` and the others add no `kolla_serial`, so `-e kolla_serial=N` batches them
   (`kolla_ansible/cli/commands.py:231-256`). To batch a reconfiguration, use `genconfig` then `deploy-containers -e
   kolla_serial=N`, or `--limit` ([Controlled batches](../operations/controlled-batches.md)).
@@ -515,7 +515,7 @@ Handlers create ordering that is not visible in task files:
    ([listings](../reference/listings/list-tasks-nova.txt), play #6). So `kolla-ansible reconfigure -t nova` rewrites
    a changed Nova frontend file under `services.d/` but does not restart HAProxy in that run; the change is applied by
    the next run that reaches the check step (no `-t`, or `-t loadbalancer`, `haproxy` or `keepalived`) [CODE].
-   [NOT AVAILABLE] Confirmation on a lab (lab test).
+   [NOT AVAILABLE] To be confirmed by the community.
 5. **The MariaDB restart is a sequence of plays, not of handler waves.** The handlers put running members into
    `mariadb_restart` and new members into `mariadb_start` (`roles/mariadb/handlers/main.yml:59-74`); the "Restart
    mariadb services" and "Start mariadb services" plays then run `restart_services.yml` (restart, port wait, WSREP sync

@@ -14,8 +14,8 @@ a component page (*(no tag)*, `letsencrypt`, `etcd`, `valkey`, the tags of the r
 Risk numbers link to the risk's own section of the [Risk register](risk-register.md).
 
 Changed in 2025.1: `valkey` is a new tag with its own play (`site.yml:399-411`), and `swift` selects nothing any more:
-the `swift` role and play are gone, so its row joins the removed services and the 2025.1 study has no Swift component
-page. The other rows are as in 2024.1, with their 2025.1 lines.
+the `swift` role and play are gone, so its row joins the removed services, and the 2025.1 [Swift](../components/swift.md)
+page describes only what the removal leaves behind. The other rows are as in 2024.1, with their 2025.1 lines.
 
 | Tag | What it executes ([Tags](tags.md)) | Scenario ([Operations](../operations/index.md)) | Command ([Operations](../operations/index.md)) | Risks ([Risk register](risk-register.md)) | Service card |
 |---|---|---|---|---|---|

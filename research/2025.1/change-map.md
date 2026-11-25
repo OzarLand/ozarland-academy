@@ -76,7 +76,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
   `kolla-ansible upgrade -e kolla_serial=30%` runs with `kolla_serial=0`. Lot 1 read the ansible-core side too:
   `load_extra_vars` merges the `-e` options in order and `combine_vars` lets the later value replace the earlier one
   (ansible-core 2.18.20 `lib/ansible/utils/vars.py:94-105, :198-224`), so the lot 1 pages state it as [CODE]; the
-  **lab test** below only confirms it. Other commands (`deploy`, `bootstrap-servers`, …) set no `kolla_serial`, so a user
+  **to be confirmed by the community** below only confirms it. Other commands (`deploy`, `bootstrap-servers`, …) set no `kolla_serial`, so a user
   `-e kolla_serial=…` still reaches the plays (the 2025.1 docs show it for `bootstrap-servers`,
   `doc/source/reference/deployment-and-bootstrapping/bootstrap-servers.rst:83`).
 - Plays: 47 plays of `site.yml` still read `serial: '{{ kolla_serial|default("0") }}'` (e.g. `ansible/site.yml:95,110`);
@@ -103,7 +103,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
 - `check_unit_change` still compares the whole text of the unit file (`kolla_systemd_worker.py:155-168`) and is part
   of `compare_container`. So, as in the 2023.1 → 2024.1 change (2024.1 map X4), a unit written by 2024.1 code is seen as
   changed at the first 2025.1 check, even with no other difference. Which containers that restarts on a running
-  platform: **lab test**.
+  platform: **to be confirmed by the community**.
 
 ### X5 — Handlers: `config` no longer notifies; one generic `check-containers` role decides restarts [CODE]
 
@@ -140,7 +140,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
   with `kolla_container_facts` and **fails** the host when a container is missing, not running or unhealthy
   (`ansible/roles/service-check/tasks/main.yml:2-40`).
 - A failing check is a failed host, so `max_fail_percentage` and the "whole batch failed" rule apply to a read-only
-  command: re-read how far a `check` run goes after the first failure. Real output: **lab test**.
+  command: re-read how far a `check` run goes after the first failure. Real output: **to be confirmed by the community**.
 
 ### X8 — Plays: `valkey` added, `swift` removed [CODE]
 
@@ -157,7 +157,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
   `'True' if mariadb_loadbalancer == 'haproxy' else 'False'` (`:132`). What an upgrade does with an existing
   `mariadb_clustercheck` container is still to re-read (lot 6).
 - Database TLS options are tied to ProxySQL (`group_vars/all.yml:94-95`).
-- Upgrade path HAProxy → ProxySQL on a running platform: **lab test** (connection cut, order of plays).
+- Upgrade path HAProxy → ProxySQL on a running platform: **to be confirmed by the community** (connection cut, order of plays).
 
 ### X10 — MariaDB [CODE]
 
@@ -166,7 +166,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
   restart at the first 2025.1 run that renders it: re-read the mariadb restart path.
 - Backups always run on `mariadb_backup_host` (`ansible/roles/mariadb/tasks/backup.yml:35`;
   `ansible/roles/mariadb/defaults/main.yml:123`), new file names (release note
-  `mariadb-backup-connect-locally-9f4c2d1e7b3a0c65.yaml`): **lab test** of backup and recovery.
+  `mariadb-backup-connect-locally-9f4c2d1e7b3a0c65.yaml`): **to be confirmed by the community** of backup and recovery.
 
 ### X11 — RabbitMQ: classic mirrored queues are gone [CODE]
 
@@ -185,7 +185,7 @@ Short IDs (X1…X22) are used in the impact table (§2).
   restore older settings.
 - Layer-7 health checks and a Prometheus `haproxy` user (release note `haproxy_healthchecks_to_l7-b05e8c7b177d1544.yaml`):
   re-read `ansible/roles/haproxy-config/` and the loadbalancer templates.
-- Which clients break (including the Quick lab tooling): **lab test**.
+- Which clients break (including the Quick lab tooling): **to be confirmed by the community**.
 
 ### X13 — Removed and new services [CODE]
 
@@ -622,12 +622,14 @@ Same order as the 2024.1 re-study: foundations first, because the other pages li
     `troubleshooting/index.md`, `troubleshooting/known-bugs-and-limitations.md`,
     `troubleshooting/what-is-not-known.md`, `start/ten-things-to-know.md`, `start/learning-journey.md`,
     `start/find-it-fast.md`, `operations/index.md`, `concepts/index.md`, `components/index.md` (text),
-    `reference/index.md`, `risk/index.md`, `index.md`.
+    `reference/index.md`, `risk/index.md`, `index.md`. Written 2026-11-25, with the release steps
+    (`docs/day2/2025.1.toml`, `academy.toml`, README) and the renaming of the "Lab tests" sections.
 
-## 4. Lab tests
+## 4. To be confirmed by the community
 
-The study rests on reading code; these points stay [NOT AVAILABLE] in the pages until a lab run confirms them. They
-need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 2026.1).
+The study rests on reading code, and no lab run is planned (decision of 2026-11-25): these points stay [NOT AVAILABLE]
+in the pages, to be confirmed by the community. They need a cloud installed in 2024.1 and upgraded to 2025.1 (the
+Quick lab deploys 2026.1). Feedback goes through an [issue on the repository](https://github.com/OzarLand/ozarland-academy/issues).
 
 | Test | Change | What the code does not settle |
 |---|---|---|

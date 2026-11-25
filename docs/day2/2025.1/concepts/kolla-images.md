@@ -252,7 +252,7 @@ Defaults handling (`handle_defaults`, `:540-556`; the same code as in 2024.1), b
   A run of the 2025.1 functions outside a container, on one file present in the image, confirms the sequence: the
   saved copy holds the image file after starts 1 and 2, then rendered files; once the entry is dropped, the
   destination keeps an earlier rendered file instead of the image's. The 2024.1 code is the same. [NOT AVAILABLE]
-  Whether this was intended, and how it behaves in a real container; a lab test is listed in [§7](#7-what-is-not-available-from-the-sources).
+  Whether this was intended, and how it behaves in a real container; a check for the community is listed in [§7](#7-what-is-not-available-from-the-sources).
 
 Copy, per `config_files` entry (`ConfigFile.copy`, `:149-176`):
 
@@ -831,7 +831,7 @@ bootstrap, upgrade and `--wsrep-recover` one-shots also run the recursive `/var/
    restart]. Triggers include turning off an option whose files a manifest copies, such as `libvirt_enable_sasl` or
    `kolla_copy_ca_into_containers` ([§2.4](#24-kolla_copy_cacerts-and-kolla_httpd_setup)). [NOT AVAILABLE] Whether a
    real deployment shows this loop, and whether removing the container and running `deploy-containers` is a safe way
-   out; both are lab tests ([§7](#7-what-is-not-available-from-the-sources)). CA certificates: a CA deleted from
+   out; both are left for the community to confirm ([§7](#7-what-is-not-available-from-the-sources)). CA certificates: a CA deleted from
    `kolla_certificates_dir/ca/` stays in `/etc/kolla/<svc>/ca-certificates/`, because the `copy` task never deletes
    (`roles/service-cert-copy/tasks/main.yml:2-10`), and is re-added at every start until it is deleted there by hand;
    even then the removal is not drift ([§3.2](#32-what-is-still-not-compared)) and waits for a restart, and whether
@@ -996,10 +996,11 @@ bootstrap, upgrade and `--wsrep-recover` one-shots also run the recursive `/var/
   migration against running servers ([§6](#6-day-2-consequences) item 8); Galera after a full stop, or a manual start
   left with `--wsrep-new-cluster` ([§6](#6-day-2-consequences) item 16).
 
-## Lab tests
+## To be confirmed by the community
 
-These points are read from the code, two of them also checked by running the same code outside a container, and need
-a lab run before an operator relies on them (they are also in the change map of the study):
+These points are read from the code, two of them also checked by running the same code outside a container, and were
+not run on a lab: they stay to be confirmed by the community before an operator relies on them (they are also in the
+change map of the study). If you run one of these checks, please share what you saw in an [issue on the repository](https://github.com/OzarLand/ozarland-academy/issues).
 
 - **Restart loop after a dropped entry:** turn off an option whose file a manifest copies (for example
   `libvirt_enable_sasl` on a compute), run `reconfigure` twice and `deploy-containers` once, and check whether the
