@@ -462,6 +462,37 @@ Points that lot 8 found while re-reading fact sheet D, the dependency page and t
   one fewer than 2024.1 in each case because `swift` is gone.
 - **Images:** horizon's settings hash now covers the themes directory, and `compress` is no longer retried (kolla
   `docker/horizon/extend_start.sh:213,246`).
+### X28 — Found in lot 9 (2026-11-25) [CODE]
+
+Points that lot 9 found while re-reading fact sheet E and the operations pages; they are written in
+`reference/factsheets/e-host-bootstrap-ops-playbooks.md` and the six `operations/` pages of the lot. Paths starting
+with `docker/`, `docker_sdk/`, `podman_sdk/` are ansible-collection-kolla `roles/<role>/…`.
+
+- **Docker restart timing:** a `meta: flush_handlers` follows the `daemon.json` write (`docker/tasks/config.yml:55`), so
+  Docker restarts on every notified host of the batch before the drop-in and CA tasks run.
+- **containerd and `docker system info`:** the Docker role runs `docker system info -f json` with no `failed_when`
+  (`docker/tasks/config.yml:57-63`) and, with the containerd image store, rewrites `/etc/containerd/config.toml` and
+  restarts containerd (`:69-87`).
+- **destroy:** `cleanup-host` keeps the `/etc/kolla` entries equal to Ansible's absolute `ansible_inventory_sources`
+  (`roles/destroy/tasks/cleanup_host.yml:16`), so an inventory in a subdirectory of `/etc/kolla` is removed.
+- **`migrate-container-engine`:** new command that stops every container on every baremetal host, with no
+  confirmation guard (`kolla_ansible/cli/commands.py:292, :325, :369` list the three guarded commands).
+- **Host libraries:** Docker SDK `docker>=7.0.0` (`docker_sdk/defaults/main.yml:35-40`); `podman_sdk_virtualenv_owner`
+  is now defined (`podman_sdk/defaults/main.yml:51`); CI re-runs `bootstrap-servers` before the upgrade
+  (`tests/upgrade.sh:16-20`).
+- **Prechecks:** ansible-core 2.17–2.18 only (`roles/prechecks/vars/main.yml:4-5`); the CLI no longer checks the
+  Ansible version itself.
+- **Facts:** `kolla_ansible_delegate_facts_hosts` (default `groups['all']`, `group_vars/all.yml:43`) bounds the
+  delegated fact gathering of a `--limit` run (`gather-facts.yml:47`).
+- **post-deploy:** `become` follows `needs_root` instead of being fixed (`post-deploy.yml:2-13`).
+- **Ulimits:** Docker `nofile` ulimits now apply on every distribution (`group_vars/all.yml:201-224`), so the first
+  2025.1 run recreates containers on non-RedHat Docker hosts (with X4).
+- **Check mode and CLI:** `kolla_toolbox` supports check mode (`library/kolla_toolbox.py:148-149, :273-274`); `stop
+  --ignore-missing` is new (`kolla_ansible/cli/commands.py:297-311`); `--list-tags` and `--list-hosts` cannot be passed
+  through the CLI, only `--list-tasks` (`kolla_ansible/ansible.py:88-94, :240-241`).
+- **Defaults that change images and containers:** ProxySQL is on by default (`group_vars/all.yml:958`), which adds an
+  image on network nodes and turns `mariadb_clustercheck` off (`roles/mariadb/defaults/main.yml:132`); Cinder
+  registers a `block-storage` service as `cinder` next to `cinderv3` (`roles/cinder/defaults/main.yml:346-359`).
 
 ## 2. Impact on the 2024.1 pages
 
@@ -586,7 +617,7 @@ Same order as the 2024.1 re-study: foundations first, because the other pages li
 9. **Lot 9 — Host and ops playbooks:** `reference/factsheets/e-host-bootstrap-ops-playbooks.md`,
    `operations/update-container-images.md`, `operations/stop-and-destroy.md`, `operations/predict-a-run.md`,
    `operations/reconfigure-a-service.md`, `operations/pre-execution-checklist.md`, `operations/command-quick-lookup.md`
-   (X1, X7, X20).
+   (X1, X7, X20, X28).
 10. **Lot 10 — Synthesis pages (last):** `risk/risk-register.md`, `risk/small-change-large-workload.md`,
     `troubleshooting/index.md`, `troubleshooting/known-bugs-and-limitations.md`,
     `troubleshooting/what-is-not-known.md`, `start/ten-things-to-know.md`, `start/learning-journey.md`,
@@ -647,3 +678,9 @@ need a lab installed in 2024.1 and upgraded to 2025.1 (the Quick lab deploys 202
 | Upgrade 2024.1 → 2025.1 with Octavia and the jobboard | X27 | whether the jobboard moves to Valkey or Redis without losing running flows |
 | First 2025.1 deploy with OVN and relays on | X16, X27 | how long each chassis takes to reconnect when `ovn-remote` moves to the relays |
 | First 2025.1 run on compute hosts with ceilometer | X27 | whether `ceilometer_compute` is recreated by the healthcheck change |
+| `kolla-ansible bootstrap-servers` on a deployed 2024.1 cloud before the upgrade | X28 | whether Docker restarts, on how many hosts at once, and what the containers do meanwhile |
+| `bootstrap-servers` with Docker stopped on one host | X28 | whether `docker system info` fails the host or the run carries on |
+| `bootstrap-servers` on a host using the containerd image store | X28 | the `config.toml` rewrite and the containerd restart |
+| `destroy -i multinode` from `/etc/kolla`, and with an inventory in `/etc/kolla/inventory/` | X28 | which inventory files survive |
+| `migrate-container-engine` from Docker to Podman | X25, X28 | total downtime, and the state of every service afterwards |
+| `bootstrap-servers` on a host with the `docker` 6.x SDK | X28 | whether the SDK is upgraded to 7.x |

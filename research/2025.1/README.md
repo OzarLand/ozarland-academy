@@ -1,4 +1,4 @@
-# 2025.1 study: in progress (lots 1 to 8 written)
+# 2025.1 study: in progress (lots 1 to 9 written)
 
 The 2025.1 (Epoxy, Kolla-Ansible 20.x, tag `2025.1-eom`) study has not been written yet. The release stays "planned"
 in `academy.toml`, so the portal shows it as "coming soon".
@@ -17,7 +17,7 @@ in `academy.toml`, so the portal shows it as "coming soon".
 
 ## Progress
 
-- Change map written (X1 to X20), completed by lot 1 (X21), lot 3 (X22), lot 4 (X23), lot 5 (X24), lot 6 (X25), lot 7 (X26) and lot 8 (X27).
+- Change map written (X1 to X20), completed by lot 1 (X21), lot 3 (X22), lot 4 (X23), lot 5 (X24), lot 6 (X25), lot 7 (X26), lot 8 (X27) and lot 9 (X28).
 - Lots 1 to 4 were committed locally together (commit "Start the 2025.1 (Epoxy) study of the day2 module: lots 1 to
   4"); each later lot is committed locally on its own. Nothing is pushed.
 - Lot 1 written (2026-11-25): `reference/method-and-limits.md`, `concepts/repository-architecture.md`,
@@ -80,7 +80,17 @@ in `academy.toml`, so the portal shows it as "coming soon".
   Neutron page, all paths it cannot parse (a `kolla/common` path, a comma list, a URL) and checked by hand.
   `check_learning.py` passes; the only `check_docs.py` errors are links to pages of later lots and the missing
   `docs/day2/2025.1.toml`. New points are in the change map (X26) and its table.
-- Lots 8 to 10: not started.
+- Lot 8 written (2026-11-25): `components/cinder.md`, `glance.md`, `manila.md`, `horizon.md`, `octavia.md`,
+  `placement.md`, `heat.md`, `barbican.md`, `swift.md` (removed in 2025.1), fact sheets C and D, the fact sheet index
+  and `components/dependencies.md`; service cards regenerated. New points are in the change map (X27) and its table.
+- Lot 9 written (2026-11-25): `reference/factsheets/e-host-bootstrap-ops-playbooks.md` (about 500 references),
+  `operations/update-container-images.md` (120), `operations/stop-and-destroy.md` (54),
+  `operations/predict-a-run.md` (59), `operations/reconfigure-a-service.md` (96),
+  `operations/pre-execution-checklist.md` (45) and `operations/command-quick-lookup.md` (85). All references resolve
+  with the citation checker (on fact sheet E, collection paths checked with a `roles/` prefix and kolla image paths by
+  hand). `check_learning.py` passes; the only `check_docs.py` errors are links to pages of lot 10 and the missing
+  `docs/day2/2025.1.toml`. New points are in the change map (X28) and its table.
+- Lot 10: not started.
 
 ## Release steps
 
